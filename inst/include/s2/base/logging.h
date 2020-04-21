@@ -69,6 +69,9 @@ class S2LogMessage {
 
   std::ostream& stream() { return stream_; }
 
+  // silences an 'unused member' compiler warning
+  absl::LogSeverity severity() { return severity_; }
+
  private:
   bool enabled() const {
 #ifdef ABSL_MIN_LOG_LEVEL

@@ -5,18 +5,18 @@
 
 using namespace Rcpp;
 
-// test
-void test();
-RcppExport SEXP _libs2_test() {
+// libs2_cpp_test_indexing
+void libs2_cpp_test_indexing();
+RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    test();
+    libs2_cpp_test_indexing();
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_libs2_test", (DL_FUNC) &_libs2_test, 0},
+    {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };
 
