@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 test <- function() {
-    invisible(.Call('_libs2_test', PACKAGE = 'libs2'))
+    invisible(.Call(`_libs2_test`))
 }
 
