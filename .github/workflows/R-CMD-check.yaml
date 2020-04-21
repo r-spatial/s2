@@ -1,8 +1,8 @@
-# Action script of tests conducted for all platforms. The complete suite
-# of tests is described in .github/workflows/R-CMD-check-with-db.yaml
 
 on:
   push:
+    branches:
+      - master
   pull_request:
     branches:
       - master
@@ -13,19 +13,16 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          # - {os: windows-latest, r: '3.6'}
-          - {os: macOS-latest, r: '3.6' }
-          - {os: macOS-latest, r: 'devel'}
-          - {os: ubuntu-16.04, r: '3.5', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          - {os: ubuntu-16.04, r: '3.6', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          - {os: ubuntu-latest, r: 'release'}
+          - {os: windows-latest, r: '3.6'}
+          - {os: macOS-latest, r: '3.6'}
+          - {os: ubuntu-16.04, r: '3.6'}
+          - {os: ubuntu-18.04, r: '3.6'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -40,9 +37,6 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Brew and macOS config
-        if: runner.os == 'macOS'
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -54,28 +48,34 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-
+          key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-
 
-      - name: Install system dependencies
+      - name: Install system dependencies (MacOS)
+        if: runner.os == 'MacOS'
+        run: |
+          brew install openssl@1.1
+
+      - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-
+        run: |
+          sudo apt install libssl-dev
       - name: Install dependencies
+        run: |
+          library(remotes)
+          deps <- readRDS("depends.Rds")
+          deps[["installed"]] <- vapply(deps[["package"]], remotes:::local_sha, character(1))
+          update(deps)
+          remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
-      - name: Install rgdal with configure
-        if: runner.os == 'macOS'
-        shell: Rscript {0}
-
-      - name: Check
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "${{ matrix.config.args }}"), error_on = "warning", check_dir = "check", build_args = "${{ matrix.config.build_args }}")
+      - name: Check (Windows)
+        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
           path: check
