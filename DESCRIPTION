@@ -19,3 +19,5 @@ Imports:
     Rcpp
 Suggests: 
     testthat
+URL: https://github.com/paleolimbot/libs2
+BugReports: https://github.com/paleolimbot/libs2/issues
