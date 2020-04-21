@@ -1,3 +1,4 @@
 ^libs2\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
+^src/Makevars$

@@ -286,8 +286,6 @@ void AnnotateIgnoreWritesEnd(const char *file, int line);
 
    TODO(user) -- The exclusive lock here ignores writes as well, but
    allows IGNORE_READS_AND_WRITES to work properly. */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
 static inline void StaticAnnotateIgnoreReadsBegin(const char *file, int line)
     ATTRIBUTE_IGNORE_READS_BEGIN { (void)file; (void)line; }
 static inline void StaticAnnotateIgnoreReadsEnd(const char *file, int line)
@@ -296,7 +294,6 @@ static inline void StaticAnnotateIgnoreWritesBegin(
     const char *file, int line) { (void)file; (void)line; }
 static inline void StaticAnnotateIgnoreWritesEnd(
     const char *file, int line) { (void)file; (void)line; }
-#pragma GCC diagnostic pop
 #endif
 
 /* Return non-zero value if running under valgrind.
