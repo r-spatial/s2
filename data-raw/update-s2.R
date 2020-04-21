@@ -16,7 +16,7 @@ src_dir <- file.path(s2_dir, "src/s2")
 # but I can't get that to work...so they are in src/, with
 # the CXXFLAGS=-I../src
 headers <- tibble(
-  path = list.files(file.path(s2_dir, "src", "s2"), "\\.(h|hpp|cpp)$", full.names = TRUE, recursive = TRUE),
+  path = list.files(file.path(s2_dir, "src", "s2"), "\\.(h|inc)$", full.names = TRUE, recursive = TRUE),
   final_path = str_replace(path, ".*?s2/", "inst/include/s2/")
 )
 
@@ -33,7 +33,7 @@ source_files <- tibble(
   filter(!str_detect(path, "_test\\."))
 
 # clean source dir
-current_source_files <- tibble(path = list.files("src", "\\.(h|hpp|cpp|o)$", full.names = TRUE, recursive = TRUE)) %>%
+current_source_files <- tibble(path = list.files("src", "\\.(h|hpp|cpp|o|cc)$", full.names = TRUE, recursive = TRUE)) %>%
   filter(!str_detect(path, "^src/(libs2-|Rcpp|Makevars)"))
 
 unlink(current_source_files$path)
