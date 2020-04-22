@@ -6,8 +6,7 @@ winlibs:
 	mkdir -p ../inst
 	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R" $(VERSION)
 
-
-OBJECTS= base__stringprintf.o \
+OBJECTS=base__stringprintf.o \
 	base__strtoint.o \
 	encoded_s2cell_id_vector.o \
 	encoded_s2point_vector.o \
@@ -120,7 +119,7 @@ OBJECTS= base__stringprintf.o \
 	util__math__mathutil.o \
 	util__units__length-units.o
 
+all:	winlibs $(SHLIB)
+
 clean:
 	rm -f $(SHLIB) $(OBJECTS)
-
-all: clean winlibs
