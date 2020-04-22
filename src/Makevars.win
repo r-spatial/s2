@@ -120,7 +120,4 @@ OBJECTS=base__stringprintf.o \
 	util__math__mathutil.o \
 	util__units__length-units.o
 
-all:	winlibs $(OBJECTS) $(SHLIB)
-
-clean:
-	rm -f $(SHLIB) $(OBJECTS)
+all: winlibs $(OBJECTS) $(SHLIB)
