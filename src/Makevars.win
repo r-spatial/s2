@@ -1,6 +1,6 @@
 # PKG_CPPFLAGS = -I../inst/include -I../windows/openssl-1.0.2d/include -D IS_LITTLE_ENDIAN
-PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DHASH_NAMESPACE=std -DNDEBUG -DIS_LITTLE_ENDIAN -I../windows/openssl-1.0.2d/include -I../inst/include
-PKG_LIBS = -L../windows/openssl-1.0.2d/lib${R_ARCH} -lssl -lcrypto
+PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -I../windows/openssl-1.1.1/include -I../inst/include
+PKG_LIBS = -L../windows/openssl-1.1.1/lib${R_ARCH} -lssl -lcrypto
 CXX_STD = CXX11
 
 winlibs:
