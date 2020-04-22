@@ -1,0 +1,1 @@
+rm -fr src/*.o src/*.so src/Makevars

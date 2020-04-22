@@ -5,7 +5,7 @@ CXX_STD = CXX11
 
 winlibs:
 	mkdir -p ../inst
-	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R" $(VERSION)
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R"
 
 OBJECTS=base__stringprintf.o \
 	base__strtoint.o \
@@ -120,7 +120,7 @@ OBJECTS=base__stringprintf.o \
 	util__math__mathutil.o \
 	util__units__length-units.o
 
-all:	winlibs $(SHLIB)
+all:	winlibs $(OBJECTS) $(SHLIB)
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS)
