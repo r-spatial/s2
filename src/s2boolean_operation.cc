@@ -1,3 +1,4 @@
+#include "libs2-cpp-compat.h"
 // Copyright 2017 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -392,8 +393,8 @@ void GraphEdgeClipper::Run() {
     }
     --i;
     if (s2builder_verbose) {
-      std::cout << "input edge " << a_input_id << " (inside=" << inside << "):";
-      for (VertexId id : a_vertices) std::cout << " " << id;
+      cpp_compat_cout << "input edge " << a_input_id << " (inside=" << inside << "):";
+      for (VertexId id : a_vertices) cpp_compat_cout << " " << id;
     }
     // Now for each B edge chain, decide which vertex of the A chain it
     // crosses, and keep track of the number of signed crossings at each A
@@ -421,12 +422,12 @@ void GraphEdgeClipper::Run() {
                                           left_to_right);
       if (a_index >= 0) {
         if (s2builder_verbose) {
-          std::cout << std::endl << "  " << "b input edge "
+          cpp_compat_cout << std::endl << "  " << "b input edge "
                     << b_input_edges[bi].input_id() << " (l2r=" << left_to_right
                     << ", crossing=" << a_vertices[a_index] << ")";
           for (const auto& x : b_edges[bi]) {
             const Graph::Edge& e = g_.edge(x.id);
-            std::cout << " (" << e.first << ", " << e.second << ")";
+            cpp_compat_cout << " (" << e.first << ", " << e.second << ")";
           }
         }
         // Keep track of the number of signed crossings (see above).
@@ -442,7 +443,7 @@ void GraphEdgeClipper::Run() {
         S2_LOG(DFATAL) << "Failed to get crossed vertex index.";
       }
     }
-    if (s2builder_verbose) std::cout << std::endl;
+    if (s2builder_verbose) cpp_compat_cout << std::endl;
 
     // Finally, we iterate through the A edge chain, keeping track of the
     // number of signed crossings as we go along.  The "multiplicity" is
@@ -758,9 +759,9 @@ void EdgeClippingLayer::Build(const Graph& g, S2Error* error) {
   GraphEdgeClipper(g, input_dimensions_, input_crossings_,
                    &new_edges, &new_input_edge_ids).Run();
   if (s2builder_verbose) {
-    std::cout << "Edges after clipping: " << std::endl;
+    cpp_compat_cout << "Edges after clipping: " << std::endl;
     for (int i = 0; i < new_edges.size(); ++i) {
-      std::cout << "  " << new_input_edge_ids[i] << " (" << new_edges[i].first
+      cpp_compat_cout << "  " << new_input_edge_ids[i] << " (" << new_edges[i].first
                 << ", " << new_edges[i].second << ")" << std::endl;
     }
   }

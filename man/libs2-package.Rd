@@ -8,6 +8,14 @@
 \description{
 Binds the S2 library for spherical geometry.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/paleolimbot/libs2}
+  \item Report bugs at \url{https://github.com/paleolimbot/libs2/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
 

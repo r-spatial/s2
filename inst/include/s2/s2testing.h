@@ -17,6 +17,7 @@
 
 #ifndef S2_S2TESTING_H_
 #define S2_S2TESTING_H_
+#include "libs2-cpp-compat.h"
 
 #include <algorithm>
 #include <memory>
@@ -352,7 +353,7 @@ bool CheckResultSet(const std::vector<std::pair<Distance, Id>>& x,
       });
     if (yp.first < limit && count != 1) {
       result = false;
-      std::cout << (count > 1 ? "Duplicate" : label) << " distance = "
+      cpp_compat_cout << (count > 1 ? "Duplicate" : label) << " distance = "
                 << S1ChordAngle(yp.first) << ", id = " << yp.second
                 << std::endl;
     }

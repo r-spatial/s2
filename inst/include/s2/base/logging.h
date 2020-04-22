@@ -15,6 +15,7 @@
 
 #ifndef S2_BASE_LOGGING_H_
 #define S2_BASE_LOGGING_H_
+#include "libs2-cpp-compat.h"
 
 #ifdef S2_USE_GLOG
 
@@ -94,7 +95,7 @@ class S2FatalLogMessage : public S2LogMessage {
                     absl::LogSeverity severity, std::ostream& stream)
       ABSL_ATTRIBUTE_COLD
     : S2LogMessage(file, line, severity, stream) {}
-  ABSL_ATTRIBUTE_NORETURN ~S2FatalLogMessage() { abort(); }
+  ABSL_ATTRIBUTE_NORETURN ~S2FatalLogMessage() { cpp_compat_abort(); }
 };
 
 // Logging stream that does nothing.
@@ -110,7 +111,7 @@ struct S2LogMessageVoidify {
 };
 
 #define S2_LOG_MESSAGE_(LogMessageClass, log_severity) \
-    LogMessageClass(__FILE__, __LINE__, log_severity, std::cerr)
+    LogMessageClass(__FILE__, __LINE__, log_severity, cpp_compat_cerr)
 #define S2_LOG_INFO \
     S2_LOG_MESSAGE_(S2LogMessage, absl::LogSeverity::kInfo)
 #define S2_LOG_WARNING \
