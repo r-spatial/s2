@@ -1,3 +1,12 @@
 PKG_CPPFLAGS = -I../inst/include -I../windows/openssl-1.0.2d/include -D IS_LITTLE_ENDIAN
 PKG_LIBS = -L../windows/openssl-1.0.2d/lib${R_ARCH} -lssl -lcrypto
 CXX_STD = CXX11
+
+winlibs:
+	mkdir -p ../inst
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R" $(VERSION)
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
+
+all: clean winlibs
