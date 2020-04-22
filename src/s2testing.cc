@@ -1,3 +1,4 @@
+#include "libs2-cpp-compat.h"
 // Copyright 2005 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,11 +62,11 @@ S2Testing::Random::Random() {
   // Unfortunately we can't use FLAGS_s2_random_seed here, because the default
   // S2Testing::Random instance is initialized before command-line flags have
   // been parsed.
-  srandom(1);
+  cpp_compat_srandom(1);
 }
 
 void S2Testing::Random::Reset(int seed) {
-  srandom(seed);
+  cpp_compat_srandom(seed);
 }
 
 // Return a 64-bit unsigned integer whose lowest "num_bits" are random, and
@@ -90,7 +91,7 @@ inline uint64 GetBits(int num_bits) {
 
   uint64 result = 0;
   for (int bits = 0; bits < num_bits; bits += RAND_BITS) {
-    result = (result << RAND_BITS) + random();
+    result = (result << RAND_BITS) + cpp_compat_random();
   }
   if (num_bits < 64) {  // Not legal to shift by full bitwidth of type
     result &= ((1ULL << num_bits) - 1);
@@ -173,36 +174,36 @@ double S2Testing::AreaToKm2(double steradians) {
 
 // The overloaded Dump() function is for use within a debugger.
 void Dump(const S2Point& p) {
-  std::cout << "S2Point: " << s2textformat::ToString(p) << std::endl;
+  cpp_compat_cout << "S2Point: " << s2textformat::ToString(p) << std::endl;
 }
 
 void Dump(const S2Loop& loop) {
-  std::cout << "S2Polygon: " << s2textformat::ToString(loop) << std::endl;
+  cpp_compat_cout << "S2Polygon: " << s2textformat::ToString(loop) << std::endl;
 }
 
 void Dump(const S2Polyline& polyline) {
-  std::cout << "S2Polyline: " << s2textformat::ToString(polyline) << std::endl;
+  cpp_compat_cout << "S2Polyline: " << s2textformat::ToString(polyline) << std::endl;
 }
 
 void Dump(const S2Polygon& polygon) {
-  std::cout << "S2Polygon: " << s2textformat::ToString(polygon) << std::endl;
+  cpp_compat_cout << "S2Polygon: " << s2textformat::ToString(polygon) << std::endl;
 }
 
 // Outputs the contents of an S2ShapeIndex in human-readable form.
 void Dump(const S2ShapeIndex& index) {
-  std::cout << "S2ShapeIndex: " << &index << std::endl;
+  cpp_compat_cout << "S2ShapeIndex: " << &index << std::endl;
   for (S2ShapeIndex::Iterator it(&index, S2ShapeIndex::BEGIN);
        !it.done(); it.Next()) {
-    std::cout << "  id: " << it.id().ToString() << std::endl;
+    cpp_compat_cout << "  id: " << it.id().ToString() << std::endl;
     const S2ShapeIndexCell& cell = it.cell();
     for (int s = 0; s < cell.num_clipped(); ++s) {
       const S2ClippedShape& clipped = cell.clipped(s);
-      std::cout << "    shape_id " << clipped.shape_id() << ": ";
+      cpp_compat_cout << "    shape_id " << clipped.shape_id() << ": ";
       for (int e = 0; e < clipped.num_edges(); ++e) {
-        if (e > 0) std::cout << ", ";
-        std::cout << clipped.edge(e);
+        if (e > 0) cpp_compat_cout << ", ";
+        cpp_compat_cout << clipped.edge(e);
       }
-      std::cout << std::endl;
+      cpp_compat_cout << std::endl;
     }
   }
 }

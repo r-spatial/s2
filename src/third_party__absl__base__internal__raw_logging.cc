@@ -1,3 +1,4 @@
+#include "libs2-cpp-compat.h"
 // Copyright 2017 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -178,7 +179,7 @@ void RawLogVA(absl::LogSeverity severity, const char* file, int line,
   // was suppressed.
   if (severity == absl::LogSeverity::kFatal) {
     abort_hook(file, line, buffer, prefix_end, buffer + kLogBufSize);
-    abort();
+    cpp_compat_abort();
   }
 }
 
