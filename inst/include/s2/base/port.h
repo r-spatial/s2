@@ -877,7 +877,7 @@ inline void UnalignedCopy64(const void *src, void *dst) {
 #endif  // defined(__cplusplus), end of unaligned API
 
 // aligned_malloc, aligned_free
-#if defined(__ANDROID__) || defined(__ASYLO__) || _POSIX_C_SOURCE < 200112L
+#if defined(__ANDROID__) || defined(__ASYLO__) || defined(_WIN32)
 #include <malloc.h>  // for memalign()
 #endif
 
@@ -890,7 +890,7 @@ inline void UnalignedCopy64(const void *src, void *dst) {
      ((__GNUC__ >= 3 || defined(__clang__)) && defined(__ANDROID__)) || \
      defined(__ASYLO__))
 inline void *aligned_malloc(size_t size, size_t minimum_alignment) {
-#if defined(__ANDROID__) || defined(OS_ANDROID) || defined(__ASYLO__) || _POSIX_C_SOURCE < 200112L
+#if defined(__ANDROID__) || defined(OS_ANDROID) || defined(__ASYLO__) || defined(_WIN32)
 # if defined(_WIN32)
   return _aligned_malloc(size, minimum_alignment);
 # else
