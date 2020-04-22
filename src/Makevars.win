@@ -3,11 +3,13 @@ PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDI
 PKG_LIBS = -L../windows/openssl-1.1.1/lib${R_ARCH} -lssl -lcrypto
 CXX_STD = CXX11
 
+all: clean winlibs
+
 winlibs:
 	mkdir -p ../inst
 	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R" $(VERSION)
 
-all:	winlibs $(SHLIB)
-
 clean:
-	rm -f $(SHLIB)
+	rm -f $(SHLIB) $(OBJECTS)
+
+.PHONY: all winlibs clean
