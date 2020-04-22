@@ -116,7 +116,7 @@
 #include <iostream>
 #include <string>
 
-#include <openssl/bn.h>
+#include "openssl/bn.h"
 
 #include "s2/base/integral_types.h"
 #include "s2/base/logging.h"
