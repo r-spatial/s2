@@ -1,12 +1,18 @@
 Package: libs2
-Title: Operators on Spherical Geometry
+Title: Spherical Geometry Operators
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Dewey",
+Authors@R: c(
+     person(given = "Dewey",
            family = "Dunnington",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "dewey@fishandwhistle.net",
-           comment = c(ORCID = "0000-0002-9415-4582"))
+           comment = c(ORCID = "0000-0002-9415-4582")),
+     person(given = "Edzer",
+             family = "Pebesma",
+             role = c("aut", "cre"),
+             email = "edzer.pebesma@uni-muenster.de",
+             comment = c(ORCID = "0000-0001-8049-7069"))
+  )
 Description: Binds the S2 library for spherical geometry.
 License: GPL-3
 Encoding: UTF-8
@@ -19,5 +25,5 @@ Imports:
     Rcpp
 Suggests: 
     testthat
-URL: https://github.com/paleolimbot/libs2
-BugReports: https://github.com/paleolimbot/libs2/issues
+URL: https://github.com/r-spatial/libs2
+BugReports: https://github.com/r-spatial/libs2/issues
