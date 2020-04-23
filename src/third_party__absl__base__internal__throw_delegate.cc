@@ -1,3 +1,4 @@
+#include "libs2-cpp-compat.h"
 // Copyright 2017 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +32,7 @@ template <typename T>
   throw error;
 #else
   ABSL_RAW_LOG(FATAL, "%s", error.what());
-  std::abort();
+  cpp_compat_abort();
 #endif
 }
 }  // namespace
