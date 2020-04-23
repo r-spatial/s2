@@ -13,7 +13,7 @@ Authors@R: c(
              email = "edzer.pebesma@uni-muenster.de",
              comment = c(ORCID = "0000-0001-8049-7069"))
   )
-Description: Binds the S2 library for spherical geometry.
+Description: Geometry operations on the sphere using s2geometry.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -6,7 +6,7 @@
 \alias{libs2-package}
 \title{libs2: Spherical Geometry Operators}
 \description{
-Binds the S2 library for spherical geometry.
+Geometry operations on the sphere using s2geometry.
 }
 \seealso{
 Useful links:
