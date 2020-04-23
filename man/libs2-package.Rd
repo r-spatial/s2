@@ -4,20 +4,25 @@
 \name{libs2-package}
 \alias{libs2}
 \alias{libs2-package}
-\title{libs2: Operators on Spherical Geometry}
+\title{libs2: Spherical Geometry Operators}
 \description{
-Binds the S2 library for spherical geometry.
+Geometry operations on the sphere using s2geometry.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/paleolimbot/libs2}
-  \item Report bugs at \url{https://github.com/paleolimbot/libs2/issues}
+  \item \url{https://github.com/r-spatial/libs2}
+  \item Report bugs at \url{https://github.com/r-spatial/libs2/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
+\strong{Maintainer}: Edzer Pebesma \email{edzer.pebesma@uni-muenster.de} (\href{https://orcid.org/0000-0001-8049-7069}{ORCID})
+
+Authors:
+\itemize{
+  \item Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
+}
 
 }
 \keyword{internal}
