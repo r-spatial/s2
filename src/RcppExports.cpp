@@ -5,6 +5,52 @@
 
 using namespace Rcpp;
 
+// BuildPolygonsLayer
+List BuildPolygonsLayer(List ptrs, SEXP b_ptr);
+RcppExport SEXP _libs2_BuildPolygonsLayer(SEXP ptrsSEXP, SEXP b_ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type b_ptr(b_ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(BuildPolygonsLayer(ptrs, b_ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MakeS2Shape
+SEXP MakeS2Shape(List mat, bool oriented);
+RcppExport SEXP _libs2_MakeS2Shape(SEXP matSEXP, SEXP orientedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
+    rcpp_result_gen = Rcpp::wrap(MakeS2Shape(mat, oriented));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Intersects
+List Intersects(List ptrs);
+RcppExport SEXP _libs2_Intersects(SEXP ptrsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    rcpp_result_gen = Rcpp::wrap(Intersects(ptrs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ReleaseShape
+List ReleaseShape(List ptrs);
+RcppExport SEXP _libs2_ReleaseShape(SEXP ptrsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    rcpp_result_gen = Rcpp::wrap(ReleaseShape(ptrs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -16,6 +62,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_libs2_BuildPolygonsLayer", (DL_FUNC) &_libs2_BuildPolygonsLayer, 2},
+    {"_libs2_MakeS2Shape", (DL_FUNC) &_libs2_MakeS2Shape, 2},
+    {"_libs2_Intersects", (DL_FUNC) &_libs2_Intersects, 1},
+    {"_libs2_ReleaseShape", (DL_FUNC) &_libs2_ReleaseShape, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };

@@ -11,7 +11,10 @@ Authors@R: c(
              family = "Pebesma",
              role = c("aut", "cre"),
              email = "edzer.pebesma@uni-muenster.de",
-             comment = c(ORCID = "0000-0001-8049-7069"))
+             comment = c(ORCID = "0000-0001-8049-7069")),
+    person("Ege", "Rubak", email="rubak@math.aau.dk", role = c("aut")),
+    person("Jeroen", "Ooms", , "jeroen.ooms@stat.ucla.edu", role = "aut", comment = "configure and cleanup script"),
+    person(family = "Google, Inc.", role = "cph", comment = "Original s2 source code")
   )
 Description: Geometry operations on the sphere using s2geometry.
 License: GPL-3
@@ -25,5 +28,5 @@ Imports:
     Rcpp
 Suggests: 
     testthat
-URL: https://github.com/r-spatial/libs2
+URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
 BugReports: https://github.com/r-spatial/libs2/issues
