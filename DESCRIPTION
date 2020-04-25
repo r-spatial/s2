@@ -27,6 +27,7 @@ LinkingTo:
 Imports: 
     Rcpp
 Suggests: 
-    testthat
+	sf,
+    testthat,
 URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
 BugReports: https://github.com/r-spatial/libs2/issues

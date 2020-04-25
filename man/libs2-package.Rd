@@ -11,7 +11,7 @@ Geometry operations on the sphere using s2geometry.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/r-spatial/libs2}
+  \item \url{https://github.com/r-spatial/libs2/ https://s2geometry.io/}
   \item Report bugs at \url{https://github.com/r-spatial/libs2/issues}
 }
 
@@ -22,6 +22,13 @@ Useful links:
 Authors:
 \itemize{
   \item Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
+  \item Ege Rubak \email{rubak@math.aau.dk}
+  \item Jeroen Ooms \email{jeroen.ooms@stat.ucla.edu} (configure and cleanup script)
+}
+
+Other contributors:
+\itemize{
+  \item  Google, Inc. (Original s2 source code) [copyright holder]
 }
 
 }
