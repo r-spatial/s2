@@ -4,7 +4,7 @@
 \name{libs2-package}
 \alias{libs2}
 \alias{libs2-package}
-\title{libs2: Spherical Geometry Operators}
+\title{libs2: Spherical Geometry Operators, Using the s2geometry.io Library}
 \description{
 Geometry operations on the sphere using s2geometry.
 }
@@ -23,12 +23,12 @@ Authors:
 \itemize{
   \item Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
   \item Ege Rubak \email{rubak@math.aau.dk}
-  \item Jeroen Ooms \email{jeroen.ooms@stat.ucla.edu} (configure and cleanup script)
 }
 
 Other contributors:
 \itemize{
-  \item  Google, Inc. (Original s2 source code) [copyright holder]
+  \item Jeroen Ooms \email{jeroen.ooms@stat.ucla.edu} (configure and cleanup script) [contributor]
+  \item  Google, Inc. (Original s2geometry.io source code) [copyright holder]
 }
 
 }

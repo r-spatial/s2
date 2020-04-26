@@ -1,5 +1,5 @@
 Package: libs2
-Title: Spherical Geometry Operators
+Title: Spherical Geometry Operators, Using the s2geometry.io Library
 Version: 0.0.0.9000
 Authors@R: c(
      person(given = "Dewey",
@@ -13,8 +13,8 @@ Authors@R: c(
              email = "edzer.pebesma@uni-muenster.de",
              comment = c(ORCID = "0000-0001-8049-7069")),
     person("Ege", "Rubak", email="rubak@math.aau.dk", role = c("aut")),
-    person("Jeroen", "Ooms", , "jeroen.ooms@stat.ucla.edu", role = "aut", comment = "configure and cleanup script"),
-    person(family = "Google, Inc.", role = "cph", comment = "Original s2 source code")
+    person("Jeroen", "Ooms", , "jeroen.ooms@stat.ucla.edu", role = "ctb", comment = "configure and cleanup script"),
+    person(family = "Google, Inc.", role = "cph", comment = "Original s2geometry.io source code")
   )
 Description: Geometry operations on the sphere using s2geometry.
 License: GPL-3
@@ -27,7 +27,6 @@ LinkingTo:
 Imports: 
     Rcpp
 Suggests: 
-	sf,
-    testthat,
+    testthat
 URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
 BugReports: https://github.com/r-spatial/libs2/issues
