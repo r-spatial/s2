@@ -32,6 +32,7 @@ s2Intersects <- function(x, y) {
 }
 
 #' @export
+#' @param ptrs list with S2Polygon pointers
 #' @name s2makepolygons
 s2ReleasePolygons <- function(ptrs) {
     .Call(`_libs2_s2ReleasePolygons`, ptrs)

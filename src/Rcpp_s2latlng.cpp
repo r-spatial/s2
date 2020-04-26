@@ -98,6 +98,7 @@ List s2Intersects(List x, List y) {
 }
 
 //' @export
+//' @param ptrs list with S2Polygon pointers
 //' @name s2makepolygons
 //[[Rcpp::export]]
 List s2ReleasePolygons(List ptrs) {

@@ -16,6 +16,8 @@ s2ReleasePolygons(ptrs)
 \item{oriented}{logical; if TRUE, rings are guaranteed to be oriented (e.g. read
 by \code{read_sf} using \code{check_ring_dir=TRUE}), meaning CCW exterior rings
 and CW holes; if FALSE, rings are normalized and holes are deduced from degree of nesting.}
+
+\item{ptrs}{list with S2Polygon pointers}
 }
 \description{
 convert R list of coordinate matrices (lon,lat) into S2Polygon ptr
