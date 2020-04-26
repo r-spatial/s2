@@ -7,8 +7,7 @@
 
 using namespace Rcpp;
 
-// Get a vector of `S2LatLng`s from a two column matrix from R.
-std::vector<S2LatLng> S2LatLngVecFromR(NumericMatrix mat, int omit_last = 1){
+std::vector<S2LatLng> S2LatLngVecFromR(NumericMatrix mat, int omit_last = 1) {
   if(mat.ncol() != 2)
     stop("Can't interpret input as lat,lng - must be a two column matrix.");
   NumericVector lat = mat( _, 1); // long first, then lat
@@ -20,7 +19,6 @@ std::vector<S2LatLng> S2LatLngVecFromR(NumericMatrix mat, int omit_last = 1){
   return rslt;
 } 
 
-// Get a vector of `S2Point`s from a two column matrix from R.
 std::vector<S2Point> S2PointVecFromR(NumericMatrix mat, int omit_last = 1){
   if(mat.ncol() != 2)
     stop("Can't interpret input as lat,lng - must be a two column matrix.");
@@ -44,8 +42,16 @@ NumericMatrix S2LatLngVecToR(std::vector<S2LatLng> points){
   return rslt;
 }
 
+//' convert R list of coordinate matrices (lon,lat) into S2Polygon ptr 
+//' 
+//' @param mat two-column matrix with longitude in first, latitude in second column
+//' @param oriented logical; if TRUE, rings are guaranteed to be oriented (e.g. read
+//' by \code{read_sf} using \code{check_ring_dir=TRUE}), meaning CCW exterior rings
+//' and CW holes; if FALSE, rings are normalized and holes are deduced from degree of nesting.
+//' @name s2makepolygons
+//' @export
 //[[Rcpp::export]]
-SEXP MakeS2Shape(List mat, bool oriented = false) {
+SEXP s2MakePolygon(List mat, bool oriented = false) {
 	// S2Shape *s = new S2Shape();
 	std::vector<std::unique_ptr<S2Loop> > loops(mat.size());
 	for (int i = 0; i < mat.size(); i++) {
@@ -64,25 +70,37 @@ SEXP MakeS2Shape(List mat, bool oriented = false) {
 	return R_MakeExternalPtr((void *) polygon, R_NilValue, R_NilValue);
 }
 
+//' Return indices of intersecting S2Polygons
+//' 
+//' @param x list with S2Polygons pointers
+//' @param y list with S2Polygons pointers
+//' @export
 //[[Rcpp::export]]
-List Intersects(List ptrs) {
-	std::vector<S2Polygon *> p(ptrs.size());
-	for (int i = 0; i < ptrs.size(); i++) {
-		SEXP s = ptrs[i];
-		p[i] = (S2Polygon *) R_ExternalPtrAddr(s);
+List s2Intersects(List x, List y) {
+	std::vector<S2Polygon *> xp(x.size());
+	for (int i = 0; i < x.size(); i++) {
+		SEXP s = x[i];
+		xp[i] = (S2Polygon *) R_ExternalPtrAddr(s);
 	}
-	for (int i = 0; i < ptrs.size(); i++) {
+	std::vector<S2Polygon *> yp(y.size());
+	for (int i = 0; i < y.size(); i++) {
+		SEXP s = y[i];
+		yp[i] = (S2Polygon *) R_ExternalPtrAddr(s);
+	}
+	for (int i = 0; i < x.size(); i++) {
 		IntegerVector ret(0);
-		for (int j = 0; j < ptrs.size(); j++)
-			if (p[i]->Intersects(p[j]))
+		for (int j = 0; j < y.size(); j++)
+			if (xp[i]->Intersects(yp[j]))
 				ret.push_back(j);
-		ptrs[i] = ret;
+		x[i] = ret;
 	}
-	return ptrs;
+	return x;
 }
 
+//' @export
+//' @name s2makepolygons
 //[[Rcpp::export]]
-List ReleaseShape(List ptrs) {
+List s2ReleasePolygons(List ptrs) {
 	for (int i = 0; i < ptrs.size(); i++) {
 		SEXP s = ptrs[i];
 		S2Polygon *p = (S2Polygon *) R_ExternalPtrAddr(s);

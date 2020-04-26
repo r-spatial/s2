@@ -7,8 +7,13 @@
 using namespace Rcpp;
 using namespace s2builderutil;
 
+//' Build s2Polygons Layers
+//' 
+//' @param ptrs list with S2Polygons pointers
+//' @param b_ptr external pointer with existing build, or NULL
+//' @export
 //[[Rcpp::export]]
-List BuildPolygonsLayer(List ptrs, SEXP b_ptr) {
+List s2BuildPolygonsLayer(List ptrs, SEXP b_ptr) {
 	std::vector<S2Polygon *> p(ptrs.size());
 	for (int i = 0; i < ptrs.size(); i++) {
 		SEXP s = ptrs[i];
