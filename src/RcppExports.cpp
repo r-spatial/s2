@@ -17,18 +17,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2MakePolygon
-SEXP s2MakePolygon(List mat, bool oriented);
-RcppExport SEXP _libs2_s2MakePolygon(SEXP matSEXP, SEXP orientedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2MakePolygon(mat, oriented));
-    return rcpp_result_gen;
-END_RCPP
-}
 // s2Intersects
 List s2Intersects(List x, List y);
 RcppExport SEXP _libs2_s2Intersects(SEXP xSEXP, SEXP ySEXP) {
@@ -41,14 +29,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2ReleasePolygons
-List s2ReleasePolygons(List ptrs);
-RcppExport SEXP _libs2_s2ReleasePolygons(SEXP ptrsSEXP) {
+// s2MakePolygon
+SEXP s2MakePolygon(List mat, bool oriented);
+RcppExport SEXP _libs2_s2MakePolygon(SEXP matSEXP, SEXP orientedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2MakePolygon(mat, oriented));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2GetPolygon
+List s2GetPolygon(List ptrs);
+RcppExport SEXP _libs2_s2GetPolygon(SEXP ptrsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2ReleasePolygons(ptrs));
+    rcpp_result_gen = Rcpp::wrap(s2GetPolygon(ptrs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2IsValid
+LogicalVector s2IsValid(List ptrs);
+RcppExport SEXP _libs2_s2IsValid(SEXP ptrsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2IsValid(ptrs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -64,9 +75,10 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2BuildPolygonsLayer", (DL_FUNC) &_libs2_s2BuildPolygonsLayer, 2},
-    {"_libs2_s2MakePolygon", (DL_FUNC) &_libs2_s2MakePolygon, 2},
     {"_libs2_s2Intersects", (DL_FUNC) &_libs2_s2Intersects, 2},
-    {"_libs2_s2ReleasePolygons", (DL_FUNC) &_libs2_s2ReleasePolygons, 1},
+    {"_libs2_s2MakePolygon", (DL_FUNC) &_libs2_s2MakePolygon, 2},
+    {"_libs2_s2GetPolygon", (DL_FUNC) &_libs2_s2GetPolygon, 1},
+    {"_libs2_s2IsValid", (DL_FUNC) &_libs2_s2IsValid, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };

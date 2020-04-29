@@ -10,6 +10,15 @@ s2BuildPolygonsLayer <- function(ptrs, b_ptr) {
     .Call(`_libs2_s2BuildPolygonsLayer`, ptrs, b_ptr)
 }
 
+#' Return indices of intersecting S2Polygons
+#' 
+#' @param x list with S2Polygons pointers
+#' @param y list with S2Polygons pointers
+#' @export
+s2Intersects <- function(x, y) {
+    .Call(`_libs2_s2Intersects`, x, y)
+}
+
 #' convert R list of coordinate matrices (lon,lat) into S2Polygon ptr 
 #' 
 #' @param mat two-column matrix with longitude in first, latitude in second column
@@ -22,20 +31,14 @@ s2MakePolygon <- function(mat, oriented = FALSE) {
     .Call(`_libs2_s2MakePolygon`, mat, oriented)
 }
 
-#' Return indices of intersecting S2Polygons
-#' 
-#' @param x list with S2Polygons pointers
-#' @param y list with S2Polygons pointers
 #' @export
-s2Intersects <- function(x, y) {
-    .Call(`_libs2_s2Intersects`, x, y)
+s2GetPolygon <- function(ptrs) {
+    .Call(`_libs2_s2GetPolygon`, ptrs)
 }
 
 #' @export
-#' @param ptrs list with S2Polygon pointers
-#' @name s2makepolygons
-s2ReleasePolygons <- function(ptrs) {
-    .Call(`_libs2_s2ReleasePolygons`, ptrs)
+s2IsValid <- function(ptrs) {
+    .Call(`_libs2_s2IsValid`, ptrs)
 }
 
 libs2_cpp_test_indexing <- function() {
