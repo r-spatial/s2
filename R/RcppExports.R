@@ -32,11 +32,13 @@ s2MakePolygon <- function(mat, oriented = FALSE) {
 }
 
 #' @export
+#' @name s2makepolygons
 s2GetPolygon <- function(ptrs) {
     .Call(`_libs2_s2GetPolygon`, ptrs)
 }
 
 #' @export
+#' @name s2makepolygons
 s2IsValid <- function(ptrs) {
     .Call(`_libs2_s2IsValid`, ptrs)
 }

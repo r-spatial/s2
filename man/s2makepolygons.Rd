@@ -3,12 +3,15 @@
 \name{s2makepolygons}
 \alias{s2makepolygons}
 \alias{s2MakePolygon}
-\alias{s2ReleasePolygons}
+\alias{s2GetPolygon}
+\alias{s2IsValid}
 \title{convert R list of coordinate matrices (lon,lat) into S2Polygon ptr}
 \usage{
 s2MakePolygon(mat, oriented = FALSE)
 
-s2ReleasePolygons(ptrs)
+s2GetPolygon(ptrs)
+
+s2IsValid(ptrs)
 }
 \arguments{
 \item{mat}{two-column matrix with longitude in first, latitude in second column}
@@ -16,8 +19,6 @@ s2ReleasePolygons(ptrs)
 \item{oriented}{logical; if TRUE, rings are guaranteed to be oriented (e.g. read
 by \code{read_sf} using \code{check_ring_dir=TRUE}), meaning CCW exterior rings
 and CW holes; if FALSE, rings are normalized and holes are deduced from degree of nesting.}
-
-\item{ptrs}{list with S2Polygon pointers}
 }
 \description{
 convert R list of coordinate matrices (lon,lat) into S2Polygon ptr

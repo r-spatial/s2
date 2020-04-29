@@ -173,6 +173,7 @@ List getPolygon(S2Polygon *p) {
 }
 
 //' @export
+//' @name s2makepolygons
 //[[Rcpp::export]]
 List s2GetPolygon(List ptrs) {
 	List ret(ptrs.size());
@@ -184,6 +185,7 @@ List s2GetPolygon(List ptrs) {
 }
 
 //' @export
+//' @name s2makepolygons
 //[[Rcpp::export]]
 LogicalVector s2IsValid(List ptrs) {
 	LogicalVector ret(ptrs.size());
