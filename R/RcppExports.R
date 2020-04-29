@@ -33,6 +33,7 @@ s2MakePolygon <- function(mat, oriented = FALSE) {
 
 #' @export
 #' @name s2makepolygons
+#' @param ptrs R list with external references (pointers) to S2Polygon objects
 s2GetPolygon <- function(ptrs) {
     .Call(`_libs2_s2GetPolygon`, ptrs)
 }

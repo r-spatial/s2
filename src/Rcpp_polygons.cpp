@@ -174,6 +174,7 @@ List getPolygon(S2Polygon *p) {
 
 //' @export
 //' @name s2makepolygons
+//' @param ptrs R list with external references (pointers) to S2Polygon objects
 //[[Rcpp::export]]
 List s2GetPolygon(List ptrs) {
 	List ret(ptrs.size());
