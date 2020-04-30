@@ -29,6 +29,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2IsValid
+LogicalVector s2IsValid(List ptrs);
+RcppExport SEXP _libs2_s2IsValid(SEXP ptrsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2IsValid(ptrs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2GetArea
+NumericVector s2GetArea(List ptrs);
+RcppExport SEXP _libs2_s2GetArea(SEXP ptrsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2GetArea(ptrs));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2MakePolygon
 SEXP s2MakePolygon(List mat, bool oriented);
 RcppExport SEXP _libs2_s2MakePolygon(SEXP matSEXP, SEXP orientedSEXP) {
@@ -52,17 +74,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2IsValid
-LogicalVector s2IsValid(List ptrs);
-RcppExport SEXP _libs2_s2IsValid(SEXP ptrsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2IsValid(ptrs));
-    return rcpp_result_gen;
-END_RCPP
-}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -76,9 +87,10 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2BuildPolygonsLayer", (DL_FUNC) &_libs2_s2BuildPolygonsLayer, 2},
     {"_libs2_s2Intersects", (DL_FUNC) &_libs2_s2Intersects, 2},
+    {"_libs2_s2IsValid", (DL_FUNC) &_libs2_s2IsValid, 1},
+    {"_libs2_s2GetArea", (DL_FUNC) &_libs2_s2GetArea, 1},
     {"_libs2_s2MakePolygon", (DL_FUNC) &_libs2_s2MakePolygon, 2},
     {"_libs2_s2GetPolygon", (DL_FUNC) &_libs2_s2GetPolygon, 1},
-    {"_libs2_s2IsValid", (DL_FUNC) &_libs2_s2IsValid, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };

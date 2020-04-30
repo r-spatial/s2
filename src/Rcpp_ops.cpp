@@ -29,3 +29,29 @@ List s2Intersects(List x, List y) {
 	}
 	return x;
 }
+
+//' @export
+//' @name s2makepolygons
+//[[Rcpp::export]]
+LogicalVector s2IsValid(List ptrs) {
+	LogicalVector ret(ptrs.size());
+	for (int i = 0; i < ptrs.size(); i++) {
+		SEXP s = ptrs[i];
+		S2Polygon *p = (S2Polygon *) R_ExternalPtrAddr(s);
+		ret[i] = p->IsValid();
+	}
+	return ret;
+}
+
+//' @export
+//' @name s2makepolygons
+//[[Rcpp::export]]
+NumericVector s2GetArea(List ptrs) {
+	NumericVector ret(ptrs.size());
+	for (int i = 0; i < ptrs.size(); i++) {
+		SEXP s = ptrs[i];
+		S2Polygon *p = (S2Polygon *) R_ExternalPtrAddr(s);
+		ret[i] = p->GetArea();
+	}
+	return ret;
+}

@@ -19,6 +19,18 @@ s2Intersects <- function(x, y) {
     .Call(`_libs2_s2Intersects`, x, y)
 }
 
+#' @export
+#' @name s2makepolygons
+s2IsValid <- function(ptrs) {
+    .Call(`_libs2_s2IsValid`, ptrs)
+}
+
+#' @export
+#' @name s2makepolygons
+s2GetArea <- function(ptrs) {
+    .Call(`_libs2_s2GetArea`, ptrs)
+}
+
 #' convert R list of coordinate matrices (lon,lat) into S2Polygon ptr 
 #' 
 #' @param mat two-column matrix with longitude in first, latitude in second column
@@ -36,12 +48,6 @@ s2MakePolygon <- function(mat, oriented = FALSE) {
 #' @param ptrs R list with external references (pointers) to S2Polygon objects
 s2GetPolygon <- function(ptrs) {
     .Call(`_libs2_s2GetPolygon`, ptrs)
-}
-
-#' @export
-#' @name s2makepolygons
-s2IsValid <- function(ptrs) {
-    .Call(`_libs2_s2IsValid`, ptrs)
 }
 
 libs2_cpp_test_indexing <- function() {

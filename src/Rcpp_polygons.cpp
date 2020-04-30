@@ -107,7 +107,6 @@ List getPolygon(S2Polygon *p) {
 	for (int i = 0; i < l.size(); i++) {
 		l[i] = LoopToMatrix(p->loop(i));
 		idx[i] = p->GetParent(i);
-		Rprintf("parent: %d", idx[i]);
 	}
 	if (l.size() == 0)
 		return l; // empty
@@ -181,19 +180,6 @@ List s2GetPolygon(List ptrs) {
 	for (int i = 0; i < ptrs.size(); i++) {
 		SEXP s = ptrs[i];
 		ret(i) = getPolygon((S2Polygon *) R_ExternalPtrAddr(s));
-	}
-	return ret;
-}
-
-//' @export
-//' @name s2makepolygons
-//[[Rcpp::export]]
-LogicalVector s2IsValid(List ptrs) {
-	LogicalVector ret(ptrs.size());
-	for (int i = 0; i < ptrs.size(); i++) {
-		SEXP s = ptrs[i];
-		S2Polygon *p = (S2Polygon *) R_ExternalPtrAddr(s);
-		ret[i] = p->IsValid();
 	}
 	return ret;
 }
