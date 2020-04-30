@@ -9,14 +9,18 @@
 \usage{
 s2Intersects(x, y, polygons = TRUE)
 
-s2IsValid(ptrs, polygon = TRUE)
+s2IsValid(ptrs, polygons = TRUE)
 
 s2GetArea(ptrs)
 }
 \arguments{
-\item{x}{list with S2Polygons pointers}
+\item{x}{list with S2Polygons or S2Polyline pointers}
 
-\item{y}{list with S2Polygons pointers}
+\item{y}{list with S2Polygons or S2Polyline pointers}
+
+\item{polygons}{logical; if TRUE, x and y are S2Polygon, otherwise S2Polyline}
+
+\item{ptrs}{list of S2Polygon or S2Polyline pointers}
 }
 \description{
 Geometry operators for s2 geometries

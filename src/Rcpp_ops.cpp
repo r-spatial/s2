@@ -5,8 +5,9 @@ using namespace Rcpp;
 
 //' Geometry operators for s2 geometries
 //' 
-//' @param x list with S2Polygons pointers
-//' @param y list with S2Polygons pointers
+//' @param x list with S2Polygons or S2Polyline pointers
+//' @param y list with S2Polygons or S2Polyline pointers
+//' @param polygons logical; if TRUE, x and y are S2Polygon, otherwise S2Polyline
 //' @name s2ops
 //' @export
 //[[Rcpp::export]]
@@ -53,12 +54,13 @@ List s2Intersects(List x, List y, bool polygons = true) {
 
 //' @export
 //' @name s2ops
+//' @param ptrs list of S2Polygon or S2Polyline pointers
 //[[Rcpp::export]]
-LogicalVector s2IsValid(List ptrs, bool polygon = true) {
+LogicalVector s2IsValid(List ptrs, bool polygons = true) {
 	LogicalVector ret(ptrs.size());
 	for (int i = 0; i < ptrs.size(); i++) {
 		SEXP s = ptrs[i];
-		if (polygon) {
+		if (polygons) {
 			S2Polygon *p = (S2Polygon *) R_ExternalPtrAddr(s);
 			ret[i] = p->IsValid();
 		} else {

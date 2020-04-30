@@ -3,12 +3,17 @@
 \name{s2makepoint}
 \alias{s2makepoint}
 \alias{s2MakePoint}
+\alias{s2GetPoint}
 \title{convert R vector with coordinates (lon,lat) into S2Point ptr}
 \usage{
 s2MakePoint(pt)
+
+s2GetPoint(ptrs)
 }
 \arguments{
 \item{pt}{numeric; length 2, longitude latitude}
+
+\item{ptrs}{R list with external references (pointers) to S2Point objects}
 }
 \description{
 convert R vector with coordinates (lon,lat) into S2Point ptr

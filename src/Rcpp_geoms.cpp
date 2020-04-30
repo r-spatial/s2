@@ -83,7 +83,7 @@ NumericVector getPoint(S2Point *p) {
 }
 
 //' @export
-//' @name s2makepoints
+//' @name s2makepoint
 //' @param ptrs R list with external references (pointers) to S2Point objects
 //[[Rcpp::export]]
 List s2GetPoint(List ptrs) {

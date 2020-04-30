@@ -20,7 +20,7 @@ s2MakePoint <- function(pt) {
 }
 
 #' @export
-#' @name s2makepoints
+#' @name s2makepoint
 #' @param ptrs R list with external references (pointers) to S2Point objects
 s2GetPoint <- function(ptrs) {
     .Call(`_libs2_s2GetPoint`, ptrs)
@@ -63,8 +63,9 @@ s2GetPolygon <- function(ptrs) {
 
 #' Geometry operators for s2 geometries
 #' 
-#' @param x list with S2Polygons pointers
-#' @param y list with S2Polygons pointers
+#' @param x list with S2Polygons or S2Polyline pointers
+#' @param y list with S2Polygons or S2Polyline pointers
+#' @param polygons logical; if TRUE, x and y are S2Polygon, otherwise S2Polyline
 #' @name s2ops
 #' @export
 s2Intersects <- function(x, y, polygons = TRUE) {
@@ -73,8 +74,9 @@ s2Intersects <- function(x, y, polygons = TRUE) {
 
 #' @export
 #' @name s2ops
-s2IsValid <- function(ptrs, polygon = TRUE) {
-    .Call(`_libs2_s2IsValid`, ptrs, polygon)
+#' @param ptrs list of S2Polygon or S2Polyline pointers
+s2IsValid <- function(ptrs, polygons = TRUE) {
+    .Call(`_libs2_s2IsValid`, ptrs, polygons)
 }
 
 #' @export

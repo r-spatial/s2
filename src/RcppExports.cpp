@@ -98,14 +98,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // s2IsValid
-LogicalVector s2IsValid(List ptrs, bool polygon);
-RcppExport SEXP _libs2_s2IsValid(SEXP ptrsSEXP, SEXP polygonSEXP) {
+LogicalVector s2IsValid(List ptrs, bool polygons);
+RcppExport SEXP _libs2_s2IsValid(SEXP ptrsSEXP, SEXP polygonsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    Rcpp::traits::input_parameter< bool >::type polygon(polygonSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2IsValid(ptrs, polygon));
+    Rcpp::traits::input_parameter< bool >::type polygons(polygonsSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2IsValid(ptrs, polygons));
     return rcpp_result_gen;
 END_RCPP
 }
