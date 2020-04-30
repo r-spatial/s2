@@ -2,9 +2,13 @@
 
 export(s2BuildPolygonsLayer)
 export(s2GetArea)
+export(s2GetPoint)
 export(s2GetPolygon)
+export(s2GetPolyline)
 export(s2Intersects)
 export(s2IsValid)
+export(s2MakePoint)
 export(s2MakePolygon)
+export(s2MakePolyline)
 importFrom(Rcpp,sourceCpp)
 useDynLib(libs2, .registration = TRUE)

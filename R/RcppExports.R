@@ -10,25 +10,36 @@ s2BuildPolygonsLayer <- function(ptrs, b_ptr) {
     .Call(`_libs2_s2BuildPolygonsLayer`, ptrs, b_ptr)
 }
 
-#' Return indices of intersecting S2Polygons
+#' convert R vector with coordinates (lon,lat) into S2Point ptr 
 #' 
-#' @param x list with S2Polygons pointers
-#' @param y list with S2Polygons pointers
+#' @param pt numeric; length 2, longitude latitude
+#' @name s2makepoint
 #' @export
-s2Intersects <- function(x, y) {
-    .Call(`_libs2_s2Intersects`, x, y)
+s2MakePoint <- function(pt) {
+    .Call(`_libs2_s2MakePoint`, pt)
 }
 
 #' @export
-#' @name s2makepolygons
-s2IsValid <- function(ptrs) {
-    .Call(`_libs2_s2IsValid`, ptrs)
+#' @name s2makepoints
+#' @param ptrs R list with external references (pointers) to S2Point objects
+s2GetPoint <- function(ptrs) {
+    .Call(`_libs2_s2GetPoint`, ptrs)
+}
+
+#' convert R matrix with coordinates (lon,lat) into S2Polyline ptr 
+#' 
+#' @param pts 2-column numeric matrix with lng,lat line vertices
+#' @name s2makepolyline
+#' @export
+s2MakePolyline <- function(pts) {
+    .Call(`_libs2_s2MakePolyline`, pts)
 }
 
 #' @export
-#' @name s2makepolygons
-s2GetArea <- function(ptrs) {
-    .Call(`_libs2_s2GetArea`, ptrs)
+#' @name s2makepolyline
+#' @param ptrs R list with external references (pointers) to S2Polyline objects
+s2GetPolyline <- function(ptrs) {
+    .Call(`_libs2_s2GetPolyline`, ptrs)
 }
 
 #' convert R list of coordinate matrices (lon,lat) into S2Polygon ptr 
@@ -48,6 +59,28 @@ s2MakePolygon <- function(mat, oriented = FALSE) {
 #' @param ptrs R list with external references (pointers) to S2Polygon objects
 s2GetPolygon <- function(ptrs) {
     .Call(`_libs2_s2GetPolygon`, ptrs)
+}
+
+#' Geometry operators for s2 geometries
+#' 
+#' @param x list with S2Polygons pointers
+#' @param y list with S2Polygons pointers
+#' @name s2ops
+#' @export
+s2Intersects <- function(x, y, polygons = TRUE) {
+    .Call(`_libs2_s2Intersects`, x, y, polygons)
+}
+
+#' @export
+#' @name s2ops
+s2IsValid <- function(ptrs, polygon = TRUE) {
+    .Call(`_libs2_s2IsValid`, ptrs, polygon)
+}
+
+#' @export
+#' @name s2ops
+s2GetArea <- function(ptrs) {
+    .Call(`_libs2_s2GetArea`, ptrs)
 }
 
 libs2_cpp_test_indexing <- function() {

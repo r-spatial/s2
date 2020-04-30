@@ -24,9 +24,9 @@ std::vector<S2LatLng> S2LatLngVecFromR(NumericMatrix mat, int omit_last = 1) {
 // Convert R long-lat matrix into S2Point vector
 std::vector<S2Point> S2PointVecFromR(NumericMatrix mat, int omit_last = 1) {
   if(mat.ncol() != 2)
-    stop("Can't interpret input as lat,lng - must be a two column matrix.");
-  NumericVector lat = mat( _, 1); // long first, then lat
+    stop("Can't interpret input as lng,lat - must be a two column matrix.");
   NumericVector lng = mat( _, 0);
+  NumericVector lat = mat( _, 1); // long first, then lat
   const int n = lat.size();
   std::vector<S2Point> rslt(n - omit_last);
   for(int i = 0; i < n - omit_last; i++) {
@@ -48,6 +48,105 @@ NumericMatrix S2LatLngVecToR(std::vector<S2LatLng> points){
 }
 */
 
+
+//
+// 1. Point (POINT):
+//
+void release_point(SEXP p) {
+	S2Point *point = (S2Point *) R_ExternalPtrAddr(p);
+	delete point;
+	return;
+}
+
+//' convert R vector with coordinates (lon,lat) into S2Point ptr 
+//' 
+//' @param pt numeric; length 2, longitude latitude
+//' @name s2makepoint
+//' @export
+//[[Rcpp::export]]
+SEXP s2MakePoint(NumericVector pt) {
+	if(pt.size() != 2)
+		stop("Can't interpret input as lng,lat - must be a size two vector.");
+  	S2Point *pp = new S2Point;
+	*pp = S2LatLng::FromDegrees(pt[1], pt[0]).ToPoint();
+	SEXP p = R_MakeExternalPtr((void *) pp, R_NilValue, R_NilValue);
+	R_RegisterCFinalizerEx(p, release_point, TRUE);
+	return p;
+}
+
+NumericVector getPoint(S2Point *p) {
+	NumericVector v(2);
+	S2LatLng ll(*p);
+	v(0) = ll.lng().degrees();
+	v(1) = ll.lat().degrees();
+	return v;
+}
+
+//' @export
+//' @name s2makepoints
+//' @param ptrs R list with external references (pointers) to S2Point objects
+//[[Rcpp::export]]
+List s2GetPoint(List ptrs) {
+	List ret(ptrs.size());
+	for (int i = 0; i < ptrs.size(); i++) {
+		SEXP s = ptrs[i];
+		ret(i) = getPoint((S2Point *) R_ExternalPtrAddr(s));
+	}
+	return ret;
+}
+
+//
+// 2. Polyline (LINESTRING)
+//
+void release_polyline(SEXP p) {
+	S2Polyline *polyline = (S2Polyline *) R_ExternalPtrAddr(p);
+	delete polyline;
+	return;
+}
+
+//' convert R matrix with coordinates (lon,lat) into S2Polyline ptr 
+//' 
+//' @param pts 2-column numeric matrix with lng,lat line vertices
+//' @name s2makepolyline
+//' @export
+//[[Rcpp::export]]
+SEXP s2MakePolyline(NumericMatrix pts) {
+	if(pts.ncol() != 2)
+		stop("Can't interpret input as lng,lat - must be a size two vector.");
+	
+  	S2Polyline *pl = new S2Polyline;
+	pl->Init(S2PointVecFromR(pts, 0)); 
+	SEXP p = R_MakeExternalPtr((void *) pl, R_NilValue, R_NilValue);
+	R_RegisterCFinalizerEx(p, release_polyline, TRUE);
+	return p;
+}
+
+NumericMatrix getPolyline(S2Polyline *pl) {
+	NumericMatrix m(pl->num_vertices(), 2);
+	for (int i = 0; i < pl->num_vertices(); i++) {
+		S2LatLng ll(pl->vertex(i));
+		m(i, 0) = ll.lng().degrees();
+		m(i, 1) = ll.lat().degrees();
+	}
+	return m;
+}
+
+//' @export
+//' @name s2makepolyline
+//' @param ptrs R list with external references (pointers) to S2Polyline objects
+//[[Rcpp::export]]
+List s2GetPolyline(List ptrs) {
+	List ret(ptrs.size());
+	for (int i = 0; i < ptrs.size(); i++) {
+		SEXP s = ptrs[i];
+		ret(i) = getPolyline((S2Polyline *) R_ExternalPtrAddr(s));
+	}
+	return ret;
+}
+
+//
+// 3. Polygon (MULTIPOLYGON)
+//
 void release_polygon(SEXP p) {
 	S2Polygon *pol = (S2Polygon *) R_ExternalPtrAddr(p);
 	delete pol;
@@ -83,6 +182,7 @@ SEXP s2MakePolygon(List mat, bool oriented = false) {
 	R_RegisterCFinalizerEx(p, release_polygon, TRUE);
 	return p;
 }
+
 
 NumericMatrix LoopToMatrix(S2Loop *lp, bool close = true) { // return long/lat
 	int n = lp->num_vertices();
