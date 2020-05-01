@@ -89,6 +89,10 @@ s2latlng_from_numeric <- function(lat, lng) {
     .Call(`_libs2_s2latlng_from_numeric`, lat, lng)
 }
 
+s2latlng_from_s2point <- function(s2point) {
+    .Call(`_libs2_s2latlng_from_s2point`, s2point)
+}
+
 data_frame_from_s2latlng <- function(xptr) {
     .Call(`_libs2_data_frame_from_s2latlng`, xptr)
 }

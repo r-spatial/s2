@@ -19,6 +19,12 @@ s2latlng.s2latlng <- function(lat, ...) {
 
 #' @rdname s2latlng
 #' @export
+s2latlng.s2point <- function(lat, ...) {
+  new_s2xptr(s2latlng_from_s2point(lat), "s2latlng")
+}
+
+#' @rdname s2latlng
+#' @export
 s2latlng.numeric <- function(lat, lng, ...) {
   recycled <- recycle_common(lat = lat, lng = lng)
   new_s2xptr(s2latlng_from_numeric(recycled$lat, recycled$lng), "s2latlng")

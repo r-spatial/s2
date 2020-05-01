@@ -132,6 +132,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2latlng_from_s2point
+List s2latlng_from_s2point(List s2point);
+RcppExport SEXP _libs2_s2latlng_from_s2point(SEXP s2pointSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2point(s2pointSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2latlng_from_s2point(s2point));
+    return rcpp_result_gen;
+END_RCPP
+}
 // data_frame_from_s2latlng
 List data_frame_from_s2latlng(List xptr);
 RcppExport SEXP _libs2_data_frame_from_s2latlng(SEXP xptrSEXP) {
@@ -200,6 +211,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2IsValid", (DL_FUNC) &_libs2_s2IsValid, 2},
     {"_libs2_s2GetArea", (DL_FUNC) &_libs2_s2GetArea, 1},
     {"_libs2_s2latlng_from_numeric", (DL_FUNC) &_libs2_s2latlng_from_numeric, 2},
+    {"_libs2_s2latlng_from_s2point", (DL_FUNC) &_libs2_s2latlng_from_s2point, 1},
     {"_libs2_data_frame_from_s2latlng", (DL_FUNC) &_libs2_data_frame_from_s2latlng, 1},
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},

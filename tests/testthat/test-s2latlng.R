@@ -6,6 +6,10 @@ test_that("s2latlng objects can be created from and converted back to R objects"
   expect_is(s2latlng(matrix(45, 64, ncol = 2)), "s2latlng")
   latlng <- s2latlng(45, 64)
   expect_identical(s2latlng(latlng), latlng)
+  expect_identical(
+    as.data.frame(s2latlng(s2point(1, 0, 0))),
+    as.data.frame(s2latlng(0, 0))
+  )
 
   # out
   expect_identical(as.data.frame(s2latlng(45, 64)), data.frame(lat = 45, lng = 64))

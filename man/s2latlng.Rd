@@ -3,6 +3,7 @@
 \name{s2latlng}
 \alias{s2latlng}
 \alias{s2latlng.s2latlng}
+\alias{s2latlng.s2point}
 \alias{s2latlng.numeric}
 \alias{s2latlng.matrix}
 \alias{as.data.frame.s2latlng}
@@ -12,6 +13,8 @@
 s2latlng(lat, ...)
 
 \method{s2latlng}{s2latlng}(lat, ...)
+
+\method{s2latlng}{s2point}(lat, ...)
 
 \method{s2latlng}{numeric}(lat, lng, ...)
 
