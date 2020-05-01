@@ -85,6 +85,14 @@ s2GetArea <- function(ptrs) {
     .Call(`_libs2_s2GetArea`, ptrs)
 }
 
+s2latlng_from_numeric <- function(lat, lng) {
+    .Call(`_libs2_s2latlng_from_numeric`, lat, lng)
+}
+
+data_frame_from_s2latlng <- function(xptr) {
+    .Call(`_libs2_data_frame_from_s2latlng`, xptr)
+}
+
 libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }

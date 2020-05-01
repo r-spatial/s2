@@ -120,6 +120,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2latlng_from_numeric
+List s2latlng_from_numeric(NumericVector lat, NumericVector lng);
+RcppExport SEXP _libs2_s2latlng_from_numeric(SEXP latSEXP, SEXP lngSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lng(lngSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2latlng_from_numeric(lat, lng));
+    return rcpp_result_gen;
+END_RCPP
+}
+// data_frame_from_s2latlng
+List data_frame_from_s2latlng(List xptr);
+RcppExport SEXP _libs2_data_frame_from_s2latlng(SEXP xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type xptr(xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2latlng(xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -141,6 +164,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2Intersects", (DL_FUNC) &_libs2_s2Intersects, 3},
     {"_libs2_s2IsValid", (DL_FUNC) &_libs2_s2IsValid, 2},
     {"_libs2_s2GetArea", (DL_FUNC) &_libs2_s2GetArea, 1},
+    {"_libs2_s2latlng_from_numeric", (DL_FUNC) &_libs2_s2latlng_from_numeric, 2},
+    {"_libs2_data_frame_from_s2latlng", (DL_FUNC) &_libs2_data_frame_from_s2latlng, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };
