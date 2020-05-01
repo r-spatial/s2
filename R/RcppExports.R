@@ -109,6 +109,10 @@ data_frame_from_s2point <- function(s2point) {
     .Call(`_libs2_data_frame_from_s2point`, s2point)
 }
 
+s2xptr_test <- function(size) {
+    .Call(`_libs2_s2xptr_test`, size)
+}
+
 libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }

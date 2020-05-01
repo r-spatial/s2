@@ -189,6 +189,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2xptr_test
+List s2xptr_test(R_xlen_t size);
+RcppExport SEXP _libs2_s2xptr_test(SEXP sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< R_xlen_t >::type size(sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2xptr_test(size));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -216,6 +227,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
+    {"_libs2_s2xptr_test", (DL_FUNC) &_libs2_s2xptr_test, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };

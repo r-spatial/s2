@@ -6,6 +6,12 @@ test_that("s2xptr class works", {
   expect_error(new_s2xptr(NULL), "must be a bare list")
 })
 
+test_that("objects pointed to by an s2xptr are destroyed by the garbage collector", {
+  xptr <- expect_output(s2xptr_test(1), "Allocating")
+  expect_identical(validate_s2xptr(xptr), xptr)
+  expect_output({rm(xptr); gc()}, "Destroying")
+})
+
 test_that("s2xptr validation works", {
   expect_identical(validate_s2xptr(new_s2xptr(list())), new_s2xptr(list()))
   expect_identical(validate_s2xptr(new_s2xptr(list(NULL))), new_s2xptr(list(NULL)))
