@@ -28,6 +28,7 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
       }
 
       loops[i] = std::unique_ptr<S2Loop>(new S2Loop());
+      loops[i]->set_s2debug_override(S2Debug::DISABLE);
       loops[i]->Init(points);
 
       // Not sure if && is short-circuiting in C++...
