@@ -1,16 +1,22 @@
 
 test_that("s2latlng objects can be created from and converted back to R objects", {
+  # in
   expect_is(s2latlng(45, 64), "s2latlng")
   expect_length(s2latlng(45, 64), 1)
   expect_is(s2latlng(matrix(45, 64, ncol = 2)), "s2latlng")
-  expect_identical(as.data.frame(s2latlng(45, 64)), data.frame(lat = 45, lng = 64))
-  expect_identical(
-    data.frame(lat = 45, lng = 64),
-    as.data.frame(s2latlng(s2latlng(45, 64)))
-  )
+  latlng <- s2latlng(45, 64)
+  expect_identical(s2latlng(latlng), latlng)
 
-  # zero-length
+  # out
+  expect_identical(as.data.frame(s2latlng(45, 64)), data.frame(lat = 45, lng = 64))
+  expect_identical(as.matrix(s2latlng(45, 64)), as.matrix(data.frame(lat = 45, lng = 64)))
+
+  # zero-length in and out
   expect_length(s2latlng(double(), double()), 0)
+  expect_identical(
+    as.data.frame(s2latlng(double(), double())),
+    data.frame(lat = double(), lng = double())
+  )
 })
 
 test_that("s2latlng objects can be printed", {

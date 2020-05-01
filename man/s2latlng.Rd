@@ -6,6 +6,7 @@
 \alias{s2latlng.numeric}
 \alias{s2latlng.matrix}
 \alias{as.data.frame.s2latlng}
+\alias{as.matrix.s2latlng}
 \title{Create an s2latlng vector}
 \usage{
 s2latlng(lat, ...)
@@ -17,6 +18,8 @@ s2latlng(lat, ...)
 \method{s2latlng}{matrix}(lat, ...)
 
 \method{as.data.frame}{s2latlng}(x, ...)
+
+\method{as.matrix}{s2latlng}(x, ...)
 }
 \arguments{
 \item{lat, lng}{Vectors of latitude and longitude values in degrees.}

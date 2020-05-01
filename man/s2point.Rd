@@ -6,6 +6,7 @@
 \alias{s2point.numeric}
 \alias{s2point.matrix}
 \alias{as.data.frame.s2point}
+\alias{as.matrix.s2point}
 \title{Create an s2point vector}
 \usage{
 s2point(x, ...)
@@ -17,6 +18,8 @@ s2point(x, ...)
 \method{s2point}{matrix}(x, ...)
 
 \method{as.data.frame}{s2point}(x, ...)
+
+\method{as.matrix}{s2point}(x, ...)
 }
 \arguments{
 \item{...}{Unused}

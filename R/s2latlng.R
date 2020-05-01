@@ -36,6 +36,12 @@ as.data.frame.s2latlng <- function(x, ...) {
   as.data.frame(data_frame_from_s2latlng(x))
 }
 
+#' @rdname s2latlng
+#' @export
+as.matrix.s2latlng <- function(x, ...) {
+  as.matrix(as.data.frame(data_frame_from_s2latlng(x)))
+}
+
 #' @export
 format.s2latlng <- function(x, ...) {
   df <- as.data.frame(x)
