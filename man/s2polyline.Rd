@@ -39,7 +39,7 @@ S2 polylines represent a collection of vertices composed of
 \code{\link[=s2latlng]{s2latlng()}} objects.
 }
 \examples{
-# construct and export a polyline using s2latlng()
+# construct and export a single polyline using s2latlng()
 (polyline <- s2polyline(s2latlng(45:50, -64)))
 s2latlng(polyline)
 

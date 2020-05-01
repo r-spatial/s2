@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' # construct and export a polyline using s2latlng()
+#' # construct and export a single polyline using s2latlng()
 #' (polyline <- s2polyline(s2latlng(45:50, -64)))
 #' s2latlng(polyline)
 #'
