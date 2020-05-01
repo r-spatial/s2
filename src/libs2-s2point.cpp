@@ -1,5 +1,6 @@
 
 #include "s2/s2point.h"
+#include "s2/s2latlng.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -7,7 +8,6 @@ using namespace Rcpp;
 List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z) {
   List output(x.size());
 
-  S2Point item;
   for (R_xlen_t i = 0; i < x.size(); i++) {
     output[i] = XPtr<S2Point>(new S2Point(x[i], y[i], z[i]));
   }
@@ -16,14 +16,34 @@ List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z) {
 }
 
 // [[Rcpp::export]]
-List data_frame_from_s2point(List xptr) {
-  NumericVector x(xptr.size());
-  NumericVector y(xptr.size());
-  NumericVector z(xptr.size());
+List s2point_from_s2latlng(List s2latlng) {
+  List output(s2latlng.size());
 
   SEXP item;
-  for (R_xlen_t i = 0; i < xptr.size(); i++) {
-    item = xptr[i];
+  S2Point newItem;
+  for (R_xlen_t i = 0; i < s2latlng.size(); i++) {
+    item = s2latlng[i];
+    if (item == R_NilValue) {
+      output[i] = R_NilValue;
+    } else {
+      XPtr<S2LatLng> ptr(item);
+      newItem = ptr->ToPoint();
+      output[i] = XPtr<S2Point>(new S2Point(newItem));
+    }
+  }
+
+  return output;
+}
+
+// [[Rcpp::export]]
+List data_frame_from_s2point(List s2point) {
+  NumericVector x(s2point.size());
+  NumericVector y(s2point.size());
+  NumericVector z(s2point.size());
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < s2point.size(); i++) {
+    item = s2point[i];
     if (item == R_NilValue) {
       x[i] = NA_REAL;
       y[i] = NA_REAL;

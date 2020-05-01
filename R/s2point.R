@@ -22,6 +22,12 @@ s2point.s2point <- function(x, ...) {
 
 #' @rdname s2point
 #' @export
+s2point.s2latlng <- function(x, ...) {
+  new_s2xptr(s2point_from_s2latlng(x), "s2point")
+}
+
+#' @rdname s2point
+#' @export
 s2point.numeric <- function(x, y, z, ...) {
   recycled <- recycle_common(x, y, z)
   new_s2xptr(s2point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2point")

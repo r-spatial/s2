@@ -97,8 +97,12 @@ s2point_from_numeric <- function(x, y, z) {
     .Call(`_libs2_s2point_from_numeric`, x, y, z)
 }
 
-data_frame_from_s2point <- function(xptr) {
-    .Call(`_libs2_data_frame_from_s2point`, xptr)
+s2point_from_s2latlng <- function(s2latlng) {
+    .Call(`_libs2_s2point_from_s2latlng`, s2latlng)
+}
+
+data_frame_from_s2point <- function(s2point) {
+    .Call(`_libs2_data_frame_from_s2point`, s2point)
 }
 
 libs2_cpp_test_indexing <- function() {

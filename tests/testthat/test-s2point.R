@@ -6,6 +6,10 @@ test_that("s2point objects can be created from and converted back to R objects",
   expect_is(s2point(matrix(1, 2, 3, ncol = 3)), "s2point")
   point <- s2point(1, 2, 3)
   expect_identical(s2point(point), point)
+  expect_identical(
+    as.data.frame(s2point(s2latlng(0, 0))),
+    as.data.frame(s2point(1, 0, 0))
+  )
 
   # out
   expect_identical(as.data.frame(s2point(1, 2, 3)), data.frame(x = 1, y = 2, z = 3))
