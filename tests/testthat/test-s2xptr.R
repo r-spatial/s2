@@ -25,6 +25,7 @@ test_that("s2xptr subsetting and concatenation work", {
   expect_identical(xptr[[1]], xptr[1])
   expect_identical(c(xptr, xptr), new_s2xptr(list(NULL, NULL, NULL, NULL)))
   expect_identical(rep(xptr, 2), new_s2xptr(list(NULL, NULL, NULL, NULL)))
+  expect_identical(rep_len(xptr, 4), new_s2xptr(list(NULL, NULL, NULL, NULL)))
 })
 
 test_that("s2xptr default print method works", {

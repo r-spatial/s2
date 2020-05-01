@@ -1,5 +1,5 @@
 
-#' Create a s2polyline vector
+#' Create an s2polyline vector
 #'
 #' S2 polylines represent a collection of vertices composed of
 #' [s2latlng()] objects.

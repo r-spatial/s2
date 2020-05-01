@@ -8,7 +8,7 @@
 \alias{s2latlng.s2polyline}
 \alias{as.matrix.s2polyline}
 \alias{as.data.frame.s2polyline}
-\title{Create a s2polyline vector}
+\title{Create an s2polyline vector}
 \usage{
 s2polyline(x, ...)
 

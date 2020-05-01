@@ -109,6 +109,14 @@ data_frame_from_s2point <- function(s2point) {
     .Call(`_libs2_data_frame_from_s2point`, s2point)
 }
 
+s2polygon_from_s2polyline <- function(s2polyline, oriented, check) {
+    .Call(`_libs2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
+}
+
+s2polygon_format <- function(s2polygon, nVertices) {
+    .Call(`_libs2_s2polygon_format`, s2polygon, nVertices)
+}
+
 s2polyline_from_s2latlng <- function(s2latlng) {
     .Call(`_libs2_s2polyline_from_s2latlng`, s2latlng)
 }

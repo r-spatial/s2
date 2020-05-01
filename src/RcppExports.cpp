@@ -189,6 +189,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2polygon_from_s2polyline
+List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check);
+RcppExport SEXP _libs2_s2polygon_from_s2polyline(SEXP s2polylineSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
+    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
+    Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polygon_from_s2polyline(s2polyline, oriented, check));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polygon_format
+CharacterVector s2polygon_format(List s2polygon, int nVertices);
+RcppExport SEXP _libs2_s2polygon_format(SEXP s2polygonSEXP, SEXP nVerticesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
+    Rcpp::traits::input_parameter< int >::type nVertices(nVerticesSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polygon_format(s2polygon, nVertices));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2polyline_from_s2latlng
 List s2polyline_from_s2latlng(List s2latlng);
 RcppExport SEXP _libs2_s2polyline_from_s2latlng(SEXP s2latlngSEXP) {
@@ -271,6 +296,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
+    {"_libs2_s2polygon_from_s2polyline", (DL_FUNC) &_libs2_s2polygon_from_s2polyline, 3},
+    {"_libs2_s2polygon_format", (DL_FUNC) &_libs2_s2polygon_format, 2},
     {"_libs2_s2polyline_from_s2latlng", (DL_FUNC) &_libs2_s2polyline_from_s2latlng, 1},
     {"_libs2_s2polyline_to_s2latlng", (DL_FUNC) &_libs2_s2polyline_to_s2latlng, 1},
     {"_libs2_s2polyline_format", (DL_FUNC) &_libs2_s2polyline_format, 2},

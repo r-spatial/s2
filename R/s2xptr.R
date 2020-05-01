@@ -34,7 +34,7 @@ validate_s2xptr <- function(x) {
 }
 
 # this seems odd, but it makes lapply() along these vectors
-# posssible
+# possible
 #' @export
 `[[.s2xptr` <- function(x, i) {
   x[i]
@@ -49,6 +49,11 @@ validate_s2xptr <- function(x) {
 
 #' @export
 rep.s2xptr <- function(x, ...) {
+  new_s2xptr(NextMethod(), class(x))
+}
+
+#' @export
+rep_len.s2xptr <- function(x, ...) {
   new_s2xptr(NextMethod(), class(x))
 }
 
