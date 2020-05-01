@@ -8,6 +8,7 @@ test_that("s2xptr class works", {
 
 test_that("objects pointed to by an s2xptr are destroyed by the garbage collector", {
   xptr <- expect_output(s2xptr_test(1), "Allocating")
+  expect_output(s2xptr_test_op(xptr), "test\\(\\) on XPtrTest")
   expect_identical(validate_s2xptr(xptr), xptr)
   expect_output({rm(xptr); gc()}, "Destroying")
 })

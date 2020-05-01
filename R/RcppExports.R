@@ -113,6 +113,10 @@ s2xptr_test <- function(size) {
     .Call(`_libs2_s2xptr_test`, size)
 }
 
+s2xptr_test_op <- function(s2xptr_test) {
+    invisible(.Call(`_libs2_s2xptr_test_op`, s2xptr_test))
+}
+
 libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }

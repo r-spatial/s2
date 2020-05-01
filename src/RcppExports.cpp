@@ -200,6 +200,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2xptr_test_op
+void s2xptr_test_op(List s2xptr_test);
+RcppExport SEXP _libs2_s2xptr_test_op(SEXP s2xptr_testSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2xptr_test(s2xptr_testSEXP);
+    s2xptr_test_op(s2xptr_test);
+    return R_NilValue;
+END_RCPP
+}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -228,6 +238,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
     {"_libs2_s2xptr_test", (DL_FUNC) &_libs2_s2xptr_test, 1},
+    {"_libs2_s2xptr_test_op", (DL_FUNC) &_libs2_s2xptr_test_op, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {NULL, NULL, 0}
 };
