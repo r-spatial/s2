@@ -36,3 +36,9 @@ A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2point
 In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
 to a \code{\link[=s2latlng]{s2latlng()}}, which is a position on the Earth's surface.
 }
+\examples{
+latlng <- s2latlng(45, -64) # Halifax, Nova Scotia!
+s2point(latlng)
+as.data.frame(s2point(latlng))
+
+}

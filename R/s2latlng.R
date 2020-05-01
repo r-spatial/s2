@@ -1,11 +1,20 @@
 
 #' Create an s2latlng vector
 #'
+#' This class represents a latitude and longitude on the Earth's surface.
+#' Most calculations in S2 convert this to a [s2point()], which is a
+#' unit vector representation of this value.
+#'
 #' @param lat,lng Vectors of latitude and longitude values in degrees.
+#' @param x A [s2latlng()] vector
 #' @param ... Unused
 #'
 #' @return A [new_s2xptr()] with class s2latlng
 #' @export
+#'
+#' @examples
+#' s2latlng(45, -64) # Halifax, Nova Scotia!
+#' as.data.frame(s2latlng(45, -64))
 #'
 s2latlng <- function(lat, ...) {
   UseMethod("s2latlng")

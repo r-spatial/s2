@@ -21,6 +21,12 @@ test_that("s2latlng objects can be created from and converted back to R objects"
     as.data.frame(s2latlng(double(), double())),
     data.frame(lat = double(), lng = double())
   )
+
+  # NAs and NULLs
+  expect_identical(
+    as.data.frame(s2latlng(double(), double())[NA]),
+    data.frame(lat = NA_real_, lng = NA_real_)
+  )
 })
 
 test_that("s2latlng objects can be printed", {

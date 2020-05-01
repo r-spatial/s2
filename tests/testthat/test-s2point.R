@@ -21,6 +21,11 @@ test_that("s2point objects can be created from and converted back to R objects",
     as.data.frame(s2point(double(), double(), double())),
     data.frame(x = double(), y = double(), z = double())
   )
+
+  expect_identical(
+    as.data.frame(s2point(double(), double(), double())[NA]),
+    data.frame(x = NA_real_, y = NA_real_, z = NA_real_)
+  )
 })
 
 test_that("s2point objects can be printed", {

@@ -28,10 +28,19 @@ s2latlng(lat, ...)
 \item{lat, lng}{Vectors of latitude and longitude values in degrees.}
 
 \item{...}{Unused}
+
+\item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2latlng
 }
 \description{
-Create an s2latlng vector
+This class represents a latitude and longitude on the Earth's surface.
+Most calculations in S2 convert this to a \code{\link[=s2point]{s2point()}}, which is a
+unit vector representation of this value.
+}
+\examples{
+s2latlng(45, -64) # Halifax, Nova Scotia!
+as.data.frame(s2latlng(45, -64))
+
 }

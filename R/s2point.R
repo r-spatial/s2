@@ -10,6 +10,11 @@
 #' @return A [new_s2xptr()] with class s2point
 #' @export
 #'
+#' @examples
+#' latlng <- s2latlng(45, -64) # Halifax, Nova Scotia!
+#' s2point(latlng)
+#' as.data.frame(s2point(latlng))
+#'
 s2point <- function(x, ...) {
   UseMethod("s2point")
 }
