@@ -4,6 +4,7 @@
 \alias{s2polygon}
 \alias{s2polygon.s2polygon}
 \alias{s2polygon.s2polyline}
+\alias{s2polyline.s2polygon}
 \title{Create an s2polygon vector}
 \usage{
 s2polygon(x, ...)
@@ -11,6 +12,8 @@ s2polygon(x, ...)
 \method{s2polygon}{s2polygon}(x, ...)
 
 \method{s2polygon}{s2polyline}(x, ..., oriented = FALSE, check = TRUE)
+
+\method{s2polyline}{s2polygon}(x, ...)
 }
 \arguments{
 \item{x}{An object from which an s2polygon can be created}

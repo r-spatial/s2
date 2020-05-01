@@ -202,6 +202,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2polyline_from_s2polygon
+List s2polyline_from_s2polygon(List s2polygon);
+RcppExport SEXP _libs2_s2polyline_from_s2polygon(SEXP s2polygonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_from_s2polygon(s2polygon));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2polygon_format
 CharacterVector s2polygon_format(List s2polygon, int nVertices);
 RcppExport SEXP _libs2_s2polygon_format(SEXP s2polygonSEXP, SEXP nVerticesSEXP) {
@@ -297,6 +308,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
     {"_libs2_s2polygon_from_s2polyline", (DL_FUNC) &_libs2_s2polygon_from_s2polyline, 3},
+    {"_libs2_s2polyline_from_s2polygon", (DL_FUNC) &_libs2_s2polyline_from_s2polygon, 1},
     {"_libs2_s2polygon_format", (DL_FUNC) &_libs2_s2polygon_format, 2},
     {"_libs2_s2polyline_from_s2latlng", (DL_FUNC) &_libs2_s2polyline_from_s2latlng, 1},
     {"_libs2_s2polyline_to_s2latlng", (DL_FUNC) &_libs2_s2polyline_to_s2latlng, 1},

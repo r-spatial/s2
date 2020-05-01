@@ -50,6 +50,35 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
 }
 
 // [[Rcpp::export]]
+List s2polyline_from_s2polygon(List s2polygon) {
+  if (s2polygon.size() != 1) {
+    stop("Can't convert an s2polygon of length != 1 to s2polyline");
+  }
+
+  SEXP item = s2polygon[0];
+  if (item  == R_NilValue) {
+    stop("Can't convert a missing s2polygon to s2polyline");
+  }
+
+  XPtr<S2Polygon> ptr(item);
+  List output(ptr->num_loops());
+
+  for (R_xlen_t i = 0; i < ptr->num_loops(); i++) {
+    const S2Loop* loop = ptr->loop(i);
+    std::vector<S2LatLng> vertices(loop->num_vertices());
+
+    for (R_xlen_t j = 0; j < loop->num_vertices(); j++) {
+      vertices[j] = S2LatLng(loop->vertex(j));
+    }
+
+    output[i] = XPtr<S2Polyline>(new S2Polyline(vertices));
+  }
+
+  return output;
+}
+
+
+// [[Rcpp::export]]
 CharacterVector s2polygon_format(List s2polygon, int nVertices) {
   CharacterVector output(s2polygon.size());
 

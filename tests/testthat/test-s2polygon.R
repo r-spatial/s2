@@ -13,7 +13,12 @@ test_that("s2polygon objects can be created from and converted back to R objects
 
   # out
   missing_polygon <- new_s2xptr(list(NULL), "s2polygon")
-
+  expect_identical(
+    as.data.frame(s2polyline(s2polygon(polyline_loop))),
+    as.data.frame(polyline_loop)
+  )
+  expect_error(s2polyline(missing_polygon), "Can't convert")
+  expect_error(s2polyline(missing_polygon[0]), "Can't convert")
 
   expect_output(print(s2polygon(polyline_loop)), "s2polygon")
   expect_output(print(missing_polygon), "NULL")

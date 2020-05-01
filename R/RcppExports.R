@@ -113,6 +113,10 @@ s2polygon_from_s2polyline <- function(s2polyline, oriented, check) {
     .Call(`_libs2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
 }
 
+s2polyline_from_s2polygon <- function(s2polygon) {
+    .Call(`_libs2_s2polyline_from_s2polygon`, s2polygon)
+}
+
 s2polygon_format <- function(s2polygon, nVertices) {
     .Call(`_libs2_s2polygon_format`, s2polygon, nVertices)
 }
