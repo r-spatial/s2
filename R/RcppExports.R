@@ -93,6 +93,14 @@ data_frame_from_s2latlng <- function(xptr) {
     .Call(`_libs2_data_frame_from_s2latlng`, xptr)
 }
 
+s2point_from_numeric <- function(x, y, z) {
+    .Call(`_libs2_s2point_from_numeric`, x, y, z)
+}
+
+data_frame_from_s2point <- function(xptr) {
+    .Call(`_libs2_data_frame_from_s2point`, xptr)
+}
+
 libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }
