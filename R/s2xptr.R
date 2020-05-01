@@ -1,8 +1,9 @@
 
-#' Create S2 vectors of XPtr objects
+#' Create vectors of XPtr objects
 #'
 #' @param x A bare `list()` of external pointers
 #' @param class A character vector subclass
+#' @param ... Unused
 #'
 #' @return An object of class s2xptr
 #' @export
@@ -47,11 +48,13 @@ validate_s2xptr <- function(x) {
   xptr
 }
 
+#' @rdname new_s2xptr
 #' @export
 rep.s2xptr <- function(x, ...) {
   new_s2xptr(NextMethod(), class(x))
 }
 
+#' @rdname new_s2xptr
 #' @export
 rep_len.s2xptr <- function(x, ...) {
   new_s2xptr(NextMethod(), class(x))

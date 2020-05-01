@@ -3,9 +3,23 @@
 #'
 #' @inheritParams s2latlng
 #' @param x An object from which an s2polygon can be created
+#' @param oriented If `TRUE`, rings are guaranteed to be oriented (e.g. read
+#'   by [sf::read_sf()] using `check_ring_dir = TRUE`, meaning CCW exterior rings
+#'   and CW holes. If `FALSE`, rings are normalized and holes are deduced from
+#'   degree of nesting.
+#' @param check Pass `FALSE` to skip ring validation.
 #'
 #' @return A [new_s2xptr()] with class s2polygon
 #' @export
+#'
+#' @examples
+#' # construct from a polyline
+#' latlng_loop <- s2latlng(c(0, 10, 0), c(0, 0, 10))
+#' (polygon <- s2polygon(s2polyline(latlng_loop)))
+#'
+#' # convert back to polyline and latlng
+#' s2polyline(polygon)
+#' s2latlng(s2polyline(polygon))
 #'
 s2polygon <- function(x, ...) {
   UseMethod("s2polygon")

@@ -19,10 +19,27 @@ s2polygon(x, ...)
 \item{x}{An object from which an s2polygon can be created}
 
 \item{...}{Unused}
+
+\item{oriented}{If \code{TRUE}, rings are guaranteed to be oriented (e.g. read
+by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, meaning CCW exterior rings
+and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
+degree of nesting.}
+
+\item{check}{Pass \code{FALSE} to skip ring validation.}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polygon
 }
 \description{
 Create an s2polygon vector
+}
+\examples{
+# construct from a polyline
+latlng_loop <- s2latlng(c(0, 10, 0), c(0, 0, 10))
+(polygon <- s2polygon(s2polyline(latlng_loop)))
+
+# convert back to polyline and latlng
+s2polyline(polygon)
+s2latlng(s2polyline(polygon))
+
 }
