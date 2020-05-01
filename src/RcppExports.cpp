@@ -189,6 +189,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2polyline_from_s2latlng
+List s2polyline_from_s2latlng(List s2latlng);
+RcppExport SEXP _libs2_s2polyline_from_s2latlng(SEXP s2latlngSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_from_s2latlng(s2latlng));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polyline_to_s2latlng
+List s2polyline_to_s2latlng(List s2polyline);
+RcppExport SEXP _libs2_s2polyline_to_s2latlng(SEXP s2polylineSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_to_s2latlng(s2polyline));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polyline_format
+CharacterVector s2polyline_format(List s2polyline, int nVertices);
+RcppExport SEXP _libs2_s2polyline_format(SEXP s2polylineSEXP, SEXP nVerticesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
+    Rcpp::traits::input_parameter< int >::type nVertices(nVerticesSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_format(s2polyline, nVertices));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2xptr_test
 List s2xptr_test(R_xlen_t size);
 RcppExport SEXP _libs2_s2xptr_test(SEXP sizeSEXP) {
@@ -237,6 +271,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
+    {"_libs2_s2polyline_from_s2latlng", (DL_FUNC) &_libs2_s2polyline_from_s2latlng, 1},
+    {"_libs2_s2polyline_to_s2latlng", (DL_FUNC) &_libs2_s2polyline_to_s2latlng, 1},
+    {"_libs2_s2polyline_format", (DL_FUNC) &_libs2_s2polyline_format, 2},
     {"_libs2_s2xptr_test", (DL_FUNC) &_libs2_s2xptr_test, 1},
     {"_libs2_s2xptr_test_op", (DL_FUNC) &_libs2_s2xptr_test_op, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},

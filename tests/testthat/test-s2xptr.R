@@ -22,7 +22,9 @@ test_that("s2xptr validation works", {
 test_that("s2xptr subsetting and concatenation work", {
   xptr <- new_s2xptr(list(NULL, NULL))
   expect_identical(xptr[1], new_s2xptr(list(NULL)))
+  expect_identical(xptr[[1]], xptr[1])
   expect_identical(c(xptr, xptr), new_s2xptr(list(NULL, NULL, NULL, NULL)))
+  expect_identical(rep(xptr, 2), new_s2xptr(list(NULL, NULL, NULL, NULL)))
 })
 
 test_that("s2xptr default print method works", {

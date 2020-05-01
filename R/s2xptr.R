@@ -19,7 +19,7 @@ new_s2xptr <- function(x = list(), class = character()) {
 #' @rdname new_s2xptr
 #' @export
 validate_s2xptr <- function(x) {
-  type <- vapply(x, typeof, character(1))
+  type <- vapply(unclass(x), typeof, character(1))
   valid_items <- type %in% c("externalptr", "NULL")
   if (any(!valid_items)) {
     stop(sprintf("Items must be externalptr objects or NULL"))
@@ -33,11 +33,23 @@ validate_s2xptr <- function(x) {
   new_s2xptr(NextMethod(), class(x))
 }
 
+# this seems odd, but it makes lapply() along these vectors
+# posssible
+#' @export
+`[[.s2xptr` <- function(x, i) {
+  x[i]
+}
+
 #' @export
 `c.s2xptr` <- function(...) {
   xptr <- new_s2xptr(NextMethod(), class(..1))
   validate_s2xptr(xptr)
   xptr
+}
+
+#' @export
+rep.s2xptr <- function(x, ...) {
+  new_s2xptr(NextMethod(), class(x))
 }
 
 #' @export

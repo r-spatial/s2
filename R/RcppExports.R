@@ -109,6 +109,18 @@ data_frame_from_s2point <- function(s2point) {
     .Call(`_libs2_data_frame_from_s2point`, s2point)
 }
 
+s2polyline_from_s2latlng <- function(s2latlng) {
+    .Call(`_libs2_s2polyline_from_s2latlng`, s2latlng)
+}
+
+s2polyline_to_s2latlng <- function(s2polyline) {
+    .Call(`_libs2_s2polyline_to_s2latlng`, s2polyline)
+}
+
+s2polyline_format <- function(s2polyline, nVertices) {
+    .Call(`_libs2_s2polyline_format`, s2polyline, nVertices)
+}
+
 s2xptr_test <- function(size) {
     .Call(`_libs2_s2xptr_test`, size)
 }
