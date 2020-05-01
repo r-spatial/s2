@@ -4,7 +4,10 @@
 \alias{s2polyline}
 \alias{s2polyline.s2polyline}
 \alias{s2polyline.s2latlng}
+\alias{s2polyline.matrix}
 \alias{s2latlng.s2polyline}
+\alias{as.matrix.s2polyline}
+\alias{as.data.frame.s2polyline}
 \title{Create a s2polyline vector}
 \usage{
 s2polyline(x, ...)
@@ -13,10 +16,20 @@ s2polyline(x, ...)
 
 \method{s2polyline}{s2latlng}(x, ...)
 
-\method{s2latlng}{s2polyline}(x, ...)
+\method{s2polyline}{matrix}(x, ...)
+
+\method{s2latlng}{s2polyline}(lat, ...)
+
+\method{as.matrix}{s2polyline}(x, ...)
+
+\method{as.data.frame}{s2polyline}(x, ...)
 }
 \arguments{
 \item{x}{An object from which an s2polyline can be created}
+
+\item{...}{Unused}
+
+\item{lat}{Vectors of latitude and longitude values in degrees.}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polyline
