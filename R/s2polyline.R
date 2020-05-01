@@ -8,6 +8,7 @@
 #' @param x An object from which an s2polyline can be created
 #'
 #' @return A [new_s2xptr()] with class s2polyline
+#' @export
 #'
 #' @examples
 #' # construct and export a polyline using s2latlng()
