@@ -19,6 +19,7 @@ A subset of \link[sf:sf]{sf's} North Carolina dataset in WKB format.
 }
 \examples{
 nc <- s2polygon(s2_nc_wkb$geometry)
+head(nc)
 
 }
 \keyword{datasets}
