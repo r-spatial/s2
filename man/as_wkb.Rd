@@ -18,16 +18,28 @@ as_wkb(x, ...)
 
 \method{as_wkb}{s2polygon}(x, ..., endian = 1)
 
-\method{s2latlng}{wk_wkb}(lat, ...)
+\method{s2latlng}{wk_wkb}(lng, ...)
 
-\method{s2polyline}{wk_wkb}(x, ...)
+\method{s2polyline}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
 
 \method{s2polygon}{wk_wkb}(x, ...)
 }
 \arguments{
-\item{x, lng}{Objects}
+\item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}
 
 \item{...}{Unused}
+
+\item{endian}{The endian to use when writing well-known binary.
+Will eventually default to the platform endian.}
+
+\item{lng}{Vectors of latitude and longitude values in degrees.}
+
+\item{oriented}{If \code{TRUE}, rings are guaranteed to be oriented (e.g. read
+by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, meaning CCW exterior rings
+and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
+degree of nesting.}
+
+\item{check}{Pass \code{FALSE} to skip ring validation.}
 }
 \value{
 A well-known binary vector (\code{list()} of \code{raw()})

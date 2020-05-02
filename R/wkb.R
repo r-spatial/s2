@@ -1,8 +1,10 @@
 
 #' Convert to and from well-known binary
 #'
-#' @param x,lng Objects
-#' @param ... Unused
+#' @inheritParams s2latlng
+#' @inheritParams s2polygon
+#' @param endian  The endian to use when writing well-known binary.
+#'   Will eventually default to the platform endian.
 #'
 #' @return A well-known binary vector (`list()` of `raw()`)
 #' @export
@@ -38,13 +40,13 @@ as_wkb.s2polygon <- function(x, ..., endian = 1) {
 
 #' @rdname as_wkb
 #' @export
-s2latlng.wk_wkb <- function(lat, ...) {
-  new_s2xptr(s2latlng_from_wkb(lat), "s2latlng")
+s2latlng.wk_wkb <- function(lng, ...) {
+  new_s2xptr(s2latlng_from_wkb(lng), "s2latlng")
 }
 
 #' @rdname as_wkb
 #' @export
-s2polyline.wk_wkb <- function(x, ...) {
+s2polyline.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2xptr(s2polyline_from_wkb(x), "s2polyline")
 }
 
