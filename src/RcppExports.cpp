@@ -334,6 +334,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// wkb_from_s2polyline
+List wkb_from_s2polyline(List s2polyline, int endian);
+RcppExport SEXP _libs2_wkb_from_s2polyline(SEXP s2polylineSEXP, SEXP endianSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
+    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
+    rcpp_result_gen = Rcpp::wrap(wkb_from_s2polyline(s2polyline, endian));
+    return rcpp_result_gen;
+END_RCPP
+}
+// wkb_from_s2polygon
+List wkb_from_s2polygon(List s2polygon, int endian);
+RcppExport SEXP _libs2_wkb_from_s2polygon(SEXP s2polygonSEXP, SEXP endianSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
+    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
+    rcpp_result_gen = Rcpp::wrap(wkb_from_s2polygon(s2polygon, endian));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2BuildPolygonsLayer", (DL_FUNC) &_libs2_s2BuildPolygonsLayer, 2},
@@ -365,6 +389,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2polyline_from_wkb", (DL_FUNC) &_libs2_s2polyline_from_wkb, 1},
     {"_libs2_s2polygon_from_wkb", (DL_FUNC) &_libs2_s2polygon_from_wkb, 1},
     {"_libs2_wkb_from_s2latlng", (DL_FUNC) &_libs2_wkb_from_s2latlng, 2},
+    {"_libs2_wkb_from_s2polyline", (DL_FUNC) &_libs2_wkb_from_s2polyline, 2},
+    {"_libs2_wkb_from_s2polygon", (DL_FUNC) &_libs2_wkb_from_s2polygon, 2},
     {NULL, NULL, 0}
 };
 

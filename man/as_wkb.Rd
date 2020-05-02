@@ -12,11 +12,11 @@
 \usage{
 as_wkb(x, ...)
 
-\method{as_wkb}{s2latlng}(x, ...)
+\method{as_wkb}{s2latlng}(x, ..., endian = 1)
 
-\method{as_wkb}{s2polyline}(x, ...)
+\method{as_wkb}{s2polyline}(x, ..., endian = 1)
 
-\method{as_wkb}{s2polygon}(x, ...)
+\method{as_wkb}{s2polygon}(x, ..., endian = 1)
 
 \method{s2latlng}{wk_wkb}(lat, ...)
 

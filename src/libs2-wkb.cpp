@@ -203,10 +203,10 @@ public:
   }
 };
 
-class WKLatLngReader: public WKReader {
+class WKS2LatLngReader: public WKReader {
 public:
 
-  WKLatLngReader(WKListProvider& provider, WKGeometryHandler& handler):
+  WKS2LatLngReader(WKListProvider& provider, WKGeometryHandler& handler):
     WKReader(provider, handler), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -246,7 +246,109 @@ List wkb_from_s2latlng(List s2latlng, int endian) {
   WKBWriter writer(exporter);
   writer.setEndian(endian);
 
-  WKLatLngReader reader(provider, writer);
+  WKS2LatLngReader reader(provider, writer);
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return exporter.output;
+}
+
+class WKS2PolylineReader: public WKS2LatLngReader {
+public:
+  WKS2PolylineReader(WKListProvider& provider, WKGeometryHandler& handler):
+    WKS2LatLngReader(provider, handler)  {}
+
+  virtual void readItem(SEXP item) {
+    XPtr<S2Polyline> ptr(item);
+
+    WKGeometryMeta meta(WKGeometryType::LineString, false, false, true);
+    meta.srid = 4326;
+    meta.hasSize = true;
+    meta.size = ptr->num_vertices();
+
+    this->handler.nextGeometryStart(meta, PART_ID_NONE);
+    S2LatLng vertex;
+    WKCoord coord;
+    for (size_t i = 0; i < ptr->num_vertices(); i++) {
+      vertex = S2LatLng(ptr->vertex(i));
+      coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
+      this->handler.nextCoordinate(meta, coord, i);
+    }
+
+    this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+  }
+};
+
+// [[Rcpp::export]]
+List wkb_from_s2polyline(List s2polyline, int endian) {
+  WKListProvider provider(s2polyline);
+  WKRawVectorListExporter exporter(s2polyline.size());
+  WKBWriter writer(exporter);
+  writer.setEndian(endian);
+
+  WKS2PolylineReader reader(provider, writer);
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return exporter.output;
+}
+
+class WKS2PolygonReader: public WKS2LatLngReader {
+public:
+  WKS2PolygonReader(WKListProvider& provider, WKGeometryHandler& handler):
+    WKS2LatLngReader(provider, handler)  {}
+
+  virtual void readItem(SEXP item) {
+    XPtr<S2Polygon> ptr(item);
+
+    WKGeometryMeta meta(WKGeometryType::Polygon, false, false, true);
+    meta.srid = 4326;
+    meta.hasSize = true;
+    meta.size = ptr->num_loops();
+
+    this->handler.nextGeometryStart(meta, PART_ID_NONE);
+    WKCoord coord;
+
+    for (size_t i = 0; i < ptr->num_loops(); i++) {
+      const S2Loop* loop = ptr->loop(i);
+      uint32_t loopSize = loop->num_vertices();
+      // need to close loop for WKB
+      if (loop->num_vertices() > 0) {
+        loopSize += 1;
+      }
+
+      this->handler.nextLinearRingStart(meta, loopSize, i);
+
+      for (size_t j = 0; j < loop->num_vertices(); j++) {
+        S2LatLng vertex(loop->vertex(j));
+        coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
+        this->handler.nextCoordinate(meta, coord, j);
+      }
+
+      // need to close loop for WKB
+      if (loop->num_vertices() > 0) {
+        S2LatLng vertex(loop->vertex(0));
+        coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
+        this->handler.nextCoordinate(meta, coord, loop->num_vertices());
+      }
+
+      this->handler.nextLinearRingEnd(meta, loopSize, i);
+    }
+
+    this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+  }
+};
+
+// [[Rcpp::export]]
+List wkb_from_s2polygon(List s2polygon, int endian) {
+  WKListProvider provider(s2polygon);
+  WKRawVectorListExporter exporter(s2polygon.size());
+  WKBWriter writer(exporter);
+  writer.setEndian(endian);
+
+  WKS2PolygonReader reader(provider, writer);
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }

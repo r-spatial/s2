@@ -22,14 +22,18 @@ as_wkb.s2latlng <- function(x, ..., endian = 1) {
 
 #' @rdname as_wkb
 #' @export
-as_wkb.s2polyline <- function(x, ...) {
-
+as_wkb.s2polyline <- function(x, ..., endian = 1) {
+  wkb <- wkb_from_s2polyline(x, endian)
+  class(wkb) <- "wk_wkb"
+  wkb
 }
 
 #' @rdname as_wkb
 #' @export
-as_wkb.s2polygon <- function(x, ...) {
-
+as_wkb.s2polygon <- function(x, ..., endian = 1) {
+  wkb <- wkb_from_s2polygon(x, endian)
+  class(wkb) <- "wk_wkb"
+  wkb
 }
 
 #' @rdname as_wkb

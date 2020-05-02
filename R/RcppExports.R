@@ -161,3 +161,11 @@ wkb_from_s2latlng <- function(s2latlng, endian) {
     .Call(`_libs2_wkb_from_s2latlng`, s2latlng, endian)
 }
 
+wkb_from_s2polyline <- function(s2polyline, endian) {
+    .Call(`_libs2_wkb_from_s2polyline`, s2polyline, endian)
+}
+
+wkb_from_s2polygon <- function(s2polygon, endian) {
+    .Call(`_libs2_wkb_from_s2polygon`, s2polygon, endian)
+}
+
