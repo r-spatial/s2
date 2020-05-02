@@ -16,7 +16,7 @@ s2polygon(x, ...)
 
 \method{s2polyline}{s2polygon}(x, ...)
 
-\method{s2polygon}{wk_wkb}(lat, ...)
+\method{s2polygon}{wk_wkb}(x, ...)
 }
 \arguments{
 \item{x}{An object from which an s2polygon can be created}
@@ -29,8 +29,6 @@ and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
 \item{check}{Pass \code{FALSE} to skip ring validation.}
-
-\item{lat}{Vectors of latitude and longitude values in degrees.}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polygon

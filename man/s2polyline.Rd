@@ -25,7 +25,7 @@ s2polyline(x, ...)
 
 \method{as.data.frame}{s2polyline}(x, ...)
 
-\method{s2polyline}{wk_wkb}(lat, ...)
+\method{s2polyline}{wk_wkb}(x, ...)
 }
 \arguments{
 \item{x}{An object from which an s2polyline can be created}
