@@ -13,7 +13,6 @@ using namespace Rcpp;
 List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
 
   SEXP item;
-  S2LatLng vertex;
   std::vector<std::unique_ptr<S2Loop>> loops(s2polyline.size());
 
   for (R_xlen_t i = 0; i < s2polyline.size(); i++) {

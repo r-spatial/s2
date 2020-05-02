@@ -145,3 +145,15 @@ libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }
 
+s2latlng_from_wkb <- function(wkb) {
+    .Call(`_libs2_s2latlng_from_wkb`, wkb)
+}
+
+s2polyline_from_wkb <- function(wkb) {
+    .Call(`_libs2_s2polyline_from_wkb`, wkb)
+}
+
+s2polygon_from_wkb <- function(wkb) {
+    .Call(`_libs2_s2polygon_from_wkb`, wkb)
+}
+

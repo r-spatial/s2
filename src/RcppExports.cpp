@@ -289,6 +289,39 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// s2latlng_from_wkb
+List s2latlng_from_wkb(List wkb);
+RcppExport SEXP _libs2_s2latlng_from_wkb(SEXP wkbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2latlng_from_wkb(wkb));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polyline_from_wkb
+List s2polyline_from_wkb(List wkb);
+RcppExport SEXP _libs2_s2polyline_from_wkb(SEXP wkbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_from_wkb(wkb));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polygon_from_wkb
+List s2polygon_from_wkb(List wkb);
+RcppExport SEXP _libs2_s2polygon_from_wkb(SEXP wkbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polygon_from_wkb(wkb));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2BuildPolygonsLayer", (DL_FUNC) &_libs2_s2BuildPolygonsLayer, 2},
@@ -316,6 +349,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2xptr_test", (DL_FUNC) &_libs2_s2xptr_test, 1},
     {"_libs2_s2xptr_test_op", (DL_FUNC) &_libs2_s2xptr_test_op, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
+    {"_libs2_s2latlng_from_wkb", (DL_FUNC) &_libs2_s2latlng_from_wkb, 1},
+    {"_libs2_s2polyline_from_wkb", (DL_FUNC) &_libs2_s2polyline_from_wkb, 1},
+    {"_libs2_s2polygon_from_wkb", (DL_FUNC) &_libs2_s2polygon_from_wkb, 1},
     {NULL, NULL, 0}
 };
 
