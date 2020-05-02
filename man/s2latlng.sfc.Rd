@@ -13,6 +13,8 @@
 \method{s2polygon}{sfc}(x, ...)
 }
 \arguments{
+\item{lat}{Vectors of latitude and longitude values in degrees.}
+
 \item{...}{Unused}
 
 \item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}

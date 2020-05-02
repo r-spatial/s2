@@ -40,8 +40,8 @@ as_wkb.s2polygon <- function(x, ..., endian = 1) {
 
 #' @rdname as_wkb
 #' @export
-s2latlng.wk_wkb <- function(lng, ...) {
-  new_s2xptr(s2latlng_from_wkb(lng), "s2latlng")
+s2latlng.wk_wkb <- function(lat, ...) {
+  new_s2xptr(s2latlng_from_wkb(lat), "s2latlng")
 }
 
 #' @rdname as_wkb
