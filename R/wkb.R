@@ -46,12 +46,12 @@ s2latlng.wk_wkb <- function(lng, ...) {
 
 #' @rdname as_wkb
 #' @export
-s2polyline.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
+s2polyline.wk_wkb <- function(x, ...) {
   new_s2xptr(s2polyline_from_wkb(x), "s2polyline")
 }
 
 #' @rdname as_wkb
 #' @export
-s2polygon.wk_wkb <- function(x, ...) {
-  new_s2xptr(s2polygon_from_wkb(x), "s2polygon")
+s2polygon.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
+  new_s2xptr(s2polygon_from_wkb(x, oriented = oriented, check = check), "s2polygon")
 }

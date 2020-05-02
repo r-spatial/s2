@@ -1,25 +1,24 @@
 
 #' S2-sf compatibility functions
 #'
-#' @param lng,x Objects
-#' @param ... Unused
+#' @inheritParams as_wkb
 #'
 #' @export
 #'
-s2latlng.sfc <- function(lng, ...) {
-  s2latlng(sf_as_wkb_base(lng))
+s2latlng.sfc <- function(lat, ...) {
+  s2latlng(sf_as_wkb_base(lat), ...)
 }
 
 #' @rdname s2latlng.sfc
 #' @export
-s2polyline.sfc <- function(lng, ...) {
-  s2polyline(sf_as_wkb_base(lng))
+s2polyline.sfc <- function(x, ...) {
+  s2polyline(sf_as_wkb_base(x), ...)
 }
 
 #' @rdname s2latlng.sfc
 #' @export
-s2polygon.sfc <- function(lng, ...) {
-  s2polygon(sf_as_wkb_base(lng))
+s2polygon.sfc <- function(x, ...) {
+  s2polygon(sf_as_wkb_base(x), ...)
 }
 
 # dynamically registered in zzz.R

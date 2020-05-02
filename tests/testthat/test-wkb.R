@@ -74,9 +74,16 @@ test_that("s2polygon can be imported from wkb", {
                                0x00, 0x3e, 0x40)))
   class(wkb_polygon) <- "wk_wkb"
 
-  dfs <- lapply(s2polyline(s2polygon(wkb_polygon)), as.data.frame)
-  expect_equal(dfs[[1]], data.frame(lat = c(30, 35, 20), lng = c(20, 35, 30)))
-  expect_equal(dfs[[2]], data.frame(lat = c(10, 45, 40, 20), lng = c(35, 45, 15, 10)))
+  dfs <- lapply(s2polyline(s2polygon(wkb_polygon, oriented = TRUE, check = FALSE)), as.data.frame)
+  expect_equal(dfs[[1]], data.frame(lat = c(10, 45, 40, 20), lng = c(35, 45, 15, 10)))
+  # ring directions seem to all be counter clockwise when oriented = TRUE...
+  expect_equal(dfs[[2]], data.frame(lat = c(20, 35, 30), lng = c(30, 35, 20)))
+
+  # this should work with check as true and false
+  expect_identical(
+    lapply(s2polyline(s2polygon(wkb_polygon, oriented = TRUE, check = TRUE)), as.data.frame),
+    lapply(s2polyline(s2polygon(wkb_polygon, oriented = TRUE, check = FALSE)), as.data.frame)
+  )
 })
 
 test_that("s2polygon can be exported to wkb", {
@@ -99,16 +106,17 @@ test_that("s2polygon can be exported to wkb", {
                                0x00, 0x3e, 0x40)))
   class(wkb_polygon) <- "wk_wkb"
 
-  loop_one <- s2latlng(c(30, 35, 20), c(20, 35, 30))
-  loop_two <- s2latlng(c(10, 45, 40, 20), c(35, 45, 15, 10))
-  polygon <- s2polygon(c(s2polyline(loop_one), s2polyline(loop_two)))
+  loop_one <- s2latlng(c(10, 45, 40, 20), c(35, 45, 15, 10))
+  loop_two <- s2latlng(c(30, 35, 20), c(20, 35, 30))
+
+  polygon <- s2polygon(c(s2polyline(loop_one), s2polyline(loop_two)), oriented = TRUE)
 
   # comes back slightly rounded...hard to test for this
   wkb <- as_wkb(polygon, endian = 1)
   expect_is(wkb, "wk_wkb")
   expect_equal(
-    lapply(s2polyline(s2polygon(wkb)), as.data.frame),
-    lapply(s2polyline(s2polygon(wkb_polygon)), as.data.frame)
+    lapply(s2polyline(s2polygon(wkb, oriented = TRUE)), as.data.frame),
+    lapply(s2polyline(s2polygon(wkb_polygon, oriented = TRUE)), as.data.frame)
   )
   expect_identical(as_wkb(new_s2xptr(list(NULL), "s2polygon")), structure(list(NULL), class = "wk_wkb"))
 })

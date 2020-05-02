@@ -6,16 +6,16 @@
 \alias{s2polygon.sfc}
 \title{S2-sf compatibility functions}
 \usage{
-\method{s2latlng}{sfc}(lng, ...)
+\method{s2latlng}{sfc}(lat, ...)
 
-\method{s2polyline}{sfc}(lng, ...)
+\method{s2polyline}{sfc}(x, ...)
 
-\method{s2polygon}{sfc}(lng, ...)
+\method{s2polygon}{sfc}(x, ...)
 }
 \arguments{
-\item{lng, x}{Objects}
-
 \item{...}{Unused}
+
+\item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}
 }
 \description{
 S2-sf compatibility functions

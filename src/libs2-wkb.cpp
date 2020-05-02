@@ -110,6 +110,14 @@ public:
 
   WKS2PolygonWriter(R_xlen_t size): s2polygon(size), check(true), oriented(false) {}
 
+  void setOriented(bool oriented) {
+    this->oriented = oriented;
+  }
+
+  void setCheck(bool check) {
+    this->check = check;
+  }
+
   void nextFeatureStart(size_t featureId) {
     loops.clear();
   }
@@ -139,7 +147,7 @@ public:
     loops[ringId]->Init(vertices);
 
     // Not sure if && is short-circuiting in C++...
-    if (check && !loops[ringId]->IsValid()) {
+    if (this->check && !loops[ringId]->IsValid()) {
       S2Error error;
       loops[ringId]->FindValidationError(&error);
       stop(error.text());
@@ -148,7 +156,7 @@ public:
 
   void nextFeatureEnd(size_t featureId) {
     XPtr<S2Polygon> polygon(new S2Polygon());
-    if (oriented) {
+    if (this->oriented) {
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
@@ -163,9 +171,11 @@ public:
 };
 
 // [[Rcpp::export]]
-List s2polygon_from_wkb(List wkb) {
+List s2polygon_from_wkb(List wkb, bool oriented, bool check) {
   WKRawVectorListProvider provider(wkb);
   WKS2PolygonWriter writer(wkb.size());
+  writer.setOriented(oriented);
+  writer.setCheck(check);
   WKBReader reader(provider, writer);
 
   while (reader.hasNextFeature()) {

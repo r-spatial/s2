@@ -20,9 +20,9 @@ as_wkb(x, ...)
 
 \method{s2latlng}{wk_wkb}(lng, ...)
 
-\method{s2polyline}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
+\method{s2polyline}{wk_wkb}(x, ...)
 
-\method{s2polygon}{wk_wkb}(x, ...)
+\method{s2polygon}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
 }
 \arguments{
 \item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}
