@@ -1,5 +1,6 @@
 
 test_that("s2latlng can be imported from wkb", {
+  # POINT (-64 45)
   wkb_point <- list(as.raw(c(0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                              0x00, 0x00, 0x00, 0x50, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
                              0x46, 0x40)))
@@ -9,6 +10,17 @@ test_that("s2latlng can be imported from wkb", {
     as.data.frame(s2latlng(wkb_point)),
     data.frame(lat = 45, lng = -64)
   )
+})
+
+test_that("s2latlng can be exported to wkb", {
+  # SRID=4326;POINT (-64 45)
+  wkb_point <- list(as.raw(c(0x01, 0x01, 0x00, 0x00, 0x20, 0xe6, 0x10, 0x00,
+                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xc0, 0x00, 0x00,
+                             0x00, 0x00, 0x00, 0x80, 0x46, 0x40)))
+  class(wkb_point) <- "wk_wkb"
+
+  expect_identical(as_wkb(s2latlng(45, -64), endian = 1), wkb_point)
+  expect_identical(as_wkb(s2latlng(double(), double())[NA]), structure(list(NULL), class = "wk_wkb"))
 })
 
 test_that("s2polyline can be imported from wkb", {
