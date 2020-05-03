@@ -4,9 +4,13 @@
 #include <Rmath.h>
 using namespace Rcpp;
 
+#include <stdarg.h> // va_ stuff
+
 void cpp_compat_printf(const char* fmt, ...) {
-  // don't know how to pass on elipses
-  Rprintf(fmt);
+  va_list args;
+  va_start(args, fmt);
+  Rprintf(fmt, args);
+  va_end(args);
 }
 
 void cpp_compat_abort() {
