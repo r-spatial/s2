@@ -95,9 +95,9 @@ CharacterVector s2polygon_format(List s2polygon, int nVertices) {
       stream.str("");
       stream << "{" << ptr->num_loops() << "}";
       // if (ptr->num_loops() > 0) {
-	  for (int l = 0, nVprinted = 0; nVprinted < nVertices && l < ptr->num_loops(); l++) {
+      for (int l = 0, nVprinted = 0; nVprinted < nVertices && l < ptr->num_loops(); l++) {
         const S2Loop* loop = ptr->loop(l);
-		stream << "[" <<  ptr->GetParent(l) << "]";
+        stream << "[" <<  ptr->GetParent(l) << "]";
 
         for (int j = 0; nVprinted < nVertices && j < loop->num_vertices(); j++) {
           if (j > 0) {
@@ -105,7 +105,7 @@ CharacterVector s2polygon_format(List s2polygon, int nVertices) {
           }
           vertex = S2LatLng(loop->vertex(j));
           stream << "(" << vertex.lat().degrees() << ", " << vertex.lng().degrees() << ")";
-		  nVprinted++;
+          nVprinted++;
         }
 
       }
