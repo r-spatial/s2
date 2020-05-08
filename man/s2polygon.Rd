@@ -13,7 +13,7 @@ s2polygon(x, ...)
 
 \method{s2polygon}{s2polyline}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{s2polyline}{s2polygon}(x, ...)
+\method{s2polyline}{s2polygon}(x, ..., close = FALSE)
 }
 \arguments{
 \item{x}{An object from which an s2polygon can be created}
@@ -26,6 +26,8 @@ and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
 \item{check}{Pass \code{FALSE} to skip ring validation.}
+
+\item{close}{logical; if TRUE, the start point of the polygon is added as added as final point (making a closed polygon)}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polygon

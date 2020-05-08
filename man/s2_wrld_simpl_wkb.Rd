@@ -30,7 +30,7 @@ a given country.
 world <- s2polygon(s2_wrld_simpl_wkb$geometry)
 head(world)
 
-s2data_country("Canada")
+s2data_country("Germany")
 
 }
 \keyword{datasets}

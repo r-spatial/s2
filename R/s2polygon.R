@@ -38,6 +38,7 @@ s2polygon.s2polyline <- function(x, ...,  oriented = FALSE, check = TRUE) {
 }
 
 #' @rdname s2polygon
+#' @param close logical; if TRUE, the start point of the polygon is added as added as final point (making a closed polygon)
 #' @export
 s2polyline.s2polygon <- function(x, ..., close = FALSE) {
   new_s2xptr(s2polyline_from_s2polygon(x, close = close), "s2polyline")
