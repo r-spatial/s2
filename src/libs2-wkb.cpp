@@ -147,7 +147,7 @@ public:
     loops[ringId]->Init(vertices);
 
     if (!this->oriented)
-	  loops[ringId]->Normalize();
+      loops[ringId]->Normalize();
 
     // Not sure if && is short-circuiting in C++...
     if (this->check && !loops[ringId]->IsValid()) {
