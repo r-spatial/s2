@@ -146,6 +146,9 @@ public:
     loops[ringId]->set_s2debug_override(S2Debug::DISABLE);
     loops[ringId]->Init(vertices);
 
+    if (!this->oriented)
+	  loops[ringId]->Normalize();
+
     // Not sure if && is short-circuiting in C++...
     if (this->check && !loops[ringId]->IsValid()) {
       S2Error error;
