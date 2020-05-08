@@ -97,6 +97,14 @@ data_frame_from_s2latlng <- function(xptr) {
     .Call(`_libs2_data_frame_from_s2latlng`, xptr)
 }
 
+s2polyline_lengths <- function(s2polyline, degrees = FALSE) {
+    .Call(`_libs2_s2polyline_lengths`, s2polyline, degrees)
+}
+
+s2polygon_areas <- function(s2polygon) {
+    .Call(`_libs2_s2polygon_areas`, s2polygon)
+}
+
 s2point_from_numeric <- function(x, y, z) {
     .Call(`_libs2_s2point_from_numeric`, x, y, z)
 }

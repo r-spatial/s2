@@ -154,6 +154,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2polyline_lengths
+NumericVector s2polyline_lengths(List s2polyline, bool degrees);
+RcppExport SEXP _libs2_s2polyline_lengths(SEXP s2polylineSEXP, SEXP degreesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
+    Rcpp::traits::input_parameter< bool >::type degrees(degreesSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polyline_lengths(s2polyline, degrees));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2polygon_areas
+NumericVector s2polygon_areas(List s2polygon);
+RcppExport SEXP _libs2_s2polygon_areas(SEXP s2polygonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polygon_areas(s2polygon));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2point_from_numeric
 List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
 RcppExport SEXP _libs2_s2point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -375,6 +398,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2latlng_from_numeric", (DL_FUNC) &_libs2_s2latlng_from_numeric, 2},
     {"_libs2_s2latlng_from_s2point", (DL_FUNC) &_libs2_s2latlng_from_s2point, 1},
     {"_libs2_data_frame_from_s2latlng", (DL_FUNC) &_libs2_data_frame_from_s2latlng, 1},
+    {"_libs2_s2polyline_lengths", (DL_FUNC) &_libs2_s2polyline_lengths, 2},
+    {"_libs2_s2polygon_areas", (DL_FUNC) &_libs2_s2polygon_areas, 1},
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
