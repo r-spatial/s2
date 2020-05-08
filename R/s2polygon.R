@@ -39,8 +39,8 @@ s2polygon.s2polyline <- function(x, ...,  oriented = FALSE, check = TRUE) {
 
 #' @rdname s2polygon
 #' @export
-s2polyline.s2polygon <- function(x, ...) {
-  new_s2xptr(s2polyline_from_s2polygon(x), "s2polyline")
+s2polyline.s2polygon <- function(x, ..., close = FALSE) {
+  new_s2xptr(s2polyline_from_s2polygon(x, close = close), "s2polyline")
 }
 
 #' @export

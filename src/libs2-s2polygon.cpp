@@ -50,7 +50,7 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
 }
 
 // [[Rcpp::export]]
-List s2polyline_from_s2polygon(List s2polygon) {
+List s2polyline_from_s2polygon(List s2polygon, bool close = false) {
   if (s2polygon.size() != 1) {
     stop("Can't convert an s2polygon of length != 1 to s2polyline");
   }
@@ -65,11 +65,13 @@ List s2polyline_from_s2polygon(List s2polygon) {
 
   for (R_xlen_t i = 0; i < ptr->num_loops(); i++) {
     const S2Loop* loop = ptr->loop(i);
-    std::vector<S2LatLng> vertices(loop->num_vertices());
+    std::vector<S2LatLng> vertices(loop->num_vertices() + (int) close);
 
     for (R_xlen_t j = 0; j < loop->num_vertices(); j++) {
       vertices[j] = S2LatLng(loop->vertex(j));
     }
+    if (close)
+      vertices[loop->num_vertices()] = S2LatLng(loop->vertex(0));
 
     output[i] = XPtr<S2Polyline>(new S2Polyline(vertices));
   }
