@@ -29,6 +29,12 @@ public:
     if (this->newMeta.geometryType != WKGeometryType::Point) this->writeUint32(meta.size);
   }
 
+  void nextPolygon(const WKGeometryMeta& meta, uint32_t size) {
+    this->writeEndian();
+    this->writeUint32(WKGeometryType::Polygon);
+    this->writeUint32(size);
+  }
+
   void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
     this->writeUint32(size);
   }

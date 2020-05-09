@@ -28,5 +28,6 @@ test_that("sf objects can be imported to s2", {
 
   expect_equal(sf_st_coordinates(point), sf_st_coordinates(point_roundtrip))
   expect_equal(sf_st_coordinates(line), sf_st_coordinates(line_roundtrip))
-  expect_equal(sf_st_coordinates(polygon), sf_st_coordinates(polygon_roudtrip))
+  # rings may be reordered & reversed, so the following does not have to hold:
+  # expect_equal(sf_st_coordinates(polygon), sf_st_coordinates(polygon_roudtrip))
 })

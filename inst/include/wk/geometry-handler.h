@@ -29,6 +29,10 @@ public:
 
   }
 
+  virtual void nextPolygon(const WKGeometryMeta& meta, uint32_t size) {
+
+  }
+
   virtual void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
 
   }
