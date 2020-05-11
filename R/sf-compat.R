@@ -55,8 +55,8 @@ st_as_sfc.s2polygon <- function(x, ...) {
 }
 
 sf_as_wkb_base <- function(x) {
-  x <- sf_st_transform(x, 4326)
-  wkb <- sf_st_as_binary(x, EWKB = TRUE)
+  # x <- sf_st_transform(x, 4326)
+  wkb <- sf_st_as_binary(x, EWKB = FALSE)
   class(wkb) <- "wk_wkb"
   wkb
 }

@@ -235,8 +235,7 @@ public:
   }
 
   virtual void readItem(SEXP item) {
-    WKGeometryMeta meta(WKGeometryType::Point, false, false, true);
-    meta.srid = 4326;
+    WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
     meta.hasSize = true;
     meta.size = 1;
 
@@ -275,8 +274,7 @@ public:
   virtual void readItem(SEXP item) {
     XPtr<S2Polyline> ptr(item);
 
-    WKGeometryMeta meta(WKGeometryType::LineString, false, false, true);
-    meta.srid = 4326;
+    WKGeometryMeta meta(WKGeometryType::LineString, false, false, false);
     meta.hasSize = true;
     meta.size = ptr->num_vertices();
 
@@ -370,9 +368,7 @@ public:
     XPtr<S2Polygon> ptr(item);
 
     if (is_multi_polygon(ptr)) { // MULTIPOLYGON:
-      // WKGeometryMeta meta(WKGeometryType::MultiPolygon, false, false, true);
-      WKGeometryMeta meta(WKGeometryType::MultiPolygon, false, false, true);
-      meta.srid = 4326; // FIXME: more than one datum exists!!!
+      WKGeometryMeta meta(WKGeometryType::MultiPolygon, false, false, false);
       meta.hasSize = true;
 
       std::vector<std::vector<int>> indices = multi_polygon_order(ptr);
@@ -421,8 +417,7 @@ public:
       this->handler.nextGeometryEnd(meta, PART_ID_NONE);
 
 	} else { // POLYGON:
-      WKGeometryMeta meta(WKGeometryType::Polygon, false, false, true);
-      meta.srid = 4326; // FIXME: more than one datum exists!!!
+      WKGeometryMeta meta(WKGeometryType::Polygon, false, false, false);
       meta.hasSize = true;
       meta.size = ptr->num_loops();
   
