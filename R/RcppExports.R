@@ -10,79 +10,34 @@ s2BuildPolygonsLayer <- function(ptrs, b_ptr) {
     .Call(`_libs2_s2BuildPolygonsLayer`, ptrs, b_ptr)
 }
 
-#' convert R vector with coordinates (lon,lat) into S2Point ptr 
-#' 
-#' @param pt numeric; length 2, longitude latitude
-#' @name s2makepoint
-#' @export
-s2MakePoint <- function(pt) {
-    .Call(`_libs2_s2MakePoint`, pt)
-}
-
-#' @export
-#' @name s2makepoint
-#' @param ptrs R list with external references (pointers) to S2Point objects
-s2GetPoint <- function(ptrs) {
-    .Call(`_libs2_s2GetPoint`, ptrs)
-}
-
-#' convert R matrix with coordinates (lon,lat) into S2Polyline ptr 
-#' 
-#' @param pts 2-column numeric matrix with lng,lat line vertices
-#' @name s2makepolyline
-#' @export
-s2MakePolyline <- function(pts) {
-    .Call(`_libs2_s2MakePolyline`, pts)
-}
-
-#' @export
-#' @name s2makepolyline
-#' @param ptrs R list with external references (pointers) to S2Polyline objects
-s2GetPolyline <- function(ptrs) {
-    .Call(`_libs2_s2GetPolyline`, ptrs)
-}
-
-#' convert R list of coordinate matrices (lon,lat) into S2Polygon ptr 
-#' 
-#' @param mat two-column matrix with longitude in first, latitude in second column
-#' @param oriented logical; if TRUE, rings are guaranteed to be oriented (e.g. read
-#' by \code{read_sf} using \code{check_ring_dir=TRUE}), meaning CCW exterior rings
-#' and CW holes; if FALSE, rings are normalized and holes are deduced from degree of nesting.
-#' @name s2makepolygons
-#' @export
-s2MakePolygon <- function(mat, oriented = FALSE) {
-    .Call(`_libs2_s2MakePolygon`, mat, oriented)
-}
-
-#' @export
-#' @name s2makepolygons
-#' @param ptrs R list with external references (pointers) to S2Polygon objects
-s2GetPolygon <- function(ptrs) {
-    .Call(`_libs2_s2GetPolygon`, ptrs)
-}
-
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers
 #' @param y list with S2Polygons or S2Polyline pointers
-#' @param polygons logical; if TRUE, x and y are S2Polygon, otherwise S2Polyline
 #' @name s2ops
 #' @export
-s2Intersects <- function(x, y, polygons = TRUE) {
-    .Call(`_libs2_s2Intersects`, x, y, polygons)
+s2polygon_intersects <- function(x, y) {
+    .Call(`_libs2_s2polygon_intersects`, x, y)
+}
+
+#' @name s2ops
+#' @export
+s2polyline_intersects <- function(x, y) {
+    .Call(`_libs2_s2polyline_intersects`, x, y)
 }
 
 #' @export
 #' @name s2ops
 #' @param ptrs list of S2Polygon or S2Polyline pointers
-s2IsValid <- function(ptrs, polygons = TRUE) {
-    .Call(`_libs2_s2IsValid`, ptrs, polygons)
+s2polygon_is_valid <- function(ptrs) {
+    .Call(`_libs2_s2polygon_is_valid`, ptrs)
 }
 
 #' @export
 #' @name s2ops
-s2GetArea <- function(ptrs) {
-    .Call(`_libs2_s2GetArea`, ptrs)
+#' @param ptrs list of S2Polygon or S2Polyline pointers
+s2polyline_is_valid <- function(ptrs) {
+    .Call(`_libs2_s2polyline_is_valid`, ptrs)
 }
 
 s2latlng_from_numeric <- function(lat, lng) {
@@ -95,6 +50,27 @@ s2latlng_from_s2point <- function(s2point) {
 
 data_frame_from_s2latlng <- function(xptr) {
     .Call(`_libs2_data_frame_from_s2latlng`, xptr)
+}
+
+#' Get lengths of s2polylines
+#' 
+#' @name s2measures
+#' @param s2polyline object of class \link{s2polyline}
+#' @param degrees logical; if `FALSE`, return length in radians, else in degrees
+#' @export
+s2polyline_lengths <- function(s2polyline, degrees = FALSE) {
+    .Call(`_libs2_s2polyline_lengths`, s2polyline, degrees)
+}
+
+#' Get area of s2polygons
+#' 
+#' @name s2measures
+#' @param s2polygon object of class \link{s2polygon}
+#' @export
+#' @details note that all s2 measures are on the unit sphere, and need rescaling 
+#' by the Earth's radius to get measures on the Earth
+s2polygon_areas <- function(s2polygon) {
+    .Call(`_libs2_s2polygon_areas`, s2polygon)
 }
 
 s2point_from_numeric <- function(x, y, z) {
@@ -113,8 +89,8 @@ s2polygon_from_s2polyline <- function(s2polyline, oriented, check) {
     .Call(`_libs2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
 }
 
-s2polyline_from_s2polygon <- function(s2polygon) {
-    .Call(`_libs2_s2polyline_from_s2polygon`, s2polygon)
+s2polyline_from_s2polygon <- function(s2polygon, close = FALSE) {
+    .Call(`_libs2_s2polyline_from_s2polygon`, s2polygon, close)
 }
 
 s2polygon_format <- function(s2polygon, nVertices) {

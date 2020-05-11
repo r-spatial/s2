@@ -13,7 +13,7 @@ s2polygon(x, ...)
 
 \method{s2polygon}{s2polyline}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{s2polyline}{s2polygon}(x, ...)
+\method{s2polyline}{s2polygon}(x, ..., close = FALSE)
 }
 \arguments{
 \item{x}{An object from which an s2polygon can be created}
@@ -25,7 +25,9 @@ by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, m
 and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
-\item{check}{Pass \code{FALSE} to skip ring validation.}
+\item{check}{Pass \code{FALSE} to skip ring and polygon validation.}
+
+\item{close}{logical; if TRUE, the start point of the polygon is added as final point (adding the last polygon edge)}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polygon

@@ -36,21 +36,29 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
         loops[i]->FindValidationError(&error);
         stop(error.text());
       }
+      if (!oriented)
+        loops[i]->Normalize();
     }
   }
 
   XPtr<S2Polygon> polygon(new S2Polygon());
+  polygon->set_s2debug_override(S2Debug::DISABLE);
   if (oriented) {
     polygon->InitOriented(std::move(loops));
   } else {
     polygon->InitNested(std::move(loops));
+  }
+  if (check && !polygon->IsValid()) {
+    S2Error error;
+    polygon->FindValidationError(&error);
+    stop(error.text());
   }
 
   return  List::create(polygon);
 }
 
 // [[Rcpp::export]]
-List s2polyline_from_s2polygon(List s2polygon) {
+List s2polyline_from_s2polygon(List s2polygon, bool close = false) {
   if (s2polygon.size() != 1) {
     stop("Can't convert an s2polygon of length != 1 to s2polyline");
   }
@@ -65,11 +73,13 @@ List s2polyline_from_s2polygon(List s2polygon) {
 
   for (R_xlen_t i = 0; i < ptr->num_loops(); i++) {
     const S2Loop* loop = ptr->loop(i);
-    std::vector<S2LatLng> vertices(loop->num_vertices());
+    std::vector<S2LatLng> vertices(loop->num_vertices() + (int) close);
 
     for (R_xlen_t j = 0; j < loop->num_vertices(); j++) {
       vertices[j] = S2LatLng(loop->vertex(j));
     }
+    if (close)
+      vertices[loop->num_vertices()] = S2LatLng(loop->vertex(0));
 
     output[i] = XPtr<S2Polyline>(new S2Polyline(vertices));
   }
@@ -94,20 +104,19 @@ CharacterVector s2polygon_format(List s2polygon, int nVertices) {
       XPtr<S2Polygon> ptr(item);
       stream.str("");
       stream << "{" << ptr->num_loops() << "}";
-      if (ptr->num_loops() > 0) {
-        const S2Loop* loop = ptr->loop(0);
+      for (int l = 0, nVprinted = 0; nVprinted < nVertices && l < ptr->num_loops(); l++) {
+        const S2Loop* loop = ptr->loop(l);
+        stream << "[" <<  ptr->GetParent(l) << "]";
 
-        for (int j = 0; j < std::min(nVertices, ptr->num_vertices()); j++) {
-          if (j > 0) {
-            stream << " ";
-          }
+        for (int j = 0; nVprinted < nVertices && j < loop->num_vertices(); j++) {
           vertex = S2LatLng(loop->vertex(j));
-          stream << "(" << vertex.lat().degrees() << ", " << vertex.lng().degrees() << ")";
+          stream << "(" << vertex.lat().degrees() << ", " << vertex.lng().degrees() << ") ";
+          nVprinted++;
         }
 
-        if (nVertices < ptr->num_vertices()) {
-          stream << "...+" << ptr->num_vertices() - nVertices;
-        }
+      }
+      if (nVertices < ptr->num_vertices()) {
+        stream << "...+" << ptr->num_vertices() - nVertices;
       }
     }
 

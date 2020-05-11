@@ -1,6 +1,6 @@
 
 test_that("s2polygon objects can be created from and converted back to R objects", {
-  latlng_loop <- s2latlng(c(0, 10, 0), c(0, 0, 10))
+  latlng_loop <- s2latlng(c(0, 10, 0), c(0, 0, 10))[3:1]
   polyline_loop <- s2polyline(latlng_loop)
 
   # in
