@@ -68,7 +68,7 @@ st_as_sfc_base <- function(x, null) {
 
   # avoids a CMD check note about sf in Suggests
   # until this can live there
-  sf_st_as_sfc(wkb, EWKB = TRUE)
+  sf_st_as_sfc(wkb, EWKB = FALSE)
 }
 
 # compatibility functions to avoid a CMD check note and keep
