@@ -159,17 +159,17 @@ public:
 
   void nextFeatureEnd(size_t featureId) {
     XPtr<S2Polygon> polygon(new S2Polygon());
-	polygon->set_s2debug_override(S2Debug::DISABLE);
+    polygon->set_s2debug_override(S2Debug::DISABLE);
     if (this->oriented) {
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
     }
-	if (this->check && !polygon->IsValid()) {
+    if (this->check && !polygon->IsValid()) {
       S2Error error;
       polygon->FindValidationError(&error);
       stop(error.text());
-	}
+    }
 
     s2polygon[featureId] = polygon;
   }
@@ -313,59 +313,59 @@ List wkb_from_s2polyline(List s2polyline, int endian) {
 }
 
 bool is_multi_polygon(S2Polygon *p) {
-	int n_outer_loops = 0;
-	for (int i = 0; i < p->num_loops(); i++) {
-		if (p->GetParent(i) == -1)
-			n_outer_loops++;
-		if (p->GetParent(i) > 0 || n_outer_loops > 1)
-			return true;
-	}
-	return false;
+  int n_outer_loops = 0;
+  for (int i = 0; i < p->num_loops(); i++) {
+    if (p->GetParent(i) == -1)
+      n_outer_loops++;
+      if (p->GetParent(i) > 0 || n_outer_loops > 1)
+      return true;
+  }
+  return false;
 }
 
 // return List with indexes of the POLYGONS, flattening the nested S2 hierarchy
 std::vector<std::vector<int>> multi_polygon_order(S2Polygon *p) {
 
-	// FIXME: handle empty MULTIPOLYGON
-	if (p->num_loops() == 0)
-		stop("empty MULTIPOLYGON not expected");
+  // FIXME: handle empty MULTIPOLYGON
+  if (p->num_loops() == 0)
+    stop("empty MULTIPOLYGON not expected");
 
-	// get nested rings kludge into flat simple feature form:
-	IntegerVector outer_index(p->num_loops());
-	// we know the first one is outer:
-	int n_outer = 1;
-	outer_index[0] = 0; // first, outer loop
+  // get nested rings kludge into flat simple feature form:
+  IntegerVector outer_index(p->num_loops());
+  // we know the first one is outer:
+  int n_outer = 1;
+  outer_index[0] = 0; // first, outer loop
 
-	// go through all others:
-	for (int i = 1; i < p->num_loops(); i++) {
-		if (p->GetParent(i) == -1) { // -1 indicates a top-level outer ring, so no hole:
-			outer_index[i] = n_outer; // the n_outer-th outer 
-			n_outer++;
-		} else {
-			// possibly hole, or a MULTIPOLYGON outer ring inside a hole:
-			if (outer_index[p->GetParent(i)] >= 0) { // parent refers to an outer loop: this is a hole
-				outer_index[i] = -1 - outer_index[p->GetParent(i)]; // give negative index
-			} else { // parent refers to a hole: this must be a nested outer loop
-				outer_index[i] = n_outer;
-				n_outer++;
-			}
-		}
-	}
+  // go through all others:
+  for (int i = 1; i < p->num_loops(); i++) {
+    if (p->GetParent(i) == -1) { // -1 indicates a top-level outer ring, so no hole:
+      outer_index[i] = n_outer; // the n_outer-th outer 
+      n_outer++;
+    } else {
+      // possibly hole, or a MULTIPOLYGON outer ring inside a hole:
+      if (outer_index[p->GetParent(i)] >= 0) { // parent refers to an outer loop: this is a hole
+        outer_index[i] = -1 - outer_index[p->GetParent(i)]; // give negative index
+      } else { // parent refers to a hole: this must be a nested outer loop
+        outer_index[i] = n_outer;
+        n_outer++;
+      }
+    }
+  }
 
-	std::vector<std::vector<int>> indices;
-	for (int i = 0; i < outer_index.size(); i++) {
-		if (outer_index[i] >= 0) { // add outer loop
-			std::vector<int> outer;
-			outer.push_back(i);
-			indices.push_back(outer);
-		} else { // add hole, to -outer_index[i]-1
-			int j = -outer_index[i] - 1;
-			std::vector<int> vec = indices[j];
-			vec.push_back(i);
-			indices[j] = vec;
-		}
-	}
-	return indices;
+  std::vector<std::vector<int>> indices;
+  for (int i = 0; i < outer_index.size(); i++) {
+    if (outer_index[i] >= 0) { // add outer loop
+      std::vector<int> outer;
+      outer.push_back(i);
+      indices.push_back(outer);
+    } else { // add hole, to -outer_index[i]-1
+      int j = -outer_index[i] - 1;
+      std::vector<int> vec = indices[j];
+      vec.push_back(i);
+      indices[j] = vec;
+    }
+  }
+  return indices;
 }
 
 
@@ -384,14 +384,14 @@ public:
       std::vector<std::vector<int>> indices = multi_polygon_order(ptr);
 
       // FIXME: output indices.size() here
-	  meta.size = indices.size(); // ???
+      meta.size = indices.size(); // ???
       this->handler.nextGeometryStart(meta, PART_ID_NONE); // ???
 
-	  for (int k = 0; k < indices.size(); k++) { // all outer loops
-	  	std::vector<int> loop_indices = indices[k]; // this outer ring + holes
+      for (int k = 0; k < indices.size(); k++) { // all outer loops
+        std::vector<int> loop_indices = indices[k]; // this outer ring + holes
 
         // meta.size = ptr->num_loops();
-		meta.size = loop_indices.size();
+        meta.size = loop_indices.size();
         this->handler.nextPolygon(meta, loop_indices.size()); // ???
 
         // this->handler.nextGeometryStart(meta, PART_ID_NONE);
@@ -421,12 +421,12 @@ public:
           }
 
           this->handler.nextLinearRingEnd(meta, loopSize, i);
-	    }
+        }
         // this->handler.nextGeometryEnd(meta, PART_ID_NONE);
-	  }
+      }
       this->handler.nextGeometryEnd(meta, PART_ID_NONE);
 
-	} else { // POLYGON:
+    } else { // POLYGON:
       WKGeometryMeta meta(WKGeometryType::Polygon, false, false, false);
       meta.hasSize = true;
       meta.size = ptr->num_loops();
