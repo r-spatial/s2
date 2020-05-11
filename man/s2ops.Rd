@@ -2,23 +2,24 @@
 % Please edit documentation in R/RcppExports.R
 \name{s2ops}
 \alias{s2ops}
-\alias{s2Intersects}
-\alias{s2IsValid}
-\alias{s2GetArea}
+\alias{s2polygon_intersects}
+\alias{s2polyline_intersects}
+\alias{s2polygon_is_valid}
+\alias{s2polyline_is_valid}
 \title{Geometry operators for s2 geometries}
 \usage{
-s2Intersects(x, y, polygons = TRUE)
+s2polygon_intersects(x, y)
 
-s2IsValid(ptrs, polygons = TRUE)
+s2polyline_intersects(x, y)
 
-s2GetArea(ptrs)
+s2polygon_is_valid(ptrs)
+
+s2polyline_is_valid(ptrs)
 }
 \arguments{
 \item{x}{list with S2Polygons or S2Polyline pointers}
 
 \item{y}{list with S2Polygons or S2Polyline pointers}
-
-\item{polygons}{logical; if TRUE, x and y are S2Polygon, otherwise S2Polyline}
 
 \item{ptrs}{list of S2Polygon or S2Polyline pointers}
 }
