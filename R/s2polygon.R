@@ -7,7 +7,7 @@
 #'   by [sf::read_sf()] using `check_ring_dir = TRUE`, meaning CCW exterior rings
 #'   and CW holes. If `FALSE`, rings are normalized and holes are deduced from
 #'   degree of nesting.
-#' @param check Pass `FALSE` to skip ring validation.
+#' @param check Pass `FALSE` to skip ring and polygon validation.
 #'
 #' @return A [new_s2xptr()] with class s2polygon
 #' @export
@@ -38,7 +38,7 @@ s2polygon.s2polyline <- function(x, ...,  oriented = FALSE, check = TRUE) {
 }
 
 #' @rdname s2polygon
-#' @param close logical; if TRUE, the start point of the polygon is added as added as final point (making a closed polygon)
+#' @param close logical; if TRUE, the start point of the polygon is added as final point (adding the last polygon edge)
 #' @export
 s2polyline.s2polygon <- function(x, ..., close = FALSE) {
   new_s2xptr(s2polyline_from_s2polygon(x, close = close), "s2polyline")

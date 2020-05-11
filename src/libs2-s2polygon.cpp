@@ -36,6 +36,8 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
         loops[i]->FindValidationError(&error);
         stop(error.text());
       }
+      if (!oriented)
+        loops[i]->Normalize();
     }
   }
 
@@ -46,7 +48,7 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
   } else {
     polygon->InitNested(std::move(loops));
   }
-  if (this->check && !polygon->IsValid()) {
+  if (check && !polygon->IsValid()) {
     S2Error error;
     polygon->FindValidationError(&error);
     stop(error.text());
