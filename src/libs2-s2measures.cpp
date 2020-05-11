@@ -7,6 +7,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+//' Get lengths of s2polylines
+//' 
+//' @name s2measures
+//' @param s2polyline object of class \link{s2polyline}
+//' @param degrees logical; if `FALSE`, return length in radians, else in degrees
+//' @export
 // [[Rcpp::export]]
 NumericVector s2polyline_lengths(List s2polyline, bool degrees = false) {
 
@@ -27,6 +33,13 @@ NumericVector s2polyline_lengths(List s2polyline, bool degrees = false) {
   return lengths;
 }
 
+//' Get area of s2polygons
+//' 
+//' @name s2measures
+//' @param s2polygon object of class \link{s2polygon}
+//' @export
+//' @details note that all s2 measures are on the unit sphere, and need rescaling 
+//' by the Earth's radius to get measures on the Earth
 // [[Rcpp::export]]
 NumericVector s2polygon_areas(List s2polygon) {
 
