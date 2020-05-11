@@ -40,10 +40,16 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
   }
 
   XPtr<S2Polygon> polygon(new S2Polygon());
+  polygon->set_s2debug_override(S2Debug::DISABLE);
   if (oriented) {
     polygon->InitOriented(std::move(loops));
   } else {
     polygon->InitNested(std::move(loops));
+  }
+  if (this->check && !polygon->IsValid()) {
+    S2Error error;
+    polygon->FindValidationError(&error);
+    stop(error.text());
   }
 
   return  List::create(polygon);
