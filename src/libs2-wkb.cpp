@@ -159,11 +159,17 @@ public:
 
   void nextFeatureEnd(size_t featureId) {
     XPtr<S2Polygon> polygon(new S2Polygon());
+	polygon->set_s2debug_override(S2Debug::DISABLE);
     if (this->oriented) {
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
     }
+	if (this->check && !polygon->IsValid()) {
+      S2Error error;
+      polygon->FindValidationError(&error);
+      stop(error.text());
+	}
 
     s2polygon[featureId] = polygon;
   }
