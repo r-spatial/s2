@@ -307,9 +307,13 @@ List wkb_from_s2polyline(List s2polyline, int endian) {
 }
 
 bool is_multi_polygon(S2Polygon *p) {
-	for (int i = 0; i < p->num_loops(); i++)
-		if (p->GetParent(i) > 0)
+	int n_outer_loops = 0;
+	for (int i = 0; i < p->num_loops(); i++) {
+		if (p->GetParent(i) == -1)
+			n_outer_loops++;
+		if (p->GetParent(i) > 0 || n_outer_loops > 1)
 			return true;
+	}
 	return false;
 }
 
