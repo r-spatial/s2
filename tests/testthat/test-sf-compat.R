@@ -22,9 +22,9 @@ test_that("sf objects can be imported to s2", {
   expect_identical(class(line), class(line_roundtrip))
   expect_identical(class(polygon), class(polygon_roudtrip))
 
-  expect_identical(sf_st_crs(point)$espg, sf_st_crs(point_roundtrip)$espg)
-  expect_identical(sf_st_crs(line)$espg, sf_st_crs(line_roundtrip)$espg)
-  expect_identical(sf_st_crs(polygon)$espg, sf_st_crs(polygon_roudtrip)$espg)
+  #expect_identical(sf_st_crs(point)$espg, sf_st_crs(point_roundtrip)$espg)
+  #expect_identical(sf_st_crs(line)$espg, sf_st_crs(line_roundtrip)$espg)
+  #expect_identical(sf_st_crs(polygon)$espg, sf_st_crs(polygon_roudtrip)$espg)
 
   expect_equal(sf_st_coordinates(point), sf_st_coordinates(point_roundtrip))
   expect_equal(sf_st_coordinates(line), sf_st_coordinates(line_roundtrip))
