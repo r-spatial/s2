@@ -39,7 +39,7 @@ by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, m
 and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
-\item{check}{Pass \code{FALSE} to skip ring validation.}
+\item{check}{Pass \code{FALSE} to skip ring and polygon validation.}
 }
 \value{
 A well-known binary vector (\code{list()} of \code{raw()})

@@ -25,9 +25,9 @@ by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, m
 and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
-\item{check}{Pass \code{FALSE} to skip ring validation.}
+\item{check}{Pass \code{FALSE} to skip ring and polygon validation.}
 
-\item{close}{logical; if TRUE, the start point of the polygon is added as added as final point (making a closed polygon)}
+\item{close}{logical; if TRUE, the start point of the polygon is added as final point (adding the last polygon edge)}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2polygon

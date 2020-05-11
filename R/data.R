@@ -25,10 +25,10 @@
 #'   `geometry` (wk_wkb)
 #' @source The [mapview package][mapview::mapview-package].
 #' @examples
-#' world <- s2polygon(s2_wrld_simpl_wkb$geometry)
-#' head(world)
+#' #world <- s2polygon(s2_wrld_simpl_wkb$geometry)
+#' #head(world)
 #'
-#' s2data_country("Germany")
+#' #s2data_country("Germany")
 #'
 "s2_wrld_simpl_wkb"
 
