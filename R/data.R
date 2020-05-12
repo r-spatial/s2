@@ -14,7 +14,7 @@
 
 #' Low-resolution world boundaries
 #'
-#' A modified version of [maptools'][maptools::maptools-package] `wrld_simpl` dataset
+#' A modified version of maptools' \link[maptools]{wrld_simpl} dataset
 #' in WKB format. Use the [s2data_country()] helper to load an [s2polygon()] vector for
 #' a given country.
 #'
@@ -25,10 +25,10 @@
 #'   `geometry` (wk_wkb)
 #' @source The [mapview package][mapview::mapview-package].
 #' @examples
-#' #world <- s2polygon(s2_wrld_simpl_wkb$geometry)
-#' #head(world)
+#' world <- s2polygon(s2_wrld_simpl_wkb$geometry)
+#' head(world)
 #'
-#' #s2data_country("Germany")
+#' s2data_country("Germany")
 #'
 "s2_wrld_simpl_wkb"
 
