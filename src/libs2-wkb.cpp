@@ -135,7 +135,7 @@ public:
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
     if (coordId < vertices.size()) {
-      vertices[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).ToPoint();
+      vertices[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint();
     }
   }
 
