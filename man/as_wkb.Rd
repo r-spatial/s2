@@ -22,7 +22,7 @@ as_wkb(x, ...)
 
 \method{s2polyline}{wk_wkb}(x, ...)
 
-\method{s2polygon}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
+\method{s2polygon}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE, omit_poles = 0)
 }
 \arguments{
 \item{x}{A \code{\link[=s2latlng]{s2latlng()}} vector}
@@ -40,6 +40,9 @@ and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
 degree of nesting.}
 
 \item{check}{Pass \code{FALSE} to skip ring and polygon validation.}
+
+\item{omit_poles}{numeric; if given a small positive value, coordinates with latitude
+degrees that differ in absolute sense less than this amount from 90 will be omitted.}
 }
 \value{
 A well-known binary vector (\code{list()} of \code{raw()})
