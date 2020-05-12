@@ -124,7 +124,7 @@ public:
 
   void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
     if (meta.geometryType != WKGeometryType::Polygon && meta.geometryType != WKGeometryType::MultiPolygon) {
-      stop("Can't create a s2poygon from a geometry that is not a polygon");
+      stop("Can't create a s2polygon from a geometry that is not a polygon");
     }
   }
 
@@ -151,6 +151,7 @@ public:
 
     // Not sure if && is short-circuiting in C++...
     if (this->check && !loops[ringId]->IsValid()) {
+      Rprintf("error on loop %d\n", ringId);
       S2Error error;
       loops[ringId]->FindValidationError(&error);
       stop(error.text());
@@ -160,16 +161,40 @@ public:
   void nextFeatureEnd(size_t featureId) {
     XPtr<S2Polygon> polygon(new S2Polygon());
     polygon->set_s2debug_override(S2Debug::DISABLE);
+	Rprintf("here 0\n");
     if (this->oriented) {
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
+      // polygon->InitNested(loops);
     }
+	Rprintf("here 1\n");
     if (this->check && !polygon->IsValid()) {
-      S2Error error;
-      polygon->FindValidationError(&error);
-      stop(error.text());
+	  std::vector<std::unique_ptr<S2Polygon>> polygons;
+	  loops = polygon->Release();
+	  Rprintf("nloops: %d\n", loops.size());
+	  for (int i = 0; i < loops.size(); i++) {
+		Rprintf("unioning polygon %d\n", i);
+	  	S2Polygon *p = new S2Polygon();
+  		std::vector<std::unique_ptr<S2Loop>> loop(1);
+		loop[0] = std::move(loops[i]); // # need to std::move?
+		// loop[0] = loops[i]; // # need to std::move?
+	  	//if (this->oriented) {
+          p->InitOriented(std::move(loop));
+        //} else {
+        //  polygons[i]->InitNested(std::move(loop));
+        //}
+        polygons.push_back(std::unique_ptr<S2Polygon>(p));
+	  }
+	  polygon->DestructiveUnion(std::move(polygons));
+	  Rprintf("here 3\n");
+      if (!polygon->IsValid()) {
+        S2Error error;
+        polygon->FindValidationError(&error);
+        stop(error.text());
+	  }
     }
+	Rprintf("here 4\n");
 
     s2polygon[featureId] = polygon;
   }
