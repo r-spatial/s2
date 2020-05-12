@@ -105,10 +105,12 @@ public:
   List s2polygon;
   std::vector<std::unique_ptr<S2Loop>> loops;
   std::vector<S2Point> vertices;
+  int n_vertices;
   bool check;
   bool oriented;
+  double omit_poles;
 
-  WKS2PolygonWriter(R_xlen_t size): s2polygon(size), check(true), oriented(false) {}
+  WKS2PolygonWriter(R_xlen_t size): s2polygon(size), check(true), oriented(false), omit_poles(0.0) {}
 
   void setOriented(bool oriented) {
     this->oriented = oriented;
@@ -116,6 +118,10 @@ public:
 
   void setCheck(bool check) {
     this->check = check;
+  }
+
+  void setOmitPoles(double omit) {
+  	this->omit_poles = omit;
   }
 
   void nextFeatureStart(size_t featureId) {
@@ -130,13 +136,19 @@ public:
 
   void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
     // skip the last vertex (WKB rings are theoretically closed)
-    vertices = std::vector<S2Point>(size - 1);
+    // vertices = std::vector<S2Point>(size - 1);
+	vertices.clear();
+	n_vertices = size;
   }
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-    if (coordId < vertices.size()) {
-      vertices[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint();
-    }
+    if (coordId < n_vertices - 1) {
+      if (this->omit_poles > 0.0) {
+        if (!(fabs(fabs(coord.y) - 90.0) < this->omit_poles))
+          vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
+	  } else
+        vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
+	}
   }
 
   void nextLinearRingEnd(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
@@ -165,7 +177,6 @@ public:
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
-      // polygon->InitNested(loops);
     }
     if (this->check && !polygon->IsValid()) {
       std::vector<std::unique_ptr<S2Polygon>> polygons;
@@ -198,11 +209,12 @@ public:
 };
 
 // [[Rcpp::export]]
-List s2polygon_from_wkb(List wkb, bool oriented, bool check) {
+List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles = 0.0) {
   WKRawVectorListProvider provider(wkb);
   WKS2PolygonWriter writer(wkb.size());
   writer.setOriented(oriented);
   writer.setCheck(check);
+  writer.setOmitPoles(omit_poles);
   WKBReader reader(provider, writer);
 
   while (reader.hasNextFeature()) {

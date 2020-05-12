@@ -129,8 +129,8 @@ s2polyline_from_wkb <- function(wkb) {
     .Call(`_libs2_s2polyline_from_wkb`, wkb)
 }
 
-s2polygon_from_wkb <- function(wkb, oriented, check) {
-    .Call(`_libs2_s2polygon_from_wkb`, wkb, oriented, check)
+s2polygon_from_wkb <- function(wkb, oriented, check, omit_poles = 0.0) {
+    .Call(`_libs2_s2polygon_from_wkb`, wkb, oriented, check, omit_poles)
 }
 
 wkb_from_s2latlng <- function(s2latlng, endian) {
