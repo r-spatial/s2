@@ -121,7 +121,7 @@ public:
   }
 
   void setOmitPoles(double omit) {
-  	this->omit_poles = omit;
+    this->omit_poles = omit;
   }
 
   void nextFeatureStart(size_t featureId) {
@@ -137,8 +137,8 @@ public:
   void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
     // skip the last vertex (WKB rings are theoretically closed)
     // vertices = std::vector<S2Point>(size - 1);
-	vertices.clear();
-	n_vertices = size;
+    vertices.clear();
+    n_vertices = size;
   }
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
@@ -146,9 +146,9 @@ public:
       if (this->omit_poles > 0.0) {
         if (!(fabs(fabs(coord.y) - 90.0) < this->omit_poles))
           vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
-	  } else
+      } else
         vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
-	}
+    }
   }
 
   void nextLinearRingEnd(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
@@ -181,8 +181,10 @@ public:
     if (this->check && !polygon->IsValid()) {
       std::vector<std::unique_ptr<S2Polygon>> polygons;
       loops = polygon->Release();
+      // polygon->InitToSnapped(polygon, S2CellId::kMaxLevel - 4);
       for (int i = 0; i < loops.size(); i++) {
         S2Polygon *p = new S2Polygon();
+        // p->InitToSnapped(p, S2CellId::kMaxLevel - 4);
         std::vector<std::unique_ptr<S2Loop>> loop(1);
         loop[0] = std::move(loops[i]); // # need to std::move?
         if (this->oriented) {
@@ -192,7 +194,8 @@ public:
         }
         polygons.push_back(std::unique_ptr<S2Polygon>(p));
       }
-      polygon->DestructiveUnion(std::move(polygons));
+      polygon->DestructiveApproxUnion(std::move(polygons), S1Angle::Degrees(0.0));
+      // Rprintf("Unioned %d loops\n", loops.size()); 
       if (!polygon->IsValid()) {
         S2Error error;
         polygon->FindValidationError(&error);
