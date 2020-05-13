@@ -179,6 +179,11 @@ public:
       polygon->InitNested(std::move(loops));
     }
     if (this->check && !polygon->IsValid()) {
+	  // try to solve this first by
+	  // 1. creating a polygon for every loop
+	  // 2. unioning these loops
+	  // the disadvantage of this is that holes are no longer interpreted 
+	  // as holes, if !oriented.
       std::vector<std::unique_ptr<S2Polygon>> polygons;
       loops = polygon->Release();
       // polygon->InitToSnapped(polygon, S2CellId::kMaxLevel - 4);
@@ -196,7 +201,7 @@ public:
       }
       polygon->DestructiveApproxUnion(std::move(polygons), S1Angle::Degrees(0.0));
       // Rprintf("Unioned %d loops\n", loops.size()); 
-      if (!polygon->IsValid()) {
+      if (!polygon->IsValid()) { // it didn't help, so:
         S2Error error;
         polygon->FindValidationError(&error);
         stop(error.text());
@@ -431,6 +436,8 @@ public:
         WKCoord coord;
   
         for (size_t i = 0; i < loop_indices.size(); i++) {
+          if (i > 0) // hole:
+            ptr->loop(loop_indices[i])->Invert();
           const S2Loop* loop = ptr->loop(loop_indices[i]);
           uint32_t loopSize = loop->num_vertices();
           // need to close loop for WKB
@@ -468,6 +475,8 @@ public:
       WKCoord coord;
   
       for (size_t i = 0; i < ptr->num_loops(); i++) {
+        if (i > 0) // hole:
+          ptr->loop(i)->Invert();
         const S2Loop* loop = ptr->loop(i);
         uint32_t loopSize = loop->num_vertices();
         // need to close loop for WKB
