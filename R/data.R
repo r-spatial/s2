@@ -14,7 +14,7 @@
 
 #' Low-resolution world boundaries
 #'
-#' A modified version of [maptools'][maptools::maptools-package] `wrld_simpl` dataset
+#' A modified version of [maptools'][maptools::wrld_simpl] `wrld_simpl` dataset
 #' in WKB format. Use the [s2data_country()] helper to load an [s2polygon()] vector for
 #' a given country.
 #'

@@ -22,7 +22,7 @@ s2data_country(name = NULL)
 for all countries.}
 }
 \description{
-A modified version of \link[maptools:maptools-package]{maptools'} \code{wrld_simpl} dataset
+A modified version of \link[maptools:wrld_simpl]{maptools'} \code{wrld_simpl} dataset
 in WKB format. Use the \code{\link[=s2data_country]{s2data_country()}} helper to load an \code{\link[=s2polygon]{s2polygon()}} vector for
 a given country.
 }
