@@ -52,6 +52,9 @@ s2polyline.wk_wkb <- function(x, ...) {
 
 #' @rdname as_wkb
 #' @export
-s2polygon.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
-  new_s2xptr(s2polygon_from_wkb(x, oriented = oriented, check = check), "s2polygon")
+#' @param omit_poles numeric; if given a small positive value, coordinates with latitude
+#' degrees that differ in absolute sense less than this amount from 90 will be omitted.
+s2polygon.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE, omit_poles = 0.0) {
+  new_s2xptr(s2polygon_from_wkb(x, oriented = oriented, check = check, 
+  	omit_poles = omit_poles), "s2polygon")
 }

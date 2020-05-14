@@ -27,7 +27,7 @@ List s2point_from_s2latlng(List s2latlng) {
       output[i] = R_NilValue;
     } else {
       XPtr<S2LatLng> ptr(item);
-      newItem = ptr->ToPoint();
+      newItem = ptr->Normalized().ToPoint();
       output[i] = XPtr<S2Point>(new S2Point(newItem));
     }
   }

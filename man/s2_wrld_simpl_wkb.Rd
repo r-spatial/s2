@@ -10,7 +10,7 @@ A list with components \code{ISO3} (character), \code{NAME} (character), and
 \code{geometry} (wk_wkb)
 }
 \source{
-The \link[mapview:mapview-package]{mapview package}.
+The \link[maptools:wrld_simpl]{mapview package}.
 }
 \usage{
 s2_wrld_simpl_wkb

@@ -23,7 +23,7 @@
 #'
 #' @format A list with components `ISO3` (character), `NAME` (character), and
 #'   `geometry` (wk_wkb)
-#' @source The [mapview package][mapview::mapview-package].
+#' @source The [mapview package][maptools::wrld_simpl].
 #' @examples
 #' #world <- s2polygon(s2_wrld_simpl_wkb$geometry)
 #' #head(world)

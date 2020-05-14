@@ -105,10 +105,12 @@ public:
   List s2polygon;
   std::vector<std::unique_ptr<S2Loop>> loops;
   std::vector<S2Point> vertices;
+  int n_vertices;
   bool check;
   bool oriented;
+  double omit_poles;
 
-  WKS2PolygonWriter(R_xlen_t size): s2polygon(size), check(true), oriented(false) {}
+  WKS2PolygonWriter(R_xlen_t size): s2polygon(size), check(true), oriented(false), omit_poles(0.0) {}
 
   void setOriented(bool oriented) {
     this->oriented = oriented;
@@ -118,24 +120,34 @@ public:
     this->check = check;
   }
 
+  void setOmitPoles(double omit) {
+    this->omit_poles = omit;
+  }
+
   void nextFeatureStart(size_t featureId) {
     loops.clear();
   }
 
   void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
     if (meta.geometryType != WKGeometryType::Polygon && meta.geometryType != WKGeometryType::MultiPolygon) {
-      stop("Can't create a s2poygon from a geometry that is not a polygon");
+      stop("Can't create a s2polygon from a geometry that is not a polygon");
     }
   }
 
   void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
     // skip the last vertex (WKB rings are theoretically closed)
-    vertices = std::vector<S2Point>(size - 1);
+    // vertices = std::vector<S2Point>(size - 1);
+    vertices.clear();
+    n_vertices = size;
   }
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-    if (coordId < vertices.size()) {
-      vertices[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).ToPoint();
+    if (coordId < n_vertices - 1) {
+      if (this->omit_poles > 0.0) {
+        if (!(fabs(fabs(coord.y) - 90.0) < this->omit_poles))
+          vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
+      } else
+        vertices.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
     }
   }
 
@@ -151,6 +163,7 @@ public:
 
     // Not sure if && is short-circuiting in C++...
     if (this->check && !loops[ringId]->IsValid()) {
+      Rprintf("error on loop %d\n", ringId);
       S2Error error;
       loops[ringId]->FindValidationError(&error);
       stop(error.text());
@@ -166,9 +179,33 @@ public:
       polygon->InitNested(std::move(loops));
     }
     if (this->check && !polygon->IsValid()) {
-      S2Error error;
-      polygon->FindValidationError(&error);
-      stop(error.text());
+	  // try to solve this first by
+	  // 1. creating a polygon for every loop
+	  // 2. unioning these loops
+	  // the disadvantage of this is that holes are no longer interpreted 
+	  // as holes, if !oriented.
+      std::vector<std::unique_ptr<S2Polygon>> polygons;
+      loops = polygon->Release();
+      // polygon->InitToSnapped(polygon, S2CellId::kMaxLevel - 4);
+      for (int i = 0; i < loops.size(); i++) {
+        S2Polygon *p = new S2Polygon();
+        // p->InitToSnapped(p, S2CellId::kMaxLevel - 4);
+        std::vector<std::unique_ptr<S2Loop>> loop(1);
+        loop[0] = std::move(loops[i]); // # need to std::move?
+        if (this->oriented) {
+          p->InitOriented(std::move(loop));
+        } else {
+          p->InitNested(std::move(loop));
+        }
+        polygons.push_back(std::unique_ptr<S2Polygon>(p));
+      }
+      polygon->DestructiveApproxUnion(std::move(polygons), S1Angle::Degrees(0.0));
+      // Rprintf("Unioned %d loops\n", loops.size()); 
+      if (!polygon->IsValid()) { // it didn't help, so:
+        S2Error error;
+        polygon->FindValidationError(&error);
+        stop(error.text());
+      }
     }
 
     s2polygon[featureId] = polygon;
@@ -180,11 +217,12 @@ public:
 };
 
 // [[Rcpp::export]]
-List s2polygon_from_wkb(List wkb, bool oriented, bool check) {
+List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles = 0.0) {
   WKRawVectorListProvider provider(wkb);
   WKS2PolygonWriter writer(wkb.size());
   writer.setOriented(oriented);
   writer.setCheck(check);
+  writer.setOmitPoles(omit_poles);
   WKBReader reader(provider, writer);
 
   while (reader.hasNextFeature()) {
@@ -398,6 +436,8 @@ public:
         WKCoord coord;
   
         for (size_t i = 0; i < loop_indices.size(); i++) {
+          if (i > 0) // hole:
+            ptr->loop(loop_indices[i])->Invert();
           const S2Loop* loop = ptr->loop(loop_indices[i]);
           uint32_t loopSize = loop->num_vertices();
           // need to close loop for WKB
@@ -435,6 +475,8 @@ public:
       WKCoord coord;
   
       for (size_t i = 0; i < ptr->num_loops(); i++) {
+        if (i > 0) // hole:
+          ptr->loop(i)->Invert();
         const S2Loop* loop = ptr->loop(i);
         uint32_t loopSize = loop->num_vertices();
         // need to close loop for WKB

@@ -401,15 +401,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // s2polygon_from_wkb
-List s2polygon_from_wkb(List wkb, bool oriented, bool check);
-RcppExport SEXP _libs2_s2polygon_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
+List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles);
+RcppExport SEXP _libs2_s2polygon_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP, SEXP omit_polesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
     Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_from_wkb(wkb, oriented, check));
+    Rcpp::traits::input_parameter< double >::type omit_poles(omit_polesSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2polygon_from_wkb(wkb, oriented, check, omit_poles));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -486,7 +487,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {"_libs2_s2latlng_from_wkb", (DL_FUNC) &_libs2_s2latlng_from_wkb, 1},
     {"_libs2_s2polyline_from_wkb", (DL_FUNC) &_libs2_s2polyline_from_wkb, 1},
-    {"_libs2_s2polygon_from_wkb", (DL_FUNC) &_libs2_s2polygon_from_wkb, 3},
+    {"_libs2_s2polygon_from_wkb", (DL_FUNC) &_libs2_s2polygon_from_wkb, 4},
     {"_libs2_wkb_from_s2latlng", (DL_FUNC) &_libs2_wkb_from_s2latlng, 2},
     {"_libs2_wkb_from_s2polyline", (DL_FUNC) &_libs2_wkb_from_s2polyline, 2},
     {"_libs2_wkb_from_s2polygon", (DL_FUNC) &_libs2_wkb_from_s2polygon, 2},
