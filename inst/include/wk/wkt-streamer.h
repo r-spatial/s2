@@ -28,7 +28,7 @@
 
 #include "wk/reader.h"
 #include "wk/io-string.h"
-#include "wk/formatter.h"
+#include "wk/error-formatter.h"
 #include "wk/geometry-handler.h"
 #include "wk/string-tokenizer.h"
 #include "wk/parse-exception.h"
@@ -38,8 +38,7 @@
 class WKTStreamer: public WKReader {
 public:
 
-  WKTStreamer(WKStringProvider& provider, WKGeometryHandler& handler):
-    WKReader(provider, handler), provider(provider) {
+  WKTStreamer(WKStringProvider& provider): WKReader(provider), provider(provider) {
     // TODO evaluate if we need this if we use C++11's double parser
 #ifdef _MSC_VER
     // Avoid multithreading issues caused by setlocale
@@ -57,12 +56,17 @@ public:
   }
 
   void readFeature(size_t featureId) {
-    const std::string& wellKnownText = this->provider.featureString();
-    WKStringTokenizer tokenizer(wellKnownText);
+    this->handler->nextFeatureStart(featureId);
 
-    handler.nextFeatureStart(featureId);
-    this->readGeometryTaggedText(&tokenizer, PART_ID_NONE, SRID_UNKNOWN);
-    handler.nextFeatureEnd(featureId);
+    if (this->provider.featureIsNull()) {
+      this->handler->nextNull(featureId);
+    } else {
+      const std::string& wellKnownText = this->provider.featureString();
+      WKStringTokenizer tokenizer(wellKnownText);
+      this->readGeometryTaggedText(&tokenizer, PART_ID_NONE, SRID_UNKNOWN);
+    }
+
+    this->handler->nextFeatureEnd(featureId);
   }
 
 protected:
@@ -97,7 +101,7 @@ protected:
       geometryType = WKGeometryType::GeometryCollection;
 
     } else {
-      throw WKParseException(Formatter() << "Unknown type " << type);
+      throw WKParseException(ErrorFormatter() << "Unknown type " << type);
     }
 
     WKGeometryMeta meta = this->getNextEmptyOrOpener(tokenizer, geometryType);
@@ -110,12 +114,12 @@ protected:
   }
 
   void readGeometry(WKStringTokenizer* tokenizer, const WKGeometryMeta meta, uint32_t partId) {
-    handler.nextGeometryStart(meta, partId);
+    this->handler->nextGeometryStart(meta, partId);
 
     // if empty, calling read* functions will fail because
     // the empty token has been consumed
     if (meta.size == 0) {
-      handler.nextGeometryEnd(meta, partId);
+      this->handler->nextGeometryEnd(meta, partId);
       return;
     }
 
@@ -151,13 +155,13 @@ protected:
 
     default:
       throw WKParseException(
-          Formatter() <<
+          ErrorFormatter() <<
             "Unrecognized geometry type: " <<
             meta.geometryType
       );
     }
 
-    handler.nextGeometryEnd(meta, partId);
+    this->handler->nextGeometryEnd(meta, partId);
   }
 
   void readPointText(WKStringTokenizer* tokenizer, const WKGeometryMeta meta) {
@@ -180,10 +184,10 @@ protected:
   }
 
   void readLinearRingText(WKStringTokenizer* tokenizer, const WKGeometryMeta meta, uint32_t ringId) {
-    handler.nextLinearRingStart(meta, WKGeometryMeta::SIZE_UNKNOWN, ringId);
+    this->handler->nextLinearRingStart(meta, WKGeometryMeta::SIZE_UNKNOWN, ringId);
     this->getNextEmptyOrOpener(tokenizer, 0);
     this->readCoordinates(tokenizer, meta);
-    handler.nextLinearRingEnd(meta, WKGeometryMeta::SIZE_UNKNOWN, ringId);
+    this->handler->nextLinearRingEnd(meta, WKGeometryMeta::SIZE_UNKNOWN, ringId);
   }
 
   void readMultiPointText(WKStringTokenizer* tokenizer, const WKGeometryMeta meta) {
@@ -205,9 +209,9 @@ protected:
         WKGeometryMeta childMeta(WKGeometryType::Point, meta.hasZ, meta.hasM, meta.hasSRID);
         childMeta.srid = meta.srid;
 
-        handler.nextGeometryStart(childMeta, partId);
+        this->handler->nextGeometryStart(childMeta, partId);
         this->readCoordinate(tokenizer, meta, 0);
-        handler.nextGeometryEnd(childMeta, partId);
+        this->handler->nextGeometryEnd(childMeta, partId);
         partId++;
 
         nextToken = this->getNextCloserOrComma(tokenizer);
@@ -329,7 +333,7 @@ protected:
         coord.m = this->getNextNumber(tokenizer);
         coord.hasM = true;
       } else {
-        throw WKParseException(Formatter() << "Found unexpected coordiate " << this->getNextNumber(tokenizer));
+        throw WKParseException(ErrorFormatter() << "Found unexpected coordiate " << this->getNextNumber(tokenizer));
       }
 
       if(this->isNumberNext(tokenizer)) {
@@ -337,7 +341,7 @@ protected:
           coord.m = this->getNextNumber(tokenizer);
           coord.hasM = true;
         } else {
-          throw WKParseException(Formatter() << "Found unexpected coordiate " << this->getNextNumber(tokenizer));
+          throw WKParseException(ErrorFormatter() << "Found unexpected coordiate " << this->getNextNumber(tokenizer));
         }
       } else if (meta.hasZ && meta.hasM) {
         throw WKParseException("Expected M coordinate but foound ','  or ')'");
@@ -346,7 +350,7 @@ protected:
       throw WKParseException("Expected Z or M coordinate");
     }
 
-    handler.nextCoordinate(meta, coord, coordId);
+    this->handler->nextCoordinate(meta, coord, coordId);
   }
 
   double getNextNumber(WKStringTokenizer* tokenizer) {
@@ -359,7 +363,7 @@ protected:
     case WKStringTokenizer::TT_EOL:
       throw WKParseException("Expected number but encountered end of line");
     case WKStringTokenizer::TT_WORD:
-      throw WKParseException(Formatter() << "Expected number but encountered word " << tokenizer->getSVal());
+      throw WKParseException(ErrorFormatter() << "Expected number but encountered word " << tokenizer->getSVal());
     case '(':
       throw WKParseException("Expected number but encountered '('");
     case ')':
@@ -367,7 +371,7 @@ protected:
     case ',':
       throw WKParseException("Expected number but encountered ','");
     default:
-      throw std::runtime_error(Formatter() << "getNextNumber(): Unexpected token type " << type);
+      throw std::runtime_error(ErrorFormatter() << "getNextNumber(): Unexpected token type " << type);
     }
   }
 
@@ -381,12 +385,12 @@ protected:
       if (nextWord == ";") {
         return srid;
       } else {
-        throw WKParseException(Formatter() << "Expected ';' but found " << nextWord);
+        throw WKParseException(ErrorFormatter() << "Expected ';' but found " << nextWord);
       }
     } else {
       // better error message here will require some refactoring of all the
       // errors
-      throw WKParseException(Formatter() <<  "Expected '=' and SRID");
+      throw WKParseException(ErrorFormatter() <<  "Expected '=' and SRID");
     }
   }
 
@@ -421,7 +425,7 @@ protected:
 
     } else {
       throw WKParseException(
-          Formatter() <<
+          ErrorFormatter() <<
             "Expected 'Z', 'M', 'ZM', 'EMPTY' or '(' but encountered " <<
               nextWord
       );
@@ -434,7 +438,7 @@ protected:
       return nextWord;
     }
 
-    throw  WKParseException(Formatter() << "Expected ')' or ',' but encountered" << nextWord);
+    throw  WKParseException(ErrorFormatter() << "Expected ')' or ',' but encountered" << nextWord);
   }
 
   std::string getNextCloser(WKStringTokenizer* tokenizer) {
@@ -443,7 +447,7 @@ protected:
       return nextWord;
     }
 
-    throw WKParseException(Formatter() << "Expected ')' but encountered" << nextWord);
+    throw WKParseException(ErrorFormatter() << "Expected ')' but encountered" << nextWord);
   }
 
   std::string getNextWord(WKStringTokenizer* tokenizer) {
@@ -462,7 +466,7 @@ protected:
     case WKStringTokenizer::TT_EOL:
       throw WKParseException("Expected word but encountered end of line");
     case WKStringTokenizer::TT_NUMBER:
-      throw WKParseException(Formatter() << "Expected word but encountered number" << tokenizer->getNVal());
+      throw WKParseException(ErrorFormatter() << "Expected word but encountered number" << tokenizer->getNVal());
     case '(':
       return "(";
     case ')':
@@ -474,7 +478,7 @@ protected:
     case '=':
       return "=";
     default:
-      throw std::runtime_error(Formatter() << "Unexpected token type " << type);
+      throw std::runtime_error(ErrorFormatter() << "Unexpected token type " << type);
     }
   }
 

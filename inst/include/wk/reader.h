@@ -12,18 +12,33 @@ public:
   const static uint32_t RING_ID_NONE = UINT32_MAX;
   const static uint32_t COORD_ID_NONE = UINT32_MAX;
 
-  WKReader(WKProvider& provider, WKGeometryHandler& handler):
-    handler(handler), featureId(0), provider(provider) {}
+  WKReader(WKProvider& provider): handler(nullptr), provider(provider) {
+    this->reset();
+  }
+
+  virtual void reset() {
+    this->provider.reset();
+    this->featureId = 0;
+  }
+
+  virtual void setHandler(WKGeometryHandler* handler) {
+    this->handler = handler;
+  }
 
   virtual bool hasNextFeature() {
     return this->provider.seekNextFeature();
   }
 
   virtual void iterateFeature() {
+    // check to make sure there is a valid handler
+    if (handler == nullptr) {
+      throw std::runtime_error("Unset handler in WKReader::iterateFeature()");
+    }
+
     try {
       this->readFeature(this->featureId);
     } catch (WKParseException& error) {
-      if (!handler.nextError(error, this->featureId)) {
+      if (!handler->nextError(error, this->featureId)) {
         throw error;
       }
     }
@@ -36,7 +51,7 @@ public:
   }
 
 protected:
-  WKGeometryHandler& handler;
+  WKGeometryHandler* handler;
   size_t featureId;
 
   virtual void readFeature(size_t featureId) = 0;

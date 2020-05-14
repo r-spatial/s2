@@ -25,7 +25,7 @@ public:
 
   // the factory handler is responsible for building these objects
   // but exporting can be done here
-  virtual void Export(WKGeometryHandler& handler, uint32_t partId) = 0;
+  virtual void Export(WKGeometryHandler* handler, uint32_t partId) = 0;
 
   virtual ~LibS2Geography() {}
 

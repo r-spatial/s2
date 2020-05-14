@@ -23,7 +23,7 @@ public:
     exporter.writeNextFeature();
   }
 
-  // creation optioins for all WKX formats
+  // creation options for all WKX formats
   void setIncludeSRID(int includeSRID) {
     this->includeSRID = includeSRID;
   }
@@ -73,7 +73,7 @@ protected:
   bool actuallyInclude(int flag, bool hasValue, const char* label) {
     if (flag == 1 && !hasValue) {
       throw std::runtime_error(
-        Formatter() << "Can't include " <<  label <<
+        ErrorFormatter() << "Can't include " <<  label <<
           " values in a geometry for which " <<
           label << " values are not defined"
       );

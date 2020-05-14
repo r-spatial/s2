@@ -1,19 +1,19 @@
 
-#ifndef WK_FORMATTER
-#define WK_FORMATTER
+#ifndef WK_ERROR_FORMATTER
+#define WK_ERROR_FORMATTER
 
 // https://stackoverflow.com/questions/12261915/how-to-throw-stdexceptions-with-variable-messages
 #include <stdexcept>
 #include <sstream>
 #include <stdexcept>
 
-class Formatter {
+class ErrorFormatter {
 public:
-    Formatter() {}
-    ~Formatter() {}
+    ErrorFormatter() {}
+    ~ErrorFormatter() {}
 
     template <typename Type>
-    Formatter & operator << (const Type & value) {
+    ErrorFormatter & operator << (const Type & value) {
         stream_ << value;
         return *this;
     }
@@ -29,8 +29,8 @@ public:
 private:
     std::stringstream stream_;
 
-    Formatter(const Formatter &);
-    Formatter & operator = (Formatter &);
+    ErrorFormatter(const ErrorFormatter &);
+    ErrorFormatter & operator = (ErrorFormatter &);
 };
 
 # endif

@@ -2,7 +2,7 @@
 #include "s2/s2latlng.h"
 #include "s2/s2polyline.h"
 #include "s2/s2polygon.h"
-#include "wk/io-rcpp.h"
+#include "wk/rcpp-io.h"
 
 #include "wk/wkb-reader.h"
 #include "wk/wkt-reader.h"
@@ -64,16 +64,16 @@ public:
     stop("Can't add point to a shape index");
   }
 
-  virtual void Export(WKGeometryHandler& handler, uint32_t partId) {
+  virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
     WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
     meta.hasSize = true;
     meta.size = !this->isEmpty;
 
-    handler.nextGeometryStart(meta, partId);
+    handler->nextGeometryStart(meta, partId);
     if (!this->isEmpty) {
-      handler.nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+      handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
     }
-    handler.nextGeometryEnd(meta, partId);
+    handler->nextGeometryEnd(meta, partId);
   }
 
 private:
@@ -116,7 +116,8 @@ public:
 List s2geography_from_wkb(List wkb) {
   WKRawVectorListProvider provider(wkb);
   WKLibS2GeographyWriter writer(wkb.size());
-  WKBReader reader(provider, writer);
+  WKBReader reader(provider);
+  reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
@@ -129,7 +130,8 @@ List s2geography_from_wkb(List wkb) {
 List s2geography_from_wkt(CharacterVector wkt) {
   WKCharacterVectorProvider provider(wkt);
   WKLibS2GeographyWriter writer(wkt.size());
-  WKTReader reader(provider, writer);
+  WKTReader reader(provider);
+  reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
@@ -162,25 +164,29 @@ public:
   size_t nFeatures() {
     return input.size();
   }
+
+  void reset() {
+    this->index = -1;
+  }
 };
 
 class WKLibS2GeographyReader: public WKReader {
 public:
 
-  WKLibS2GeographyReader(WKListProvider& provider, WKGeometryHandler& handler):
-  WKReader(provider, handler), provider(provider) {}
+  WKLibS2GeographyReader(WKListProvider& provider):
+  WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
-    this->handler.nextFeatureStart(featureId);
+    this->handler->nextFeatureStart(featureId);
 
     if (this->provider.featureIsNull()) {
-      this->handler.nextNull(featureId);
+      this->handler->nextNull(featureId);
     } else {
       XPtr<LibS2Geography> geography(this->provider.feature());
       geography->Export(handler, WKReader::PART_ID_NONE);
     }
 
-    this->handler.nextFeatureEnd(featureId);
+    this->handler->nextFeatureEnd(featureId);
   }
 
   virtual void readItem(SEXP item) {
@@ -188,12 +194,12 @@ public:
     meta.hasSize = true;
     meta.size = 1;
 
-    this->handler.nextGeometryStart(meta, PART_ID_NONE);
+    this->handler->nextGeometryStart(meta, PART_ID_NONE);
 
     XPtr<S2LatLng> ptr(item);
     const WKCoord coord = WKCoord::xy(ptr->lng().degrees(), ptr->lat().degrees());
-    this->handler.nextCoordinate(meta, coord, 0);
-    this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+    this->handler->nextCoordinate(meta, coord, 0);
+    this->handler->nextGeometryEnd(meta, PART_ID_NONE);
   }
 
 private:
@@ -206,7 +212,9 @@ CharacterVector s2geography_format(List s2geography, int maxCoords) {
   WKCharacterVectorExporter exporter(s2geography.size());
   WKGeometryFormatter formatter(exporter, maxCoords);
 
-  WKLibS2GeographyReader reader(provider, formatter);
+  WKLibS2GeographyReader reader(provider);
+  reader.setHandler(&formatter);
+
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }

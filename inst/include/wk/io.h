@@ -7,6 +7,7 @@ public:
   virtual bool seekNextFeature() = 0;
   virtual bool featureIsNull() = 0;
   virtual size_t nFeatures() = 0;
+  virtual void reset() = 0;
   virtual ~WKProvider() {}
 };
 
