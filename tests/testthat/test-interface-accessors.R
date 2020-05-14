@@ -44,3 +44,16 @@ test_that("s2_x and s2_y works", {
   expect_identical(s2_y("POINT EMPTY"), NA_real_)
 })
 
+test_that("s2_distance works", {
+  expect_equal(
+    s2_distance("POINT (0 0)", "POINT (0 90)", radius = 180 / pi),
+    90
+  )
+
+  expect_identical(s2_distance("POINT (0 0)", NA_character_), NA_real_)
+  expect_identical(s2_distance(NA_character_, "POINT (0 0)"), NA_real_)
+  # apparently Infinite is the distance returned for an empty
+  expect_identical(s2_distance("POINT (0 0)", "POINT EMPTY"), Inf)
+  expect_identical(s2_distance("POINT EMPTY", "POINT (0 0)"), Inf)
+})
+

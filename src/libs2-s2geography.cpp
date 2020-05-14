@@ -2,6 +2,7 @@
 #include "s2/s2latlng.h"
 #include "s2/s2polyline.h"
 #include "s2/s2polygon.h"
+#include "s2/s2point_vector_shape.h"
 #include "wk/rcpp-io.h"
 
 #include "wk/wkb-reader.h"
@@ -61,7 +62,11 @@ public:
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
-    stop("Can't add point to a shape index");
+    if (!this->isEmpty) {
+      std::vector<S2Point> points(1);
+      points[0] = S2Point(this->point);
+      index->Add(std::unique_ptr<S2PointVectorShape>(new S2PointVectorShape(std::move(points))));
+    }
   }
 
   virtual void Export(WKGeometryHandler* handler, uint32_t partId) {

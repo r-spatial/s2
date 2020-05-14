@@ -7,6 +7,8 @@
 class LibS2Geography {
 public:
 
+  LibS2Geography(): hasIndex(false) {}
+
   // accessors need to be methods, since their calculation
   // depends on the geometry type
   virtual bool IsCollection() = 0;
@@ -31,10 +33,15 @@ public:
 
   // other calculations use ShapeIndex
   virtual S2ShapeIndex* ShapeIndex() {
-    this->BuildShapeIndex(&this->shape_index_);
+    if (!this->hasIndex) {
+      this->BuildShapeIndex(&this->shape_index_);
+      this->hasIndex = true;
+    }
+
     return &this->shape_index_;
   };
 
 protected:
   MutableS2ShapeIndex shape_index_;
+  bool hasIndex;
 };

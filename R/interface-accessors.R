@@ -2,6 +2,8 @@
 #' S2 Geography Accessors
 #'
 #' @param x,y An object that can be interpreted as an S2 type.
+#' @param radius Radius of the earth. Defaults to the average radius of
+#'   the earth as defined by [s2earth_radius_meters()].
 #'
 #' @export
 #'
@@ -67,8 +69,9 @@ s2_y <- function(x) {
 
 #' @rdname s2_iscollection
 #' @export
-s2_distance <- function(x, y) {
-  stop("Not implemented")
+s2_distance <- function(x, y, radius = s2earth_radius_meters()) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_iscollection
