@@ -1,0 +1,20 @@
+
+test_that("s2geography class works", {
+  geog <- new_s2xptr(list(NULL), class = "s2geography")
+  expect_output(print(geog), "s2geography")
+  expect_identical(s2geography(geog), geog)
+})
+
+test_that("s2geography vectors can be created from wkb points", {
+  wkb_point <- list(as.raw(c(0x01, 0x01, 0x00, 0x00, 0x20, 0xe6, 0x10, 0x00,
+                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xc0, 0x00, 0x00,
+                             0x00, 0x00, 0x00, 0x80, 0x46, 0x40)))
+  class(wkb_point) <- "wk_wkb"
+
+  expect_output(print(s2geography(wkb_point)), "<POINT \\(-64 45\\)>")
+})
+
+test_that("s2geography vectors can be created from wkt", {
+  expect_output(print(s2geography("POINT (-64 45)")), "<POINT \\(-64 45\\)>")
+  expect_output(print(s2geography("POINT EMPTY")), "<POINT EMPTY>")
+})

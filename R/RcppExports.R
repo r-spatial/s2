@@ -10,6 +10,38 @@ s2BuildPolygonsLayer <- function(ptrs, b_ptr) {
     .Call(`_libs2_s2BuildPolygonsLayer`, ptrs, b_ptr)
 }
 
+libs2_cpp_s2_iscollection <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_iscollection`, geog)
+}
+
+libs2_cpp_s2_dimension <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_dimension`, geog)
+}
+
+libs2_cpp_s2_numpoints <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_numpoints`, geog)
+}
+
+libs2_cpp_s2_area <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_area`, geog)
+}
+
+libs2_cpp_s2_length <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_length`, geog)
+}
+
+libs2_cpp_s2_perimeter <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_perimeter`, geog)
+}
+
+libs2_cpp_s2_x <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_x`, geog)
+}
+
+libs2_cpp_s2_y <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_y`, geog)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers
@@ -38,6 +70,18 @@ s2polygon_is_valid <- function(ptrs) {
 #' @param ptrs list of S2Polygon or S2Polyline pointers
 s2polyline_is_valid <- function(ptrs) {
     .Call(`_libs2_s2polyline_is_valid`, ptrs)
+}
+
+s2geography_from_wkb <- function(wkb) {
+    .Call(`_libs2_s2geography_from_wkb`, wkb)
+}
+
+s2geography_from_wkt <- function(wkt) {
+    .Call(`_libs2_s2geography_from_wkt`, wkt)
+}
+
+s2geography_format <- function(s2geography, maxCoords) {
+    .Call(`_libs2_s2geography_format`, s2geography, maxCoords)
 }
 
 s2latlng_from_numeric <- function(lat, lng) {
