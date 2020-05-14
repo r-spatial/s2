@@ -57,3 +57,14 @@ test_that("s2_distance works", {
   expect_identical(s2_distance("POINT EMPTY", "POINT (0 0)"), Inf)
 })
 
+test_that("s2_maxdistance works", {
+  expect_equal(
+    s2_maxdistance("POINT (0 0)", "POINT (0 90)", radius = 180 / pi),
+    90
+  )
+
+  expect_identical(s2_maxdistance("POINT (0 0)", NA_character_), NA_real_)
+  expect_identical(s2_maxdistance(NA_character_, "POINT (0 0)"), NA_real_)
+  expect_identical(s2_maxdistance("POINT (0 0)", "POINT EMPTY"), -Inf)
+  expect_identical(s2_maxdistance("POINT EMPTY", "POINT (0 0)"), -Inf)
+})

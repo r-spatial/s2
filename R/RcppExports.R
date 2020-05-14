@@ -46,6 +46,10 @@ libs2_cpp_s2_distance <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_distance`, geog1, geog2)
 }
 
+libs2_cpp_s2_maxdistance <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_maxdistance`, geog1, geog2)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers
