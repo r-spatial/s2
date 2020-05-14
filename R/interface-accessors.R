@@ -76,6 +76,7 @@ s2_distance <- function(x, y, radius = s2earth_radius_meters()) {
 
 #' @rdname s2_iscollection
 #' @export
-s2_maxdistance <- function(x, y) {
-  stop("Not implemented")
+s2_maxdistance <- function(x, y, radius = s2earth_radius_meters()) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_maxdistance(recycled[[1]], recycled[[2]]) * radius
 }
