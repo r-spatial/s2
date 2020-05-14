@@ -1,36 +1,13 @@
 
-#include "libs2-s2geography.h"
+#include "libs2-geography-operator.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2furthest_edge_query.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
-template<class VectorType, class ScalarType>
-class LibS2UnaryOperator {
-public:
-  VectorType processVector(List geog) {
-    VectorType output(geog.size());
-
-    SEXP item;
-    for (R_xlen_t i = 0; i < geog.size(); i++) {
-      item = geog[i];
-      if (item == R_NilValue) {
-        output[i] = VectorType::get_na();
-      } else {
-        XPtr<LibS2Geography> feature(item);
-        output[i] = this->processFeature(feature);
-      }
-    }
-
-    return output;
-  }
-
-  virtual ScalarType processFeature(XPtr<LibS2Geography> feature) = 0;
-};
-
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_iscollection(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<LogicalVector, int> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<LibS2Geography> feature) {
       return feature->IsCollection();
     }
@@ -42,7 +19,7 @@ LogicalVector libs2_cpp_s2_iscollection(List geog) {
 
 // [[Rcpp::export]]
 IntegerVector libs2_cpp_s2_dimension(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<IntegerVector, int> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<LibS2Geography> feature) {
       return feature->Dimension();
     }
@@ -54,7 +31,7 @@ IntegerVector libs2_cpp_s2_dimension(List geog) {
 
 // [[Rcpp::export]]
 IntegerVector libs2_cpp_s2_numpoints(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<IntegerVector, int> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<LibS2Geography> feature) {
       return feature->NumPoints();
     }
@@ -66,7 +43,7 @@ IntegerVector libs2_cpp_s2_numpoints(List geog) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_area(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<LibS2Geography> feature) {
       return feature->Area();
     }
@@ -78,7 +55,7 @@ NumericVector libs2_cpp_s2_area(List geog) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_length(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<LibS2Geography> feature) {
       return feature->Length();
     }
@@ -90,7 +67,7 @@ NumericVector libs2_cpp_s2_length(List geog) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_perimeter(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<LibS2Geography> feature) {
       return feature->Perimeter();
     }
@@ -102,7 +79,7 @@ NumericVector libs2_cpp_s2_perimeter(List geog) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_x(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<LibS2Geography> feature) {
       return feature->X();
     }
@@ -114,7 +91,7 @@ NumericVector libs2_cpp_s2_x(List geog) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_y(List geog) {
-  class LibS2Op: public LibS2UnaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<LibS2Geography> feature) {
       return feature->Y();
     }
@@ -124,40 +101,9 @@ NumericVector libs2_cpp_s2_y(List geog) {
   return op.processVector(geog);
 }
 
-template<class VectorType, class ScalarType>
-class LibS2BinaryOperator {
-public:
-  VectorType processVector(List geog1, List geog2) {
-    if (geog2.size() != geog1.size()) {
-      stop("Incompatible lengths");
-    }
-
-    VectorType output(geog1.size());
-
-    SEXP item1;
-    SEXP item2;
-
-    for (R_xlen_t i = 0; i < geog1.size(); i++) {
-      item1 = geog1[i];
-      item2 = geog2[i];
-      if (item1 ==  R_NilValue || item2 == R_NilValue) {
-        output[i] = NA_REAL;
-      } else {
-        XPtr<LibS2Geography> feature1(item1);
-        XPtr<LibS2Geography> feature2(item2);
-        output[i] = processFeature(feature1, feature2);
-      }
-    }
-
-    return output;
-  }
-
-  virtual ScalarType processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) = 0;
-};
-
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_distance(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2BinaryGeographyOperator<NumericVector, double> {
 
     double processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
@@ -176,7 +122,7 @@ NumericVector libs2_cpp_s2_distance(List geog1, List geog2) {
 
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_maxdistance(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryOperator<NumericVector, double> {
+  class LibS2Op: public LibS2BinaryGeographyOperator<NumericVector, double> {
 
     double processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
       S2FurthestEdgeQuery query(feature1->ShapeIndex());

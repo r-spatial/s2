@@ -1,4 +1,7 @@
 
+#ifndef LIBS2_GEOGRAPHY_H
+#define LIBS2_GEOGRAPHY_H
+
 #include "s2/s2latlng.h"
 #include "s2/s2shape_index.h"
 #include "s2/mutable_s2shape_index.h"
@@ -45,3 +48,5 @@ protected:
   MutableS2ShapeIndex shape_index_;
   bool hasIndex;
 };
+
+#endif
