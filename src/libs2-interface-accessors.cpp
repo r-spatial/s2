@@ -114,7 +114,13 @@ NumericVector libs2_cpp_s2_distance(List geog1, List geog2) {
       const auto& result = query.FindClosestEdge(&target);
 
       S1ChordAngle angle = result.distance();
-      return angle.ToAngle().radians();
+      double distance = angle.ToAngle().radians();
+
+      if (distance == R_PosInf) {
+        return NA_REAL;
+      } else {
+        return distance;
+      }
     }
   };
 
@@ -138,13 +144,13 @@ NumericVector libs2_cpp_s2_maxdistance(List geog1, List geog2) {
       double distance = angle.ToAngle().radians();
 
       // returns -1 if one of the indexes is empty
-      // -Inf is more consistent with the minimum distance
-      // which returns Inf if one of the indexes is empty
-      if (distance == -1) {
-        distance = R_NegInf;
+      // NA is more consistent with the BigQuery
+      // function, and makes way more sense
+      if (distance < 0) {
+        return NA_REAL;
+      } else {
+        return distance;
       }
-
-      return distance;
     }
   };
 

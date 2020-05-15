@@ -58,9 +58,8 @@ test_that("s2_distance works", {
 
   expect_identical(s2_distance("POINT (0 0)", NA_character_), NA_real_)
   expect_identical(s2_distance(NA_character_, "POINT (0 0)"), NA_real_)
-  # apparently Infinite is the distance returned for an empty
-  expect_identical(s2_distance("POINT (0 0)", "POINT EMPTY"), Inf)
-  expect_identical(s2_distance("POINT EMPTY", "POINT (0 0)"), Inf)
+  expect_identical(s2_distance("POINT (0 0)", "POINT EMPTY"), NA_real_)
+  expect_identical(s2_distance("POINT EMPTY", "POINT (0 0)"), NA_real_)
 })
 
 test_that("s2_maxdistance works", {
@@ -71,6 +70,6 @@ test_that("s2_maxdistance works", {
 
   expect_identical(s2_maxdistance("POINT (0 0)", NA_character_), NA_real_)
   expect_identical(s2_maxdistance(NA_character_, "POINT (0 0)"), NA_real_)
-  expect_identical(s2_maxdistance("POINT (0 0)", "POINT EMPTY"), -Inf)
-  expect_identical(s2_maxdistance("POINT EMPTY", "POINT (0 0)"), -Inf)
+  expect_identical(s2_maxdistance("POINT (0 0)", "POINT EMPTY"), NA_real_)
+  expect_identical(s2_maxdistance("POINT EMPTY", "POINT (0 0)"), NA_real_)
 })
