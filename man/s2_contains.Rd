@@ -31,7 +31,7 @@ s2_touches(x, y)
 
 s2_within(x, y)
 
-s2_dwithin(x, y, distance)
+s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 }
 \arguments{
 \item{x}{An object that can be interpreted as an S2 type.}
@@ -41,6 +41,9 @@ s2_dwithin(x, y, distance)
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 
 \item{distance}{A distance in meters on the surface of the earth}
+
+\item{radius}{Radius of the earth. Defaults to the average radius of
+the earth as defined by \code{\link[=s2earth_radius_meters]{s2earth_radius_meters()}}.}
 }
 \description{
 S2 Geography Predicates

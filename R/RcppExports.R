@@ -62,6 +62,10 @@ libs2_cpp_s2_contains <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_contains`, geog1, geog2)
 }
 
+libs2_cpp_s2_dwithin <- function(geog1, geog2, distance) {
+    .Call(`_libs2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers

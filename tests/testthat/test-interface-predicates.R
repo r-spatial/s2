@@ -35,3 +35,9 @@ test_that("s2_within() works", {
   expect_false(s2_within("POINT (0 0)", "POINT EMPTY"))
 })
 
+test_that("s2_dwithin() works", {
+  expect_identical(s2_dwithin("POINT (0 0)", NA_character_, 0), NA)
+  expect_true(s2_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 + 0.01, radius = 1))
+  expect_false(s2_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 - 0.01, radius = 1))
+  expect_false(s2_dwithin("POINT (0 0)", "POINT EMPTY", 0))
+})
