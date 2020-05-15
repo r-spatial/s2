@@ -23,7 +23,7 @@ s2_disjoint(x, y)
 
 s2_equals(x, y)
 
-s2_intersects(x)
+s2_intersects(x, y)
 
 s2_intersectsbox(x, lng1, lat1, lng2, lat2)
 

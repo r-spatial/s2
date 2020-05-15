@@ -23,13 +23,14 @@
 #' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
 s2_contains <- function(x, y) {
-  stop("Not implemented")
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]])
 }
 
 #' @rdname s2_contains
 #' @export
 s2_coveredby <- function(x, y) {
-  stop("Not implemented")
+  s2_covers(y, x)
 }
 
 #' @rdname s2_contains
@@ -41,19 +42,21 @@ s2_covers <- function(x, y) {
 #' @rdname s2_contains
 #' @export
 s2_disjoint <- function(x, y) {
-  stop("Not implemented")
+  !s2_intersects(x, y)
 }
 
 #' @rdname s2_contains
 #' @export
 s2_equals <- function(x, y) {
-  stop("Not implemented")
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_equals(recycled[[1]], recycled[[2]])
 }
 
 #' @rdname s2_contains
 #' @export
-s2_intersects <- function(x) {
-  stop("Not implemented")
+s2_intersects <- function(x, y) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_intersects(recycled[[1]], recycled[[2]])
 }
 
 #' @rdname s2_contains
@@ -71,7 +74,7 @@ s2_touches <- function(x, y) {
 #' @rdname s2_contains
 #' @export
 s2_within <- function(x, y) {
-  stop("Not implemented")
+  s2_contains(y, x)
 }
 
 #' @rdname s2_contains

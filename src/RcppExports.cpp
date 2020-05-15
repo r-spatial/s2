@@ -129,6 +129,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libs2_cpp_s2_intersects
+LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2);
+RcppExport SEXP _libs2_libs2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersects(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libs2_cpp_s2_equals
+LogicalVector libs2_cpp_s2_equals(List geog1, List geog2);
+RcppExport SEXP _libs2_libs2_cpp_s2_equals(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_equals(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libs2_cpp_s2_contains
+LogicalVector libs2_cpp_s2_contains(List geog1, List geog2);
+RcppExport SEXP _libs2_libs2_cpp_s2_contains(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_contains(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2polygon_intersects
 List s2polygon_intersects(List x, List y);
 RcppExport SEXP _libs2_s2polygon_intersects(SEXP xSEXP, SEXP ySEXP) {
@@ -487,6 +523,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_y", (DL_FUNC) &_libs2_libs2_cpp_s2_y, 1},
     {"_libs2_libs2_cpp_s2_distance", (DL_FUNC) &_libs2_libs2_cpp_s2_distance, 2},
     {"_libs2_libs2_cpp_s2_maxdistance", (DL_FUNC) &_libs2_libs2_cpp_s2_maxdistance, 2},
+    {"_libs2_libs2_cpp_s2_intersects", (DL_FUNC) &_libs2_libs2_cpp_s2_intersects, 2},
+    {"_libs2_libs2_cpp_s2_equals", (DL_FUNC) &_libs2_libs2_cpp_s2_equals, 2},
+    {"_libs2_libs2_cpp_s2_contains", (DL_FUNC) &_libs2_libs2_cpp_s2_contains, 2},
     {"_libs2_s2polygon_intersects", (DL_FUNC) &_libs2_s2polygon_intersects, 2},
     {"_libs2_s2polyline_intersects", (DL_FUNC) &_libs2_s2polyline_intersects, 2},
     {"_libs2_s2polygon_is_valid", (DL_FUNC) &_libs2_s2polygon_is_valid, 1},
