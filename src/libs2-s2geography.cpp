@@ -145,40 +145,10 @@ List s2geography_from_wkt(CharacterVector wkt) {
   return writer.s2geography;
 }
 
-// this should be added to wk
-class WKListProvider: public WKProvider {
-public:
-  List& input;
-  R_xlen_t index;
-
-  WKListProvider(List& input): input(input), index(-1) {}
-
-  SEXP feature() {
-    return this->input[this->index];
-  }
-
-  bool seekNextFeature() {
-    this->index++;
-    return this->index < input.size();
-  }
-
-  bool featureIsNull() {
-    return this->input[this->index] == R_NilValue;
-  }
-
-  size_t nFeatures() {
-    return input.size();
-  }
-
-  void reset() {
-    this->index = -1;
-  }
-};
-
 class WKLibS2GeographyReader: public WKReader {
 public:
 
-  WKLibS2GeographyReader(WKListProvider& provider):
+  WKLibS2GeographyReader(WKSEXPProvider& provider):
   WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -208,12 +178,12 @@ public:
   }
 
 private:
-  WKListProvider& provider;
+  WKSEXPProvider& provider;
 };
 
 // [[Rcpp::export]]
 CharacterVector s2geography_format(List s2geography, int maxCoords) {
-  WKListProvider provider(s2geography);
+  WKSEXPProvider provider(s2geography);
   WKCharacterVectorExporter exporter(s2geography.size());
   WKGeometryFormatter formatter(exporter, maxCoords);
 

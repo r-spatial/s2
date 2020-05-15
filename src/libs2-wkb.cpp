@@ -237,42 +237,10 @@ List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles =
 
 // -------- exporters ---------
 
-// this should be added to wk
-class WKListProvider: public WKProvider {
-public:
-  List& input;
-  R_xlen_t index;
-
-  WKListProvider(List& input): input(input), index(-1) {
-    this->reset();
-  }
-
-  SEXP feature() {
-    return this->input[this->index];
-  }
-
-  bool seekNextFeature() {
-    this->index++;
-    return this->index < input.size();
-  }
-
-  bool featureIsNull() {
-    return this->input[this->index] == R_NilValue;
-  }
-
-  size_t nFeatures() {
-    return input.size();
-  }
-
-  void reset() {
-    this->index = -1;
-  }
-};
-
 class WKS2LatLngReader: public WKReader {
 public:
 
-  WKS2LatLngReader(WKListProvider& provider):
+  WKS2LatLngReader(WKSEXPProvider& provider):
     WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -301,12 +269,12 @@ public:
   }
 
 private:
-  WKListProvider& provider;
+  WKSEXPProvider& provider;
 };
 
 // [[Rcpp::export]]
 List wkb_from_s2latlng(List s2latlng, int endian) {
-  WKListProvider provider(s2latlng);
+  WKSEXPProvider provider(s2latlng);
   WKRawVectorListExporter exporter(s2latlng.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
@@ -323,7 +291,7 @@ List wkb_from_s2latlng(List s2latlng, int endian) {
 
 class WKS2PolylineReader: public WKS2LatLngReader {
 public:
-  WKS2PolylineReader(WKListProvider& provider):
+  WKS2PolylineReader(WKSEXPProvider& provider):
     WKS2LatLngReader(provider)  {}
 
   virtual void readItem(SEXP item) {
@@ -348,7 +316,7 @@ public:
 
 // [[Rcpp::export]]
 List wkb_from_s2polyline(List s2polyline, int endian) {
-  WKListProvider provider(s2polyline);
+  WKSEXPProvider provider(s2polyline);
   WKRawVectorListExporter exporter(s2polyline.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
@@ -422,7 +390,7 @@ std::vector<std::vector<int>> multi_polygon_order(S2Polygon *p) {
 
 class WKS2PolygonReader: public WKS2LatLngReader {
 public:
-  WKS2PolygonReader(WKListProvider& provider):
+  WKS2PolygonReader(WKSEXPProvider& provider):
     WKS2LatLngReader(provider)  {}
 
   virtual void readItem(SEXP item) {
@@ -521,7 +489,7 @@ public:
 
 // [[Rcpp::export]]
 List wkb_from_s2polygon(List s2polygon, int endian) {
-  WKListProvider provider(s2polygon);
+  WKSEXPProvider provider(s2polygon);
   WKRawVectorListExporter exporter(s2polygon.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
