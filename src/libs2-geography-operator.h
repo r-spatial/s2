@@ -18,14 +18,14 @@ public:
         output[i] = VectorType::get_na();
       } else {
         Rcpp::XPtr<LibS2Geography> feature(item);
-        output[i] = this->processFeature(feature);
+        output[i] = this->processFeature(feature, i);
       }
     }
 
     return output;
   }
 
-  virtual ScalarType processFeature(Rcpp::XPtr<LibS2Geography> feature) = 0;
+  virtual ScalarType processFeature(Rcpp::XPtr<LibS2Geography> feature, R_xlen_t i) = 0;
 };
 
 
@@ -50,7 +50,7 @@ public:
       } else {
         Rcpp::XPtr<LibS2Geography> feature1(item1);
         Rcpp::XPtr<LibS2Geography> feature2(item2);
-        output[i] = processFeature(feature1, feature2);
+        output[i] = processFeature(feature1, feature2, i);
       }
     }
 
@@ -58,7 +58,8 @@ public:
   }
 
   virtual ScalarType processFeature(Rcpp::XPtr<LibS2Geography> feature1,
-                                    Rcpp::XPtr<LibS2Geography> feature2) = 0;
+                                    Rcpp::XPtr<LibS2Geography> feature2,
+                                    R_xlen_t i) = 0;
 };
 
 #endif

@@ -40,4 +40,10 @@ test_that("s2_dwithin() works", {
   expect_true(s2_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 + 0.01, radius = 1))
   expect_false(s2_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 - 0.01, radius = 1))
   expect_false(s2_dwithin("POINT (0 0)", "POINT EMPTY", 0))
+
+  # check vectorization
+  expect_identical(
+    s2_dwithin("POINT (0 0)", "POINT (90  0)", pi / 2 + c(0.01, -0.01), radius = 1),
+    c(TRUE, FALSE)
+  )
 })

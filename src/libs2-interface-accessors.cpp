@@ -8,7 +8,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_iscollection(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<LogicalVector, int> {
-    int processFeature(XPtr<LibS2Geography> feature) {
+    int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->IsCollection();
     }
   };
@@ -20,7 +20,7 @@ LogicalVector libs2_cpp_s2_iscollection(List geog) {
 // [[Rcpp::export]]
 IntegerVector libs2_cpp_s2_dimension(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<IntegerVector, int> {
-    int processFeature(XPtr<LibS2Geography> feature) {
+    int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->Dimension();
     }
   };
@@ -32,7 +32,7 @@ IntegerVector libs2_cpp_s2_dimension(List geog) {
 // [[Rcpp::export]]
 IntegerVector libs2_cpp_s2_numpoints(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<IntegerVector, int> {
-    int processFeature(XPtr<LibS2Geography> feature) {
+    int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->NumPoints();
     }
   };
@@ -44,7 +44,7 @@ IntegerVector libs2_cpp_s2_numpoints(List geog) {
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_area(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
-    double processFeature(XPtr<LibS2Geography> feature) {
+    double processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->Area();
     }
   };
@@ -56,7 +56,7 @@ NumericVector libs2_cpp_s2_area(List geog) {
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_length(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
-    double processFeature(XPtr<LibS2Geography> feature) {
+    double processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->Length();
     }
   };
@@ -68,7 +68,7 @@ NumericVector libs2_cpp_s2_length(List geog) {
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_perimeter(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
-    double processFeature(XPtr<LibS2Geography> feature) {
+    double processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->Perimeter();
     }
   };
@@ -80,7 +80,7 @@ NumericVector libs2_cpp_s2_perimeter(List geog) {
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_x(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
-    double processFeature(XPtr<LibS2Geography> feature) {
+    double processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->X();
     }
   };
@@ -92,7 +92,7 @@ NumericVector libs2_cpp_s2_x(List geog) {
 // [[Rcpp::export]]
 NumericVector libs2_cpp_s2_y(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<NumericVector, double> {
-    double processFeature(XPtr<LibS2Geography> feature) {
+    double processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       return feature->Y();
     }
   };
@@ -105,7 +105,9 @@ NumericVector libs2_cpp_s2_y(List geog) {
 NumericVector libs2_cpp_s2_distance(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<NumericVector, double> {
 
-    double processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
+    double processFeature(XPtr<LibS2Geography> feature1,
+                          XPtr<LibS2Geography> feature2,
+                          R_xlen_t i) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 
@@ -124,7 +126,9 @@ NumericVector libs2_cpp_s2_distance(List geog1, List geog2) {
 NumericVector libs2_cpp_s2_maxdistance(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<NumericVector, double> {
 
-    double processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
+    double processFeature(XPtr<LibS2Geography> feature1,
+                          XPtr<LibS2Geography> feature2,
+                          R_xlen_t i) {
       S2FurthestEdgeQuery query(feature1->ShapeIndex());
       S2FurthestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 

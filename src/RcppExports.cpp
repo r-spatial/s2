@@ -166,14 +166,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // libs2_cpp_s2_dwithin
-LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, double distance);
+LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distance);
 RcppExport SEXP _libs2_libs2_cpp_s2_dwithin(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< double >::type distance(distanceSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
     rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_dwithin(geog1, geog2, distance));
     return rcpp_result_gen;
 END_RCPP
