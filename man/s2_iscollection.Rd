@@ -4,6 +4,7 @@
 \alias{s2_iscollection}
 \alias{s2_dimension}
 \alias{s2_numpoints}
+\alias{s2_isempty}
 \alias{s2_area}
 \alias{s2_length}
 \alias{s2_perimeter}
@@ -18,6 +19,8 @@ s2_iscollection(x)
 s2_dimension(x)
 
 s2_numpoints(x)
+
+s2_isempty(x)
 
 s2_area(x)
 

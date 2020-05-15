@@ -17,6 +17,12 @@ test_that("s2_numpoints works", {
   expect_identical(s2_numpoints("POINT EMPTY"), 0L)
 })
 
+test_that("s2_isempty works", {
+  expect_identical(s2_isempty(NA_character_), NA)
+  expect_identical(s2_isempty("POINT (-64 45)"), FALSE)
+  expect_identical(s2_isempty("POINT EMPTY"), TRUE)
+})
+
 test_that("s2_area works", {
   expect_identical(s2_area(NA_character_), NA_real_)
   expect_identical(s2_area("POINT (-64 45)"), 0)

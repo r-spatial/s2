@@ -39,6 +39,12 @@ s2_numpoints <- function(x) {
 
 #' @rdname s2_iscollection
 #' @export
+s2_isempty <- function(x) {
+  s2_numpoints(x) == 0
+}
+
+#' @rdname s2_iscollection
+#' @export
 s2_area <- function(x) {
   libs2_cpp_s2_area(s2geography(x))
 }
