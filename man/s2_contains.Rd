@@ -60,7 +60,6 @@ BigQuery's geography function reference:
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersectsbox}{ST_INTERSECTSBOX}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_touches}{ST_TOUCHES}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within}{ST_WITHIN}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty}{ST_ISEMPTY}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin}{ST_DWITHIN}
 }
 }

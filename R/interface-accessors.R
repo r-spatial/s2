@@ -13,6 +13,7 @@
 #' - [ST_ISCOLLECTION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_iscollection)
 #' - [ST_DIMENSION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dimension)
 #' - [ST_NUMPOINTS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_numpoints)
+#' - [ST_ISEMPTY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty)
 #' - [ST_AREA](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_area)
 #' - [ST_LENGTH](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_length)
 #' - [ST_PERIMETER](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_perimeter)
@@ -76,13 +77,13 @@ s2_y <- function(x) {
 #' @rdname s2_iscollection
 #' @export
 s2_distance <- function(x, y, radius = s2earth_radius_meters()) {
-  recycled <- recycle_common(s2geography(x), s2geography(y))
+  recycled <- recycle_common(s2geography(x), s2geography(y), radius)
   libs2_cpp_s2_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_maxdistance <- function(x, y, radius = s2earth_radius_meters()) {
-  recycled <- recycle_common(s2geography(x), s2geography(y))
+  recycled <- recycle_common(s2geography(x), s2geography(y), radius)
   libs2_cpp_s2_maxdistance(recycled[[1]], recycled[[2]]) * radius
 }
