@@ -31,7 +31,7 @@ s2_y(x)
 
 s2_distance(x, y, radius = s2earth_radius_meters())
 
-s2_maxdistance(x, y)
+s2_maxdistance(x, y, radius = s2earth_radius_meters())
 }
 \arguments{
 \item{x, y}{An object that can be interpreted as an S2 type.}
