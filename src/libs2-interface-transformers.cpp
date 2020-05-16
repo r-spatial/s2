@@ -121,14 +121,14 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       if (edge1.v0 == edge1.v1) {
         return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(edge1.v0)));
       }
-      
-      // reverse query: find the edge on feature2 that is closest to edge
+
+      // reverse query: find the edge on feature2 that is closest to feature1
       S2ClosestEdgeQuery reverseQuery(feature2->ShapeIndex());
       S2ClosestEdgeQuery::EdgeTarget reverseTarget(edge1.v0, edge1.v1);
       const auto& reverseResult = reverseQuery.FindClosestEdge(&target);
 
       // get the edge on feature2 that is closest to feature1
-      const S2Shape::Edge edge2 = reverseQuery.GetEdge(result);
+      const S2Shape::Edge edge2 = reverseQuery.GetEdge(reverseResult);
 
       // the edge on feature 2 *is* a point: sort of easy!
       if (edge2.v0 == edge2.v1) {
@@ -144,3 +144,28 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   return op.processVector(geog1, geog2);
 }
 
+// [[Rcpp::export]]
+List libs2_cpp_s2_centroid(List geog) {
+  class LibS2Op: public LibS2UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
+      std::unique_ptr<LibS2Geography> ptr = feature->Centroid();
+      return XPtr<LibS2Geography>(ptr.release());
+    }
+  };
+
+  LibS2Op op;
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
+List libs2_cpp_s2_boundary(List geog) {
+  class LibS2Op: public LibS2UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
+      std::unique_ptr<LibS2Geography> ptr = feature->Boundary();
+      return XPtr<LibS2Geography>(ptr.release());
+    }
+  };
+
+  LibS2Op op;
+  return op.processVector(geog);
+}

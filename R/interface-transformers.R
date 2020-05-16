@@ -21,13 +21,13 @@
 #' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
 #'
 s2_boundary <- function(x) {
-  stop("Not implemented")
+  new_s2xptr(libs2_cpp_s2_boundary(s2geography(x)), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_centroid <- function(x) {
-  stop("Not implemented")
+  new_s2xptr(libs2_cpp_s2_centroid(s2geography(x)), "s2geography")
 }
 
 #' @rdname s2_boundary

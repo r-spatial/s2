@@ -2,7 +2,9 @@
 #ifndef LIBS2_GEOGRAPHY_H
 #define LIBS2_GEOGRAPHY_H
 
+#include <memory>
 #include "s2/s2latlng.h"
+#include "s2/s2polyline.h"
 #include "s2/s2shape_index.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2point_vector_shape.h"
@@ -24,6 +26,8 @@ public:
   virtual double Perimeter() = 0;
   virtual double X() = 0;
   virtual double Y() = 0;
+  virtual std::unique_ptr<LibS2Geography> Centroid() = 0;
+  virtual std::unique_ptr<LibS2Geography> Boundary() = 0;
 
   // every type will build the index differently based on
   // the underlying data, and this can (should?) be done
@@ -94,6 +98,23 @@ public:
     } else {
       return point.lat().degrees();
     }
+  }
+
+  std::unique_ptr<LibS2Geography> Centroid() {
+    std::unique_ptr<LibS2PointGeography> ptr;
+
+    if (this->isEmpty) {
+      ptr = std::unique_ptr<LibS2PointGeography>(new LibS2PointGeography());
+    } else {
+      ptr = std::unique_ptr<LibS2PointGeography>(new LibS2PointGeography(this->point));
+    }
+
+    return std::move(ptr);
+  }
+
+  std::unique_ptr<LibS2Geography> Boundary() {
+    std::unique_ptr<LibS2PointGeography> ptr(new LibS2PointGeography());
+    return std::move(ptr);
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {

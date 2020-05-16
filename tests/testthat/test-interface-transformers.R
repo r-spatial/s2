@@ -1,4 +1,15 @@
 
+test_that("s2_centroid() works", {
+  expect_equal(s2_x(s2_centroid("POINT (30 10)")), 30)
+  expect_equal(s2_y(s2_centroid("POINT (30 10)")), 10)
+  expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
+})
+
+test_that("s2_boundary() works", {
+  expect_true(s2_isempty(s2_boundary("POINT (30 10)")))
+  expect_true(s2_isempty(s2_boundary("POINT EMPTY")))
+})
+
 test_that("s2_closestpoint() works", {
   expect_equal(s2_x(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 0)
   expect_equal(s2_y(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 1)

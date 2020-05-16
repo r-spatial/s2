@@ -86,6 +86,14 @@ libs2_cpp_s2_closestpoint <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_closestpoint`, geog1, geog2)
 }
 
+libs2_cpp_s2_centroid <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_centroid`, geog)
+}
+
+libs2_cpp_s2_boundary <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_boundary`, geog)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers
