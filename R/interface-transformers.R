@@ -1,5 +1,4 @@
 
-
 #' S2 Geography Transformations
 #'
 #' @inheritParams s2_iscollection
@@ -14,8 +13,10 @@
 #' - [ST_CLOSESTPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_closestpoint)
 #' - [ST_DIFFERENCE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_difference)
 #' - [ST_INTERSECTION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection)
-#' - [ST_SNAPTOGRID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
 #' - [ST_UNION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union)
+#' - [ST_SNAPTOGRID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
+#' - [ST_UNION_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg)
+#' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
 #'
 s2_boundary <- function(x) {
   stop("Not implemented")
@@ -24,18 +25,6 @@ s2_boundary <- function(x) {
 #' @rdname s2_boundary
 #' @export
 s2_centroid <- function(x) {
-  stop("Not implemented")
-}
-
-#' @rdname s2_boundary
-#' @export
-s2_snaptogrid <- function(x) {
-  stop("Not implemented")
-}
-
-#' @rdname s2_boundary
-#' @export
-s2_union <- function(x, y = NULL) {
   stop("Not implemented")
 }
 
@@ -54,6 +43,19 @@ s2_difference <- function(x, y) {
 #' @rdname s2_boundary
 #' @export
 s2_intersection <- function(x, y) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  new_s2xptr(libs2_cpp_s2_intersection(recycled[[1]], recycled[[2]]), "s2geography")
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_union <- function(x, y = NULL) {
+  stop("Not implemented")
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_snaptogrid <- function(x) {
   stop("Not implemented")
 }
 

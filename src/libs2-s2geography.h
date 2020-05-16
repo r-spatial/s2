@@ -5,7 +5,9 @@
 #include "s2/s2latlng.h"
 #include "s2/s2shape_index.h"
 #include "s2/mutable_s2shape_index.h"
+#include "s2/s2point_vector_shape.h"
 #include "wk/geometry-handler.h"
+#include <Rcpp.h>
 
 class LibS2Geography {
 public:
@@ -47,6 +49,76 @@ public:
 protected:
   MutableS2ShapeIndex shape_index_;
   bool hasIndex;
+};
+
+class LibS2PointGeography: public LibS2Geography {
+public:
+  LibS2PointGeography(): isEmpty(true) {}
+  LibS2PointGeography(S2LatLng point): isEmpty(false), point(point) {}
+
+  bool IsCollection() {
+    return false;
+  }
+
+  int Dimension() {
+    return  0;
+  }
+
+  int NumPoints() {
+    return !isEmpty;
+  }
+
+  double Area() {
+    return 0;
+  }
+
+  double Length() {
+    return 0;
+  }
+
+  double Perimeter() {
+    return 0;
+  }
+
+  double X() {
+    if (this->isEmpty) {
+      return NA_REAL;
+    } else {
+      return point.lng().degrees();
+    }
+  }
+
+  double Y() {
+    if (this->isEmpty) {
+      return NA_REAL;
+    } else {
+      return point.lat().degrees();
+    }
+  }
+
+  virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
+    if (!this->isEmpty) {
+      std::vector<S2Point> points(1);
+      points[0] = S2Point(this->point);
+      index->Add(std::unique_ptr<S2PointVectorShape>(new S2PointVectorShape(std::move(points))));
+    }
+  }
+
+  virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
+    WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
+    meta.hasSize = true;
+    meta.size = !this->isEmpty;
+
+    handler->nextGeometryStart(meta, partId);
+    if (!this->isEmpty) {
+      handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+    }
+    handler->nextGeometryEnd(meta, partId);
+  }
+
+private:
+  bool isEmpty;
+  S2LatLng point;
 };
 
 #endif
