@@ -82,6 +82,10 @@ libs2_cpp_s2_union_agg <- function(geog, naRm) {
     .Call(`_libs2_libs2_cpp_s2_union_agg`, geog, naRm)
 }
 
+libs2_cpp_s2_closestpoint <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_closestpoint`, geog1, geog2)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers

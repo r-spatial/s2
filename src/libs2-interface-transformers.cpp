@@ -97,3 +97,50 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
   output[0] = doBooleanOperation<S2BooleanOperation::OpType::UNION>(&index, &emptyIndex);
   return output;
 }
+
+// [[Rcpp::export]]
+List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
+  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
+
+    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+      S2ClosestEdgeQuery query(feature1->ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+
+      const auto& result = query.FindClosestEdge(&target);
+
+      //  result.edge_id() == -1 means there was no match
+      if (result.edge_id() == -1) {
+        return XPtr<LibS2Geography>(new LibS2PointGeography());
+      }
+
+      // get the edge on feature1 that is closest to feature2
+      // the point returned here must be somewhere along this edge
+      const S2Shape::Edge edge1 = query.GetEdge(result);
+
+      // the edge on feature 1 *is* a point: easy!
+      if (edge1.v0 == edge1.v1) {
+        return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(edge1.v0)));
+      }
+      
+      // reverse query: find the edge on feature2 that is closest to edge
+      S2ClosestEdgeQuery reverseQuery(feature2->ShapeIndex());
+      S2ClosestEdgeQuery::EdgeTarget reverseTarget(edge1.v0, edge1.v1);
+      const auto& reverseResult = reverseQuery.FindClosestEdge(&target);
+
+      // get the edge on feature2 that is closest to feature1
+      const S2Shape::Edge edge2 = reverseQuery.GetEdge(result);
+
+      // the edge on feature 2 *is* a point: sort of easy!
+      if (edge2.v0 == edge2.v1) {
+        S2Point closest = query.Project(edge2.v0, result);
+        return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(closest)));
+      } else {
+        stop("Don't know how to find the closest point given two non-point edges");
+      }
+    }
+  };
+
+  LibS2Op op;
+  return op.processVector(geog1, geog2);
+}
+

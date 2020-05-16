@@ -1,4 +1,10 @@
 
+test_that("s2_closestpoint() works", {
+  expect_equal(s2_x(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 0)
+  expect_equal(s2_y(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 1)
+  expect_true(s2_isempty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
+})
+
 test_that("s2_difference() works", {
   expect_equal(s2_x(s2_difference("POINT (30 10)", "POINT EMPTY")), 30)
   expect_equal(s2_y(s2_difference("POINT (30 10)", "POINT EMPTY")), 10)

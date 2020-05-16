@@ -33,7 +33,8 @@ s2_centroid <- function(x) {
 #' @rdname s2_boundary
 #' @export
 s2_closestpoint <- function(x, y) {
-  stop("Not implemented")
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  new_s2xptr(libs2_cpp_s2_closestpoint(recycled[[1]], recycled[[2]]), "s2geography")
 }
 
 #' @rdname s2_boundary
