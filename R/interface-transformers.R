@@ -37,7 +37,8 @@ s2_closestpoint <- function(x, y) {
 #' @rdname s2_boundary
 #' @export
 s2_difference <- function(x, y) {
-  stop("Not implemented")
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  new_s2xptr(libs2_cpp_s2_difference(recycled[[1]], recycled[[2]]), "s2geography")
 }
 
 #' @rdname s2_boundary
