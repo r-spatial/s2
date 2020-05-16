@@ -74,3 +74,26 @@ List libs2_cpp_s2_difference(List geog1, List geog2) {
   LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE> op;
   return op.processVector(geog1, geog2);
 }
+
+// [[Rcpp::export]]
+List libs2_cpp_s2_union_agg(List geog, bool naRm) {
+  MutableS2ShapeIndex index;
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+    if (item == R_NilValue && !naRm) {
+      return List::create(R_NilValue);
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<LibS2Geography> feature(item);
+      feature->BuildShapeIndex(&index);
+    }
+  }
+
+  List output(1);
+  MutableS2ShapeIndex emptyIndex;
+  output[0] = doBooleanOperation<S2BooleanOperation::OpType::UNION>(&index, &emptyIndex);
+  return output;
+}

@@ -26,7 +26,7 @@ s2_union(x, y = NULL)
 
 s2_snaptogrid(x)
 
-s2_union_agg(x)
+s2_union_agg(x, na.rm = FALSE)
 
 s2_centroid_agg(x)
 }
@@ -34,6 +34,9 @@ s2_centroid_agg(x)
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
+
+\item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
+to drop missing values.}
 }
 \description{
 S2 Geography Transformations

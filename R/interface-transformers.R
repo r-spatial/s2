@@ -2,6 +2,8 @@
 #' S2 Geography Transformations
 #'
 #' @inheritParams s2_iscollection
+#' @param na.rm For aggregate calculations use `na.rm = TRUE`
+#'   to drop missing values.
 #'
 #' @export
 #'
@@ -67,8 +69,8 @@ s2_snaptogrid <- function(x) {
 
 #' @rdname s2_boundary
 #' @export
-s2_union_agg <- function(x) {
-  stop("Not implemented")
+s2_union_agg <- function(x, na.rm = FALSE) {
+  new_s2xptr(libs2_cpp_s2_union_agg(s2geography(x), na.rm), "s2geography")
 }
 
 #' @rdname s2_boundary

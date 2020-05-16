@@ -214,6 +214,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libs2_cpp_s2_union_agg
+List libs2_cpp_s2_union_agg(List geog, bool naRm);
+RcppExport SEXP _libs2_libs2_cpp_s2_union_agg(SEXP geogSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_union_agg(geog, naRm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2polygon_intersects
 List s2polygon_intersects(List x, List y);
 RcppExport SEXP _libs2_s2polygon_intersects(SEXP xSEXP, SEXP ySEXP) {
@@ -579,6 +591,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_intersection", (DL_FUNC) &_libs2_libs2_cpp_s2_intersection, 2},
     {"_libs2_libs2_cpp_s2_union", (DL_FUNC) &_libs2_libs2_cpp_s2_union, 2},
     {"_libs2_libs2_cpp_s2_difference", (DL_FUNC) &_libs2_libs2_cpp_s2_difference, 2},
+    {"_libs2_libs2_cpp_s2_union_agg", (DL_FUNC) &_libs2_libs2_cpp_s2_union_agg, 2},
     {"_libs2_s2polygon_intersects", (DL_FUNC) &_libs2_s2polygon_intersects, 2},
     {"_libs2_s2polyline_intersects", (DL_FUNC) &_libs2_s2polyline_intersects, 2},
     {"_libs2_s2polygon_is_valid", (DL_FUNC) &_libs2_s2polygon_is_valid, 1},
