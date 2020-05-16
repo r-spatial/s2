@@ -15,7 +15,7 @@
 using namespace Rcpp;
 
 template <S2BooleanOperation::OpType opType>
-SEXP doBooleanOperation(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
+SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
 
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
@@ -29,7 +29,7 @@ SEXP doBooleanOperation(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feat
   S2BooleanOperation op(opType, std::move(layers));
 
   S2Error error;
-  if (!op.Build(*feature1->ShapeIndex(), *feature2->ShapeIndex(), &error)) {
+  if (!op.Build(*index1, *index2, &error)) {
     stop(error.text());
   }
 
@@ -50,28 +50,21 @@ SEXP doBooleanOperation(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feat
   }
 }
 
+template <S2BooleanOperation::OpType opType>
+class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
+  SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex());
+  }
+};
+
 // [[Rcpp::export]]
 List libs2_cpp_s2_intersection(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
-
-    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-      return doBooleanOperation<S2BooleanOperation::OpType::INTERSECTION>(feature1, feature2);
-    }
-  };
-
-  LibS2Op op;
+  LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION> op;
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
 List libs2_cpp_s2_union(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
-
-    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-      return doBooleanOperation<S2BooleanOperation::OpType::UNION>(feature1, feature2);
-    }
-  };
-
-  LibS2Op op;
+  LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION> op;
   return op.processVector(geog1, geog2);
 }
