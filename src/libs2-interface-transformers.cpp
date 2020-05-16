@@ -14,45 +14,61 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+template <S2BooleanOperation::OpType opType>
+SEXP doBooleanOperation(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2) {
+
+  std::vector<S2Point> points;
+  std::vector<std::unique_ptr<S2Polyline>> polylines;
+  S2Polygon polygon;
+
+  std::vector<std::unique_ptr<S2Builder::Layer>> layers;
+  layers.push_back(absl::make_unique<s2builderutil::S2PointVectorLayer>(&points));
+  layers.push_back(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
+  layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(&polygon));
+
+  S2BooleanOperation op(opType, std::move(layers));
+
+  S2Error error;
+  if (!op.Build(*feature1->ShapeIndex(), *feature2->ShapeIndex(), &error)) {
+    stop(error.text());
+  }
+
+  if (polylines.size() > 0) {
+    stop("Can't handle polyline output (yet)");
+  }
+
+  if (!polygon.is_empty()) {
+    stop("Can't handle polygon output (yet)");
+  }
+
+  if (points.size() == 0) {
+    return XPtr<LibS2Geography>(new LibS2PointGeography());
+  } else if (points.size() == 1) {
+    return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(points[0])));
+  } else {
+    stop("Can't handle multipoint output (yet)");
+  }
+}
+
 // [[Rcpp::export]]
 List libs2_cpp_s2_intersection(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+      return doBooleanOperation<S2BooleanOperation::OpType::INTERSECTION>(feature1, feature2);
+    }
+  };
 
-      std::vector<S2Point> points;
-      std::vector<std::unique_ptr<S2Polyline>> polylines;
-      S2Polygon polygon;
+  LibS2Op op;
+  return op.processVector(geog1, geog2);
+}
 
-      std::vector<std::unique_ptr<S2Builder::Layer>> layers;
-      layers.push_back(absl::make_unique<s2builderutil::S2PointVectorLayer>(&points));
-      layers.push_back(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
-      layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(&polygon));
+// [[Rcpp::export]]
+List libs2_cpp_s2_union(List geog1, List geog2) {
+  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
 
-      S2BooleanOperation op(S2BooleanOperation::OpType::INTERSECTION, std::move(layers));
-
-      S2Error error;
-      if (!op.Build(*feature1->ShapeIndex(), *feature2->ShapeIndex(), &error)) {
-        stop(error.text());
-      }
-
-      if (polylines.size() > 0) {
-        stop("Can't handle polyline output (yet)");
-      }
-
-      if (!polygon.is_empty()) {
-        stop("Can't handle polygon output (yet)");
-      }
-
-      if (points.size() == 0) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography());
-      } else if (points.size() == 1) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(points[0])));
-      } else {
-        stop("Can't handle multipoint output (yet)");
-      }
-
-      return R_NilValue;
+    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+      return doBooleanOperation<S2BooleanOperation::OpType::UNION>(feature1, feature2);
     }
   };
 
