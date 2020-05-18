@@ -66,6 +66,10 @@ libs2_cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_libs2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
+libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2) {
+    .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2)
+}
+
 libs2_cpp_s2_intersection <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_intersection`, geog1, geog2)
 }

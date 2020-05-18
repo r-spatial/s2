@@ -28,6 +28,13 @@ test_that("s2_intersects() works", {
   expect_false(s2_intersects("POINT (0 0)", "POINT EMPTY"))
 })
 
+test_that("s2_intersectsbox() works", {
+  expect_true(s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2))
+  expect_false(s2_intersectsbox("POINT (-1 -1)", 0, 0, 2, 2))
+  skip("s2intersectsbox() is not precise")
+  expect_false(s2_intersectsbox("POINT (0 0)", 1, 1, 2, 2))
+})
+
 test_that("s2_within() works", {
   expect_identical(s2_within("POINT (0 0)", NA_character_), NA)
   expect_true(s2_within("POINT (0 0)", "POINT (0 0)"))

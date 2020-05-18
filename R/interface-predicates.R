@@ -61,7 +61,12 @@ s2_intersects <- function(x, y) {
 #' @rdname s2_contains
 #' @export
 s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2) {
-  stop("Not implemented")
+  recycled <- recycle_common(s2geography(x), lng1, lat1, lng2, lat2)
+  libs2_cpp_s2_intersectsbox(
+    recycled[[1]],
+    recycled[[2]], recycled[[3]],
+    recycled[[4]], recycled[[5]]
+  )
 }
 
 #' @rdname s2_contains

@@ -178,6 +178,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libs2_cpp_s2_intersectsbox
+LogicalVector libs2_cpp_s2_intersectsbox(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2);
+RcppExport SEXP _libs2_libs2_cpp_s2_intersectsbox(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lng1(lng1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lng2(lng2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersectsbox(geog, lng1, lat1, lng2, lat2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_s2_intersection
 List libs2_cpp_s2_intersection(List geog1, List geog2);
 RcppExport SEXP _libs2_libs2_cpp_s2_intersection(SEXP geog1SEXP, SEXP geog2SEXP) {
@@ -622,6 +637,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_equals", (DL_FUNC) &_libs2_libs2_cpp_s2_equals, 2},
     {"_libs2_libs2_cpp_s2_contains", (DL_FUNC) &_libs2_libs2_cpp_s2_contains, 2},
     {"_libs2_libs2_cpp_s2_dwithin", (DL_FUNC) &_libs2_libs2_cpp_s2_dwithin, 3},
+    {"_libs2_libs2_cpp_s2_intersectsbox", (DL_FUNC) &_libs2_libs2_cpp_s2_intersectsbox, 5},
     {"_libs2_libs2_cpp_s2_intersection", (DL_FUNC) &_libs2_libs2_cpp_s2_intersection, 2},
     {"_libs2_libs2_cpp_s2_union", (DL_FUNC) &_libs2_libs2_cpp_s2_union, 2},
     {"_libs2_libs2_cpp_s2_difference", (DL_FUNC) &_libs2_libs2_cpp_s2_difference, 2},
