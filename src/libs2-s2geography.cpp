@@ -19,9 +19,10 @@ public:
   List s2geography;
   R_xlen_t featureId;
 
-  WKLibS2GeographyWriter(R_xlen_t size): s2geography(size) {}
+  WKLibS2GeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr) {}
 
   void nextFeatureStart(size_t featureId) {
+    this->builder = std::unique_ptr<LibS2GeographyBuilder>(nullptr);
     this->featureId = featureId;
   }
 
@@ -30,17 +31,44 @@ public:
   }
 
   void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
-    if (meta.geometryType != WKGeometryType::Point) {
-      stop("Can't create a geography that is not a point (yet!!)");
-    } else if(meta.size == 0) {
-      s2geography[this->featureId] = XPtr<LibS2PointGeography>(new LibS2PointGeography());
+    if (!this->builder) {
+      switch (meta.geometryType) {
+      case WKGeometryType::Point:
+        this->builder = absl::make_unique<LibS2PointGeography::Builder>();
+        break;
+      default:
+        stop("Can't create a geography that is not a point (yet!!)");
+      }
     }
+
+    this->builder->nextGeometryStart(meta, partId);
+  }
+
+  void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
+    this->builder->nextLinearRingStart(meta, size, ringId);
   }
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-    S2LatLng feature = S2LatLng::FromDegrees(coord.y, coord.x);
-    s2geography[this->featureId] = XPtr<LibS2PointGeography>(new LibS2PointGeography(feature));
+    this->builder->nextCoordinate(meta, coord, coordId);
   }
+
+  void nextLinearRingEnd(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
+    this->builder->nextLinearRingEnd(meta, size, ringId);
+  }
+
+  void nextGeometryEnd(const WKGeometryMeta& meta, uint32_t partId) {
+    this->builder->nextGeometryEnd(meta, partId);
+  }
+
+  void nextFeatureEnd(size_t featureId) {
+    if (this->builder) {
+      std::unique_ptr<LibS2Geography> feature = builder->build();
+      this->s2geography[featureId] = XPtr<LibS2Geography>(feature.release());
+    }
+  }
+
+private:
+  std::unique_ptr<LibS2GeographyBuilder> builder;
 };
 
 // [[Rcpp::export]]

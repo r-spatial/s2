@@ -48,11 +48,17 @@ public:
     }
 
     return &this->shape_index_;
-  };
+  }
 
 protected:
   MutableS2ShapeIndex shape_index_;
   bool hasIndex;
+};
+
+class LibS2GeographyBuilder: public WKGeometryHandler {
+public:
+  virtual std::unique_ptr<LibS2Geography> build() = 0;
+  virtual ~LibS2GeographyBuilder() {}
 };
 
 class LibS2PointGeography: public LibS2Geography {
@@ -101,20 +107,15 @@ public:
   }
 
   std::unique_ptr<LibS2Geography> Centroid() {
-    std::unique_ptr<LibS2PointGeography> ptr;
-
     if (this->isEmpty) {
-      ptr = std::unique_ptr<LibS2PointGeography>(new LibS2PointGeography());
+      return absl::make_unique<LibS2PointGeography>();
     } else {
-      ptr = std::unique_ptr<LibS2PointGeography>(new LibS2PointGeography(this->point));
+      return absl::make_unique<LibS2PointGeography>(this->point);
     }
-
-    return std::move(ptr);
   }
 
   std::unique_ptr<LibS2Geography> Boundary() {
-    std::unique_ptr<LibS2PointGeography> ptr(new LibS2PointGeography());
-    return std::move(ptr);
+    return absl::make_unique<LibS2PointGeography>();
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -136,6 +137,24 @@ public:
     }
     handler->nextGeometryEnd(meta, partId);
   }
+
+  class Builder: public LibS2GeographyBuilder {
+
+    void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
+      points.push_back(S2LatLng::FromDegrees(coord.y, coord.x));
+    }
+
+    std::unique_ptr<LibS2Geography> build() {
+      if (points.size() > 0) {
+        return absl::make_unique<LibS2PointGeography>(points[0]);
+      } else {
+        return absl::make_unique<LibS2PointGeography>();
+      }
+    }
+
+    private:
+      std::vector<S2LatLng> points;
+  };
 
 private:
   bool isEmpty;
