@@ -63,19 +63,22 @@ public:
 
 class LibS2PointGeography: public LibS2Geography {
 public:
-  LibS2PointGeography(): isEmpty(true) {}
-  LibS2PointGeography(S2LatLng point): isEmpty(false), point(point) {}
+  LibS2PointGeography(): points(0) {}
+  LibS2PointGeography(S2Point point): points(1) {
+    this->points[0] = point;
+  }
+  LibS2PointGeography(std::vector<S2Point> points): points(points) {}
 
   bool IsCollection() {
-    return false;
+    return this->NumPoints() > 1;
   }
 
   int Dimension() {
-    return  0;
+    return 0;
   }
 
   int NumPoints() {
-    return !isEmpty;
+    return this->points.size();
   }
 
   double Area() {
@@ -91,26 +94,30 @@ public:
   }
 
   double X() {
-    if (this->isEmpty) {
+    if (this->points.size() != 1) {
       return NA_REAL;
     } else {
-      return point.lng().degrees();
+      S2LatLng latLng(this->points[0]);
+      return latLng.lng().degrees();
     }
   }
 
   double Y() {
-    if (this->isEmpty) {
+    if (this->points.size() != 1) {
       return NA_REAL;
     } else {
-      return point.lat().degrees();
+      S2LatLng latLng(this->points[0]);
+      return latLng.lat().degrees();
     }
   }
 
   std::unique_ptr<LibS2Geography> Centroid() {
-    if (this->isEmpty) {
+    if (this->NumPoints() == 0) {
       return absl::make_unique<LibS2PointGeography>();
+    } else if(this->NumPoints() == 1) {
+      return absl::make_unique<LibS2PointGeography>(this->points[0]);
     } else {
-      return absl::make_unique<LibS2PointGeography>(this->point);
+      Rcpp::stop("Can't create centroid for more than one point (yet)");
     }
   }
 
@@ -119,46 +126,68 @@ public:
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
-    if (!this->isEmpty) {
-      std::vector<S2Point> points(1);
-      points[0] = S2Point(this->point);
-      index->Add(std::unique_ptr<S2PointVectorShape>(new S2PointVectorShape(std::move(points))));
-    }
+    std::vector<S2Point> pointsCopy(this->points);
+    index->Add(std::unique_ptr<S2PointVectorShape>(new S2PointVectorShape(std::move(points))));
   }
 
   virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
-    WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
-    meta.hasSize = true;
-    meta.size = !this->isEmpty;
+    S2LatLng point;
 
-    handler->nextGeometryStart(meta, partId);
-    if (!this->isEmpty) {
-      handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+    if (this->points.size() > 1) {
+      // export multipoint
+      WKGeometryMeta meta(WKGeometryType::MultiPoint, false, false, false);
+      meta.hasSize = true;
+      meta.size = this->points.size();
+
+      WKGeometryMeta childMeta(WKGeometryType::Point, false, false, false);
+      meta.hasSize = true;
+      meta.size = 1;
+
+      handler->nextGeometryStart(meta, partId);
+
+      for (size_t i = 0; i < this->points.size(); i++) {
+        point = S2LatLng(this->points[i]);
+
+        handler->nextGeometryStart(childMeta, i);
+        handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+        handler->nextGeometryEnd(childMeta, i);
+      }
+
+      handler->nextGeometryEnd(meta, partId);
+
+    } else {
+      // export point
+      WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
+      meta.hasSize = true;
+      meta.size = this->points.size();
+
+      handler->nextGeometryStart(meta, partId);
+
+      if (this->points.size() > 0) {
+        point = S2LatLng(this->points[0]);
+        handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+      }
+
+      handler->nextGeometryEnd(meta, partId);
     }
-    handler->nextGeometryEnd(meta, partId);
   }
 
   class Builder: public LibS2GeographyBuilder {
 
     void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-      points.push_back(S2LatLng::FromDegrees(coord.y, coord.x));
+      points.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
     }
 
     std::unique_ptr<LibS2Geography> build() {
-      if (points.size() > 0) {
-        return absl::make_unique<LibS2PointGeography>(points[0]);
-      } else {
-        return absl::make_unique<LibS2PointGeography>();
-      }
+      return absl::make_unique<LibS2PointGeography>(std::move(this->points));
     }
 
     private:
-      std::vector<S2LatLng> points;
+      std::vector<S2Point> points;
   };
 
 private:
-  bool isEmpty;
-  S2LatLng point;
+  std::vector<S2Point> points;
 };
 
 #endif

@@ -44,8 +44,8 @@ test_that("s2_perimeter works", {
 test_that("s2_x and s2_y works", {
   expect_identical(s2_x(NA_character_), NA_real_)
   expect_identical(s2_y(NA_character_), NA_real_)
-  expect_identical(s2_x("POINT (-64 45)"), -64)
-  expect_identical(s2_y("POINT (-64 45)"), 45)
+  expect_equal(s2_x("POINT (-64 45)"), -64)
+  expect_equal(s2_y("POINT (-64 45)"), 45)
   expect_identical(s2_x("POINT EMPTY"), NA_real_)
   expect_identical(s2_y("POINT EMPTY"), NA_real_)
 })

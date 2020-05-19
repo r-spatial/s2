@@ -41,13 +41,7 @@ SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
     stop("Can't handle polygon output (yet)");
   }
 
-  if (points.size() == 0) {
-    return XPtr<LibS2Geography>(new LibS2PointGeography());
-  } else if (points.size() == 1) {
-    return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(points[0])));
-  } else {
-    stop("Can't handle multipoint output (yet)");
-  }
+  return XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
 }
 
 template <S2BooleanOperation::OpType opType>
@@ -119,7 +113,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
 
       // the edge on feature 1 *is* a point: easy!
       if (edge1.v0 == edge1.v1) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(edge1.v0)));
+        return XPtr<LibS2Geography>(new LibS2PointGeography(edge1.v0));
       }
 
       // reverse query: find the edge on feature2 that is closest to feature1
@@ -133,7 +127,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       // the edge on feature 2 *is* a point: sort of easy!
       if (edge2.v0 == edge2.v1) {
         S2Point closest = query.Project(edge2.v0, result);
-        return XPtr<LibS2Geography>(new LibS2PointGeography(S2LatLng(closest)));
+        return XPtr<LibS2Geography>(new LibS2PointGeography(closest));
       } else {
         stop("Don't know how to find the closest point given two non-point edges");
       }
