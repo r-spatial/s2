@@ -37,8 +37,12 @@ public:
       case WKGeometryType::MultiPoint:
         this->builder = absl::make_unique<LibS2PointGeography::Builder>();
         break;
+      case WKGeometryType::LineString:
+      case WKGeometryType::MultiLineString:
+        this->builder = absl::make_unique<LibS2PolylineGeography::Builder>();
+        break;
       default:
-        stop("Can't create a geography that is not a point (yet!!)");
+        stop("Can't create a geography that is not a point or linestring (yet!!)");
       }
     }
 
