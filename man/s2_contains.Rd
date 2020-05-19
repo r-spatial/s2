@@ -25,7 +25,7 @@ s2_equals(x, y)
 
 s2_intersects(x, y)
 
-s2_intersectsbox(x, lng1, lat1, lng2, lat2)
+s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000)
 
 s2_touches(x, y)
 
@@ -39,6 +39,9 @@ s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 \item{y}{An object that can be interpreted as an S2 type.}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
+
+\item{detail}{The number of points with which to approximate
+non-geodesic edges.}
 
 \item{distance}{A distance in meters on the surface of the earth}
 

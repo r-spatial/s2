@@ -4,6 +4,8 @@
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2latlng_rect.h"
+#include "s2/s2polygon.h"
+#include "s2/s2testing.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -72,42 +74,74 @@ LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distanc
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_intersectsbox(List geog,
                                          NumericVector lng1, NumericVector lat1,
-                                         NumericVector lng2, NumericVector lat2) {
+                                         NumericVector lng2, NumericVector lat2,
+                                         IntegerVector detail) {
 
   class LibS2Op: public LibS2UnaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector lng1, lat1, lng2, lat2;
+    IntegerVector detail;
 
     LibS2Op(NumericVector lng1, NumericVector lat1,
-            NumericVector lng2, NumericVector lat2):
-      lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2) {}
+            NumericVector lng2, NumericVector lat2,
+            IntegerVector detail):
+      lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2), detail(detail) {}
 
     int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
-      // construct rect
-      S2LatLng lo = S2LatLng::FromDegrees(this->lng1[i], this->lat1[i]);
-      S2LatLng hi = S2LatLng::FromDegrees(this->lng2[i], this->lat2[i]);
-      S2LatLngRect rect(lo, hi);
-
-      // Incomplete and conservative
-      // (may return true when the lat/lon rect doesn't actually contain the geography)
-      MutableS2ShapeIndex* index = (MutableS2ShapeIndex*)feature->ShapeIndex();
-      for (MutableS2ShapeIndex::Iterator it(index, S2ShapeIndex::BEGIN); !it.done(); it.Next()) {
-        if (rect.Intersects(S2Cell(it.id()))) {
-          const S2ShapeIndexCell& cell = it.cell();
-          for (int j = 0; j < cell.num_clipped(); j++) {
-            // const S2ClippedShape& clippedShape = cell.clipped(j);
-            // S2Shape* shape = index->shape(clippedShape.shape_id());
-            // don't know what to do with shape here to properly test for intersection
-          }
-          return true;
-        }
+      // construct polygon
+      double xmin = this->lng1[i];
+      double ymin = this->lat1[i];
+      double xmax = this->lng2[i];
+      double ymax = this->lat2[i];
+      int detail = this->detail[i];
+      
+      if (detail < 1) {
+        stop("Can't create polygon from bounding box with detail < 1");
       }
 
-      return false;
+      // can't just do xmax - xmin because these boxes can wrap around the date line
+      S2Point westEquator = S2LatLng::FromDegrees(0, xmin).Normalized().ToPoint();
+      S2Point eastEquator = S2LatLng::FromDegrees(0, xmax).Normalized().ToPoint();
+      S1ChordAngle width(westEquator, eastEquator);
+      double widthDegrees = width.degrees();
+      double deltaDegrees = widthDegrees / (double) detail;
+      double heightDegrees = ymax - ymin;
+      
+      // these situations would result in an error below because of
+      // duplicate vertices
+      if (widthDegrees == 0 || heightDegrees == 0) {
+        return false;
+      }
+
+      // create polygon vertices
+      std::vector<S2Point> points(2 + 2 * detail);
+      S2LatLng vertex;
+
+      // south edge
+      for (int i = 0; i <= detail; i++) {
+        vertex = S2LatLng::FromDegrees(xmin + deltaDegrees * i, ymin).Normalized();
+        points[i] = vertex.ToPoint();
+      }
+
+      // north edge
+      for (int i = 0; i <= detail; i++) {
+        vertex = S2LatLng::FromDegrees(xmax - deltaDegrees * i, ymax).Normalized();
+        points[detail + 1 + i] = vertex.ToPoint();
+      }
+
+      // create polygon
+      std::unique_ptr<S2Loop> loop(new S2Loop());
+      loop->Init(points);
+      std::vector<std::unique_ptr<S2Loop>> loops(1);
+      loops[0] = std::move(loop);
+      S2Polygon polygon;
+      polygon.InitOriented(std::move(loops));
+      
+      // test intersection
+      return S2BooleanOperation::Intersects(polygon.index(), *feature->ShapeIndex());
     }
   };
 
-  LibS2Op op(lng1, lat1, lng2, lat2);
+  LibS2Op op(lng1, lat1, lng2, lat2, detail);
   return op.processVector(geog);
 }
-

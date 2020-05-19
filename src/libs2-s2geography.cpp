@@ -90,19 +90,6 @@ public:
     this->handler->nextFeatureEnd(featureId);
   }
 
-  virtual void readItem(SEXP item) {
-    WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
-    meta.hasSize = true;
-    meta.size = 1;
-
-    this->handler->nextGeometryStart(meta, PART_ID_NONE);
-
-    XPtr<S2LatLng> ptr(item);
-    const WKCoord coord = WKCoord::xy(ptr->lng().degrees(), ptr->lat().degrees());
-    this->handler->nextCoordinate(meta, coord, 0);
-    this->handler->nextGeometryEnd(meta, PART_ID_NONE);
-  }
-
 private:
   WKSEXPProvider& provider;
 };

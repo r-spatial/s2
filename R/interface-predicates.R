@@ -4,6 +4,8 @@
 #' @inheritParams s2_iscollection
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
 #' @param distance A distance in meters on the surface of the earth
+#' @param detail The number of points with which to approximate
+#'   non-geodesic edges.
 #'
 #' @export
 #'
@@ -60,12 +62,13 @@ s2_intersects <- function(x, y) {
 
 #' @rdname s2_contains
 #' @export
-s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2) {
-  recycled <- recycle_common(s2geography(x), lng1, lat1, lng2, lat2)
+s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2, detail = 1000) {
+  recycled <- recycle_common(s2geography(x), lng1, lat1, lng2, lat2, detail)
   libs2_cpp_s2_intersectsbox(
     recycled[[1]],
     recycled[[2]], recycled[[3]],
-    recycled[[4]], recycled[[5]]
+    recycled[[4]], recycled[[5]],
+    detail = recycled[[6]]
   )
 }
 

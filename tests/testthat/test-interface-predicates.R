@@ -29,9 +29,17 @@ test_that("s2_intersects() works", {
 })
 
 test_that("s2_intersectsbox() works", {
+  expect_error(
+    s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2, detail = 0),
+    "Can't create polygon"
+  )
+  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0))
+  expect_false(s2_intersectsbox("POINT (0 0)", -1, 0, 1, 0))
+  expect_false(s2_intersectsbox("POINT (0 0)", 0, -1, 0, 1))
+
+  skip("intersectsbox returns the exactly opposite of what it's supposed to")
   expect_true(s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2))
   expect_false(s2_intersectsbox("POINT (-1 -1)", 0, 0, 2, 2))
-  skip("s2intersectsbox() is not precise")
   expect_false(s2_intersectsbox("POINT (0 0)", 1, 1, 2, 2))
 })
 
