@@ -34,6 +34,7 @@ public:
     if (!this->builder) {
       switch (meta.geometryType) {
       case WKGeometryType::Point:
+      case WKGeometryType::MultiPoint:
         this->builder = absl::make_unique<LibS2PointGeography::Builder>();
         break;
       default:

@@ -17,4 +17,8 @@ test_that("s2geography vectors can be created from wkb points", {
 test_that("s2geography vectors can be created from wkt", {
   expect_output(print(s2geography("POINT (-64 45)")), "<POINT \\(-64 45\\)>")
   expect_output(print(s2geography("POINT EMPTY")), "<POINT EMPTY>")
+  expect_output(
+    print(s2geography("MULTIPOINT ((-64 45), (30 10))")),
+    "<MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)>"
+  )
 })
