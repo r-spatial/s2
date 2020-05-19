@@ -89,6 +89,7 @@ LogicalVector libs2_cpp_s2_intersectsbox(List geog,
 
     int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
       // construct polygon
+      // this might be easier with an s2region intersection
       double xmin = this->lng1[i];
       double ymin = this->lat1[i];
       double xmax = this->lng2[i];

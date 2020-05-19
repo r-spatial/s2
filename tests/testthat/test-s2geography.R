@@ -21,4 +21,16 @@ test_that("s2geography vectors can be created from wkt", {
     print(s2geography("MULTIPOINT ((-64 45), (30 10))")),
     "<MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)>"
   )
+  expect_output(
+    print(s2geography("LINESTRING (-64 45, 0 0)")),
+    "<LINESTRING \\(-64 45, 0 0\\)>"
+  )
+  expect_output(
+    print(s2geography("LINESTRING EMPTY")),
+    "<LINESTRING EMPTY>"
+  )
+  expect_output(
+    print(s2geography("MULTILINESTRING ((-64 45, 0 0), (0 1, 2 3))")),
+    "<MULTILINESTRING \\(\\(-64 45, 0 0), \\(0 1, 2 3\\)\\)>"
+  )
 })

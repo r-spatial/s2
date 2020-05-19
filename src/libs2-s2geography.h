@@ -197,9 +197,7 @@ class LibS2PolylineGeography: public LibS2Geography {
 public:
   LibS2PolylineGeography(): polylines(0) {}
   LibS2PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines): 
-    polylines(std::move(polylines)) {
-
-  }
+    polylines(std::move(polylines)) {}
 
   bool IsCollection() {
     return this->polylines.size() > 1;
@@ -285,9 +283,9 @@ public:
 
         handler->nextGeometryStart(childMeta, i);
 
-        for (size_t j = 0; j < meta.size; j++) {
+        for (size_t j = 0; j < childMeta.size; j++) {
           point = S2LatLng(this->polylines[i]->vertex(j));
-          handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+          handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), j);
         }
         
         handler->nextGeometryEnd(childMeta, i);
@@ -305,7 +303,7 @@ public:
 
       for (size_t i = 0; i < meta.size; i++) {
         point = S2LatLng(this->polylines[0]->vertex(i));
-        handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
+        handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), i);
       }
 
       handler->nextGeometryEnd(meta, partId);
@@ -333,7 +331,9 @@ public:
     }
 
     void nextGeometryEnd(const WKGeometryMeta& meta, uint32_t partId) {
-      polylines.push_back(absl::make_unique<S2Polyline>(std::move(points)));
+      if (meta.geometryType == WKGeometryType::LineString) {
+        polylines.push_back(absl::make_unique<S2Polyline>(std::move(points)));
+      }
     }
 
     std::unique_ptr<LibS2Geography> build() {
