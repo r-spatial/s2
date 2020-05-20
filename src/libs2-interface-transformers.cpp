@@ -33,15 +33,17 @@ SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
     stop(error.text());
   }
 
-  if (polylines.size() > 0) {
-    stop("Can't handle polyline output (yet)");
+  if ((!polygon.is_empty() + (polylines.size() > 0) + (points.size() > 0)) > 1) {
+    stop("Can't handle mixed point/polyline/polygon output (yet)");
   }
 
   if (!polygon.is_empty()) {
     stop("Can't handle polygon output (yet)");
+  } else if (polylines.size() > 0) {
+    return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
+  } else {
+    return XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
   }
-
-  return XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
 }
 
 template <S2BooleanOperation::OpType opType>
