@@ -18,8 +18,13 @@ public:
 
   // accessors need to be methods, since their calculation
   // depends on the geometry type
+
+  // returns true for a multi-
+  // or geometrycollection type
   virtual bool IsCollection() = 0;
+  // Returns 0 for point, 1 for line, 2 for polygon
   virtual int Dimension() = 0;
+  // Returns the number of unique points in the input
   virtual int NumPoints() = 0;
   virtual double Area() = 0;
   virtual double Length() = 0;
@@ -63,6 +68,7 @@ public:
 
 // This class handles both points and multipoints, as this is how
 // points are generally returned/required in S2 (vector of S2Point)
+// This is similar to an S2PointVectorLayer
 class LibS2PointGeography: public LibS2Geography {
 public:
   LibS2PointGeography(): points(0) {}
@@ -72,7 +78,7 @@ public:
   LibS2PointGeography(std::vector<S2Point> points): points(points) {}
 
   bool IsCollection() {
-    return this->NumPoints() > 1;
+    return this->points.size() > 1;
   }
 
   int Dimension() {
@@ -157,7 +163,7 @@ public:
 
       handler->nextGeometryEnd(meta, partId);
 
-    } else {
+    } else if (this->points.size() > 0) {
       // export point
       WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
       meta.hasSize = true;
@@ -165,11 +171,17 @@ public:
 
       handler->nextGeometryStart(meta, partId);
 
-      if (this->points.size() > 0) {
-        point = S2LatLng(this->points[0]);
-        handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
-      }
+      point = S2LatLng(this->points[0]);
+      handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 0);
 
+      handler->nextGeometryEnd(meta, partId);
+    } else {
+      // export empty point
+      // export point
+      WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
+      meta.hasSize = true;
+      meta.size = 0;
+      handler->nextGeometryStart(meta, partId);
       handler->nextGeometryEnd(meta, partId);
     }
   }
@@ -192,11 +204,12 @@ private:
   std::vector<S2Point> points;
 };
 
-// This class handles (vectors of) polylines
+// This class handles (vectors of) polylines (LINESTRING and MULTILINESTRING)
+// This is similar to an S2PolylineVectorLayer
 class LibS2PolylineGeography: public LibS2Geography {
 public:
   LibS2PolylineGeography(): polylines(0) {}
-  LibS2PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines): 
+  LibS2PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
   bool IsCollection() {
@@ -210,37 +223,27 @@ public:
   int NumPoints() {
     int numPoints = 0;
     for (size_t i = 0; i < this->polylines.size(); i++) {
-      // not implemented yet
+      numPoints += this->polylines[i]->num_vertices();
     }
 
     return numPoints;
   }
 
   double Area() {
-    double area = 0;
-    for (size_t i = 0; i < this->polylines.size(); i++) {
-      // not implemented yet
-    }
-
-    return area;
+    return 0;
   }
 
   double Length() {
     double length  = 0;
     for (size_t i = 0; i < this->polylines.size(); i++) {
-      // not implemented yet
+      length += this->polylines[i]->GetLength().radians();
     }
 
     return length;
   }
 
   double Perimeter() {
-    double perimeter = 0;
-    for (size_t i = 0; i < this->polylines.size(); i++) {
-      // not implemented yet
-    }
-
-    return perimeter;
+    return 0;
   }
 
   double X() {
@@ -261,7 +264,9 @@ public:
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
     for (size_t i = 0; i < this->polylines.size(); i++) {
-      // not implemented yet
+      std::unique_ptr<S2Polyline::Shape> shape = absl::make_unique<S2Polyline::Shape>();
+      shape->Init(this->polylines[i].get());
+      index->Add(std::move(shape));
     }
   }
 
@@ -287,7 +292,7 @@ public:
           point = S2LatLng(this->polylines[i]->vertex(j));
           handler->nextCoordinate(meta, WKCoord::xy(point.lng().degrees(), point.lat().degrees()), j);
         }
-        
+
         handler->nextGeometryEnd(childMeta, i);
       }
 

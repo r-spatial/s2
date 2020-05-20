@@ -46,20 +46,23 @@ s2_isempty <- function(x) {
 
 #' @rdname s2_iscollection
 #' @export
-s2_area <- function(x) {
-  libs2_cpp_s2_area(s2geography(x))
+s2_area <- function(x, radius = s2earth_radius_meters()) {
+  recycled <- recycle_common(s2geography(x), radius)
+  libs2_cpp_s2_area(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
-s2_length <- function(x) {
-  libs2_cpp_s2_length(s2geography(x))
+s2_length <- function(x, radius = s2earth_radius_meters()) {
+  recycled <- recycle_common(s2geography(x), radius)
+  libs2_cpp_s2_length(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
-s2_perimeter <- function(x) {
-  libs2_cpp_s2_perimeter(s2geography(x))
+s2_perimeter <- function(x, radius = s2earth_radius_meters()) {
+  recycled <- recycle_common(s2geography(x), radius)
+  libs2_cpp_s2_perimeter(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection

@@ -22,11 +22,11 @@ s2_numpoints(x)
 
 s2_isempty(x)
 
-s2_area(x)
+s2_area(x, radius = s2earth_radius_meters())
 
-s2_length(x)
+s2_length(x, radius = s2earth_radius_meters())
 
-s2_perimeter(x)
+s2_perimeter(x, radius = s2earth_radius_meters())
 
 s2_x(x)
 
