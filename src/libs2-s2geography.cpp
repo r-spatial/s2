@@ -136,7 +136,6 @@ CharacterVector s2geography_format(List s2geography, int maxCoords) {
   WKSEXPProvider provider(s2geography);
   WKCharacterVectorExporter exporter(s2geography.size());
   WKGeometryFormatter formatter(exporter, maxCoords);
-
   WKLibS2GeographyReader reader(provider);
   reader.setHandler(&formatter);
 

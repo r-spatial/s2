@@ -10,6 +10,7 @@
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2point_vector_shape.h"
 #include "wk/geometry-handler.h"
+#include "wk/reader.h"
 #include <Rcpp.h>
 
 class LibS2Geography {
@@ -188,7 +189,7 @@ public:
   }
 
   class Builder: public LibS2GeographyBuilder {
-
+  public:
     void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
       points.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
     }
@@ -325,7 +326,7 @@ public:
   }
 
   class Builder: public LibS2GeographyBuilder {
-
+  public:
     void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
       if (meta.geometryType == WKGeometryType::LineString) {
         points = std::vector<S2Point>(meta.size);
@@ -401,26 +402,23 @@ public:
   }
 
   std::unique_ptr<LibS2Geography> Boundary() {
-    std::vector<std::unique_ptr<S2Polyline>> loops(this->polygon->num_loops());
+    LibS2PolylineGeography::Builder builder;
+    std::vector<std::vector<int>> flatIndices = this->flatLoopIndices();
 
-    for (int i = 0; i < this->polygon->num_loops(); i++) {
-      S2Loop* loop = this->polygon->loop(i);
-      if (loop->num_vertices() == 0) {
-        loops[i] = absl::make_unique<S2Polyline>();
-        continue;
-      }
+    // export multilinestring
+    WKGeometryMeta meta(WKGeometryType::MultiLineString, false, false, false);
+    meta.hasSize = true;
+    meta.size = this->polygon->num_loops();
 
-      std::vector<S2Point> vertices(loop->num_vertices() + 1);
-      for (int j = 0; j < loop->num_vertices(); j++) {
-        vertices[j] = loop->vertex(i);
-      }
-      vertices[loop->num_vertices()] = loop->vertex(0);
-
-      std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>(std::move(vertices));
-      loops[i] = std::move(polyline);
+    builder.nextGeometryStart(meta, WKReader::PART_ID_NONE);
+    int loopId = 0;
+    for (int i = 0; i < flatIndices.size(); i++) {
+      this->exportLoops(&builder, meta, flatIndices[i], loopId);
+      loopId += flatIndices[i].size();
     }
+    builder.nextGeometryEnd(meta, WKReader::PART_ID_NONE);
 
-    return absl::make_unique<LibS2PolylineGeography>(std::move(loops));
+    return builder.build();
   }
 
   void BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -471,7 +469,7 @@ public:
   }
 
   class Builder: public LibS2GeographyBuilder {
-
+  public:
     void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
       // skip the last vertex (WKB rings are theoretically closed)
       if (size > 0) {
@@ -564,8 +562,8 @@ private:
     return flatIndices;
   }
 
-  void exportLoops(WKGeometryHandler* handler, const WKGeometryMeta& meta, 
-                   const std::vector<int>& loopIndices) {
+  void exportLoops(WKGeometryHandler* handler, WKGeometryMeta meta, 
+                   const std::vector<int>& loopIndices, int loopIdOffset = 0) {
     S2LatLng point;
 
     for (int i = 0; i < loopIndices.size(); i++) {
@@ -574,14 +572,32 @@ private:
         continue;
       }
 
-      handler->nextLinearRingStart(meta, loop->num_vertices() + 1, i);
+      // this is a slightly ugly way to make it possible to export either the
+      // boundaries or the loops using the same code
+      WKGeometryMeta childMeta(WKGeometryType::LineString, false, false, false);
+      childMeta.hasSize = true;
+      childMeta.size = loop->num_vertices() + 1;
+
+      WKGeometryMeta coordMeta;
+
+      if (meta.geometryType == WKGeometryType::Polygon) {
+        handler->nextLinearRingStart(meta, loop->num_vertices() + 1, i + loopIdOffset);
+        coordMeta = meta;
+      } else if (meta.geometryType == WKGeometryType::MultiLineString) {
+        handler->nextGeometryStart(childMeta, i + loopIdOffset);
+        coordMeta = childMeta;
+      } else {
+        std::stringstream err;
+        err << "Can't export S2Loop with parent geometry type " << meta.geometryType;
+        Rcpp::stop(err.str());
+      }
 
       if (i == 0) {
         // if this is the first ring, use the internal vertex order
         for (int j = 0; j < loop->num_vertices(); j++) {
           point = S2LatLng(loop->vertex(j));
           handler->nextCoordinate(
-            meta,
+            coordMeta,
             WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
             j
           );
@@ -590,7 +606,7 @@ private:
         // close the loop!
         point = S2LatLng(loop->vertex(0));
         handler->nextCoordinate(
-          meta,
+          coordMeta,
           WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
           loop->num_vertices()
         );
@@ -600,7 +616,7 @@ private:
         for (int j = 0; j < loop->num_vertices(); j++) {
           point = S2LatLng(loop->vertex(loop->num_vertices() - 1 - j));
           handler->nextCoordinate(
-            meta,
+            coordMeta,
             WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
             j
           );
@@ -609,13 +625,17 @@ private:
         // close the loop!
         point = S2LatLng(loop->vertex(loop->num_vertices() - 1));
         handler->nextCoordinate(
-          meta,
+          coordMeta,
           WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
           loop->num_vertices()
         );
       }
 
-      handler->nextLinearRingEnd(meta, loop->num_vertices() + 1, i);
+      if (meta.geometryType == WKGeometryType::Polygon) {
+        handler->nextLinearRingEnd(meta, loop->num_vertices() + 1, i + loopIdOffset);
+      } else if (meta.geometryType == WKGeometryType::MultiLineString) {
+        handler->nextGeometryEnd(childMeta, i + loopIdOffset);
+      }
     }
   }
 };

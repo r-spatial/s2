@@ -8,6 +8,33 @@ test_that("s2_centroid() works", {
 test_that("s2_boundary() works", {
   expect_true(s2_isempty(s2_boundary("POINT (30 10)")))
   expect_true(s2_isempty(s2_boundary("POINT EMPTY")))
+  expect_true(s2_isempty(s2_boundary("POLYGON EMPTY")))
+  expect_true(
+    s2_iscollection(
+      s2_boundary("MULTIPOLYGON (
+          ((40 40, 20 45, 45 30, 40 40)),
+          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+      )")
+    )
+  )
+  expect_identical(
+    s2_dimension(
+      s2_boundary("MULTIPOLYGON (
+          ((40 40, 20 45, 45 30, 40 40)),
+          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+      )")
+    ),
+    1L
+  )
+  expect_identical(
+    s2_numpoints(
+      s2_boundary("MULTIPOLYGON (
+          ((40 40, 20 45, 45 30, 40 40)),
+          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+      )")
+    ),
+    14L
+  )
 })
 
 test_that("s2_closestpoint() works", {

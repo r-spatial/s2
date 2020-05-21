@@ -61,7 +61,7 @@ test_that("s2geography vectors can be created from wkt", {
       )"),
       max_coords = 100
     ),
-    "\\(\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25, 30 20"
+    "\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25, 30 20"
   )
 
   skip("currently only oriented polygons can be imported")
