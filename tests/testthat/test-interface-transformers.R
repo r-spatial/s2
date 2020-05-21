@@ -32,7 +32,7 @@ test_that("s2_intersection() works", {
   expect_equal(s2_y(s2_intersection("POINT (30 10)", "POINT (30 10)")), 10)
   expect_true(s2_isempty(s2_intersection("POINT (30 10)", "POINT (30 11)")))
 
-  skip("Don't understand why this intersection fails")
+  skip("Don't know why this intersection fails (works on bigquery)")
   expect_equal(s2_x(s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)")), 0)
   expect_equal(s2_y(s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)")), 0)
 })

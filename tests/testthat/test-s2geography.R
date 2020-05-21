@@ -33,4 +33,26 @@ test_that("s2geography vectors can be created from wkt", {
     print(s2geography("MULTILINESTRING ((-64 45, 0 0), (0 1, 2 3))")),
     "<MULTILINESTRING \\(\\(-64 45, 0 0), \\(0 1, 2 3\\)\\)>"
   )
+
+  expect_output(print(s2geography("POLYGON EMPTY"), "<POLYGON EMPTY>"))
+  expect_output(
+    print(s2geography("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")),
+    "<POLYGON \\(\\(0 0, 10 0, 10 10"
+  )
+  expect_output(
+    print(s2geography("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)))")),
+    "<MULTIPOLYGON \\(\\(\\(0 0, 10 0, 10 10"
+  )
+
+  expect_output(
+    print(
+      s2geography("MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+      )")
+    ),
+    "<MULTIPOLYGON \\(\\(\\(40 40, 20 45, 45 30"
+  )
+
+  skip("currently only oriented polygons can be imported")
 })
