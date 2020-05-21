@@ -67,7 +67,7 @@ print.s2xptr <- function(x, ...) {
     return(invisible(x))
   }
 
-  out <- stats::setNames(format(x), names(x))
+  out <- stats::setNames(format(x, ...), names(x))
   print(out, quote = FALSE)
   invisible(x)
 }

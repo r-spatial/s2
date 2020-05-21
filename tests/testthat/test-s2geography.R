@@ -52,6 +52,17 @@ test_that("s2geography vectors can be created from wkt", {
     ),
     "<MULTIPOLYGON \\(\\(\\(40 40, 20 45, 45 30"
   )
+  # make sure ring directions are correct
+  expect_output(
+    print(
+      s2geography("MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+      )"),
+      max_coords = 100
+    ),
+    "\\(\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25, 30 20"
+  )
 
   skip("currently only oriented polygons can be imported")
 })

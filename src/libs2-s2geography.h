@@ -576,22 +576,44 @@ private:
 
       handler->nextLinearRingStart(meta, loop->num_vertices() + 1, i);
 
-      for (int j = 0; j < loop->num_vertices(); j++) {
-        point = S2LatLng(loop->vertex(j));
+      if (i == 0) {
+        // if this is the first ring, use the internal vertex order
+        for (int j = 0; j < loop->num_vertices(); j++) {
+          point = S2LatLng(loop->vertex(j));
+          handler->nextCoordinate(
+            meta,
+            WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+            j
+          );
+        }
+
+        // close the loop!
+        point = S2LatLng(loop->vertex(0));
         handler->nextCoordinate(
           meta,
           WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
-          j
+          loop->num_vertices()
+        );
+      } else {
+
+        // if an interior ring, reverse the vertex order
+        for (int j = 0; j < loop->num_vertices(); j++) {
+          point = S2LatLng(loop->vertex(loop->num_vertices() - 1 - j));
+          handler->nextCoordinate(
+            meta,
+            WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+            j
+          );
+        }
+
+        // close the loop!
+        point = S2LatLng(loop->vertex(loop->num_vertices() - 1));
+        handler->nextCoordinate(
+          meta,
+          WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+          loop->num_vertices()
         );
       }
-
-      // close the loop!
-      point = S2LatLng(loop->vertex(0));
-      handler->nextCoordinate(
-        meta, 
-        WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
-        loop->num_vertices()
-      );
 
       handler->nextLinearRingEnd(meta, loop->num_vertices() + 1, i);
     }
