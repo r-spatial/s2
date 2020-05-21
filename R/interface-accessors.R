@@ -48,7 +48,7 @@ s2_isempty <- function(x) {
 #' @export
 s2_area <- function(x, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
-  libs2_cpp_s2_area(recycled[[1]]) * radius
+  libs2_cpp_s2_area(recycled[[1]]) * radius ^ 2
 }
 
 #' @rdname s2_iscollection
