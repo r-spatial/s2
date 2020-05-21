@@ -436,7 +436,7 @@ public:
       // export multipolygon
       WKGeometryMeta meta(WKGeometryType::MultiPolygon, false, false, false);
       meta.hasSize = true;
-      meta.size = 0;
+      meta.size = flatIndices.size();
 
       WKGeometryMeta childMeta(WKGeometryType::Polygon, false, false, false);
       childMeta.hasSize = true;
@@ -577,7 +577,7 @@ private:
       handler->nextLinearRingStart(meta, loop->num_vertices() + 1, i);
 
       for (int j = 0; j < loop->num_vertices(); j++) {
-        point = S2LatLng(loop->vertex(i));
+        point = S2LatLng(loop->vertex(j));
         handler->nextCoordinate(
           meta,
           WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 

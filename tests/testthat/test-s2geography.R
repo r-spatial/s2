@@ -41,9 +41,8 @@ test_that("s2geography vectors can be created from wkt", {
   )
   expect_output(
     print(s2geography("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)))")),
-    "<MULTIPOLYGON \\(\\(\\(0 0, 10 0, 10 10"
+    "<POLYGON \\(\\(0 0, 10 0, 10 10"
   )
-
   expect_output(
     print(
       s2geography("MULTIPOLYGON (
