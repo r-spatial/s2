@@ -5,6 +5,7 @@
 #include "s2/s2polyline.h"
 #include "s2/s2point.h"
 #include "s2/s2error.h"
+#include "s2/s2boolean_operation.h"
 #include "s2/s2builderutil_s2polygon_layer.h"
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
@@ -13,12 +14,13 @@
 #include "libs2-point-geography.h"
 #include "libs2-polyline-geography.h"
 #include "libs2-polygon-geography.h"
+#include "libs2-geography-collection.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
 template <S2BooleanOperation::OpType opType>
-SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
+Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
 
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
@@ -36,16 +38,40 @@ SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
     stop(error.text());
   }
 
-  if ((!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0)) > 1) {
-    stop("Can't handle mixed point/polyline/polygon output (yet)");
+  // count non-empty dimensions
+  int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
+
+  // return empty output
+  if (nonEmptyDimensions == 0) {
+    return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
   }
 
+  // return mixed output
+  if (nonEmptyDimensions > 1) {
+    std::vector<std::unique_ptr<LibS2Geography>> features;
+
+    if (points.size() > 0) {
+      features.push_back(absl::make_unique<LibS2PointGeography>(std::move(points)));
+    }
+
+    if (polylines.size() > 0) {
+      features.push_back(absl::make_unique<LibS2PolylineGeography>(std::move(polylines)));
+    }
+
+    if (!polygon->is_empty()) {
+      features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(polygon)));
+    }
+
+    return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection(std::move(features)));
+  }
+
+  // return single dimension output
   if (!polygon->is_empty()) {
-    return XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
+    return Rcpp::XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
   } else if (polylines.size() > 0) {
-    return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
+    return Rcpp::XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
   } else {
-    return XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
+    return Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
   }
 }
 

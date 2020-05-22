@@ -84,7 +84,7 @@ test_that("s2_intersection() works", {
 
 test_that("s2_union(x) works", {
   expect_wkt_equal(s2_union("POINT (30 10)"), "POINT (30 10)")
-  expect_wkt_equal(s2_union("POINT EMPTY"), "POINT EMPTY")
+  expect_wkt_equal(s2_union("POINT EMPTY"), "GEOMETRYCOLLECTION EMPTY")
   expect_wkt_equal(
     s2_union("MULTILINESTRING ((-45 0, 0 0), (0 0, 0 10))"),
     "LINESTRING (-45 0, 0 0, 0 10)"
@@ -93,7 +93,7 @@ test_that("s2_union(x) works", {
 
 test_that("s2_union(x, y) works", {
   expect_wkt_equal(s2_union("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
-  expect_wkt_equal(s2_union("POINT EMPTY", "POINT EMPTY"), "POINT EMPTY")
+  expect_wkt_equal(s2_union("POINT EMPTY", "POINT EMPTY"), "GEOMETRYCOLLECTION EMPTY")
 
   # LINESTRING (-45 0, 0 0, 0 10)
   expect_wkt_equal(
@@ -119,7 +119,7 @@ test_that("s2_union(x, y) works", {
 
 test_that("s2_union_agg() works", {
   expect_wkt_equal(s2_union_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
-  expect_wkt_equal(s2_union_agg(c("POINT EMPTY", "POINT EMPTY")), "POINT EMPTY")
+  expect_wkt_equal(s2_union_agg(c("POINT EMPTY", "POINT EMPTY")), "GEOMETRYCOLLECTION EMPTY")
 
   # NULL handling
   expect_identical(

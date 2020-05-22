@@ -15,6 +15,7 @@
 #include "libs2-point-geography.h"
 #include "libs2-polyline-geography.h"
 #include "libs2-polygon-geography.h"
+#include "libs2-geography-collection.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -50,8 +51,13 @@ public:
       case WKGeometryType::MultiPolygon:
         this->builder = absl::make_unique<LibS2PolygonGeography::Builder>();
         break;
+      case WKGeometryType::GeometryCollection:
+        this->builder = absl::make_unique<LibS2GeographyCollection::Builder>();
+        break;
       default:
-        stop("Can't create an S2 geometrycollection (yet)");
+        std::stringstream err;
+        err << "Unknown geometry type in geography builder: " << meta.geometryType;
+        Rcpp::stop(err.str());
       }
     }
 
