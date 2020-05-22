@@ -2,12 +2,17 @@
 test_that("s2_centroid() works", {
   expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
+  expect_wkt_equal(s2_centroid("MULTIPOINT ((0 0), (0 10))"), "POINT (0 5)")
+  expect_wkt_equal(s2_centroid("LINESTRING (0 0, 0 10)"), "POINT (0 5)", precision = 15)
+  expect_wkt_equal(s2_centroid("POLYGON ((-5 -5, 5 -5, 5 5, -5 5, -5 -5))"), "POINT (0 0)")
 })
 
 test_that("s2_boundary() works", {
   expect_true(s2_isempty(s2_boundary("POINT (30 10)")))
   expect_true(s2_isempty(s2_boundary("POINT EMPTY")))
   expect_true(s2_isempty(s2_boundary("POLYGON EMPTY")))
+  expect_wkt_equal(s2_boundary("LINESTRING (0 0, 0 10)"), "MULTIPOINT ((0 0), (0 10))")
+
   expect_wkt_equal(
     s2_boundary("MULTIPOLYGON (
         ((40 40, 20 45, 45 30, 40 40)),
@@ -121,6 +126,22 @@ test_that("s2_union_agg() works", {
   )
   expect_wkt_equal(
     s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    "POINT (30 10)"
+  )
+})
+
+test_that("s2_centroid_agg() works", {
+  expect_wkt_equal(s2_centroid_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
+  expect_wkt_equal(s2_centroid_agg(c("POINT EMPTY", "POINT EMPTY")), "POINT EMPTY")
+  expect_wkt_equal(s2_centroid_agg(c("POINT (0 0)", "POINT (0 10)")), "POINT (0 5)")
+
+  # NULL handling
+  expect_identical(
+    s2_centroid_agg(c("POINT (30 10)", NA), na.rm = FALSE),
+    s2geography(NA_character_)
+  )
+  expect_wkt_equal(
+    s2_centroid_agg(c("POINT (30 10)", NA), na.rm = TRUE),
     "POINT (30 10)"
   )
 })

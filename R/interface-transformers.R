@@ -76,6 +76,7 @@ s2_union_agg <- function(x, na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
-s2_centroid_agg <- function(x) {
-  stop("Not implemented")
+s2_centroid_agg <- function(x, na.rm = FALSE) {
+  new_s2xptr(libs2_cpp_s2_centroid_agg(s2geography(x), na.rm), "s2geography")
 }
+

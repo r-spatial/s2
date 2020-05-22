@@ -33,7 +33,7 @@ public:
   virtual double Perimeter() = 0;
   virtual double X() = 0;
   virtual double Y() = 0;
-  virtual std::unique_ptr<LibS2Geography> Centroid() = 0;
+  virtual S2Point Centroid() = 0;
   virtual std::unique_ptr<LibS2Geography> Boundary() = 0;
 
   // every type will build the index differently based on

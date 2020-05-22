@@ -54,12 +54,25 @@ public:
     Rcpp::stop("Can't compute Y value of a non-point geography");
   }
 
-  std::unique_ptr<LibS2Geography> Centroid() {
-    Rcpp::stop("Can't compute centroid for more than one point (yet)");
+  S2Point Centroid() {
+    S2Point output(0, 0, 0);
+    for (size_t i = 0; i < this->polylines.size(); i++) {
+      output += this->polylines[i]->GetCentroid();
+    }
+
+    return output;
   }
 
   std::unique_ptr<LibS2Geography> Boundary() {
-    Rcpp::stop("Can't compute boundary for more than one point (yet)");
+    std::vector<S2Point> endpoints;
+    for (size_t i = 0; i < this->polylines.size(); i++) {
+      if (this->polylines[i]->num_vertices() >= 2) {
+        endpoints.push_back(this->polylines[i]->vertex(0));
+        endpoints.push_back(this->polylines[i]->vertex(1));
+      }
+    }
+    
+    return absl::make_unique<LibS2PointGeography>(endpoints);
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {

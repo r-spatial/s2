@@ -98,6 +98,36 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
 }
 
 // [[Rcpp::export]]
+List libs2_cpp_s2_centroid_agg(List geog, bool naRm) {
+  S2Point cumCentroid;
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+    if (item == R_NilValue && !naRm) {
+      return List::create(R_NilValue);
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<LibS2Geography> feature(item);
+      S2Point centroid = feature->Centroid();
+      if (centroid.Norm2() > 0) {
+        cumCentroid += centroid.Normalize();
+      }
+    }
+  }
+
+  List output(1);
+  if (cumCentroid.Norm2() == 0) {
+    output[0] = Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography());
+  } else {
+    output[0] = Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(cumCentroid));
+  }
+
+  return output;
+}
+
+// [[Rcpp::export]]
 List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
 
@@ -147,8 +177,12 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
 List libs2_cpp_s2_centroid(List geog) {
   class LibS2Op: public LibS2UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
-      std::unique_ptr<LibS2Geography> ptr = feature->Centroid();
-      return XPtr<LibS2Geography>(ptr.release());
+      S2Point centroid = feature->Centroid();
+      if (centroid.Norm2() == 0) {
+        return XPtr<LibS2Geography>(new LibS2PointGeography());
+      } else {
+        return XPtr<LibS2Geography>(new LibS2PointGeography(centroid.Normalize()));
+      }
     }
   };
 

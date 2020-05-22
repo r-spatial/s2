@@ -47,8 +47,8 @@ public:
     Rcpp::stop("Can't compute Y value of a non-point geography");
   }
 
-  std::unique_ptr<LibS2Geography> Centroid() {
-    return absl::make_unique<LibS2PointGeography>(this->polygon->GetCentroid());
+  S2Point Centroid() {
+    return this->polygon->GetCentroid();
   }
 
   std::unique_ptr<LibS2Geography> Boundary() {

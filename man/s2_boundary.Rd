@@ -28,7 +28,7 @@ s2_snaptogrid(x)
 
 s2_union_agg(x, na.rm = FALSE)
 
-s2_centroid_agg(x)
+s2_centroid_agg(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{An object that can be interpreted as an S2 type.}

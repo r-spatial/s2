@@ -57,14 +57,13 @@ public:
     }
   }
 
-  std::unique_ptr<LibS2Geography> Centroid() {
-    if (this->NumPoints() == 0) {
-      return absl::make_unique<LibS2PointGeography>();
-    } else if(this->NumPoints() == 1) {
-      return absl::make_unique<LibS2PointGeography>(this->points[0]);
-    } else {
-      Rcpp::stop("Can't create centroid for more than one point (yet)");
+  S2Point Centroid() {
+    S2Point output(0, 0, 0);
+    for (size_t i = 0; i < this->points.size(); i++) {
+        output += this->points[i];
     }
+
+    return output;
   }
 
   std::unique_ptr<LibS2Geography> Boundary() {
