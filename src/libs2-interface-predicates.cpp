@@ -131,7 +131,10 @@ LogicalVector libs2_cpp_s2_intersectsbox(List geog,
 
       // create polygon
       std::unique_ptr<S2Loop> loop(new S2Loop());
+      loop->set_s2debug_override(S2Debug::DISABLE);
       loop->Init(points);
+      loop->Normalize();
+      
       std::vector<std::unique_ptr<S2Loop>> loops(1);
       loops[0] = std::move(loop);
       S2Polygon polygon;
