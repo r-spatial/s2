@@ -11,7 +11,7 @@
 #include "wk/geometry-formatter.h"
 #include "wk/geometry-handler.h"
 
-#include "libs2-s2geography.h"
+#include "libs2-geography.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 

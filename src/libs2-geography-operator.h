@@ -1,8 +1,8 @@
 
-#ifndef LIBS2_GEOGRAHPY_OPERATOR_H
-#define LIBS2_GEOGRAHPY_OPERATOR_H
+#ifndef LIBS2_GEOGRAPHY_OPERATOR_H
+#define LIBS2_GEOGRAPHY_OPERATOR_H
 
-#include "libs2-s2geography.h"
+#include "libs2-geography.h"
 #include <Rcpp.h>
 
 template<class VectorType, class ScalarType>

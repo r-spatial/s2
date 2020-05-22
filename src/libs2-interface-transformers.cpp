@@ -1,5 +1,5 @@
 
-#include "libs2-s2geography.h"
+#include "libs2-geography.h"
 #include "libs2-geography-operator.h"
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
