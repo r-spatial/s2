@@ -115,6 +115,11 @@ public:
       }
 
       if (this->builderStack.size() == 0) {
+        // store a reference to the meta associated with this
+        // builder so that we know when the corresponding nextGeometryEnd()
+        // is called
+        this->builderMeta.push_back(&meta);
+
         switch (meta.geometryType) {
         case WKGeometryType::Point:
         case WKGeometryType::MultiPoint:
@@ -136,9 +141,9 @@ public:
           err << "Unknown geometry type in geography builder: " << meta.geometryType;
           Rcpp::stop(err.str());
         }
-      } else {
-        this->builder()->nextGeometryStart(meta, partId);
       }
+
+      this->builder()->nextGeometryStart(meta, partId);
     }
 
     virtual void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
@@ -159,12 +164,13 @@ public:
         return;
       }
 
-      if (this->builderStack.size() == 1) {
+      this->builder()->nextGeometryEnd(meta, partId);
+
+      if (this->builderStack.size() == 1 && (&meta == this->builderMetaRef())) {
         std::unique_ptr<LibS2Geography> feature = this->builder()->build();
         features.push_back(std::move(feature));
         this->builderStack.pop_back();
-      } else {
-        this->builder()->nextGeometryEnd(meta, partId);
+        this->builderMeta.pop_back();
       }
     }
 
@@ -175,10 +181,19 @@ public:
   private:
     std::vector<std::unique_ptr<LibS2Geography>> features;
     std::vector<std::unique_ptr<LibS2GeographyBuilder>> builderStack;
+    std::vector<const WKGeometryMeta*> builderMeta;
 
     LibS2GeographyBuilder* builder() {
       if (builderStack.size() > 0) {
         return builderStack[builderStack.size() - 1].get();
+      } else {
+        Rcpp::stop("Invalid nesting in geometrycollection (can't find nested builder)");
+      }
+    }
+
+    const WKGeometryMeta* builderMetaRef() {
+      if (builderMeta.size() > 0) {
+        return builderMeta[builderMeta.size() - 1];
       } else {
         Rcpp::stop("Invalid nesting in geometrycollection (can't find nested builder)");
       }

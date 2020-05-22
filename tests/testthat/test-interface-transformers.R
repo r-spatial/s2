@@ -89,6 +89,12 @@ test_that("s2_union(x) works", {
     s2_union("MULTILINESTRING ((-45 0, 0 0), (0 0, 0 10))"),
     "LINESTRING (-45 0, 0 0, 0 10)"
   )
+
+  expect_wkt_equal(s2_union("GEOMETRYCOLLECTION (POINT (30 10))"), "POINT (30 10)")
+  expect_wkt_equal(
+    s2_union("GEOMETRYCOLLECTION (POINT (30 10), LINESTRING (0 0, 0 1))"),
+    "GEOMETRYCOLLECTION (POINT (30 10), LINESTRING (0 0, 0 1))"
+  )
 })
 
 test_that("s2_union(x, y) works", {
