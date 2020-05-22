@@ -108,33 +108,36 @@ public:
   class Builder: public LibS2GeographyBuilder {
   public:
 
+    Builder(): metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr) {}
+
     virtual void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
-      // the start of this GEOMETRYCOLLECTION
-      if (this->builderStack.size() == 0 && partId == WKReader::PART_ID_NONE) {
+      // if this is the first call, store the meta reference associated with this geometry
+      if (this->metaPtr == nullptr) {
+        this->metaPtr = (WKGeometryMeta*) &meta;
         return;
       }
 
-      if (this->builderStack.size() == 0) {
+      if (!this->builderPtr) {
         // store a reference to the meta associated with this
         // builder so that we know when the corresponding nextGeometryEnd()
         // is called
-        this->builderMeta.push_back(&meta);
+        this->builderMetaPtr = (WKGeometryMeta*) &meta;
 
         switch (meta.geometryType) {
         case WKGeometryType::Point:
         case WKGeometryType::MultiPoint:
-          this->builderStack.push_back(absl::make_unique<LibS2PointGeography::Builder>());
+          this->builderPtr = absl::make_unique<LibS2PointGeography::Builder>();
           break;
         case WKGeometryType::LineString:
         case WKGeometryType::MultiLineString:
-          this->builderStack.push_back(absl::make_unique<LibS2PolylineGeography::Builder>());
+          this->builderPtr = absl::make_unique<LibS2PolylineGeography::Builder>();
           break;
         case WKGeometryType::Polygon:
         case WKGeometryType::MultiPolygon:
-          this->builderStack.push_back(absl::make_unique<LibS2PolygonGeography::Builder>());
+          this->builderPtr = absl::make_unique<LibS2PolygonGeography::Builder>();
           break;
         case WKGeometryType::GeometryCollection:
-          this->builderStack.push_back(absl::make_unique<LibS2GeographyCollection::Builder>());
+          this->builderPtr = absl::make_unique<LibS2GeographyCollection::Builder>();
           break;
         default:
           std::stringstream err;
@@ -160,17 +163,17 @@ public:
 
     virtual void nextGeometryEnd(const WKGeometryMeta& meta, uint32_t partId) {
       // the end of this GEOMETRYCOLLECTION
-      if (this->builderStack.size() == 0 && partId == WKReader::PART_ID_NONE) {
+      if (&meta == this->metaPtr) {
         return;
       }
 
       this->builder()->nextGeometryEnd(meta, partId);
 
-      if (this->builderStack.size() == 1 && (&meta == this->builderMetaRef())) {
+      if (&meta == this->builderMetaPtr) {
         std::unique_ptr<LibS2Geography> feature = this->builder()->build();
         features.push_back(std::move(feature));
-        this->builderStack.pop_back();
-        this->builderMeta.pop_back();
+        this->builderPtr = std::unique_ptr<LibS2GeographyBuilder>(nullptr);
+        this->builderMetaPtr = nullptr;
       }
     }
 
@@ -180,20 +183,13 @@ public:
 
   private:
     std::vector<std::unique_ptr<LibS2Geography>> features;
-    std::vector<std::unique_ptr<LibS2GeographyBuilder>> builderStack;
-    std::vector<const WKGeometryMeta*> builderMeta;
+    WKGeometryMeta* metaPtr;
+    std::unique_ptr<LibS2GeographyBuilder> builderPtr;
+    WKGeometryMeta* builderMetaPtr;
 
     LibS2GeographyBuilder* builder() {
-      if (builderStack.size() > 0) {
-        return builderStack[builderStack.size() - 1].get();
-      } else {
-        Rcpp::stop("Invalid nesting in geometrycollection (can't find nested builder)");
-      }
-    }
-
-    const WKGeometryMeta* builderMetaRef() {
-      if (builderMeta.size() > 0) {
-        return builderMeta[builderMeta.size() - 1];
+      if (this->builderPtr) {
+        return this->builderPtr.get();
       } else {
         Rcpp::stop("Invalid nesting in geometrycollection (can't find nested builder)");
       }

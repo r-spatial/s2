@@ -59,19 +59,6 @@ test_that("s2geography vectors can be created from wkt", {
     "<GEOMETRYCOLLECTION \\(POINT \\(-64 45\\)\\)>"
   )
 
-  # cat("constructing\n")
-  # s2geography(
-  #   "GEOMETRYCOLLECTION (
-  #         POINT (30 10),
-  #         MULTIPOINT (11 12, 12 13),
-  #         LINESTRING (40 40, 40 41),
-  #         MULTILINESTRING ((-10 -12, -12 -13), (-15 -15, -16 -16)),
-  #         POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0)),
-  #         MULTIPOLYGON (((0 0, -10 0, -10 -10, 0 -10, 0 0))),
-  #         GEOMETRYCOLLECTION (POINT (-100 0), MULTIPOINT(-101 0, -102 0))
-  #       )"
-  # )
-
   expect_output(
     print(
       s2geography(
@@ -81,14 +68,15 @@ test_that("s2geography vectors can be created from wkt", {
           LINESTRING (40 40, 40 41),
           MULTILINESTRING ((-10 -12, -12 -13), (-15 -15, -16 -16)),
           POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0)),
-          MULTIPOLYGON (((0 0, -10 0, -10 -10, 0 -10, 0 0)))
+          MULTIPOLYGON (((0 0, -10 0, -10 -10, 0 -10, 0 0))),
+          GEOMETRYCOLLECTION (POINT (-100 0), MULTIPOINT(-101 0, -102 0))
         )"
       ),
       max_coords = 100
     ),
     paste0(
       "GEOMETRYCOLLECTION.*?POINT.*?MULTIPOINT.*?LINESTRING.*?MULTILINESTRING.*?",
-      "POLYGON.*?POLYGON"
+      "POLYGON.*?POLYGON.*?GEOMETRYCOLLECTION.*?POINT.*?MULTIPOINT"
     )
   )
 
