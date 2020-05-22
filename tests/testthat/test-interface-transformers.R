@@ -10,7 +10,7 @@ test_that("s2_centroid() works", {
       "POINT (0 0)"
     ),
     0,
-    epsilon = 1e-10
+    epsilon = 1e-6
   )
 })
 
