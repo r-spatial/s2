@@ -21,6 +21,7 @@ test_that("s2geography vectors can be created from wkt", {
     print(s2geography("MULTIPOINT ((-64 45), (30 10))")),
     "<MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)>"
   )
+
   expect_output(
     print(s2geography("LINESTRING (-64 45, 0 0)")),
     "<LINESTRING \\(-64 45, 0 0\\)>"
@@ -52,17 +53,37 @@ test_that("s2geography vectors can be created from wkt", {
     ),
     "<MULTIPOLYGON"
   )
-  # make sure ring directions are correct for nested rings
+})
+
+test_that("nested ring depths are correctly exported", {
+  # polygon with hole
   expect_output(
     print(
       s2geography("MULTIPOLYGON (
         ((40 40, 20 45, 45 30, 40 40)),
-        ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+        (
+          (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+          (30 20, 20 15, 20 25, 30 20)
+        )
       )"),
       max_coords = 100
     ),
     "\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25, 30 20"
   )
 
-  skip("currently only oriented polygons can be imported")
+  # polygon with a hole in a hole!
+  expect_output(
+    print(
+      s2geography("MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        (
+          (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+          (30 20, 20 15, 20 25, 30 20),
+          (27 21, 21 21, 21 16, 27 21)
+        )
+      )"),
+      max_coords = 100
+    ),
+    "30 20, 20 15, 20 25, 30 20\\), \\(27 21, 21 21, 21 16, 27 21"
+  )
 })

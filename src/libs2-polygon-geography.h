@@ -194,18 +194,13 @@ private:
     std::vector<int> outerLoops = this->outerLoopIndices();
 
     std::vector<std::vector<int>> flatIndices(outerLoops.size());
-    for (int j = 0; j < outerLoops.size(); j++) {
-      flatIndices[j] = std::vector<int>(1);
-      flatIndices[j][0] = outerLoops[j];
-    }
+    for (int i = 0; i < outerLoops.size(); i++) {
+      int thisLoop = outerLoops[i];
+      int lastDescendant = this->polygon->GetLastDescendant(thisLoop);
+      flatIndices[i] = std::vector<int>(lastDescendant - i + 1);
 
-    for (int i = 0; i < this->polygon->num_loops(); i++) {
-      int parent = this->polygon->GetParent(i);
-      for (int j = 0; j < outerLoops.size(); j++) {
-        if (parent == outerLoops[j]) {
-          flatIndices[j].push_back(i);
-          break;
-        }
+      for (size_t j = 0; j <= flatIndices[i].size(); j++) {
+        flatIndices[i][j] = thisLoop + j;
       }
     }
 
@@ -242,7 +237,7 @@ private:
         Rcpp::stop(err.str());
       }
 
-      if (i == 0) {
+      if ((loop->depth() % 2) == 0) {
         // if this is the first ring, use the internal vertex order
         for (int j = 0; j < loop->num_vertices(); j++) {
           point = S2LatLng(loop->vertex(j));
