@@ -136,6 +136,14 @@ s2geography_from_wkt <- function(wkt) {
     .Call(`_libs2_s2geography_from_wkt`, wkt)
 }
 
+s2geography_to_wkt <- function(s2geography, precision, trim) {
+    .Call(`_libs2_s2geography_to_wkt`, s2geography, precision, trim)
+}
+
+s2geography_to_wkb <- function(s2geography, endian) {
+    .Call(`_libs2_s2geography_to_wkb`, s2geography, endian)
+}
+
 s2geography_format <- function(s2geography, maxCoords) {
     .Call(`_libs2_s2geography_format`, s2geography, maxCoords)
 }

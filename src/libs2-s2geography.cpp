@@ -6,6 +6,8 @@
 
 #include "wk/wkb-reader.h"
 #include "wk/wkt-reader.h"
+#include "wk/wkb-writer.h"
+#include "wk/wkt-writer.h"
 #include "wk/geometry-formatter.h"
 #include "wk/geometry-handler.h"
 
@@ -132,13 +134,49 @@ private:
 };
 
 // [[Rcpp::export]]
+CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim) {
+  WKSEXPProvider provider(s2geography);
+  WKLibS2GeographyReader reader(provider);
+   
+  WKCharacterVectorExporter exporter(reader.nFeatures());
+  exporter.setRoundingPrecision(precision);
+  exporter.setTrim(trim);
+  WKTWriter writer(exporter);
+
+  reader.setHandler(&writer);
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return exporter.output;
+}
+
+// [[Rcpp::export]]
+List s2geography_to_wkb(List s2geography, int endian) {
+  WKSEXPProvider provider(s2geography);
+  WKLibS2GeographyReader reader(provider);
+  
+  WKRawVectorListExporter exporter(reader.nFeatures());
+  WKBWriter writer(exporter);
+  writer.setEndian(endian);
+
+  reader.setHandler(&writer);
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return exporter.output;
+}
+
+// [[Rcpp::export]]
 CharacterVector s2geography_format(List s2geography, int maxCoords) {
   WKSEXPProvider provider(s2geography);
+  WKLibS2GeographyReader reader(provider);
+
   WKCharacterVectorExporter exporter(s2geography.size());
   WKGeometryFormatter formatter(exporter, maxCoords);
-  WKLibS2GeographyReader reader(provider);
-  reader.setHandler(&formatter);
 
+  reader.setHandler(&formatter);
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }

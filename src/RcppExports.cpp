@@ -344,6 +344,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2geography_to_wkt
+CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim);
+RcppExport SEXP _libs2_s2geography_to_wkt(SEXP s2geographySEXP, SEXP precisionSEXP, SEXP trimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2geography(s2geographySEXP);
+    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< bool >::type trim(trimSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2geography_to_wkt(s2geography, precision, trim));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2geography_to_wkb
+List s2geography_to_wkb(List s2geography, int endian);
+RcppExport SEXP _libs2_s2geography_to_wkb(SEXP s2geographySEXP, SEXP endianSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2geography(s2geographySEXP);
+    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2geography_to_wkb(s2geography, endian));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2geography_format
 CharacterVector s2geography_format(List s2geography, int maxCoords);
 RcppExport SEXP _libs2_s2geography_format(SEXP s2geographySEXP, SEXP maxCoordsSEXP) {
@@ -652,6 +677,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2polyline_is_valid", (DL_FUNC) &_libs2_s2polyline_is_valid, 1},
     {"_libs2_s2geography_from_wkb", (DL_FUNC) &_libs2_s2geography_from_wkb, 1},
     {"_libs2_s2geography_from_wkt", (DL_FUNC) &_libs2_s2geography_from_wkt, 1},
+    {"_libs2_s2geography_to_wkt", (DL_FUNC) &_libs2_s2geography_to_wkt, 3},
+    {"_libs2_s2geography_to_wkb", (DL_FUNC) &_libs2_s2geography_to_wkb, 2},
     {"_libs2_s2geography_format", (DL_FUNC) &_libs2_s2geography_format, 2},
     {"_libs2_s2latlng_from_numeric", (DL_FUNC) &_libs2_s2latlng_from_numeric, 2},
     {"_libs2_s2latlng_from_s2point", (DL_FUNC) &_libs2_s2latlng_from_s2point, 1},

@@ -1,0 +1,24 @@
+
+test_that("st_astext() works", {
+  expect_identical(
+    s2_astext("POINT (0.1234567890123456 0.1234567890123456)"),
+    "POINT (0.1234567890123456 0.1234567890123456)"
+  )
+})
+
+test_that("st_asbinary() works", {
+  expect_identical(
+    s2_asbinary("POINT (30 10)", endian = 0),
+    list(
+      as.raw(
+        c(0x00,
+          0x00, 0x00, 0x00, 0x01,
+          0x40, 0x3d, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+          0x40, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        )
+      )
+    )
+  )
+})
+
+
