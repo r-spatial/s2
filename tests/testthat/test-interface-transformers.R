@@ -1,7 +1,6 @@
 
 test_that("s2_centroid() works", {
-  expect_equal(s2_x(s2_centroid("POINT (30 10)")), 30)
-  expect_equal(s2_y(s2_centroid("POINT (30 10)")), 10)
+  expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
 })
 
@@ -9,46 +8,28 @@ test_that("s2_boundary() works", {
   expect_true(s2_isempty(s2_boundary("POINT (30 10)")))
   expect_true(s2_isempty(s2_boundary("POINT EMPTY")))
   expect_true(s2_isempty(s2_boundary("POLYGON EMPTY")))
-  expect_true(
-    s2_iscollection(
-      s2_boundary("MULTIPOLYGON (
-          ((40 40, 20 45, 45 30, 40 40)),
-          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
-      )")
-    )
-  )
-  expect_identical(
-    s2_dimension(
-      s2_boundary("MULTIPOLYGON (
-          ((40 40, 20 45, 45 30, 40 40)),
-          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
-      )")
-    ),
-    1L
-  )
-  expect_identical(
-    s2_numpoints(
-      s2_boundary("MULTIPOLYGON (
-          ((40 40, 20 45, 45 30, 40 40)),
-          ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
-      )")
-    ),
-    14L
+  expect_wkt_equal(
+    s2_boundary("MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
+    )"),
+    "MULTILINESTRING (
+        (40 40, 20 45, 45 30, 40 40),
+        (20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)
+    )",
+    precision = 15
   )
 })
 
 test_that("s2_closestpoint() works", {
-  expect_equal(s2_x(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 0)
-  expect_equal(s2_y(s2_closestpoint("POINT (0 1)", "POINT (30 10)")), 1)
+  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
   expect_true(s2_isempty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
 
-  expect_equal(s2_x(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)")), 0)
-  expect_equal(s2_y(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)")), 1)
+  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
 })
 
 test_that("s2_difference() works", {
-  expect_equal(s2_x(s2_difference("POINT (30 10)", "POINT EMPTY")), 30)
-  expect_equal(s2_y(s2_difference("POINT (30 10)", "POINT EMPTY")), 10)
+  expect_wkt_equal(s2_difference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
   expect_true(s2_isempty(s2_difference("POINT (30 10)", "POINT (30 10)")))
 
   expect_true(s2_isempty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
@@ -68,8 +49,7 @@ test_that("s2_difference() works", {
 })
 
 test_that("s2_intersection() works", {
-  expect_equal(s2_x(s2_intersection("POINT (30 10)", "POINT (30 10)")), 30)
-  expect_equal(s2_y(s2_intersection("POINT (30 10)", "POINT (30 10)")), 10)
+  expect_wkt_equal(s2_intersection("POINT (30 10)", "POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_isempty(s2_intersection("POINT (30 10)", "POINT (30 11)")))
 
   expect_wkt_equal(
@@ -139,8 +119,8 @@ test_that("s2_union_agg() works", {
     s2_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
     s2geography(NA_character_)
   )
-  expect_equal(
-    s2_x(s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE)),
-    30
+  expect_wkt_equal(
+    s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    "POINT (30 10)"
   )
 })
