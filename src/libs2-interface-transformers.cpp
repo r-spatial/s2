@@ -1,6 +1,4 @@
 
-#include "libs2-geography.h"
-#include "libs2-geography-operator.h"
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2polygon.h"
@@ -10,6 +8,11 @@
 #include "s2/s2builderutil_s2polygon_layer.h"
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
+
+#include "libs2-geography-operator.h"
+#include "libs2-point-geography.h"
+#include "libs2-polyline-geography.h"
+#include "libs2-polygon-geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
