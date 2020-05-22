@@ -123,10 +123,9 @@ test_that("s2_maxdistance works", {
     91
   )
 
-  skip("This max distance calculation is incorrect")
   expect_equal(
     s2_maxdistance("POINT (0 0)", "POLYGON ((90 0, 91 0, 89 1, 90 0))", radius = 180 / pi),
-    90
+    91
   )
 
   expect_identical(s2_maxdistance("POINT (0 0)", NA_character_), NA_real_)
