@@ -87,3 +87,32 @@ test_that("nested ring depths are correctly exported", {
     "30 20, 20 15, 20 25, 30 20\\), \\(27 21, 21 21, 21 16, 27 21"
   )
 })
+
+test_that("polygons with holes are interpreted as such by S2", {
+  expect_true(
+    s2_intersects(
+      "MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        (
+          (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+          (30 20, 20 15, 20 25, 30 20),
+          (27 21, 21 21, 21 16, 27 21)
+        )
+      )",
+      "POINT (23 19.5)"
+    )
+  )
+
+  expect_false(
+    s2_intersects(
+      "MULTIPOLYGON (
+        ((40 40, 20 45, 45 30, 40 40)),
+        (
+          (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+          (30 20, 20 15, 20 25, 30 20)
+        )
+      )",
+      "POINT (23 19.5)"
+    )
+  )
+})
