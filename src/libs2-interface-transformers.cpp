@@ -22,12 +22,12 @@ SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
 
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
-  S2Polygon polygon;
+  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
   std::vector<std::unique_ptr<S2Builder::Layer>> layers;
   layers.push_back(absl::make_unique<s2builderutil::S2PointVectorLayer>(&points));
   layers.push_back(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
-  layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(&polygon));
+  layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
 
   S2BooleanOperation op(opType, std::move(layers));
 
@@ -36,12 +36,12 @@ SEXP doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
     stop(error.text());
   }
 
-  if ((!polygon.is_empty() + (polylines.size() > 0) + (points.size() > 0)) > 1) {
+  if ((!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0)) > 1) {
     stop("Can't handle mixed point/polyline/polygon output (yet)");
   }
 
-  if (!polygon.is_empty()) {
-    stop("Can't handle polygon output (yet)");
+  if (!polygon->is_empty()) {
+    return XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
   } else if (polylines.size() > 0) {
     return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
   } else {

@@ -52,6 +52,19 @@ test_that("s2_difference() works", {
   expect_true(s2_isempty(s2_difference("POINT (30 10)", "POINT (30 10)")))
 
   expect_true(s2_isempty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+
+  expect_near(
+    s2_area(
+      s2_difference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+      ),
+      radius = 1
+    ),
+    s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.004
+  )
 })
 
 test_that("s2_intersection() works", {
@@ -59,33 +72,67 @@ test_that("s2_intersection() works", {
   expect_equal(s2_y(s2_intersection("POINT (30 10)", "POINT (30 10)")), 10)
   expect_true(s2_isempty(s2_intersection("POINT (30 10)", "POINT (30 11)")))
 
+  expect_wkt_equal(
+    s2_intersection(
+      "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+      "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+    ),
+    "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
+    precision = 2
+  )
+
+  expect_wkt_equal(
+    s2_intersection(
+      "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+      "LINESTRING (0 5, 10 5)"
+    ),
+    "LINESTRING (0 5, 10 5)"
+  )
+
   skip("Don't know why this intersection fails (works on bigquery)")
-  expect_equal(s2_x(s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)")), 0)
-  expect_equal(s2_y(s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)")), 0)
+  expect_wkt_equal(
+    s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)"),
+    "POINT (0 0)"
+  )
 })
 
 test_that("s2_union(x) works", {
-  expect_equal(s2_x(s2_union("POINT (30 10)")), 30)
-  expect_equal(s2_y(s2_union("POINT (30 10)")), 10)
-  expect_true(s2_isempty(s2_union("POINT EMPTY")))
-
-  # LINESTRING (-45 0, 0 0, 0 10)
-  expect_false(s2_iscollection(s2_union("MULTILINESTRING ((-45 0, 0 0), (0 0, 0 10))")))
+  expect_wkt_equal(s2_union("POINT (30 10)"), "POINT (30 10)")
+  expect_wkt_equal(s2_union("POINT EMPTY"), "POINT EMPTY")
+  expect_wkt_equal(
+    s2_union("MULTILINESTRING ((-45 0, 0 0), (0 0, 0 10))"),
+    "LINESTRING (-45 0, 0 0, 0 10)"
+  )
 })
 
 test_that("s2_union(x, y) works", {
-  expect_equal(s2_x(s2_union("POINT (30 10)", "POINT EMPTY")), 30)
-  expect_equal(s2_y(s2_union("POINT (30 10)", "POINT EMPTY")), 10)
-  expect_true(s2_isempty(s2_union("POINT EMPTY", "POINT EMPTY")))
+  expect_wkt_equal(s2_union("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
+  expect_wkt_equal(s2_union("POINT EMPTY", "POINT EMPTY"), "POINT EMPTY")
 
   # LINESTRING (-45 0, 0 0, 0 10)
-  expect_false(s2_iscollection(s2_union("LINESTRING (-45 0, 0 0)", "LINESTRING (0 0, 0 10)")))
+  expect_wkt_equal(
+    s2_union("LINESTRING (-45 0, 0 0)", "LINESTRING (0 0, 0 10)"),
+    "LINESTRING (-45 0, 0 0, 0 10)"
+  )
+
+  expect_near(
+    s2_area(
+      s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+      ),
+      radius = 1
+    ),
+    s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) +
+      s2_area("POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.004
+  )
 })
 
 test_that("s2_union_agg() works", {
-  expect_equal(s2_x(s2_union_agg(c("POINT (30 10)", "POINT EMPTY"))), 30)
-  expect_equal(s2_y(s2_union_agg(c("POINT (30 10)", "POINT EMPTY"))), 10)
-  expect_true(s2_isempty(s2_union_agg(c("POINT EMPTY", "POINT EMPTY"))))
+  expect_wkt_equal(s2_union_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
+  expect_wkt_equal(s2_union_agg(c("POINT EMPTY", "POINT EMPTY")), "POINT EMPTY")
 
   # NULL handling
   expect_identical(
