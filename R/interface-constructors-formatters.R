@@ -6,6 +6,9 @@
 #' @param wkt_string Well-known text
 #' @param wkb_bytes A `list()` of `raw()`
 #' @param endian 0 for big endian and 1 for little endian.
+#' @param oriented TRUE if polygon ring directions are known to be correct
+#'   (i.e., exterior rings are defined counter clockwise and interior
+#'   rings are defined clockwise).
 #'
 #' @export
 #'

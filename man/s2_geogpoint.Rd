@@ -32,6 +32,10 @@ s2_asbinary(x, endian = match(.Platform$endian, c("big", "little")) - 1)
 
 \item{wkt_string}{Well-known text}
 
+\item{oriented}{TRUE if polygon ring directions are known to be correct
+(i.e., exterior rings are defined counter clockwise and interior
+rings are defined clockwise).}
+
 \item{wkb_bytes}{A \code{list()} of \code{raw()}}
 
 \item{x}{An object that can be interpreted as an S2 type.}
