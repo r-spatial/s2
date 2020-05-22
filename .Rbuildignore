@@ -3,3 +3,4 @@
 ^data-raw$
 ^src/Makevars$
 ^\.github$
+^\.covrignore$
