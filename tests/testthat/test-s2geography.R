@@ -144,3 +144,26 @@ test_that("polygons with holes are interpreted as such by S2", {
     )
   )
 })
+
+test_that("polygon construction works with oriented = TRUE and oriented = FALSE", {
+  polygon_with_bad_hole_nested <- s2geography("MULTIPOLYGON (
+    ((40 40, 20 45, 45 30, 40 40)),
+    (
+      (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+      (30 20, 20 25, 20 15, 30 20)
+    )
+  )", oriented = FALSE)
+
+  expect_false(s2_intersects(polygon_with_bad_hole_nested, "POINT (23 19.5)"))
+
+  expect_error(
+    s2geography("MULTIPOLYGON (
+      ((40 40, 20 45, 45 30, 40 40)),
+      (
+        (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
+        (30 20, 20 25, 20 15, 30 20)
+      )
+    )", oriented = TRUE),
+    "Inconsistent loop orientations"
+  )
+})
