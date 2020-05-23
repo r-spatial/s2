@@ -9,6 +9,15 @@ temp_json <- tempfile(fileext = ".geojson")
 write_sf(ne, temp_json)
 ne <- read_sf(temp_json, check_ring_dir = TRUE)
 
+# remove the south pole from antarctica
+ant_ind <- which(ne$admin == "Antarctica")
+ne$geometry[[ant_ind]][] <- lapply(ne$geometry[[ant_ind]], function(ply) {
+  lapply(ply, function(ring) {
+    is_pole <- abs(ring[, 2] + 90) < 1e-6
+    ring[!is_pole, ]
+  })
+})
+
 ne_wkb <- st_as_binary(ne$geometry, EWKT = TRUE) %>% wk::wkb()
 s2_data_world_borders <- as.data.frame(tibble::tibble(name = ne$admin, geometry = ne_wkb))
 
