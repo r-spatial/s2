@@ -32,3 +32,16 @@ test_that("s2xptr default print method works", {
   expect_output(print(new_s2xptr()), "s2xptr")
   expect_output(print(new_s2xptr(list(NULL))), "s2xptr")
 })
+
+test_that("garbage collecting a real object doesn't segfault", {
+  skip("this really does segfault")
+  # create object
+  big_object <- s2data_countries()
+
+  # do something with it
+  formatted <- format(big_object)
+
+  # delete and gc()
+  rm(big_object)
+  gc()
+})

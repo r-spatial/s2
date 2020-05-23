@@ -26,9 +26,9 @@ A well-known binary version of the \href{https://www.naturalearthdata.com/}{Natu
 low-resolution world boundaries.
 }
 \examples{
-head(s2data_countries())
-s2data_countries("Germany")
-s2data_countries("Canada")
+# head(s2data_countries())
+# s2data_countries("Germany")
+# s2data_countries("Canada")
 
 }
 \keyword{datasets}

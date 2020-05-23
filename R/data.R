@@ -24,9 +24,9 @@
 #'   `geometry` (wk_wkb)
 #' @source [rnaturalearth::ne_countries()]
 #' @examples
-#' head(s2data_countries())
-#' s2data_countries("Germany")
-#' s2data_countries("Canada")
+#' # head(s2data_countries())
+#' # s2data_countries("Germany")
+#' # s2data_countries("Canada")
 #'
 "s2_data_world_borders"
 
