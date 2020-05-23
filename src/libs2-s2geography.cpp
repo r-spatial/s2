@@ -24,7 +24,6 @@ class WKLibS2GeographyWriter: public WKGeometryHandler {
 public:
   List s2geography;
   R_xlen_t featureId;
-  bool oriented;
 
   WKLibS2GeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr), oriented(false) {}
 
@@ -94,6 +93,7 @@ public:
 
 private:
   std::unique_ptr<LibS2GeographyBuilder> builder;
+  bool oriented;
 };
 
 // [[Rcpp::export]]
