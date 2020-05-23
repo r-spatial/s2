@@ -24,8 +24,13 @@ class WKLibS2GeographyWriter: public WKGeometryHandler {
 public:
   List s2geography;
   R_xlen_t featureId;
+  bool oriented;
 
-  WKLibS2GeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr) {}
+  WKLibS2GeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr), oriented(false) {}
+
+  void setOriented(bool oriented) {
+    this->oriented = oriented;
+  }
 
   void nextFeatureStart(size_t featureId) {
     this->builder = std::unique_ptr<LibS2GeographyBuilder>(nullptr);
@@ -49,10 +54,10 @@ public:
         break;
       case WKGeometryType::Polygon:
       case WKGeometryType::MultiPolygon:
-        this->builder = absl::make_unique<LibS2PolygonGeography::Builder>();
+        this->builder = absl::make_unique<LibS2PolygonGeography::Builder>(this->oriented);
         break;
       case WKGeometryType::GeometryCollection:
-        this->builder = absl::make_unique<LibS2GeographyCollection::Builder>();
+        this->builder = absl::make_unique<LibS2GeographyCollection::Builder>(this->oriented);
         break;
       default:
         std::stringstream err;
@@ -92,9 +97,10 @@ private:
 };
 
 // [[Rcpp::export]]
-List s2geography_from_wkb(List wkb) {
+List s2geography_from_wkb(List wkb, bool oriented) {
   WKRawVectorListProvider provider(wkb);
   WKLibS2GeographyWriter writer(wkb.size());
+  writer.setOriented(oriented);
   WKBReader reader(provider);
   reader.setHandler(&writer);
 
@@ -106,9 +112,10 @@ List s2geography_from_wkb(List wkb) {
 }
 
 // [[Rcpp::export]]
-List s2geography_from_wkt(CharacterVector wkt) {
+List s2geography_from_wkt(CharacterVector wkt, bool oriented) {
   WKCharacterVectorProvider provider(wkt);
   WKLibS2GeographyWriter writer(wkt.size());
+  writer.setOriented(oriented);
   WKTReader reader(provider);
   reader.setHandler(&writer);
 
@@ -146,7 +153,7 @@ private:
 CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim) {
   WKSEXPProvider provider(s2geography);
   WKLibS2GeographyReader reader(provider);
-   
+
   WKCharacterVectorExporter exporter(reader.nFeatures());
   exporter.setRoundingPrecision(precision);
   exporter.setTrim(trim);
@@ -164,7 +171,7 @@ CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim) {
 List s2geography_to_wkb(List s2geography, int endian) {
   WKSEXPProvider provider(s2geography);
   WKLibS2GeographyReader reader(provider);
-  
+
   WKRawVectorListExporter exporter(reader.nFeatures());
   WKBWriter writer(exporter);
   writer.setEndian(endian);

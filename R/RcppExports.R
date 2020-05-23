@@ -132,12 +132,12 @@ s2polyline_is_valid <- function(ptrs) {
     .Call(`_libs2_s2polyline_is_valid`, ptrs)
 }
 
-s2geography_from_wkb <- function(wkb) {
-    .Call(`_libs2_s2geography_from_wkb`, wkb)
+s2geography_from_wkb <- function(wkb, oriented) {
+    .Call(`_libs2_s2geography_from_wkb`, wkb, oriented)
 }
 
-s2geography_from_wkt <- function(wkt) {
-    .Call(`_libs2_s2geography_from_wkt`, wkt)
+s2geography_from_wkt <- function(wkt, oriented) {
+    .Call(`_libs2_s2geography_from_wkt`, wkt, oriented)
 }
 
 s2geography_to_wkt <- function(s2geography, precision, trim) {

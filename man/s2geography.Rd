@@ -11,14 +11,18 @@ s2geography(x, ...)
 
 \method{s2geography}{s2geography}(x, ...)
 
-\method{s2geography}{wk_wkb}(x, ...)
+\method{s2geography}{wk_wkb}(x, ..., oriented = FALSE)
 
-\method{s2geography}{character}(x, ...)
+\method{s2geography}{character}(x, ..., oriented = FALSE)
 }
 \arguments{
 \item{x}{An object that can be converted to an s2geography vector}
 
 \item{...}{Unused}
+
+\item{oriented}{TRUE if polygon ring directions are known to be correct
+(i.e., exterior rings are defined counter clockwise and interior
+rings are defined clockwise).}
 }
 \value{
 A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2geography

@@ -120,6 +120,8 @@ public:
 
   class Builder: public LibS2GeographyBuilder {
   public:
+    Builder(bool oriented): oriented(oriented) {}
+
     void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
       // skip the last vertex (WKB rings are theoretically closed)
       if (size > 0) {
@@ -140,6 +142,10 @@ public:
       loop->set_s2debug_override(S2Debug::DISABLE);
       loop->Init(vertices);
 
+      if (!oriented) {
+        loop->Normalize();
+      }
+
       if (!loop->IsValid()) {
         std::stringstream err;
         err << "Loop " << (this->loops.size()) << " is not valid: ";
@@ -154,8 +160,10 @@ public:
 
     std::unique_ptr<LibS2Geography> build() {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
-      if (this->loops.size() > 0) {
+      if (this->loops.size() > 0 && oriented) {
         polygon->InitOriented(std::move(this->loops));
+      } else if (this->loops.size() > 0) {
+        polygon->InitNested(std::move(this->loops));
       }
 
       // make sure polygon is valid
@@ -169,6 +177,7 @@ public:
     }
 
   private:
+    bool oriented;
     std::vector<S2Point> vertices;
     std::vector<std::unique_ptr<S2Loop>> loops;
   };

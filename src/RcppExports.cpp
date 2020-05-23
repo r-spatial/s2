@@ -335,24 +335,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // s2geography_from_wkb
-List s2geography_from_wkb(List wkb);
-RcppExport SEXP _libs2_s2geography_from_wkb(SEXP wkbSEXP) {
+List s2geography_from_wkb(List wkb, bool oriented);
+RcppExport SEXP _libs2_s2geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkb(wkb));
+    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkb(wkb, oriented));
     return rcpp_result_gen;
 END_RCPP
 }
 // s2geography_from_wkt
-List s2geography_from_wkt(CharacterVector wkt);
-RcppExport SEXP _libs2_s2geography_from_wkt(SEXP wktSEXP) {
+List s2geography_from_wkt(CharacterVector wkt, bool oriented);
+RcppExport SEXP _libs2_s2geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type wkt(wktSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkt(wkt));
+    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkt(wkt, oriented));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -688,8 +690,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2polyline_intersects", (DL_FUNC) &_libs2_s2polyline_intersects, 2},
     {"_libs2_s2polygon_is_valid", (DL_FUNC) &_libs2_s2polygon_is_valid, 1},
     {"_libs2_s2polyline_is_valid", (DL_FUNC) &_libs2_s2polyline_is_valid, 1},
-    {"_libs2_s2geography_from_wkb", (DL_FUNC) &_libs2_s2geography_from_wkb, 1},
-    {"_libs2_s2geography_from_wkt", (DL_FUNC) &_libs2_s2geography_from_wkt, 1},
+    {"_libs2_s2geography_from_wkb", (DL_FUNC) &_libs2_s2geography_from_wkb, 2},
+    {"_libs2_s2geography_from_wkt", (DL_FUNC) &_libs2_s2geography_from_wkt, 2},
     {"_libs2_s2geography_to_wkt", (DL_FUNC) &_libs2_s2geography_to_wkt, 3},
     {"_libs2_s2geography_to_wkb", (DL_FUNC) &_libs2_s2geography_to_wkb, 2},
     {"_libs2_s2geography_format", (DL_FUNC) &_libs2_s2geography_format, 2},

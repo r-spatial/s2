@@ -10,7 +10,7 @@
 class LibS2GeographyCollection: public LibS2Geography {
 public:
   LibS2GeographyCollection(): features(0) {}
-  LibS2GeographyCollection(std::vector<std::unique_ptr<LibS2Geography>> features): 
+  LibS2GeographyCollection(std::vector<std::unique_ptr<LibS2Geography>> features):
     features(std::move(features)) {}
 
   bool IsCollection() {
@@ -74,7 +74,7 @@ public:
         cumCentroid += centroid.Normalize();
       }
     }
-    
+
     return cumCentroid;
   }
 
@@ -108,7 +108,8 @@ public:
   class Builder: public LibS2GeographyBuilder {
   public:
 
-    Builder(): metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr) {}
+    Builder(bool oriented):
+      metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr), oriented(oriented) {}
 
     virtual void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
       // if this is the first call, store the meta reference associated with this geometry
@@ -134,10 +135,10 @@ public:
           break;
         case WKGeometryType::Polygon:
         case WKGeometryType::MultiPolygon:
-          this->builderPtr = absl::make_unique<LibS2PolygonGeography::Builder>();
+          this->builderPtr = absl::make_unique<LibS2PolygonGeography::Builder>(this->oriented);
           break;
         case WKGeometryType::GeometryCollection:
-          this->builderPtr = absl::make_unique<LibS2GeographyCollection::Builder>();
+          this->builderPtr = absl::make_unique<LibS2GeographyCollection::Builder>(this->oriented);
           break;
         default:
           std::stringstream err;
@@ -186,6 +187,7 @@ public:
     WKGeometryMeta* metaPtr;
     std::unique_ptr<LibS2GeographyBuilder> builderPtr;
     WKGeometryMeta* builderMetaPtr;
+    bool oriented;
 
     LibS2GeographyBuilder* builder() {
       if (this->builderPtr) {
