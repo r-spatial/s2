@@ -96,7 +96,7 @@ public:
         this->exportLoops(handler, childMeta, flatIndices[i]);
         handler->nextGeometryEnd(childMeta, i);
       }
-      
+
       handler->nextGeometryEnd(meta, partId);
 
     } else if (flatIndices.size() > 0) {
@@ -157,7 +157,7 @@ public:
       if (this->loops.size() > 0) {
         polygon->InitOriented(std::move(this->loops));
       }
-      
+
       // make sure polygon is valid
       if (!polygon->IsValid()) {
         S2Error error;
@@ -184,7 +184,7 @@ private:
         indices.push_back(i);
       }
     }
-    
+
     return indices;
   }
 
@@ -199,7 +199,7 @@ private:
       int lastDescendant = this->polygon->GetLastDescendant(thisLoop);
       flatIndices[i] = std::vector<int>(lastDescendant - i + 1);
 
-      for (size_t j = 0; j <= flatIndices[i].size(); j++) {
+      for (size_t j = 0; j < flatIndices[i].size(); j++) {
         flatIndices[i][j] = thisLoop + j;
       }
     }
@@ -207,7 +207,7 @@ private:
     return flatIndices;
   }
 
-  void exportLoops(WKGeometryHandler* handler, WKGeometryMeta meta, 
+  void exportLoops(WKGeometryHandler* handler, WKGeometryMeta meta,
                    const std::vector<int>& loopIndices, int loopIdOffset = 0) {
     S2LatLng point;
 
@@ -243,7 +243,7 @@ private:
           point = S2LatLng(loop->vertex(j));
           handler->nextCoordinate(
             coordMeta,
-            WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+            WKCoord::xy(point.lng().degrees(), point.lat().degrees()),
             j
           );
         }
@@ -252,7 +252,7 @@ private:
         point = S2LatLng(loop->vertex(0));
         handler->nextCoordinate(
           coordMeta,
-          WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+          WKCoord::xy(point.lng().degrees(), point.lat().degrees()),
           loop->num_vertices()
         );
       } else {
@@ -262,7 +262,7 @@ private:
           point = S2LatLng(loop->vertex(loop->num_vertices() - 1 - j));
           handler->nextCoordinate(
             coordMeta,
-            WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+            WKCoord::xy(point.lng().degrees(), point.lat().degrees()),
             j
           );
         }
@@ -271,7 +271,7 @@ private:
         point = S2LatLng(loop->vertex(loop->num_vertices() - 1));
         handler->nextCoordinate(
           coordMeta,
-          WKCoord::xy(point.lng().degrees(), point.lat().degrees()), 
+          WKCoord::xy(point.lng().degrees(), point.lat().degrees()),
           loop->num_vertices()
         );
       }
