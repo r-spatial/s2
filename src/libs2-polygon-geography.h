@@ -185,11 +185,11 @@ public:
 private:
   std::unique_ptr<S2Polygon> polygon;
 
-  // Calculate which loops in the polygon are outer loops
+  // Calculate which loops in the polygon are outer loops (loop->depth() == 0)
   std::vector<int> outerLoopIndices() {
     std::vector<int> indices;
     for (int i = 0; i < this->polygon->num_loops(); i++) {
-      if (this->polygon->GetParent(i) == -1) {
+      if (this->polygon->loop(i)->depth() == 0) {
         indices.push_back(i);
       }
     }
@@ -204,12 +204,18 @@ private:
 
     std::vector<std::vector<int>> flatIndices(outerLoops.size());
     for (int i = 0; i < outerLoops.size(); i++) {
-      int thisLoop = outerLoops[i];
-      int lastDescendant = this->polygon->GetLastDescendant(thisLoop);
-      flatIndices[i] = std::vector<int>(lastDescendant - i + 1);
+      int k = outerLoops[i];
+      flatIndices[i] = std::vector<int>();
 
-      for (size_t j = 0; j < flatIndices[i].size(); j++) {
-        flatIndices[i][j] = thisLoop + j;
+      // the first loop here is the shell (depth == 0)
+      flatIndices[i].push_back(k);
+
+      // loops in the S2Polygon are arranged such that child loops are
+      // directly after the outer loop, so add all loop indices before
+      // the next parent loop (or end of polygon). This is similar to
+      // S2Polygon::GetLastDescendant() but is slightly easier to understand.
+      while (++k < this->polygon->num_loops() && this->polygon->loop(k)->depth() > 0) {
+        flatIndices[i].push_back(k);
       }
     }
 
@@ -221,7 +227,8 @@ private:
     S2LatLng point;
 
     for (int i = 0; i < loopIndices.size(); i++) {
-      S2Loop* loop = this->polygon->loop(loopIndices[i]);
+      int loopId = loopIndices[i];
+      S2Loop* loop = this->polygon->loop(loopId);
       if (loop->num_vertices() == 0) {
         continue;
       }
@@ -265,7 +272,6 @@ private:
           loop->num_vertices()
         );
       } else {
-
         // if an interior ring, reverse the vertex order
         for (int j = 0; j < loop->num_vertices(); j++) {
           point = S2LatLng(loop->vertex(loop->num_vertices() - 1 - j));
