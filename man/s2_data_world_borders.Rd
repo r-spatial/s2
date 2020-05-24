@@ -4,26 +4,34 @@
 \name{s2_data_world_borders}
 \alias{s2_data_world_borders}
 \alias{s2_data_timezones}
+\alias{s2_data_cities}
 \alias{s2data_countries}
 \alias{s2data_timezones}
-\title{Low-resolution world boundaries and timezones}
+\alias{s2data_cities}
+\title{Low-resolution world boundaries, timezones, and cities}
 \format{
 A data.frame with columns \code{name} (character), and
 \code{geometry} (wk_wkb)
 
 An object of class \code{data.frame} with 120 rows and 2 columns.
+
+An object of class \code{data.frame} with 243 rows and 3 columns.
 }
 \source{
-\code{\link[rnaturalearth:ne_countries]{rnaturalearth::ne_countries()}}
+\href{https://www.naturalearthdata.com/}{Natural Earth Data}
 }
 \usage{
 s2_data_world_borders
 
 s2_data_timezones
 
+s2_data_cities
+
 s2data_countries(name = NULL)
 
 s2data_timezones(utc_offset_min = NULL, utc_offset_max = utc_offset_min)
+
+s2data_cities(name = NULL)
 }
 \arguments{
 \item{name}{The name of a country, continent, city, or \code{NULL}
@@ -40,6 +48,12 @@ low-resolution world boundaries and timezone boundaries.
 head(s2data_countries())
 s2data_countries("Germany")
 s2data_countries("Europe")
+
+head(s2data_timezones())
+s2data_timezones(-4)
+
+head(s2data_cities())
+s2data_cities("Cairo")
 
 }
 \keyword{datasets}

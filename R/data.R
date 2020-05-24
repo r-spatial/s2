@@ -1,5 +1,5 @@
 
-#' Low-resolution world boundaries and timezones
+#' Low-resolution world boundaries, timezones, and cities
 #'
 #' Well-known binary versions of the [Natural Earth](https://www.naturalearthdata.com/)
 #' low-resolution world boundaries and timezone boundaries.
@@ -11,16 +11,25 @@
 #'
 #' @format A data.frame with columns `name` (character), and
 #'   `geometry` (wk_wkb)
-#' @source [rnaturalearth::ne_countries()]
+#' @source [Natural Earth Data](https://www.naturalearthdata.com/)
 #' @examples
 #' head(s2data_countries())
 #' s2data_countries("Germany")
 #' s2data_countries("Europe")
 #'
+#' head(s2data_timezones())
+#' s2data_timezones(-4)
+#'
+#' head(s2data_cities())
+#' s2data_cities("Cairo")
+#'
 "s2_data_world_borders"
 
 #' @rdname s2_data_world_borders
 "s2_data_timezones"
+
+#' @rdname s2_data_world_borders
+"s2_data_cities"
 
 #' @rdname s2_data_world_borders
 #' @export
@@ -44,6 +53,19 @@ s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_
   } else {
     matches <- (df$utc_offset >= utc_offset_min) & (df$utc_offset <= utc_offset_max)
     wkb <- structure(df$geometry[matches], class = "wk_wkb")
+  }
+
+  s2geography(wkb)
+}
+
+#' @rdname s2_data_world_borders
+#' @export
+s2data_cities <- function(name = NULL) {
+  df <- libs2::s2_data_cities
+  if (is.null(name)) {
+    wkb <- df$geometry
+  } else {
+    wkb <- structure(df$geometry[(df$name %in% name)], class = "wk_wkb")
   }
 
   s2geography(wkb)
