@@ -3,11 +3,15 @@
 \docType{data}
 \name{s2_data_world_borders}
 \alias{s2_data_world_borders}
+\alias{s2_data_timezones}
 \alias{s2data_countries}
-\title{Low-resolution world boundaries}
+\alias{s2data_timezones}
+\title{Low-resolution world boundaries and timezones}
 \format{
 A data.frame with columns \code{name} (character), and
 \code{geometry} (wk_wkb)
+
+An object of class \code{data.frame} with 120 rows and 2 columns.
 }
 \source{
 \code{\link[rnaturalearth:ne_countries]{rnaturalearth::ne_countries()}}
@@ -15,20 +19,24 @@ A data.frame with columns \code{name} (character), and
 \usage{
 s2_data_world_borders
 
+s2_data_timezones
+
 s2data_countries(name = NULL)
+
+s2data_timezones(utc_offset_min = NULL, utc_offset_max = utc_offset_min)
 }
 \arguments{
-\item{name}{The name or of a country, or \code{NULL}
+\item{name}{The name of of a country or continent, or \code{NULL}
 for all countries.}
 }
 \description{
-A well-known binary version of the \href{https://www.naturalearthdata.com/}{Natural Earth}
-low-resolution world boundaries.
+Well-known binary versions of the \href{https://www.naturalearthdata.com/}{Natural Earth}
+low-resolution world boundaries and timezone boundaries.
 }
 \examples{
 head(s2data_countries())
 s2data_countries("Germany")
-s2data_countries("Canada")
+s2data_countries("Europe")
 
 }
 \keyword{datasets}
