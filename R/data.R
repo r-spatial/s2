@@ -17,8 +17,10 @@
 #' Well-known binary versions of the [Natural Earth](https://www.naturalearthdata.com/)
 #' low-resolution world boundaries and timezone boundaries.
 #'
-#' @param name The name of of a country or continent, or `NULL`
-#'   for all countries.
+#' @param name The name of a country, continent, city, or `NULL`
+#'   for all features.
+#' @param utc_offset_min,utc_offset_max Minimum and/or maximum timezone
+#'   offsets.
 #'
 #' @format A data.frame with columns `name` (character), and
 #'   `geometry` (wk_wkb)

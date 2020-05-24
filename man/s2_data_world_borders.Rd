@@ -26,8 +26,11 @@ s2data_countries(name = NULL)
 s2data_timezones(utc_offset_min = NULL, utc_offset_max = utc_offset_min)
 }
 \arguments{
-\item{name}{The name of of a country or continent, or \code{NULL}
-for all countries.}
+\item{name}{The name of a country, continent, city, or \code{NULL}
+for all features.}
+
+\item{utc_offset_min, utc_offset_max}{Minimum and/or maximum timezone
+offsets.}
 }
 \description{
 Well-known binary versions of the \href{https://www.naturalearthdata.com/}{Natural Earth}
