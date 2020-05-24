@@ -14,3 +14,14 @@ recycle_common <- function(...) {
 
   lapply(dots, rep_len, final_length)
 }
+
+expect_wkt_equal <- function(x, y, precision = 16) {
+  testthat::expect_equal(
+    s2geography_to_wkt(s2geography(x), precision = precision, trim = TRUE),
+    s2geography_to_wkt(s2geography(y), precision = precision, trim = TRUE)
+  )
+}
+
+expect_near <- function(x, y, epsilon) {
+  testthat::expect_true(abs(y - x) < epsilon)
+}

@@ -1,48 +1,74 @@
 
-#' Geometry of the nc dataset of package sf
+#' Low-resolution world boundaries, timezones, and cities
 #'
-#' A subset of [sf's][sf::sf] North Carolina dataset in WKB format.
+#' Well-known binary versions of the [Natural Earth](https://www.naturalearthdata.com/)
+#' low-resolution world boundaries and timezone boundaries.
 #'
-#' @format A list with components `CNTY_ID` (integer), `NAME` (character), and
+#' @param name The name of a country, continent, city, or `NULL`
+#'   for all features.
+#' @param utc_offset_min,utc_offset_max Minimum and/or maximum timezone
+#'   offsets.
+#'
+#' @format A data.frame with columns `name` (character), and
 #'   `geometry` (wk_wkb)
-#' @source <http://r-spatial.github.io/sf/>
+#' @source [Natural Earth Data](https://www.naturalearthdata.com/)
 #' @examples
-#' nc <- s2polygon(s2_nc_wkb$geometry)
-#' head(nc)
+#' head(s2data_countries())
+#' s2data_countries("Germany")
+#' s2data_countries("Europe")
 #'
-"s2_nc_wkb"
+#' head(s2data_timezones())
+#' s2data_timezones(-4)
+#'
+#' head(s2data_cities())
+#' s2data_cities("Cairo")
+#'
+"s2_data_world_borders"
 
-#' Low-resolution world boundaries
-#'
-#' A modified version of maptools' \link[maptools]{wrld_simpl} dataset
-#' in WKB format. Use the [s2data_country()] helper to load an [s2polygon()] vector for
-#' a given country.
-#'
-#' @param name The name or ISO3 identifier of a country, or `NULL`
-#'   for all countries.
-#'
-#' @format A list with components `ISO3` (character), `NAME` (character), and
-#'   `geometry` (wk_wkb)
-#' @source The [mapview package][mapview::mapview-package].
-#' @examples
-#' world <- s2polygon(s2_wrld_simpl_wkb$geometry)
-#' head(world)
-#'
-#' s2data_country("Germany")
-#'
-"s2_wrld_simpl_wkb"
+#' @rdname s2_data_world_borders
+"s2_data_timezones"
 
-#' @rdname s2_wrld_simpl_wkb
+#' @rdname s2_data_world_borders
+"s2_data_cities"
+
+#' @rdname s2_data_world_borders
 #' @export
-s2data_country <- function(name = NULL) {
-  df <- libs2::s2_wrld_simpl_wkb
+s2data_countries <- function(name = NULL) {
+  df <- libs2::s2_data_world_borders
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
-    wkb <- structure(df$geometry[(df$NAME %in% name) | (df$ISO3 %in% name)], class = "wk_wkb")
+    wkb <- structure(df$geometry[(df$name %in% name) | (df$continent %in% name)], class = "wk_wkb")
   }
 
-  s2polygon(wkb, oriented = FALSE, check = TRUE)
+  s2geography(wkb)
+}
+
+#' @rdname s2_data_world_borders
+#' @export
+s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_min) {
+  df <- libs2::s2_data_timezones
+  if (is.null(utc_offset_min)) {
+    wkb <- df$geometry
+  } else {
+    matches <- (df$utc_offset >= utc_offset_min) & (df$utc_offset <= utc_offset_max)
+    wkb <- structure(df$geometry[matches], class = "wk_wkb")
+  }
+
+  s2geography(wkb)
+}
+
+#' @rdname s2_data_world_borders
+#' @export
+s2data_cities <- function(name = NULL) {
+  df <- libs2::s2_data_cities
+  if (is.null(name)) {
+    wkb <- df$geometry
+  } else {
+    wkb <- structure(df$geometry[(df$name %in% name)], class = "wk_wkb")
+  }
+
+  s2geography(wkb)
 }
 
 #' Geometry of the nc dataset of package sf

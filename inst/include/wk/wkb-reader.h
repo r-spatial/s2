@@ -14,8 +14,7 @@ class WKBReader: public WKReader {
 public:
   const static unsigned char ENDIAN_NONE = 0xff;
 
-  WKBReader(WKBytesProvider& provider, WKGeometryHandler& handler):
-    WKReader(provider, handler), provider(provider) {
+  WKBReader(WKBytesProvider& provider): WKReader(provider), provider(provider) {
     this->swapEndian = false;
     this->featureId = 0;
     this->partId = PART_ID_NONE;
@@ -35,15 +34,15 @@ protected:
   unsigned char endian;
 
   virtual void readFeature(size_t featureId) {
-    this->handler.nextFeatureStart(featureId);
+    this->handler->nextFeatureStart(featureId);
 
     if (this->provider.featureIsNull()) {
-      this->handler.nextNull(featureId);
+      this->handler->nextNull(featureId);
     } else {
       this->readGeometry(PART_ID_NONE);
     }
 
-    this->handler.nextFeatureEnd(featureId);
+    this->handler->nextFeatureEnd(featureId);
   }
 
   void readGeometry(uint32_t partId) {
@@ -65,7 +64,7 @@ protected:
       meta.size = this->readUint32();
     }
 
-    this->handler.nextGeometryStart(meta, partId);
+    this->handler->nextGeometryStart(meta, partId);
 
     switch (meta.geometryType) {
     case WKGeometryType::Point:
@@ -85,13 +84,13 @@ protected:
       break;
     default:
       throw WKParseException(
-          Formatter() <<
+          ErrorFormatter() <<
             "Unrecognized geometry type in WKBReader::readGeometry(): " <<
               meta.geometryType
       );
     }
 
-    this->handler.nextGeometryEnd(meta, partId);
+    this->handler->nextGeometryEnd(meta, partId);
   }
 
   void readPoint(const WKGeometryMeta meta) {
@@ -115,12 +114,12 @@ protected:
   }
 
   void readLinearRing(const WKGeometryMeta meta, uint32_t size, uint32_t ringId) {
-    this->handler.nextLinearRingStart(meta, size, ringId);
+    this->handler->nextLinearRingStart(meta, size, ringId);
     for (uint32_t i=0; i < size; i++) {
       this->coordId = i;
       this->readCoordinate(meta, i);
     }
-    this->handler.nextLinearRingEnd(meta, size, ringId);
+    this->handler->nextLinearRingEnd(meta, size, ringId);
   }
 
   void readCollection(WKGeometryMeta meta) {
@@ -137,18 +136,18 @@ protected:
     if (meta.hasZ && meta.hasM) {
       this->z = this->readDouble();
       this->m = this->readDouble();
-      this->handler.nextCoordinate(meta, WKCoord::xyzm(x, y, z, m), coordId);
+      this->handler->nextCoordinate(meta, WKCoord::xyzm(x, y, z, m), coordId);
 
     } else if (meta.hasZ) {
       this->z = this->readDouble();
-      this->handler.nextCoordinate(meta, WKCoord::xyz(x, y, z), coordId);
+      this->handler->nextCoordinate(meta, WKCoord::xyz(x, y, z), coordId);
 
     } else if (meta.hasM) {
       this->m = this->readDouble();
-      this->handler.nextCoordinate(meta, WKCoord::xym(x, y, m), coordId);
+      this->handler->nextCoordinate(meta, WKCoord::xym(x, y, m), coordId);
 
     } else {
-      this->handler.nextCoordinate(meta, WKCoord::xy(x, y), coordId);
+      this->handler->nextCoordinate(meta, WKCoord::xy(x, y), coordId);
     }
   }
 

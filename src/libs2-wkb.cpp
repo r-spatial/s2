@@ -2,7 +2,7 @@
 #include "s2/s2latlng.h"
 #include "s2/s2polyline.h"
 #include "s2/s2polygon.h"
-#include "wk/io-rcpp.h"
+#include "wk/rcpp-io.h"
 #include "wk/wkb-reader.h"
 #include "wk/wkb-writer.h"
 #include "wk/geometry-handler.h"
@@ -46,7 +46,8 @@ public:
 List s2latlng_from_wkb(List wkb) {
   WKRawVectorListProvider provider(wkb);
   WKS2LatLngWriter writer(wkb.size());
-  WKBReader reader(provider, writer);
+  WKBReader reader(provider);
+  reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
@@ -90,7 +91,8 @@ public:
 List s2polyline_from_wkb(List wkb) {
   WKRawVectorListProvider provider(wkb);
   WKS2PolylineWriter writer(wkb.size());
-  WKBReader reader(provider, writer);
+  WKBReader reader(provider);
+  reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
@@ -182,7 +184,7 @@ public:
 	  // try to solve this first by
 	  // 1. creating a polygon for every loop
 	  // 2. unioning these loops
-	  // the disadvantage of this is that holes are no longer interpreted 
+	  // the disadvantage of this is that holes are no longer interpreted
 	  // as holes, if !oriented.
       std::vector<std::unique_ptr<S2Polygon>> polygons;
       loops = polygon->Release();
@@ -200,7 +202,7 @@ public:
         polygons.push_back(std::unique_ptr<S2Polygon>(p));
       }
       polygon->DestructiveApproxUnion(std::move(polygons), S1Angle::Degrees(0.0));
-      // Rprintf("Unioned %d loops\n", loops.size()); 
+      // Rprintf("Unioned %d loops\n", loops.size());
       if (!polygon->IsValid()) { // it didn't help, so:
         S2Error error;
         polygon->FindValidationError(&error);
@@ -223,7 +225,8 @@ List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles =
   writer.setOriented(oriented);
   writer.setCheck(check);
   writer.setOmitPoles(omit_poles);
-  WKBReader reader(provider, writer);
+  WKBReader reader(provider);
+  reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
@@ -234,48 +237,22 @@ List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles =
 
 // -------- exporters ---------
 
-// this should be added to wk
-class WKListProvider: public WKProvider {
-public:
-  List& input;
-  R_xlen_t index;
-
-  WKListProvider(List& input): input(input), index(-1) {}
-
-  SEXP feature() {
-    return this->input[this->index];
-  }
-
-  bool seekNextFeature() {
-    this->index++;
-    return this->index < input.size();
-  }
-
-  bool featureIsNull() {
-    return this->input[this->index] == R_NilValue;
-  }
-
-  size_t nFeatures() {
-    return input.size();
-  }
-};
-
 class WKS2LatLngReader: public WKReader {
 public:
 
-  WKS2LatLngReader(WKListProvider& provider, WKGeometryHandler& handler):
-    WKReader(provider, handler), provider(provider) {}
+  WKS2LatLngReader(WKSEXPProvider& provider):
+    WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
-    this->handler.nextFeatureStart(featureId);
+    this->handler->nextFeatureStart(featureId);
 
     if (this->provider.featureIsNull()) {
-      this->handler.nextNull(featureId);
+      this->handler->nextNull(featureId);
     } else {
       this->readItem(this->provider.feature());
     }
 
-    this->handler.nextFeatureEnd(featureId);
+    this->handler->nextFeatureEnd(featureId);
   }
 
   virtual void readItem(SEXP item) {
@@ -283,26 +260,28 @@ public:
     meta.hasSize = true;
     meta.size = 1;
 
-    this->handler.nextGeometryStart(meta, PART_ID_NONE);
+    this->handler->nextGeometryStart(meta, PART_ID_NONE);
 
     XPtr<S2LatLng> ptr(item);
     const WKCoord coord = WKCoord::xy(ptr->lng().degrees(), ptr->lat().degrees());
-    this->handler.nextCoordinate(meta, coord, 0);
-    this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+    this->handler->nextCoordinate(meta, coord, 0);
+    this->handler->nextGeometryEnd(meta, PART_ID_NONE);
   }
 
 private:
-  WKListProvider& provider;
+  WKSEXPProvider& provider;
 };
 
 // [[Rcpp::export]]
 List wkb_from_s2latlng(List s2latlng, int endian) {
-  WKListProvider provider(s2latlng);
+  WKSEXPProvider provider(s2latlng);
   WKRawVectorListExporter exporter(s2latlng.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
 
-  WKS2LatLngReader reader(provider, writer);
+  WKS2LatLngReader reader(provider);
+  reader.setHandler(&writer);
+
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }
@@ -312,8 +291,8 @@ List wkb_from_s2latlng(List s2latlng, int endian) {
 
 class WKS2PolylineReader: public WKS2LatLngReader {
 public:
-  WKS2PolylineReader(WKListProvider& provider, WKGeometryHandler& handler):
-    WKS2LatLngReader(provider, handler)  {}
+  WKS2PolylineReader(WKSEXPProvider& provider):
+    WKS2LatLngReader(provider)  {}
 
   virtual void readItem(SEXP item) {
     XPtr<S2Polyline> ptr(item);
@@ -322,27 +301,29 @@ public:
     meta.hasSize = true;
     meta.size = ptr->num_vertices();
 
-    this->handler.nextGeometryStart(meta, PART_ID_NONE);
+    this->handler->nextGeometryStart(meta, PART_ID_NONE);
     S2LatLng vertex;
     WKCoord coord;
     for (size_t i = 0; i < ptr->num_vertices(); i++) {
       vertex = S2LatLng(ptr->vertex(i));
       coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
-      this->handler.nextCoordinate(meta, coord, i);
+      this->handler->nextCoordinate(meta, coord, i);
     }
 
-    this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+    this->handler->nextGeometryEnd(meta, PART_ID_NONE);
   }
 };
 
 // [[Rcpp::export]]
 List wkb_from_s2polyline(List s2polyline, int endian) {
-  WKListProvider provider(s2polyline);
+  WKSEXPProvider provider(s2polyline);
   WKRawVectorListExporter exporter(s2polyline.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
 
-  WKS2PolylineReader reader(provider, writer);
+  WKS2PolylineReader reader(provider);
+  reader.setHandler(&writer);
+
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }
@@ -377,7 +358,7 @@ std::vector<std::vector<int>> multi_polygon_order(S2Polygon *p) {
   // go through all others:
   for (int i = 1; i < p->num_loops(); i++) {
     if (p->GetParent(i) == -1) { // -1 indicates a top-level outer ring, so no hole:
-      outer_index[i] = n_outer; // the n_outer-th outer 
+      outer_index[i] = n_outer; // the n_outer-th outer
       n_outer++;
     } else {
       // possibly hole, or a MULTIPOLYGON outer ring inside a hole:
@@ -409,8 +390,8 @@ std::vector<std::vector<int>> multi_polygon_order(S2Polygon *p) {
 
 class WKS2PolygonReader: public WKS2LatLngReader {
 public:
-  WKS2PolygonReader(WKListProvider& provider, WKGeometryHandler& handler):
-    WKS2LatLngReader(provider, handler)  {}
+  WKS2PolygonReader(WKSEXPProvider& provider):
+    WKS2LatLngReader(provider)  {}
 
   virtual void readItem(SEXP item) {
     XPtr<S2Polygon> ptr(item);
@@ -423,18 +404,18 @@ public:
 
       // FIXME: output indices.size() here
       meta.size = indices.size(); // ???
-      this->handler.nextGeometryStart(meta, PART_ID_NONE); // ???
+      this->handler->nextGeometryStart(meta, PART_ID_NONE); // ???
 
       for (int k = 0; k < indices.size(); k++) { // all outer loops
         std::vector<int> loop_indices = indices[k]; // this outer ring + holes
 
         // meta.size = ptr->num_loops();
         meta.size = loop_indices.size();
-        this->handler.nextPolygon(meta, loop_indices.size()); // ???
+        this->handler->nextGeometryStart(meta, loop_indices.size()); // ???
 
-        // this->handler.nextGeometryStart(meta, PART_ID_NONE);
+        // this->handler->nextGeometryStart(meta, PART_ID_NONE);
         WKCoord coord;
-  
+
         for (size_t i = 0; i < loop_indices.size(); i++) {
           if (i > 0) // hole:
             ptr->loop(loop_indices[i])->Invert();
@@ -445,35 +426,35 @@ public:
             loopSize += 1;
           }
 
-          this->handler.nextLinearRingStart(meta, loopSize, i);
-    
+          this->handler->nextLinearRingStart(meta, loopSize, i);
+
           for (size_t j = 0; j < loop->num_vertices(); j++) {
             S2LatLng vertex(loop->vertex(j));
             coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
-            this->handler.nextCoordinate(meta, coord, j);
+            this->handler->nextCoordinate(meta, coord, j);
           }
 
           // need to close loop for WKB
           if (loop->num_vertices() > 0) {
             S2LatLng vertex(loop->vertex(0));
             coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
-            this->handler.nextCoordinate(meta, coord, loop->num_vertices());
+            this->handler->nextCoordinate(meta, coord, loop->num_vertices());
           }
 
-          this->handler.nextLinearRingEnd(meta, loopSize, i);
+          this->handler->nextLinearRingEnd(meta, loopSize, i);
         }
-        // this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+        // this->handler->nextGeometryEnd(meta, PART_ID_NONE);
       }
-      this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+      this->handler->nextGeometryEnd(meta, PART_ID_NONE);
 
     } else { // POLYGON:
       WKGeometryMeta meta(WKGeometryType::Polygon, false, false, false);
       meta.hasSize = true;
       meta.size = ptr->num_loops();
-  
-      this->handler.nextGeometryStart(meta, PART_ID_NONE);
+
+      this->handler->nextGeometryStart(meta, PART_ID_NONE);
       WKCoord coord;
-  
+
       for (size_t i = 0; i < ptr->num_loops(); i++) {
         if (i > 0) // hole:
           ptr->loop(i)->Invert();
@@ -484,36 +465,37 @@ public:
           loopSize += 1;
         }
 
-        this->handler.nextLinearRingStart(meta, loopSize, i);
-  
+        this->handler->nextLinearRingStart(meta, loopSize, i);
+
         for (size_t j = 0; j < loop->num_vertices(); j++) {
           S2LatLng vertex(loop->vertex(j));
           coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
-          this->handler.nextCoordinate(meta, coord, j);
+          this->handler->nextCoordinate(meta, coord, j);
         }
 
         // need to close loop for WKB
         if (loop->num_vertices() > 0) {
           S2LatLng vertex(loop->vertex(0));
           coord = WKCoord::xy(vertex.lng().degrees(), vertex.lat().degrees());
-          this->handler.nextCoordinate(meta, coord, loop->num_vertices());
+          this->handler->nextCoordinate(meta, coord, loop->num_vertices());
         }
 
-        this->handler.nextLinearRingEnd(meta, loopSize, i);
+        this->handler->nextLinearRingEnd(meta, loopSize, i);
       }
-      this->handler.nextGeometryEnd(meta, PART_ID_NONE);
+      this->handler->nextGeometryEnd(meta, PART_ID_NONE);
     } // else POLYGON
   }
 };
 
 // [[Rcpp::export]]
 List wkb_from_s2polygon(List s2polygon, int endian) {
-  WKListProvider provider(s2polygon);
+  WKSEXPProvider provider(s2polygon);
   WKRawVectorListExporter exporter(s2polygon.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
 
-  WKS2PolygonReader reader(provider, writer);
+  WKS2PolygonReader reader(provider);
+  reader.setHandler(&writer);
   while (reader.hasNextFeature()) {
     reader.iterateFeature();
   }

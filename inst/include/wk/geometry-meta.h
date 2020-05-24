@@ -4,7 +4,8 @@
 
 #include <cstdint>
 #include <string>
-#include "formatter.h"
+#include "parse-exception.h"
+#include "error-formatter.h"
 
 // https://github.com/postgis/postgis/blob/2.1.0/doc/ZMSgeoms.txt
 // https://github.com/r-spatial/sf/blob/master/src/wkb.cpp
@@ -70,7 +71,7 @@ public:
     srid(SRID_NONE) {}
 
   std::string wktType() const {
-    Formatter f;
+    ErrorFormatter f;
     f << wktSimpleGeometryType(this->geometryType);
 
     if (this->hasZ || this->hasM) {
@@ -113,8 +114,8 @@ private:
     case WKGeometryType::GeometryCollection:
       return "GEOMETRYCOLLECTION";
     default:
-      throw std::runtime_error(
-        Formatter() <<
+      throw WKParseException(
+        ErrorFormatter() <<
           "invalid type in WKGeometryMeta::wktSimpleGeometryType(): " <<
           simpleGeometryType
       );

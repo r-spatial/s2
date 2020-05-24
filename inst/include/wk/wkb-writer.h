@@ -18,7 +18,12 @@ public:
     this->swapEndian = WKBytesUtils::nativeEndian() != endian;
   }
 
-  void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
+  virtual void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
+    // make sure meta has a valid size
+    if (!meta.hasSize || meta.size == WKGeometryMeta::SIZE_UNKNOWN) {
+      throw std::runtime_error("Can't write WKB wihout a valid meta.size");
+    }
+
     // make a new geometry type based on the creation options
     this->newMeta = this->getNewMeta(meta);
 
@@ -27,19 +32,20 @@ public:
 
     if (this->newMeta.hasSRID) this->writeUint32(this->newMeta.srid);
     if (this->newMeta.geometryType != WKGeometryType::Point) this->writeUint32(meta.size);
+
+    // empty point hack! could also error here, but this feels more in line with
+    // how these are represented in real life (certainly in R)
+    if (this->newMeta.geometryType == WKGeometryType::Point && this->newMeta.size == 0) {
+      this->writeDouble(NAN);
+      this->writeDouble(NAN);
+    }
   }
 
-  void nextPolygon(const WKGeometryMeta& meta, uint32_t size) {
-    this->writeEndian();
-    this->writeUint32(WKGeometryType::Polygon);
+  virtual void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
     this->writeUint32(size);
   }
 
-  void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
-    this->writeUint32(size);
-  }
-
-  void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
+  virtual void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
     this->writeDouble(coord.x);
     this->writeDouble(coord.y);
     if (this->newMeta.hasZ && coord.hasZ) {

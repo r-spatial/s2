@@ -10,6 +10,98 @@ s2BuildPolygonsLayer <- function(ptrs, b_ptr) {
     .Call(`_libs2_s2BuildPolygonsLayer`, ptrs, b_ptr)
 }
 
+libs2_cpp_s2_iscollection <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_iscollection`, geog)
+}
+
+libs2_cpp_s2_dimension <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_dimension`, geog)
+}
+
+libs2_cpp_s2_numpoints <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_numpoints`, geog)
+}
+
+libs2_cpp_s2_area <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_area`, geog)
+}
+
+libs2_cpp_s2_length <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_length`, geog)
+}
+
+libs2_cpp_s2_perimeter <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_perimeter`, geog)
+}
+
+libs2_cpp_s2_x <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_x`, geog)
+}
+
+libs2_cpp_s2_y <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_y`, geog)
+}
+
+libs2_cpp_s2_distance <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_distance`, geog1, geog2)
+}
+
+libs2_cpp_s2_maxdistance <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_maxdistance`, geog1, geog2)
+}
+
+libs2_cpp_s2_intersects <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2)
+}
+
+libs2_cpp_s2_equals <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_equals`, geog1, geog2)
+}
+
+libs2_cpp_s2_contains <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_contains`, geog1, geog2)
+}
+
+libs2_cpp_s2_dwithin <- function(geog1, geog2, distance) {
+    .Call(`_libs2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
+}
+
+libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2, detail) {
+    .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail)
+}
+
+libs2_cpp_s2_intersection <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_intersection`, geog1, geog2)
+}
+
+libs2_cpp_s2_union <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_union`, geog1, geog2)
+}
+
+libs2_cpp_s2_difference <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_difference`, geog1, geog2)
+}
+
+libs2_cpp_s2_union_agg <- function(geog, naRm) {
+    .Call(`_libs2_libs2_cpp_s2_union_agg`, geog, naRm)
+}
+
+libs2_cpp_s2_centroid_agg <- function(geog, naRm) {
+    .Call(`_libs2_libs2_cpp_s2_centroid_agg`, geog, naRm)
+}
+
+libs2_cpp_s2_closestpoint <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_closestpoint`, geog1, geog2)
+}
+
+libs2_cpp_s2_centroid <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_centroid`, geog)
+}
+
+libs2_cpp_s2_boundary <- function(geog) {
+    .Call(`_libs2_libs2_cpp_s2_boundary`, geog)
+}
+
 #' Geometry operators for s2 geometries
 #' 
 #' @param x list with S2Polygons or S2Polyline pointers
@@ -38,6 +130,26 @@ s2polygon_is_valid <- function(ptrs) {
 #' @param ptrs list of S2Polygon or S2Polyline pointers
 s2polyline_is_valid <- function(ptrs) {
     .Call(`_libs2_s2polyline_is_valid`, ptrs)
+}
+
+s2geography_from_wkb <- function(wkb, oriented) {
+    .Call(`_libs2_s2geography_from_wkb`, wkb, oriented)
+}
+
+s2geography_from_wkt <- function(wkt, oriented) {
+    .Call(`_libs2_s2geography_from_wkt`, wkt, oriented)
+}
+
+s2geography_to_wkt <- function(s2geography, precision, trim) {
+    .Call(`_libs2_s2geography_to_wkt`, s2geography, precision, trim)
+}
+
+s2geography_to_wkb <- function(s2geography, endian) {
+    .Call(`_libs2_s2geography_to_wkb`, s2geography, endian)
+}
+
+s2geography_format <- function(s2geography, maxCoords) {
+    .Call(`_libs2_s2geography_format`, s2geography, maxCoords)
 }
 
 s2latlng_from_numeric <- function(lat, lng) {
