@@ -29,7 +29,7 @@ s2geography.wk_wkb <- function(x, ..., oriented = FALSE) {
 #' @rdname s2geography
 #' @export
 s2geography.logical <- function(x, ...) {
-  stopifnot(all(!is.na(x)))
+  stopifnot(isTRUE(x))
   new_s2xptr(libs2:::s2geography_full(TRUE), "s2geography")
 }
 
