@@ -32,6 +32,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
 
   S2BooleanOperation op(opType, std::move(layers));
+  FLAGS_s2debug = false;
 
   S2Error error;
   if (!op.Build(*index1, *index2, &error)) {
