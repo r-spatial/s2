@@ -126,6 +126,16 @@ List s2geography_from_wkt(CharacterVector wkt, bool oriented) {
   return writer.s2geography;
 }
 
+// [[Rcpp::export]]
+List s2geography_full(LogicalVector x) { // create single geography with full polygon
+  std::unique_ptr<S2Loop> l = absl::make_unique<S2Loop>(S2Loop::kFull());
+  std::unique_ptr<S2Polygon> p = absl::make_unique<S2Polygon>(std::move(l));
+  LibS2Geography *pg = new LibS2PolygonGeography(std::move(p));
+  List ret(1);
+  ret(0) = Rcpp::XPtr<LibS2Geography>(pg);
+  return ret;
+}
+
 class WKLibS2GeographyReader: public WKReader {
 public:
 

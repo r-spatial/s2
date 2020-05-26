@@ -358,6 +358,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2geography_full
+List s2geography_full(LogicalVector x);
+RcppExport SEXP _libs2_s2geography_full(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2geography_full(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2geography_to_wkt
 CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim);
 RcppExport SEXP _libs2_s2geography_to_wkt(SEXP s2geographySEXP, SEXP precisionSEXP, SEXP trimSEXP) {
@@ -692,6 +703,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2polyline_is_valid", (DL_FUNC) &_libs2_s2polyline_is_valid, 1},
     {"_libs2_s2geography_from_wkb", (DL_FUNC) &_libs2_s2geography_from_wkb, 2},
     {"_libs2_s2geography_from_wkt", (DL_FUNC) &_libs2_s2geography_from_wkt, 2},
+    {"_libs2_s2geography_full", (DL_FUNC) &_libs2_s2geography_full, 1},
     {"_libs2_s2geography_to_wkt", (DL_FUNC) &_libs2_s2geography_to_wkt, 3},
     {"_libs2_s2geography_to_wkb", (DL_FUNC) &_libs2_s2geography_to_wkb, 2},
     {"_libs2_s2geography_format", (DL_FUNC) &_libs2_s2geography_format, 2},

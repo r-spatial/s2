@@ -140,6 +140,10 @@ s2geography_from_wkt <- function(wkt, oriented) {
     .Call(`_libs2_s2geography_from_wkt`, wkt, oriented)
 }
 
+s2geography_full <- function(x) {
+    .Call(`_libs2_s2geography_full`, x)
+}
+
 s2geography_to_wkt <- function(s2geography, precision, trim) {
     .Call(`_libs2_s2geography_to_wkt`, s2geography, precision, trim)
 }
