@@ -42,8 +42,8 @@ s2_covers <- function(x, y) {
 
 #' @rdname s2_contains
 #' @export
-s2_disjoint <- function(x, y) {
-  !s2_intersects(x, y)
+s2_disjoint <- function(x, y, ...) {
+  !s2_intersects(x, y, ...)
 }
 
 #' @rdname s2_contains
@@ -53,11 +53,21 @@ s2_equals <- function(x, y) {
   libs2_cpp_s2_equals(recycled[[1]], recycled[[2]])
 }
 
+sort_polygon_model = function(x) {
+  switch(x,
+    OPEN = 0,
+    SEMI_OPEN = 1,
+    CLOSED = 2,
+    -1)
+}
+
 #' @rdname s2_contains
 #' @export
-s2_intersects <- function(x, y) {
+s2_intersects <- function(x, y, ..., polygon_model = -1) {
+  if (!is.numeric(polygon_model))
+    polygon_model = sort_polygon_model(as.character(polygon_model))
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_intersects(recycled[[1]], recycled[[2]])
+  libs2_cpp_s2_intersects(recycled[[1]], recycled[[2]], polygon_model)
 }
 
 #' @rdname s2_contains

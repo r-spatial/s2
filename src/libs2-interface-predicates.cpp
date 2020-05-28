@@ -5,20 +5,42 @@
 #include "s2/s2latlng_rect.h"
 #include "s2/s2polygon.h"
 #include "s2/s2testing.h"
+#include "s2/s2builderutil_snap_functions.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
+S2BooleanOperation::PolygonModel get_polygon_model(int m) {
+  switch (m) {
+    case 0: return S2BooleanOperation::PolygonModel::OPEN;
+    case 1: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
+    case 2: return S2BooleanOperation::PolygonModel::CLOSED;
+	default: stop("invalid value for polygon_model");
+  }
+  return S2BooleanOperation::PolygonModel::SEMI_OPEN;
+}
+
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2) {
+LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int polygon_model = -1) {
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
 
     int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex());
+      return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex(),
+        options);
+    };
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_polygon_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
     }
   };
 
   LibS2Op op;
+  if (polygon_model >= 0)
+    op.set_polygon_model(polygon_model);
   return op.processVector(geog1, geog2);
 }
 

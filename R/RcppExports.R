@@ -50,8 +50,8 @@ libs2_cpp_s2_maxdistance <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_maxdistance`, geog1, geog2)
 }
 
-libs2_cpp_s2_intersects <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2)
+libs2_cpp_s2_intersects <- function(geog1, geog2, polygon_model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2, polygon_model)
 }
 
 libs2_cpp_s2_equals <- function(geog1, geog2) {

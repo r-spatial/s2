@@ -4,7 +4,7 @@
 \alias{new_s2xptr}
 \alias{validate_s2xptr}
 \alias{rep.s2xptr}
-\alias{rep_len.s2xptr}
+\alias{print.s2xptr}
 \title{Create vectors of XPtr objects}
 \usage{
 new_s2xptr(x = list(), class = character())
@@ -13,7 +13,7 @@ validate_s2xptr(x)
 
 \method{rep}{s2xptr}(x, ...)
 
-rep_len.s2xptr(x, ...)
+\method{print}{s2xptr}(x, ...)
 }
 \arguments{
 \item{x}{A bare \code{list()} of external pointers}
