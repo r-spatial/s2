@@ -11,6 +11,7 @@
 #include "wk/geometry-formatter.h"
 #include "wk/geometry-handler.h"
 
+#include "libs2-snap.h"
 #include "libs2-geography.h"
 #include "libs2-point-geography.h"
 #include "libs2-polyline-geography.h"

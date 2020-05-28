@@ -8,6 +8,8 @@
 #include "wk/geometry-handler.h"
 #include "wk/geometry-debug-handler.h"
 
+#include "libs2-snap.h"
+
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -179,6 +181,11 @@ public:
       polygon->InitOriented(std::move(loops));
     } else {
       polygon->InitNested(std::move(loops));
+    }
+    Rcpp::Rcout << "here! " << snap_level << std::endl;
+    if (snap_level > 0) {
+      // Rcpp::Rcout << "snapping to level " << snap_level << std::endl;
+      polygon->InitToSnapped(polygon, snap_level);
     }
     if (this->check && !polygon->IsValid()) {
 	  // try to solve this first by

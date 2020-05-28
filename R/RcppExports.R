@@ -233,6 +233,23 @@ s2xptr_test_op <- function(s2xptr_test) {
     invisible(.Call(`_libs2_s2xptr_test_op`, s2xptr_test))
 }
 
+#' Set snap level for polygons and polylines
+#' 
+#' @param snap integer, snap level (max. 30, negative prevents snapping)
+#' @name snaplevel
+#' @returns s2_set_snaplevel returns the old value of snap level
+#' @export
+s2_set_snaplevel <- function(snap = -1L) {
+    .Call(`_libs2_s2_set_snaplevel`, snap)
+}
+
+#' @param snap integer, snap level (max. 30, negative prevents snapping)
+#' @name snaplevel
+#' @export
+s2_get_snaplevel <- function(snap = -1L) {
+    .Call(`_libs2_s2_get_snaplevel`, snap)
+}
+
 libs2_cpp_test_indexing <- function() {
     invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
 }

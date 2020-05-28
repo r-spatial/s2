@@ -10,6 +10,7 @@
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
 
+#include "libs2-snap.h"
 #include "libs2-geography-operator.h"
 #include "libs2-point-geography.h"
 #include "libs2-polyline-geography.h"

@@ -590,6 +590,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// s2_set_snaplevel
+IntegerVector s2_set_snaplevel(int snap);
+RcppExport SEXP _libs2_s2_set_snaplevel(SEXP snapSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type snap(snapSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_set_snaplevel(snap));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2_get_snaplevel
+IntegerVector s2_get_snaplevel(int snap);
+RcppExport SEXP _libs2_s2_get_snaplevel(SEXP snapSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type snap(snapSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_get_snaplevel(snap));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_test_indexing
 void libs2_cpp_test_indexing();
 RcppExport SEXP _libs2_libs2_cpp_test_indexing() {
@@ -723,6 +745,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2polyline_format", (DL_FUNC) &_libs2_s2polyline_format, 2},
     {"_libs2_s2xptr_test", (DL_FUNC) &_libs2_s2xptr_test, 1},
     {"_libs2_s2xptr_test_op", (DL_FUNC) &_libs2_s2xptr_test_op, 1},
+    {"_libs2_s2_set_snaplevel", (DL_FUNC) &_libs2_s2_set_snaplevel, 1},
+    {"_libs2_s2_get_snaplevel", (DL_FUNC) &_libs2_s2_get_snaplevel, 1},
     {"_libs2_libs2_cpp_test_indexing", (DL_FUNC) &_libs2_libs2_cpp_test_indexing, 0},
     {"_libs2_s2latlng_from_wkb", (DL_FUNC) &_libs2_s2latlng_from_wkb, 1},
     {"_libs2_s2polyline_from_wkb", (DL_FUNC) &_libs2_s2polyline_from_wkb, 1},

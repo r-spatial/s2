@@ -8,6 +8,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#include "libs2-snap.h"
 
 // [[Rcpp::export]]
 List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
@@ -47,6 +48,10 @@ List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {
     polygon->InitOriented(std::move(loops));
   } else {
     polygon->InitNested(std::move(loops));
+  }
+  if (snap_level > 0) {
+    // Rcpp::Rcout << "snapping to level " << snap_level << std::endl;
+    polygon->InitToSnapped(polygon, snap_level);
   }
   if (check && !polygon->IsValid()) {
     S2Error error;
