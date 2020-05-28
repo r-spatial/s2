@@ -54,11 +54,13 @@ rep.s2xptr <- function(x, ...) {
   new_s2xptr(NextMethod(), class(x))
 }
 
-#' @rdname new_s2xptr
-#' @export
-rep_len.s2xptr <- function(x, ...) {
-  new_s2xptr(NextMethod(), class(x))
-}
+# EP: this seems obsolete, as rep_len is not a generic and seems to work as is
+##' @rdname new_s2xptr
+##' @export
+#rep_len.s2xptr <- function(x, ...) {
+#  new_s2xptr(NextMethod(), class(x))
+#}
+
 
 #' @export
 print.s2xptr <- function(x, ...) {
