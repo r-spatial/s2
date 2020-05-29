@@ -50,24 +50,24 @@ libs2_cpp_s2_maxdistance <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_maxdistance`, geog1, geog2)
 }
 
-libs2_cpp_s2_intersects <- function(geog1, geog2, polygon_model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2, polygon_model)
+libs2_cpp_s2_intersects <- function(geog1, geog2, model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_equals <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_equals`, geog1, geog2)
 }
 
-libs2_cpp_s2_contains <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_contains`, geog1, geog2)
+libs2_cpp_s2_contains <- function(geog1, geog2, model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_contains`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_libs2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
-libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2, detail) {
-    .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail)
+libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2, detail, model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail, model)
 }
 
 libs2_cpp_s2_intersection <- function(geog1, geog2) {

@@ -130,15 +130,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libs2_cpp_s2_intersects
-LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int polygon_model);
-RcppExport SEXP _libs2_libs2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP, SEXP polygon_modelSEXP) {
+LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type polygon_model(polygon_modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersects(geog1, geog2, polygon_model));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersects(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -155,14 +155,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libs2_cpp_s2_contains
-LogicalVector libs2_cpp_s2_contains(List geog1, List geog2);
-RcppExport SEXP _libs2_libs2_cpp_s2_contains(SEXP geog1SEXP, SEXP geog2SEXP) {
+LogicalVector libs2_cpp_s2_contains(List geog1, List geog2, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_contains(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_contains(geog1, geog2));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_contains(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -180,8 +181,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // libs2_cpp_s2_intersectsbox
-LogicalVector libs2_cpp_s2_intersectsbox(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2, IntegerVector detail);
-RcppExport SEXP _libs2_libs2_cpp_s2_intersectsbox(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP, SEXP detailSEXP) {
+LogicalVector libs2_cpp_s2_intersectsbox(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2, IntegerVector detail, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_intersectsbox(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP, SEXP detailSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -191,7 +192,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lng2(lng2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type detail(detailSEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersectsbox(geog, lng1, lat1, lng2, lat2, detail));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_intersectsbox(geog, lng1, lat1, lng2, lat2, detail, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -709,9 +711,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_maxdistance", (DL_FUNC) &_libs2_libs2_cpp_s2_maxdistance, 2},
     {"_libs2_libs2_cpp_s2_intersects", (DL_FUNC) &_libs2_libs2_cpp_s2_intersects, 3},
     {"_libs2_libs2_cpp_s2_equals", (DL_FUNC) &_libs2_libs2_cpp_s2_equals, 2},
-    {"_libs2_libs2_cpp_s2_contains", (DL_FUNC) &_libs2_libs2_cpp_s2_contains, 2},
+    {"_libs2_libs2_cpp_s2_contains", (DL_FUNC) &_libs2_libs2_cpp_s2_contains, 3},
     {"_libs2_libs2_cpp_s2_dwithin", (DL_FUNC) &_libs2_libs2_cpp_s2_dwithin, 3},
-    {"_libs2_libs2_cpp_s2_intersectsbox", (DL_FUNC) &_libs2_libs2_cpp_s2_intersectsbox, 6},
+    {"_libs2_libs2_cpp_s2_intersectsbox", (DL_FUNC) &_libs2_libs2_cpp_s2_intersectsbox, 7},
     {"_libs2_libs2_cpp_s2_intersection", (DL_FUNC) &_libs2_libs2_cpp_s2_intersection, 2},
     {"_libs2_libs2_cpp_s2_union", (DL_FUNC) &_libs2_libs2_cpp_s2_union, 2},
     {"_libs2_libs2_cpp_s2_difference", (DL_FUNC) &_libs2_libs2_cpp_s2_difference, 2},
