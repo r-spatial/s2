@@ -60,7 +60,7 @@ s2_intersection <- function(x, y, model = -1L) {
 
 #' @rdname s2_boundary
 #' @export
-s2_union <- function(x, y = NULL, model  -1L) {
+s2_union <- function(x, y = NULL, model = -1L) {
   if (is.null(y)) {
     y <- s2geography("POINT EMPTY")
   }
