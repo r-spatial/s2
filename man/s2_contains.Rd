@@ -13,23 +13,23 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y)
+s2_contains(x, y, model = -1)
 
 s2_coveredby(x, y)
 
 s2_covers(x, y)
 
-s2_disjoint(x, y)
+s2_disjoint(x, y, ...)
 
 s2_equals(x, y)
 
-s2_intersects(x, y)
+s2_intersects(x, y, ..., model = -1)
 
 s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000)
 
 s2_touches(x, y)
 
-s2_within(x, y)
+s2_within(x, y, ...)
 
 s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 }
@@ -37,6 +37,9 @@ s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
+
+\item{model}{integer or character; specify polygon and polyline model
+as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 

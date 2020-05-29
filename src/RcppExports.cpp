@@ -212,38 +212,41 @@ BEGIN_RCPP
 END_RCPP
 }
 // libs2_cpp_s2_union
-List libs2_cpp_s2_union(List geog1, List geog2);
-RcppExport SEXP _libs2_libs2_cpp_s2_union(SEXP geog1SEXP, SEXP geog2SEXP) {
+List libs2_cpp_s2_union(List geog1, List geog2, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_union(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_union(geog1, geog2));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_union(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
 // libs2_cpp_s2_difference
-List libs2_cpp_s2_difference(List geog1, List geog2);
-RcppExport SEXP _libs2_libs2_cpp_s2_difference(SEXP geog1SEXP, SEXP geog2SEXP) {
+List libs2_cpp_s2_difference(List geog1, List geog2, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_difference(geog1, geog2));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_difference(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
 // libs2_cpp_s2_symdifference
-List libs2_cpp_s2_symdifference(List geog1, List geog2);
-RcppExport SEXP _libs2_libs2_cpp_s2_symdifference(SEXP geog1SEXP, SEXP geog2SEXP) {
+List libs2_cpp_s2_symdifference(List geog1, List geog2, int model);
+RcppExport SEXP _libs2_libs2_cpp_s2_symdifference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_symdifference(geog1, geog2));
+    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_symdifference(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -729,9 +732,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_dwithin", (DL_FUNC) &_libs2_libs2_cpp_s2_dwithin, 3},
     {"_libs2_libs2_cpp_s2_intersectsbox", (DL_FUNC) &_libs2_libs2_cpp_s2_intersectsbox, 7},
     {"_libs2_libs2_cpp_s2_intersection", (DL_FUNC) &_libs2_libs2_cpp_s2_intersection, 3},
-    {"_libs2_libs2_cpp_s2_union", (DL_FUNC) &_libs2_libs2_cpp_s2_union, 2},
-    {"_libs2_libs2_cpp_s2_difference", (DL_FUNC) &_libs2_libs2_cpp_s2_difference, 2},
-    {"_libs2_libs2_cpp_s2_symdifference", (DL_FUNC) &_libs2_libs2_cpp_s2_symdifference, 2},
+    {"_libs2_libs2_cpp_s2_union", (DL_FUNC) &_libs2_libs2_cpp_s2_union, 3},
+    {"_libs2_libs2_cpp_s2_difference", (DL_FUNC) &_libs2_libs2_cpp_s2_difference, 3},
+    {"_libs2_libs2_cpp_s2_symdifference", (DL_FUNC) &_libs2_libs2_cpp_s2_symdifference, 3},
     {"_libs2_libs2_cpp_s2_union_agg", (DL_FUNC) &_libs2_libs2_cpp_s2_union_agg, 2},
     {"_libs2_libs2_cpp_s2_centroid_agg", (DL_FUNC) &_libs2_libs2_cpp_s2_centroid_agg, 2},
     {"_libs2_libs2_cpp_s2_closestpoint", (DL_FUNC) &_libs2_libs2_cpp_s2_closestpoint, 2},

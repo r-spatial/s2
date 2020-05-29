@@ -22,7 +22,8 @@
 using namespace Rcpp;
 
 template <S2BooleanOperation::OpType opType>
-Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2) {
+Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2, 
+      S2BooleanOperation::Options options) {
 
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
@@ -33,7 +34,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   layers.push_back(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
   layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
 
-  S2BooleanOperation op(opType, std::move(layers));
+  S2BooleanOperation op(opType, std::move(layers), options);
   FLAGS_s2debug = false;
 
   S2Error error;
@@ -81,7 +82,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
 template <S2BooleanOperation::OpType opType>
 class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
   SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-    return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex());
+    return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex(), options);
   }
   S2BooleanOperation::Options options = S2BooleanOperation::Options();
   public:
@@ -140,9 +141,10 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
     }
   }
 
+  S2BooleanOperation::Options options = S2BooleanOperation::Options();
   List output(1);
   MutableS2ShapeIndex emptyIndex;
-  output[0] = doBooleanOperation<S2BooleanOperation::OpType::UNION>(&index, &emptyIndex);
+  output[0] = doBooleanOperation<S2BooleanOperation::OpType::UNION>(&index, &emptyIndex, options);
   return output;
 }
 

@@ -5,6 +5,7 @@
 \alias{s2_centroid}
 \alias{s2_closestpoint}
 \alias{s2_difference}
+\alias{s2_symdifference}
 \alias{s2_intersection}
 \alias{s2_union}
 \alias{s2_snaptogrid}
@@ -18,11 +19,13 @@ s2_centroid(x)
 
 s2_closestpoint(x, y)
 
-s2_difference(x, y)
+s2_difference(x, y, model = -1L)
 
-s2_intersection(x, y)
+s2_symdifference(x, y, model = -1L)
 
-s2_union(x, y = NULL)
+s2_intersection(x, y, model = -1L)
+
+s2_union(x, y = NULL, model = -1L)
 
 s2_snaptogrid(x)
 
