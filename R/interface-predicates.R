@@ -23,9 +23,9 @@
 #' - [ST_WITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
 #' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
-s2_contains <- function(x, y) {
+s2_contains <- function(x, y, model = -1) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]])
+  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model)
 }
 
 #' @rdname s2_contains
@@ -53,7 +53,7 @@ s2_equals <- function(x, y) {
   libs2_cpp_s2_equals(recycled[[1]], recycled[[2]])
 }
 
-sort_polygon_model = function(x) {
+sort_out_model = function(x) {
   switch(x,
     OPEN = 0,
     SEMI_OPEN = 1,
@@ -62,12 +62,14 @@ sort_polygon_model = function(x) {
 }
 
 #' @rdname s2_contains
+#' @param model integer or character; specify polygon and polyline model 
+#' as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)
 #' @export
-s2_intersects <- function(x, y, ..., polygon_model = -1) {
-  if (!is.numeric(polygon_model))
-    polygon_model = sort_polygon_model(as.character(polygon_model))
+s2_intersects <- function(x, y, ..., model = -1) {
+  if (!is.numeric(model))
+    model = sort_out_model(as.character(model))
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_intersects(recycled[[1]], recycled[[2]], polygon_model)
+  libs2_cpp_s2_intersects(recycled[[1]], recycled[[2]], model)
 }
 
 #' @rdname s2_contains
@@ -90,8 +92,8 @@ s2_touches <- function(x, y) {
 
 #' @rdname s2_contains
 #' @export
-s2_within <- function(x, y) {
-  s2_contains(y, x)
+s2_within <- function(x, y, ...) {
+  s2_contains(y, x, ...)
 }
 
 #' @rdname s2_contains

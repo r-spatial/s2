@@ -54,8 +54,8 @@ libs2_cpp_s2_intersects <- function(geog1, geog2, model = -1L) {
     .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2, model)
 }
 
-libs2_cpp_s2_equals <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_equals`, geog1, geog2)
+libs2_cpp_s2_equals <- function(geog1, geog2, model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_equals`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_contains <- function(geog1, geog2, model = -1L) {
@@ -70,8 +70,8 @@ libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2, detail, mod
     .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail, model)
 }
 
-libs2_cpp_s2_intersection <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_intersection`, geog1, geog2)
+libs2_cpp_s2_intersection <- function(geog1, geog2, model = -1L) {
+    .Call(`_libs2_libs2_cpp_s2_intersection`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_union <- function(geog1, geog2) {
@@ -80,6 +80,10 @@ libs2_cpp_s2_union <- function(geog1, geog2) {
 
 libs2_cpp_s2_difference <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_difference`, geog1, geog2)
+}
+
+libs2_cpp_s2_symdifference <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_symdifference`, geog1, geog2)
 }
 
 libs2_cpp_s2_union_agg <- function(geog, naRm) {

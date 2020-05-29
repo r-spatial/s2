@@ -39,27 +39,34 @@ s2_closestpoint <- function(x, y) {
 
 #' @rdname s2_boundary
 #' @export
-s2_difference <- function(x, y) {
+s2_difference <- function(x, y, model = -1L) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(libs2_cpp_s2_difference(recycled[[1]], recycled[[2]]), "s2geography")
+  new_s2xptr(libs2_cpp_s2_difference(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_intersection <- function(x, y) {
+s2_symdifference <- function(x, y, model = -1L) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(libs2_cpp_s2_intersection(recycled[[1]], recycled[[2]]), "s2geography")
+  new_s2xptr(libs2_cpp_s2_symdifference(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_union <- function(x, y = NULL) {
+s2_intersection <- function(x, y, model = -1L) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  new_s2xptr(libs2_cpp_s2_intersection(recycled[[1]], recycled[[2]], model), "s2geography")
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_union <- function(x, y = NULL, model  -1L) {
   if (is.null(y)) {
     y <- s2geography("POINT EMPTY")
   }
 
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(libs2_cpp_s2_union(recycled[[1]], recycled[[2]]), "s2geography")
+  new_s2xptr(libs2_cpp_s2_union(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary

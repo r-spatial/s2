@@ -11,6 +11,7 @@
 #include "s2/s2builderutil_s2point_vector_layer.h"
 
 #include "libs2-snap.h"
+#include "libs2-model.h"
 #include "libs2-geography-operator.h"
 #include "libs2-point-geography.h"
 #include "libs2-polyline-geography.h"
@@ -82,23 +83,43 @@ class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
   SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
     return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex());
   }
+  S2BooleanOperation::Options options = S2BooleanOperation::Options();
+  public:
+  void set_model(int model) {
+    options.set_polygon_model(get_polygon_model(model));
+    options.set_polyline_model(get_polyline_model(model));
+  }
 };
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_intersection(List geog1, List geog2) {
+List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1) {
   LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION> op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_union(List geog1, List geog2) {
+List libs2_cpp_s2_union(List geog1, List geog2, int model = -1) {
   LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION> op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_difference(List geog1, List geog2) {
+List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1) {
   LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE> op;
+  if (model >= 0)
+    op.set_model(model);
+  return op.processVector(geog1, geog2);
+}
+
+// [[Rcpp::export]]
+List libs2_cpp_s2_symdifference(List geog1, List geog2, int model = -1) {
+  LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE> op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 

@@ -6,28 +6,11 @@
 #include "s2/s2polygon.h"
 #include "s2/s2testing.h"
 #include "s2/s2builderutil_snap_functions.h"
+#include "libs2-model.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
-S2BooleanOperation::PolygonModel get_polygon_model(int m) {
-  switch (m) {
-    case 0: return S2BooleanOperation::PolygonModel::OPEN;
-    case 1: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
-    case 2: return S2BooleanOperation::PolygonModel::CLOSED;
-	default: ;
-  }
-  stop("invalid value for polygon_model");
-}
-S2BooleanOperation::PolylineModel get_polyline_model(int m) {
-  switch (m) {
-    case 0: return S2BooleanOperation::PolylineModel::OPEN;
-    case 1: return S2BooleanOperation::PolylineModel::SEMI_OPEN;
-    case 2: return S2BooleanOperation::PolylineModel::CLOSED;
-	default: ;
-  }
-  stop("invalid value for model");
-}
 
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model = -1) {
@@ -55,16 +38,27 @@ LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model = -1) {
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_equals(List geog1, List geog2) {
+LogicalVector libs2_cpp_s2_equals(List geog1, List geog2, int model = -1) {
   // for s2_equals(), handling polygon_model wouldn't make sense, right?
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
 
     int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Equals(*feature1->ShapeIndex(), *feature2->ShapeIndex());
     }
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
+    }
   };
 
   LibS2Op op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
