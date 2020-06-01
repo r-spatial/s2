@@ -79,49 +79,72 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   }
 }
 
-template <S2BooleanOperation::OpType opType>
+template <S2BooleanOperation::OpType opType, int model>
 class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
   SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+	if (model >= 0) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
+	}
     return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex(), options);
-  }
-  S2BooleanOperation::Options options = S2BooleanOperation::Options();
-  public:
-  void set_model(int model) {
-    options.set_polygon_model(get_polygon_model(model));
-    options.set_polyline_model(get_polyline_model(model));
   }
 };
 
 // [[Rcpp::export]]
 List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1) {
-  LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION> op;
-  if (model >= 0)
-    op.set_model(model);
-  return op.processVector(geog1, geog2);
+  if (model == -1 || model == 1) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 1> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 0) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 0> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 2) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 2> op;
+    return op.processVector(geog1, geog2);
+  }
 }
 
 // [[Rcpp::export]]
 List libs2_cpp_s2_union(List geog1, List geog2, int model = -1) {
-  LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION> op;
-  if (model >= 0)
-    op.set_model(model);
-  return op.processVector(geog1, geog2);
+  if (model == -1 || model == 1) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 1> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 0) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 0> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 2) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 2> op;
+    return op.processVector(geog1, geog2);
+  }
 }
 
 // [[Rcpp::export]]
 List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1) {
-  LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE> op;
-  if (model >= 0)
-    op.set_model(model);
-  return op.processVector(geog1, geog2);
+  if (model == -1 || model == 1) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 1> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 0) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 0> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 2) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 2> op;
+    return op.processVector(geog1, geog2);
+  }
 }
 
 // [[Rcpp::export]]
 List libs2_cpp_s2_symdifference(List geog1, List geog2, int model = -1) {
-  LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE> op;
-  if (model >= 0)
-    op.set_model(model);
-  return op.processVector(geog1, geog2);
+  if (model == -1 || model == 1) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 1> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 0) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 0> op;
+    return op.processVector(geog1, geog2);
+  } else if (model == 2) {
+    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 2> op;
+    return op.processVector(geog1, geog2);
+  }
 }
 
 // [[Rcpp::export]]

@@ -9,16 +9,16 @@ S2BooleanOperation::PolygonModel get_polygon_model(int m) {
     case 0: return S2BooleanOperation::PolygonModel::OPEN;
     case 1: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
     case 2: return S2BooleanOperation::PolygonModel::CLOSED;
-	default: ;
+    default: ;
   }
-  stop("invalid value for polygon_model");
+  stop("invalid value for model");
 }
 S2BooleanOperation::PolylineModel get_polyline_model(int m) {
   switch (m) {
     case 0: return S2BooleanOperation::PolylineModel::OPEN;
     case 1: return S2BooleanOperation::PolylineModel::SEMI_OPEN;
     case 2: return S2BooleanOperation::PolylineModel::CLOSED;
-	default: ;
+    default: ;
   }
   stop("invalid value for model");
 }
