@@ -6,9 +6,11 @@
 #include "s2/s2point.h"
 #include "s2/s2error.h"
 #include "s2/s2boolean_operation.h"
+#include "s2/s2builder.h"
 #include "s2/s2builderutil_s2polygon_layer.h"
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
+#include "s2/s2builderutil_closed_set_normalizer.h"
 
 #include "libs2-snap.h"
 #include "libs2-model.h"
@@ -35,6 +37,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
 
   S2BooleanOperation op(opType, std::move(layers), options);
+
   FLAGS_s2debug = false;
 
   S2Error error;
@@ -45,8 +48,40 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   // count non-empty dimensions
   int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
 
+  if (nonEmptyDimensions == 0 && 
+       !S2BooleanOperation::IsEmpty(opType, *index1, *index2, options)) {
+	 MutableS2ShapeIndex index;
+     s2builderutil::IndexedS2PolylineVectorLayer::Options polyline_options;
+     polyline_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
+     polyline_options.set_polyline_type(S2Builder::Graph::PolylineType::WALK);
+     polyline_options.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
+	 s2builderutil::IndexedS2PolygonLayer::Options polygon_options;
+     s2builderutil::LayerVector layers(3);
+     layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(&index);
+     layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(
+         &index, polyline_options);
+     layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(&index, polygon_options);
+     S2BooleanOperation op2(opType, s2builderutil::NormalizeClosedSet(std::move(layers)), options);
+     if (!op2.Build(*index1, *index2, &error)) {
+       stop(error.text());
+	 }
+	 
+	 /*
+	 for (int i = 0; i < index.num_shape_ids(); i++) {
+       // std::unique_ptr<S2Shape> shp = index.Release(i);
+       S2Shape *shp = index.shape(i);
+	 }
+	 */
+	 Rcpp::Rcout << "number of messy features: " << index.num_shape_ids() << std::endl;
+	 Rcpp::XPtr<LibS2Geography> feature(new LibS2GeographyCollection());
+     feature->BuildShapeIndex(&index);
+	 return feature;
+   }
+
   // return empty output
   if (nonEmptyDimensions == 0) {
+    if (!S2BooleanOperation::IsEmpty(opType, *index1, *index2, options))
+      warning("result is not empty, but we found no vertices!");
     return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
   }
 
@@ -82,7 +117,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
 template <S2BooleanOperation::OpType opType, int model>
 class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
   SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    S2BooleanOperation::Options options;
 	if (model >= 0) {
       options.set_polygon_model(get_polygon_model(model));
       options.set_polyline_model(get_polyline_model(model));
@@ -164,7 +199,7 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
     }
   }
 
-  S2BooleanOperation::Options options = S2BooleanOperation::Options();
+  S2BooleanOperation::Options options;
   List output(1);
   MutableS2ShapeIndex emptyIndex;
   output[0] = doBooleanOperation<S2BooleanOperation::OpType::UNION>(&index, &emptyIndex, options);
