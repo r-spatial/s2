@@ -11,6 +11,7 @@
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
 #include "s2/s2builderutil_closed_set_normalizer.h"
+#include "s2/s2builderutil_snap_functions.h"
 
 #include "libs2-snap.h"
 #include "libs2-model.h"
@@ -174,6 +175,9 @@ class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
       options.set_polygon_model(get_polygon_model(model));
       options.set_polyline_model(get_polyline_model(model));
     }
+	if (snap_level > 0) {
+	  options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+	}
     return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex(), options);
   }
 };
