@@ -13,11 +13,11 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y, model = -1)
+s2_contains(x, y, model = 0)
 
-s2_coveredby(x, y)
+s2_coveredby(x, y, model = 2)
 
-s2_covers(x, y)
+s2_covers(x, y, model = 2)
 
 s2_disjoint(x, y, ...)
 

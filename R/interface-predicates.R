@@ -1,4 +1,3 @@
-
 #' S2 Geography Predicates
 #'
 #' @inheritParams s2_iscollection
@@ -23,21 +22,22 @@
 #' - [ST_WITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
 #' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
-s2_contains <- function(x, y, model = -1) {
+s2_contains <- function(x, y, model = 0) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model)
+  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model = 0)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_coveredby <- function(x, y) {
-  s2_covers(y, x)
+s2_coveredby <- function(x, y, model = 2) {
+  s2_covers(y, x, model = model)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_covers <- function(x, y) {
-  stop("Not implemented")
+s2_covers <- function(x, y, model = 2) {
+  recycled <- recycle_common(s2geography(x), s2geography(y))
+  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
 }
 
 #' @rdname s2_contains
