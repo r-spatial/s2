@@ -182,12 +182,10 @@ public:
     } else {
       polygon->InitNested(std::move(loops));
     }
-    Rcpp::Rcout << "here! " << snap_level << std::endl;
     if (snap_level > 0) {
-      // Rcpp::Rcout << "snapping to level " << snap_level << std::endl;
       polygon->InitToSnapped(polygon, snap_level);
     }
-    if (this->check && !polygon->IsValid()) {
+    if (this->check && !polygon->IsValid()) { // FIXME: do we have use cases for needing this?
 	  // try to solve this first by
 	  // 1. creating a polygon for every loop
 	  // 2. unioning these loops
