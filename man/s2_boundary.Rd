@@ -38,6 +38,8 @@ s2_centroid_agg(x, na.rm = FALSE)
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
+\item{model}{integer; specifies boundary model; see \link{s2_contains}}
+
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}
 }

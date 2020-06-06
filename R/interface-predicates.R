@@ -5,7 +5,23 @@
 #' @param distance A distance in meters on the surface of the earth
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
+#' @param model integer indicating the geometry model used; see Details.
+#' @param ... arguments passed on
 #'
+#' @details
+#' The geometry model indicates whether a geometry includes its boundaries.
+#' Boundaries of line geometries are its end points.
+#' OPEN geometries do not contain their boundary (model = 0); CLOSED
+#' geometries (model = 2) contain their boundary; HALF-CLOSED geometries 
+#' contain, like, half of their boundaries, such that when two polygons
+#' do not overlap or two lines do not cross, no point exist that belong to 
+#' more than one of the geometries. (This latter form, half-closed, is 
+#' not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on 
+#' which that is based). A value of -1 does not set the model, leaving the
+#' S2 default (HALF-CLOSED). The default values for \code{s2_contains} (0)
+#' and covers/coveredby (2) correspond to the SFA standard specification 
+#' of these operators.
+#' 
 #' @export
 #'
 #' @seealso
@@ -65,7 +81,7 @@ sort_out_model = function(x) {
 #' @param model integer or character; specify polygon and polyline model 
 #' as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)
 #' @export
-s2_intersects <- function(x, y, ..., model = -1) {
+s2_intersects <- function(x, y, model = -1) {
   if (!is.numeric(model))
     model = sort_out_model(as.character(model))
   recycled <- recycle_common(s2geography(x), s2geography(y))

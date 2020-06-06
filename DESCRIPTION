@@ -27,7 +27,9 @@ LinkingTo:
 Imports: 
     Rcpp
 Suggests: 
-    testthat
+    testthat,
+	knitr
+VignetteBuilder: knitr
 URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
 BugReports: https://github.com/r-spatial/libs2/issues
 Depends: 

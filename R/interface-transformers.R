@@ -4,6 +4,7 @@
 #' @inheritParams s2_iscollection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
+#' @param model integer; specifies boundary model; see \link{s2_contains}
 #'
 #' @export
 #'
