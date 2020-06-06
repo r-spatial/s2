@@ -28,142 +28,89 @@ template <S2BooleanOperation::OpType opType>
 Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2, 
       S2BooleanOperation::Options options) {
 
+  FLAGS_s2debug = false;
+
+  MutableS2ShapeIndex index;
+  s2builderutil::IndexedS2PolylineVectorLayer::Options polyline_options;
+  polyline_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
+  polyline_options.set_polyline_type(S2Builder::Graph::PolylineType::WALK);
+  polyline_options.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
+  s2builderutil::IndexedS2PolygonLayer::Options polygon_options;
+  s2builderutil::LayerVector layers(3);
+  layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(&index);
+  layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(
+     &index, polyline_options);
+  layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(&index, polygon_options);
+
+  S2BooleanOperation op2(opType, s2builderutil::NormalizeClosedSet(std::move(layers)), options);
+
+  S2Error error;
+  if (!op2.Build(*index1, *index2, &error)) {
+    stop(error.text());
+  }
+
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
   std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
-  std::vector<std::unique_ptr<S2Builder::Layer>> layers;
-  layers.push_back(absl::make_unique<s2builderutil::S2PointVectorLayer>(&points));
-  layers.push_back(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
-  layers.push_back(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
-
-  S2BooleanOperation op(opType, std::move(layers), options);
-
-  FLAGS_s2debug = false;
-
-  S2Error error;
-  if (!op.Build(*index1, *index2, &error)) {
-    stop(error.text());
+  std::vector<std::unique_ptr<LibS2Geography>> features;
+  std::vector<std::unique_ptr<S2Shape>> shapes(std::move(index.ReleaseAll()));
+  int dims = 0; // bitfield with dimension flags in lower 3 bits
+  for (int i = 0; i < shapes.size(); i++) {
+    std::unique_ptr<S2Shape> shape = std::move(shapes[i]);
+    switch (shape->dimension()) {
+      case 0: {
+        dims = dims | 1;
+        std::unique_ptr<S2PointVectorShape> p(static_cast<S2PointVectorShape*>(shape.release()));
+        for (int j = 0; j < p->num_points(); j++) 
+          points.push_back(p->point(j));
+        break;
+      }
+      case 1: {
+        dims = dims | 2;
+        std::unique_ptr<S2Polyline::Shape> polyline_shape(static_cast<S2Polyline::Shape*>(shape.release()));
+        S2Polyline *clone = polyline_shape->polyline()->Clone();
+        std::unique_ptr<S2Polyline> polyline(clone);
+        polylines.push_back(std::move(polyline));
+        break;
+      }
+      case 2: {
+        dims = dims | 4;
+        std::unique_ptr<S2Polygon::Shape> polygon_shape(static_cast<S2Polygon::Shape*>(shape.release()));
+        S2Polygon *clone = polygon_shape->polygon()->Clone();
+        std::unique_ptr<S2Polygon> polyg(clone);
+        polygon = std::move(polyg);
+        break;
+      }
+    }
   }
 
-  // count non-empty dimensions
-  int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
-
-  if (nonEmptyDimensions == 0 && 
-        !S2BooleanOperation::IsEmpty(opType, *index1, *index2, options)) {
-    MutableS2ShapeIndex index;
-    s2builderutil::IndexedS2PolylineVectorLayer::Options polyline_options;
-    polyline_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
-    polyline_options.set_polyline_type(S2Builder::Graph::PolylineType::WALK);
-    polyline_options.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
-    s2builderutil::IndexedS2PolygonLayer::Options polygon_options;
-    s2builderutil::LayerVector layers(3);
-    layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(&index);
-    layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(
-       &index, polyline_options);
-    layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(&index, polygon_options);
-    S2BooleanOperation op2(opType, s2builderutil::NormalizeClosedSet(std::move(layers)), options);
-    if (!op2.Build(*index1, *index2, &error)) {
-      stop(error.text());
+  int ndims = ((dims & 1) != 0) + ((dims & 2) != 0) + ((dims & 4) != 0);
+  switch (ndims) {
+    case 0: // EMPTY
+      return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
+    case 1: { // SINGLE DIM
+      if (!polygon->is_empty()) {
+        return Rcpp::XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
+      } else if (polylines.size() > 0) {
+        return Rcpp::XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
+      } else {
+        return Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
+      }
+      break;
     }
-
-    std::vector<S2Point> pts;
-    std::vector<std::unique_ptr<S2Polyline>> pli;
-    std::unique_ptr<S2Polygon> pol = absl::make_unique<S2Polygon>();
-
-    std::vector<std::unique_ptr<LibS2Geography>> features;
-	std::vector<std::unique_ptr<S2Shape>> shps(std::move(index.ReleaseAll()));
-    for (int i = 0; i < shps.size(); i++) {
-      // std::unique_ptr<S2Shape> shp = index.Release(i);
-      std::unique_ptr<S2Shape> shp = std::move(shps[i]);
-	  // Rcpp::Rcout << " dim: " << shp->dimension();
-	  switch (shp->dimension()) {
-	    case 0: {
-		  std::unique_ptr<S2PointVectorShape> p(static_cast<S2PointVectorShape*>(shp.release()));
-		  for (int j = 0; j < p->num_points(); j++) 
-		     pts.push_back(p->point(j));
-		  break;
-		  }
-	    case 1: {
-		  std::unique_ptr<S2Polyline::Shape> plnshp(static_cast<S2Polyline::Shape*>(shp.release()));
-		  S2Polyline *clone = plnshp->polyline()->Clone();
-		  std::unique_ptr<S2Polyline> pln(clone);
-		  pli.push_back(std::move(pln));
-		  break;
-		  }
-	    case 2: {
-		  std::unique_ptr<S2Polygon::Shape> plgshp(static_cast<S2Polygon::Shape*>(shp.release()));
-		  S2Polygon *clone = plgshp->polygon()->Clone();
-	      std::unique_ptr<S2Polygon> plg(clone);
-		  pol = std::move(plg);
-          if (!pol->is_empty())
-            features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(pol)));
-		  break;
-		  }
-	  }
-    }
-
-	int ndims = (pts.size() > 0) + (pli.size() > 0) + !pol->is_empty();
-	switch (ndims) {
-	  case 0: // EMPTY
-        return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
-	  case 1: { // SINGLE DIM
-        if (!pol->is_empty()) {
-          return Rcpp::XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(pol)));
-        } else if (pli.size() > 0) {
-          return Rcpp::XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(pli)));
-        } else {
-          return Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(std::move(pts)));
-        }
-	    }
-		break;
-	  default: // GEOMETRYCOLLECTION
-        if (pts.size() > 0) {
-          features.push_back(absl::make_unique<LibS2PointGeography>(std::move(pts)));
-        }
-        if (pli.size() > 0) {
-          features.push_back(absl::make_unique<LibS2PolylineGeography>(std::move(pli)));
-        }
-        if (!pol->is_empty()) {
-          features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(pol)));
-        }
-        return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection(std::move(features)));
-	}
-  }
-
-  // return empty output
-  if (nonEmptyDimensions == 0) {
-    if (!S2BooleanOperation::IsEmpty(opType, *index1, *index2, options))
-      warning("result is not empty, but we found no vertices!");
-    return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
-  }
-
-  // return mixed output
-  if (nonEmptyDimensions > 1) {
-    std::vector<std::unique_ptr<LibS2Geography>> features;
-
-    if (points.size() > 0) {
-      features.push_back(absl::make_unique<LibS2PointGeography>(std::move(points)));
-    }
-
-    if (polylines.size() > 0) {
-      features.push_back(absl::make_unique<LibS2PolylineGeography>(std::move(polylines)));
-    }
-
-    if (!polygon->is_empty()) {
-      features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(polygon)));
-    }
-
-    return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection(std::move(features)));
-  }
-
-  // return single dimension output
-  if (!polygon->is_empty()) {
-    return Rcpp::XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
-  } else if (polylines.size() > 0) {
-    return Rcpp::XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
-  } else {
-    return Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
+    default: // GEOMETRYCOLLECTION
+      if (points.size() > 0) {
+        features.push_back(absl::make_unique<LibS2PointGeography>(std::move(points)));
+      }
+      if (polylines.size() > 0) {
+        features.push_back(absl::make_unique<LibS2PolylineGeography>(std::move(polylines)));
+      }
+      if (!polygon->is_empty()) {
+        features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(polygon)));
+      }
+      return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection(std::move(features)));
+    break; // never reached;
   }
 }
 
@@ -183,7 +130,7 @@ class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
 };
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1) {
+List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1L) {
   if (model == -1 || model == 1) {
     LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 1> op;
     return op.processVector(geog1, geog2);
@@ -197,7 +144,7 @@ List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1) {
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_union(List geog1, List geog2, int model = -1) {
+List libs2_cpp_s2_union(List geog1, List geog2, int model = -1L) {
   if (model == -1 || model == 1) {
     LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 1> op;
     return op.processVector(geog1, geog2);
@@ -211,7 +158,7 @@ List libs2_cpp_s2_union(List geog1, List geog2, int model = -1) {
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1) {
+List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1L) {
   if (model == -1 || model == 1) {
     LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 1> op;
     return op.processVector(geog1, geog2);
@@ -225,7 +172,7 @@ List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1) {
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_symdifference(List geog1, List geog2, int model = -1) {
+List libs2_cpp_s2_symdifference(List geog1, List geog2, int model = -1L) {
   if (model == -1 || model == 1) {
     LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 1> op;
     return op.processVector(geog1, geog2);
