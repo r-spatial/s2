@@ -35,11 +35,12 @@ Will eventually default to the platform endian.}
 \item{lat}{Vectors of latitude and longitude values in degrees.}
 
 \item{oriented}{If \code{TRUE}, rings are guaranteed to be oriented (e.g. read
-by \code{\link[sf:read_sf]{sf::read_sf()}} using \code{check_ring_dir = TRUE}, meaning CCW exterior rings
+by \code{sf::read_sf()} using \code{check_ring_dir = TRUE}, meaning CCW exterior rings
 and CW holes. If \code{FALSE}, rings are normalized and holes are deduced from
-degree of nesting.}
+degree of nesting. (Note that package sf checks ring directions in R2, not S2,
+and may be useless when rings cross the antimeridian or cover a pole.)}
 
-\item{check}{Pass \code{FALSE} to skip ring and polygon validation.}
+\item{check}{logical; pass \code{FALSE} to skip ring and polygon validity checks.}
 
 \item{omit_poles}{numeric; if given a small positive value, coordinates with latitude
 degrees that differ in absolute sense less than this amount from 90 will be omitted.}
