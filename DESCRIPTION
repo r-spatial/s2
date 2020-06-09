@@ -33,4 +33,4 @@ VignetteBuilder: knitr
 URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
 BugReports: https://github.com/r-spatial/libs2/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.0.0)
