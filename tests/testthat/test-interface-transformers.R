@@ -46,7 +46,8 @@ test_that("s2_difference() works", {
 
   expect_true(s2_isempty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
 
-  skip("this fails on Windows (probably needs some degree of snap rounding)")
+  #skip("this fails on Windows (probably needs some degree of snap rounding)")
+  #skip_on_os("windows")
   expect_near(
     s2_area(
       s2_difference(
@@ -82,10 +83,12 @@ test_that("s2_intersection() works", {
     "LINESTRING (0 5, 10 5)"
   )
 
-  skip("Don't know why this intersection fails (works on bigquery)")
-  expect_wkt_equal(
-    s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)"),
-    "POINT (0 0)"
+  #skip("Don't know why this intersection fails (works on bigquery)") -> returns POINT (0 -0)
+  expect_equal(
+    s2_distance(
+	  s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)"),
+      "POINT (0 0)"
+	), 0.0
   )
 })
 
@@ -114,15 +117,14 @@ test_that("s2_union(x, y) works", {
     "LINESTRING (-45 0, 0 0, 0 10)"
   )
 
-  skip("this fails on Windows (probably needs some degree of snap rounding)")
-  expect_near(
-    s2_area(
-      s2_union(
+  #skip("this fails on Windows (probably needs some degree of snap rounding)")
+  #skip_on_os("windows")
+  u = s2_union(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
-      ),
-      radius = 1
-    ),
+      )
+  expect_near(
+    s2_area(u, radius = 1),
     s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) +
       s2_area("POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))", radius = 1) -
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
