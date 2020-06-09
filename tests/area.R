@@ -1,5 +1,5 @@
 library(libs2)
-s2_set_snaplevel(29)
+s2_set_snaplevel(30) # for windows i386
 u = s2_union(
    "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
    "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"

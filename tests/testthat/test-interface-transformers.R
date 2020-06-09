@@ -1,4 +1,3 @@
-
 test_that("s2_centroid() works", {
   expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
@@ -52,7 +51,8 @@ test_that("s2_difference() works", {
     s2_area(
       s2_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+		snap_level = 30
       ),
       radius = 1
     ),
@@ -69,7 +69,8 @@ test_that("s2_intersection() works", {
   expect_wkt_equal(
     s2_intersection(
       "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-      "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+      "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+	  snap_level = 30
     ),
     "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
     precision = 2
@@ -121,7 +122,8 @@ test_that("s2_union(x, y) works", {
   #skip_on_os("windows")
   u = s2_union(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+		snap_level = 30
       )
   expect_near(
     s2_area(u, radius = 1),

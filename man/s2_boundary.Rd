@@ -19,13 +19,13 @@ s2_centroid(x)
 
 s2_closestpoint(x, y)
 
-s2_difference(x, y, model = -1L)
+s2_difference(x, y, model = -1L, snap_level = -1L)
 
-s2_symdifference(x, y, model = -1L)
+s2_symdifference(x, y, model = -1L, snap_level = -1L)
 
-s2_intersection(x, y, model = -1L)
+s2_intersection(x, y, model = -1L, snap_level = -1L)
 
-s2_union(x, y = NULL, model = -1L)
+s2_union(x, y = NULL, model = -1L, snap_level = -1L)
 
 s2_snaptogrid(x)
 
@@ -39,6 +39,8 @@ s2_centroid_agg(x, na.rm = FALSE)
 \item{y}{An object that can be interpreted as an S2 type.}
 
 \item{model}{integer; specifies boundary model; see \link{s2_contains}}
+
+\item{snap_level}{integer; if positive, specifies the snap level; see \link{s2_set_snaplevel}}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}
