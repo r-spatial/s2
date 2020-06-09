@@ -47,15 +47,13 @@ test_that("s2_difference() works", {
 
   #skip("this fails on Windows (probably needs some degree of snap rounding)")
   #skip_on_os("windows")
-  expect_near(
-    s2_area(
-      s2_difference(
+  sn = s2_set_snaplevel(30)
+  df = s2_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-		snap_level = 30
-      ),
-      radius = 1
-    ),
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
     s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
@@ -120,11 +118,13 @@ test_that("s2_union(x, y) works", {
 
   #skip("this fails on Windows (probably needs some degree of snap rounding)")
   #skip_on_os("windows")
+  sn = s2_set_snaplevel(30)
   u = s2_union(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 		snap_level = 30
       )
+  s2_set_snaplevel(sn)
   expect_near(
     s2_area(u, radius = 1),
     s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) +
