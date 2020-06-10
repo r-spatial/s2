@@ -122,9 +122,9 @@ class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
       options.set_polygon_model(get_polygon_model(model));
       options.set_polyline_model(get_polyline_model(model));
     }
-	if (snap_level > 0) {
-	  options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
-	}
+    if (snap_level > 0) { // taking the global variable!!
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    }
     return doBooleanOperation<opType>(feature1->ShapeIndex(), feature2->ShapeIndex(), options);
   }
 };
@@ -252,6 +252,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+	  /*
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 
@@ -286,6 +287,39 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       } else {
         stop("Don't know how to find the closest point given two non-point edges");
       }
+	  */
+	  // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
+	  
+    S2ClosestEdgeQuery query1(feature1->ShapeIndex());
+    S2ClosestEdgeQuery::ShapeIndexTarget target2(feature2->ShapeIndex());
+    auto result1 = query1.FindClosestEdge(&target2);
+    if (result1.edge_id() == -1) {
+      return XPtr<LibS2Geography>(new LibS2PointGeography());
+    }
+    // Get the edge from index1 (edge1) that is closest to index2.
+    S2Shape::Edge edge1 = query1.GetEdge(result1);
+
+    // Now find the edge from index2 (edge2) that is closest to edge1.
+    S2ClosestEdgeQuery query2(feature2->ShapeIndex());
+    S2ClosestEdgeQuery::EdgeTarget target1(edge1.v0, edge1.v1);
+    auto result2 = query2.FindClosestEdge(&target1);
+    S2Shape::Edge edge2 = query2.GetEdge(result2);
+
+    // Find the closest point pair on edge1 and edge2.
+    auto closest = S2::GetEdgePairClosestPoints(edge1.v0, edge1.v1,
+                                                edge2.v0, edge2.v1);
+    // meters = GeoidDistance(closest.first, closest.second);
+    // return LINESTRING with these two points:
+
+    std::vector<S2Point> pts(2);
+    pts[0] = closest.first;
+    pts[1] = closest.second;
+	S2Polyline *pl = new S2Polyline;
+    std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
+	polyline->Init(pts);
+    std::vector<std::unique_ptr<S2Polyline>> polylines(1);
+	polylines[0] = std::move(polyline);
+    return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
     }
   };
 

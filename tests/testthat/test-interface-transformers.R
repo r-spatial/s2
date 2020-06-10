@@ -33,10 +33,12 @@ test_that("s2_boundary() works", {
 })
 
 test_that("s2_closestpoint() works", {
-  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  #expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
   expect_true(s2_isempty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
 
-  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
+  #expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
 })
 
 test_that("s2_difference() works", {
