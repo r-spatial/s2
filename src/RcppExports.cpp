@@ -5,18 +5,6 @@
 
 using namespace Rcpp;
 
-// s2BuildPolygonsLayer
-List s2BuildPolygonsLayer(List ptrs, SEXP b_ptr);
-RcppExport SEXP _libs2_s2BuildPolygonsLayer(SEXP ptrsSEXP, SEXP b_ptrSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type b_ptr(b_ptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2BuildPolygonsLayer(ptrs, b_ptr));
-    return rcpp_result_gen;
-END_RCPP
-}
 // libs2_cpp_s2_iscollection
 LogicalVector libs2_cpp_s2_iscollection(List geog);
 RcppExport SEXP _libs2_libs2_cpp_s2_iscollection(SEXP geogSEXP) {
@@ -727,7 +715,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_libs2_s2BuildPolygonsLayer", (DL_FUNC) &_libs2_s2BuildPolygonsLayer, 2},
     {"_libs2_libs2_cpp_s2_iscollection", (DL_FUNC) &_libs2_libs2_cpp_s2_iscollection, 1},
     {"_libs2_libs2_cpp_s2_dimension", (DL_FUNC) &_libs2_libs2_cpp_s2_dimension, 1},
     {"_libs2_libs2_cpp_s2_numpoints", (DL_FUNC) &_libs2_libs2_cpp_s2_numpoints, 1},

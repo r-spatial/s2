@@ -72,6 +72,40 @@ test_that("s2_difference() works", {
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
   )
+  df0 = s2_difference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_difference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+})
+
+test_that("s2_symdifference() works", {
+  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
+  expect_true(s2_isempty(s2_symdifference("POINT (30 10)", "POINT (30 10)")))
+  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT (30 20)"), "MULTIPOINT ((30 20), (30 10))")
+
+  expect_true(s2_isempty(s2_symdifference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+
+  sn = s2_set_snaplevel(30)
+  df = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
+      2 * s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.0042
+  )
+  df0 = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
 })
 
 test_that("s2_intersection() works", {
@@ -87,6 +121,12 @@ test_that("s2_intersection() works", {
     "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
     precision = 2
   )
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = -1)))
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 0)))
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 1)))
+  expect_wkt_equal(
+    s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 2),
+	"POINT(0 0)")
 
   expect_wkt_equal(
     s2_intersection(
@@ -103,6 +143,13 @@ test_that("s2_intersection() works", {
       "POINT (0 0)"
 	), 0.0
   )
+  df0 = s2_intersection(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_intersection(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
 })
 
 test_that("s2_union(x) works", {
@@ -146,6 +193,13 @@ test_that("s2_union(x, y) works", {
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
   )
+  df0 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
 })
 
 test_that("s2_union_agg() works", {

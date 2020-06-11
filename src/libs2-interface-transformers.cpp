@@ -46,7 +46,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
 
   S2Error error;
   if (!op2.Build(*index1, *index2, &error)) {
-    stop(error.text());
+    stop(error.text()); // #nocov
   }
 
   std::vector<S2Point> points;
