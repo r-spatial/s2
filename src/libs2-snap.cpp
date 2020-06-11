@@ -12,7 +12,7 @@ int snap_level = -1; // global variable
 //' @export
 // [[Rcpp::export]]
 IntegerVector s2_set_snaplevel(int snap = -1) {
-	if (snap > 30)
+	if (snap > 30 || snap < -1)
 		stop("maximum snap level is 30, set to -1 to prevent snapping");
 	int old_snap_level = snap_level;
 	snap_level = snap;
