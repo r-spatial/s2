@@ -13,23 +13,23 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y)
+s2_contains(x, y, model = 0)
 
-s2_coveredby(x, y)
+s2_coveredby(x, y, model = 2)
 
-s2_covers(x, y)
+s2_covers(x, y, model = 2)
 
-s2_disjoint(x, y)
+s2_disjoint(x, y, ...)
 
-s2_equals(x, y)
+s2_equals(x, y, model = -1)
 
-s2_intersects(x, y)
+s2_intersects(x, y, model = -1)
 
-s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000)
+s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1)
 
 s2_touches(x, y)
 
-s2_within(x, y)
+s2_within(x, y, ...)
 
 s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 }
@@ -37,6 +37,11 @@ s2_dwithin(x, y, distance, radius = s2earth_radius_meters())
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
+
+\item{model}{integer or character; specify polygon and polyline model
+as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)}
+
+\item{...}{arguments passed on}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 
@@ -50,6 +55,20 @@ the earth as defined by \code{\link[=s2earth_radius_meters]{s2earth_radius_meter
 }
 \description{
 S2 Geography Predicates
+}
+\details{
+The geometry model indicates whether a geometry includes its boundaries.
+Boundaries of line geometries are its end points.
+OPEN geometries do not contain their boundary (model = 0); CLOSED
+geometries (model = 2) contain their boundary; HALF-CLOSED geometries
+contain, like, half of their boundaries, such that when two polygons
+do not overlap or two lines do not cross, no point exist that belong to
+more than one of the geometries. (This latter form, half-closed, is
+not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+which that is based). A value of -1 does not set the model, leaving the
+S2 default (HALF-CLOSED). The default values for \code{s2_contains} (0)
+and covers/coveredby (2) correspond to the SFA standard specification
+of these operators.
 }
 \seealso{
 BigQuery's geography function reference:

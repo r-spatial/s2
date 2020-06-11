@@ -1,0 +1,31 @@
+---
+title: "Introduction to libs2"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Introduction to libs2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r}
+library(libs2)
+```
+
+* S2LatLng points are always latitude-longitude
+* internally represented as S2Points, 3-D unit vectors (geocentric)
+* S2polyline; when is a polyline invalid
+* S2Loop: rings get reordered (different starting point)
+* rings are not closed
+* polygons are properly nested rings (unlike e.g. MULTIPOLYGON)
+* in addition to empty polygon: full polygon
+* default polygon building: not oriented, assuming their area is less than `2*pi`

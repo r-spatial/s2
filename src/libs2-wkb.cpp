@@ -8,6 +8,8 @@
 #include "wk/geometry-handler.h"
 #include "wk/geometry-debug-handler.h"
 
+#include "libs2-snap.h"
+
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -180,7 +182,10 @@ public:
     } else {
       polygon->InitNested(std::move(loops));
     }
-    if (this->check && !polygon->IsValid()) {
+    if (snap_level > 0) {
+      polygon->InitToSnapped(polygon, snap_level);
+    }
+    if (this->check && !polygon->IsValid()) { // FIXME: do we have use cases for needing this?
 	  // try to solve this first by
 	  // 1. creating a polygon for every loop
 	  // 2. unioning these loops

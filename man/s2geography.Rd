@@ -4,6 +4,7 @@
 \alias{s2geography}
 \alias{s2geography.s2geography}
 \alias{s2geography.wk_wkb}
+\alias{s2geography.logical}
 \alias{s2geography.character}
 \title{Create an S2 Geography Vector}
 \usage{
@@ -12,6 +13,8 @@ s2geography(x, ...)
 \method{s2geography}{s2geography}(x, ...)
 
 \method{s2geography}{wk_wkb}(x, ..., oriented = FALSE)
+
+\method{s2geography}{logical}(x, ...)
 
 \method{s2geography}{character}(x, ..., oriented = FALSE)
 }

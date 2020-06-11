@@ -160,6 +160,7 @@ public:
 
     std::unique_ptr<LibS2Geography> build() {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+      polygon->set_s2debug_override(S2Debug::DISABLE);
       if (this->loops.size() > 0 && oriented) {
         polygon->InitOriented(std::move(this->loops));
       } else if (this->loops.size() > 0) {
@@ -171,6 +172,11 @@ public:
         S2Error error;
         polygon->FindValidationError(&error);
         Rcpp::stop(error.text());
+      }
+
+	  // snap if needed:
+      if (snap_level > 0) {
+        polygon->InitToSnapped(polygon.get(), snap_level);
       }
 
       return absl::make_unique<LibS2PolygonGeography>(std::move(polygon));

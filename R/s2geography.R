@@ -28,6 +28,14 @@ s2geography.wk_wkb <- function(x, ..., oriented = FALSE) {
 
 #' @rdname s2geography
 #' @export
+s2geography.logical <- function(x, ...) {
+  stopifnot(isTRUE(x))
+  new_s2xptr(s2geography_full(TRUE), "s2geography")
+}
+
+
+#' @rdname s2geography
+#' @export
 s2geography.character <- function(x, ..., oriented = FALSE) {
   new_s2xptr(s2geography_from_wkt(x, oriented = oriented), "s2geography")
 }

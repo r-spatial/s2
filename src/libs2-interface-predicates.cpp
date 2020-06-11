@@ -5,53 +5,91 @@
 #include "s2/s2latlng_rect.h"
 #include "s2/s2polygon.h"
 #include "s2/s2testing.h"
+#include "s2/s2builderutil_snap_functions.h"
+#include "libs2-model.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2) {
+LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model = -1) {
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
 
     int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex());
+      return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex(),
+        options);
+    };
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
     }
   };
 
   LibS2Op op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_equals(List geog1, List geog2) {
+LogicalVector libs2_cpp_s2_equals(List geog1, List geog2, int model = -1) {
+  // for s2_equals(), handling polygon_model wouldn't make sense, right?
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
 
     int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Equals(*feature1->ShapeIndex(), *feature2->ShapeIndex());
     }
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
+    }
   };
 
   LibS2Op op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_contains(List geog1, List geog2) {
+LogicalVector libs2_cpp_s2_contains(List geog1, List geog2, int model = -1) {
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
 
     int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Contains(*feature1->ShapeIndex(), *feature2->ShapeIndex());
     }
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
+    }
   };
 
   LibS2Op op;
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
   if (distance.size() != geog1.size())  {
-    stop("Incompatible lengths");
+    stop("Incompatible lengths"); // #nocov
   }
 
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
@@ -74,7 +112,8 @@ LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distanc
 LogicalVector libs2_cpp_s2_intersectsbox(List geog,
                                          NumericVector lng1, NumericVector lat1,
                                          NumericVector lng2, NumericVector lat2,
-                                         IntegerVector detail) {
+                                         IntegerVector detail,
+										 int model = -1) {
 
   class LibS2Op: public LibS2UnaryGeographyOperator<LogicalVector, int> {
   public:
@@ -143,8 +182,19 @@ LogicalVector libs2_cpp_s2_intersectsbox(List geog,
       // test intersection
       return S2BooleanOperation::Intersects(polygon.index(), *feature->ShapeIndex());
     }
+    S2BooleanOperation::Options options = S2BooleanOperation::Options();
+    public:
+    void set_snap_level(int snap_level) {
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
+    };
+    void set_model(int model) {
+      options.set_polygon_model(get_polygon_model(model));
+      options.set_polyline_model(get_polyline_model(model));
+    }
   };
 
   LibS2Op op(lng1, lat1, lng2, lat2, detail);
+  if (model >= 0)
+    op.set_model(model);
   return op.processVector(geog);
 }

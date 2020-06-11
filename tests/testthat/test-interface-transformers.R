@@ -1,4 +1,3 @@
-
 test_that("s2_centroid() works", {
   expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
@@ -34,10 +33,24 @@ test_that("s2_boundary() works", {
 })
 
 test_that("s2_closestpoint() works", {
-  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  #expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
   expect_true(s2_isempty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
 
-  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
+  #expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
+  expect_wkt_equal(s2_closestpoint("LINESTRING(0 0,1 1)", "LINESTRING(1 0,0 1)"), "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
+  	precision = 6)
+})
+
+test_that("s2_nearestfeature() works", {
+  x = c("GEOMETRYCOLLECTION(POINT(-10 -10),POINT(0 0))")
+  y = c("POINT (30 10)", "GEOMETRYCOLLECTION(POINT(1 1),LINESTRING(0.1 0,1 1),POINT(1 1),POINT(-10 -10))")
+  e = "POINT EMPTY"
+  expect_identical(s2_nearestfeature(x, y), c(1L, 4L))
+  expect_identical(s2_nearestfeature(y, x), c(2L, 1L))
+  expect_identical(s2_nearestfeature(e, x), NA_integer_)
+  expect_identical(s2_nearestfeature(y, e), c(NA_integer_, NA_integer_))
 })
 
 test_that("s2_difference() works", {
@@ -46,18 +59,52 @@ test_that("s2_difference() works", {
 
   expect_true(s2_isempty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
 
-  skip("this fails on Windows (probably needs some degree of snap rounding)")
-  expect_near(
-    s2_area(
-      s2_difference(
+  #skip("this fails on Windows (probably needs some degree of snap rounding)")
+  #skip_on_os("windows")
+  sn = s2_set_snaplevel(30)
+  df = s2_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
-      ),
-      radius = 1
-    ),
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
+  df0 = s2_difference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_difference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
     s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
+  )
+})
+
+test_that("s2_symdifference() works", {
+  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
+  expect_true(s2_isempty(s2_symdifference("POINT (30 10)", "POINT (30 10)")))
+  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT (30 20)"), "MULTIPOINT ((30 20), (30 10))")
+
+  expect_true(s2_isempty(s2_symdifference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+
+  sn = s2_set_snaplevel(30)
+  df = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
+  df0 = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_symdifference(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
+      2 * s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.0042
   )
 })
 
@@ -68,11 +115,18 @@ test_that("s2_intersection() works", {
   expect_wkt_equal(
     s2_intersection(
       "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-      "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+      "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+	  snap_level = 30
     ),
     "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
     precision = 2
   )
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = -1)))
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 0)))
+  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 1)))
+  expect_wkt_equal(
+    s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 2),
+	"POINT(0 0)")
 
   expect_wkt_equal(
     s2_intersection(
@@ -82,11 +136,20 @@ test_that("s2_intersection() works", {
     "LINESTRING (0 5, 10 5)"
   )
 
-  skip("Don't know why this intersection fails (works on bigquery)")
-  expect_wkt_equal(
-    s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)"),
-    "POINT (0 0)"
+  #skip("Don't know why this intersection fails (works on bigquery)") -> returns POINT (0 -0)
+  expect_equal(
+    s2_distance(
+	  s2_intersection("LINESTRING (-45 0, 45 0)", "LINESTRING (0 -10, 0 10)"),
+      "POINT (0 0)"
+	), 0.0
   )
+  df0 = s2_intersection(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_intersection(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
 })
 
 test_that("s2_union(x) works", {
@@ -114,15 +177,24 @@ test_that("s2_union(x, y) works", {
     "LINESTRING (-45 0, 0 0, 0 10)"
   )
 
-  skip("this fails on Windows (probably needs some degree of snap rounding)")
-  expect_near(
-    s2_area(
-      s2_union(
+  #skip("this fails on Windows (probably needs some degree of snap rounding)")
+  #skip_on_os("windows")
+  sn = s2_set_snaplevel(30)
+  u = s2_union(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
-      ),
-      radius = 1
-    ),
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+		snap_level = 30
+      )
+  df0 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(u, radius = 1),
     s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) +
       s2_area("POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))", radius = 1) -
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),

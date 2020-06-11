@@ -4,10 +4,11 @@
 #' @inheritParams s2latlng
 #' @param x An object from which an s2polygon can be created
 #' @param oriented If `TRUE`, rings are guaranteed to be oriented (e.g. read
-#'   by [sf::read_sf()] using `check_ring_dir = TRUE`, meaning CCW exterior rings
+#'   by `sf::read_sf()` using `check_ring_dir = TRUE`, meaning CCW exterior rings
 #'   and CW holes. If `FALSE`, rings are normalized and holes are deduced from
-#'   degree of nesting.
-#' @param check Pass `FALSE` to skip ring and polygon validation.
+#'   degree of nesting. (Note that package sf checks ring directions in R2, not S2, 
+#'   and may be useless when rings cross the antimeridian or cover a pole.)
+#' @param check logical; pass `FALSE` to skip ring and polygon validity checks.
 #'
 #' @return A [new_s2xptr()] with class s2polygon
 #' @export
