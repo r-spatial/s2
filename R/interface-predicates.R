@@ -40,7 +40,7 @@
 #'
 s2_contains <- function(x, y, model = 0) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model = 0)
+  libs2_cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
 }
 
 #' @rdname s2_contains

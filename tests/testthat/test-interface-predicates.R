@@ -10,6 +10,31 @@ test_that("s2_contains() works", {
   expect_false(s2_contains("LINESTRING (0 0, 1 1)", "POINT (-1 -1)"))
 })
 
+test_that("s2_covers() and s2_coveredby() work", {
+  expect_true(s2_covers("POINT (0 0)", "POINT (0 0)"))
+  expect_false(s2_covers("POINT (0 0)", "POINT (1 1)"))
+  expect_true(s2_covers("POINT (0 0)", "POINT EMPTY")) # surprising!
+  expect_true(s2_covers("LINESTRING (0 0, 1 1)", "POINT (0 0)"))
+  expect_false(s2_covers("LINESTRING (0 0, 1 1)", "POINT (-1 -1)"))
+
+  p = "POLYGON((0 0,1 1,0 1,0 0))"
+  l = "LINESTRING(.1 .1,.9 .9)"
+  pt="POINT(.5 .7)"
+  expect_true(s2_covers(p,p))
+  expect_false(s2_covers(p,l,model=0)) # FIXME: ??
+  expect_false(s2_covers(p,l,model=1)) # FIXME: ??
+  expect_false(s2_covers(p,l,model=2)) # FIXME: ??
+  expect_true(s2_covers(p,pt,model=0))
+  expect_true(s2_covers(p,pt,model=1))
+  expect_true(s2_covers(p,pt,model=2))
+  expect_false(s2_coveredby(p,l,model=0))
+  expect_false(s2_coveredby(p,l,model=1))
+  expect_false(s2_coveredby(p,l,model=2))
+  expect_true(s2_coveredby(pt,p,model=0))
+  expect_true(s2_coveredby(pt,p,model=1))
+  expect_true(s2_coveredby(pt,p,model=2))
+})
+
 test_that("s2_disjoint() works", {
   expect_identical(s2_disjoint("POINT (0 0)", NA_character_), NA)
 
@@ -47,8 +72,11 @@ test_that("s2_intersects() works", {
   expect_false(s2_intersects("LINESTRING (0 0, 1 1)", "LINESTRING (-2 -2, -1 -1)"))
   expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)"))
   expect_false(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 0))
+  expect_false(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = "OPEN"))
   expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 1))
+  expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = "SEMI_CLOSED"))
   expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 2))
+  expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = "CLOSED"))
   p = "POLYGON((0 0,1 0,1 1,0 1,0 0))"
   expect_false(s2_intersects(p, "POINT (0 0)"))
   expect_false(s2_intersects(p, "POINT (0 0)", model = 0))
