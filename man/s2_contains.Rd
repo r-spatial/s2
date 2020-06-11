@@ -21,11 +21,11 @@ s2_covers(x, y, model = 2)
 
 s2_disjoint(x, y, ...)
 
-s2_equals(x, y)
+s2_equals(x, y, model = -1)
 
 s2_intersects(x, y, model = -1)
 
-s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000)
+s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1)
 
 s2_touches(x, y)
 
