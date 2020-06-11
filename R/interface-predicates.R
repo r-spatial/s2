@@ -64,9 +64,9 @@ s2_disjoint <- function(x, y, ...) {
 
 #' @rdname s2_contains
 #' @export
-s2_equals <- function(x, y) {
+s2_equals <- function(x, y, model = -1) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  libs2_cpp_s2_equals(recycled[[1]], recycled[[2]])
+  libs2_cpp_s2_equals(recycled[[1]], recycled[[2]], model)
 }
 
 sort_out_model = function(x) {
@@ -90,13 +90,14 @@ s2_intersects <- function(x, y, model = -1) {
 
 #' @rdname s2_contains
 #' @export
-s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2, detail = 1000) {
+s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1) {
   recycled <- recycle_common(s2geography(x), lng1, lat1, lng2, lat2, detail)
   libs2_cpp_s2_intersectsbox(
     recycled[[1]],
     recycled[[2]], recycled[[3]],
     recycled[[4]], recycled[[5]],
-    detail = recycled[[6]]
+    detail = recycled[[6]],
+	model
   )
 }
 

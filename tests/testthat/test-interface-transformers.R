@@ -65,13 +65,6 @@ test_that("s2_difference() works", {
   df = s2_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
-  s2_set_snaplevel(sn)
-  expect_near(
-    s2_area(df, radius = 1),
-    s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
-      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
-    epsilon = 0.004
-  )
   df0 = s2_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
@@ -79,6 +72,13 @@ test_that("s2_difference() works", {
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
+    s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.004
+  )
 })
 
 test_that("s2_symdifference() works", {
@@ -92,13 +92,6 @@ test_that("s2_symdifference() works", {
   df = s2_symdifference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
-  s2_set_snaplevel(sn)
-  expect_near(
-    s2_area(df, radius = 1),
-      2 * s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
-      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
-    epsilon = 0.0042
-  )
   df0 = s2_symdifference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
@@ -106,6 +99,13 @@ test_that("s2_symdifference() works", {
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
+  s2_set_snaplevel(sn)
+  expect_near(
+    s2_area(df, radius = 1),
+      2 * s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 1) -
+      s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
+    epsilon = 0.0042
+  )
 })
 
 test_that("s2_intersection() works", {
@@ -185,6 +185,13 @@ test_that("s2_union(x, y) works", {
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 		snap_level = 30
       )
+  df0 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
+  df2 = s2_union(
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
+  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
   s2_set_snaplevel(sn)
   expect_near(
     s2_area(u, radius = 1),
@@ -193,13 +200,6 @@ test_that("s2_union(x, y) works", {
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
   )
-  df0 = s2_union(
-        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
-  df2 = s2_union(
-        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
-        "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
-  expect_equal(s2_area(df0) - s2_area(df2), 0.0)
 })
 
 test_that("s2_union_agg() works", {

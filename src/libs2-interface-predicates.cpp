@@ -89,7 +89,7 @@ LogicalVector libs2_cpp_s2_contains(List geog1, List geog2, int model = -1) {
 // [[Rcpp::export]]
 LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
   if (distance.size() != geog1.size())  {
-    stop("Incompatible lengths");
+    stop("Incompatible lengths"); // #nocov
   }
 
   class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {

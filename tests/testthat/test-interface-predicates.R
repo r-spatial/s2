@@ -25,6 +25,9 @@ test_that("s2_equals() works", {
   expect_identical(s2_equals("POINT (0 0)", NA_character_), NA)
 
   expect_true(s2_equals("POINT (0 0)", "POINT (0 0)"))
+  expect_true(s2_equals("POINT (0 0)", "POINT (0 0)", model = 0))
+  expect_true(s2_equals("POINT (0 0)", "POINT (0 0)", model = 1))
+  expect_true(s2_equals("POINT (0 0)", "POINT (0 0)", model = 2))
   expect_false(s2_equals("POINT (0 0)", "POINT (1 1)"))
   expect_false(s2_equals("POINT (0 0)", "POINT EMPTY"))
   expect_true(s2_equals("POINT EMPTY", "POINT EMPTY"))
@@ -42,6 +45,15 @@ test_that("s2_intersects() works", {
 
   expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "LINESTRING (1 0, 0 1)"))
   expect_false(s2_intersects("LINESTRING (0 0, 1 1)", "LINESTRING (-2 -2, -1 -1)"))
+  expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)"))
+  expect_false(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 0))
+  expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 1))
+  expect_true(s2_intersects("LINESTRING (0 0, 1 1)", "POINT (0 0)", model = 2))
+  p = "POLYGON((0 0,1 0,1 1,0 1,0 0))"
+  expect_false(s2_intersects(p, "POINT (0 0)"))
+  expect_false(s2_intersects(p, "POINT (0 0)", model = 0))
+  expect_false(s2_intersects(p, "POINT (0 0)", model = 1))
+  expect_true(s2_intersects(p, "POINT (0 0)", model = 2))
 })
 
 test_that("s2_intersectsbox() works", {
@@ -52,6 +64,9 @@ test_that("s2_intersectsbox() works", {
   expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0))
   expect_false(s2_intersectsbox("POINT (0 0)", -1, 0, 1, 0))
   expect_false(s2_intersectsbox("POINT (0 0)", 0, -1, 0, 1))
+  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 0))
+  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 1))
+  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 2)) # FIXME: why is this FALSE?
 
   expect_true(s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2))
   expect_false(s2_intersectsbox("POINT (-1 -1)", 0, 0, 2, 2))
