@@ -286,6 +286,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libs2_cpp_s2_nearestfeature
+List libs2_cpp_s2_nearestfeature(List geog1, List geog2);
+RcppExport SEXP _libs2_libs2_cpp_s2_nearestfeature(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(libs2_cpp_s2_nearestfeature(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libs2_cpp_s2_centroid
 List libs2_cpp_s2_centroid(List geog);
 RcppExport SEXP _libs2_libs2_cpp_s2_centroid(SEXP geogSEXP) {
@@ -738,6 +750,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_union_agg", (DL_FUNC) &_libs2_libs2_cpp_s2_union_agg, 2},
     {"_libs2_libs2_cpp_s2_centroid_agg", (DL_FUNC) &_libs2_libs2_cpp_s2_centroid_agg, 2},
     {"_libs2_libs2_cpp_s2_closestpoint", (DL_FUNC) &_libs2_libs2_cpp_s2_closestpoint, 2},
+    {"_libs2_libs2_cpp_s2_nearestfeature", (DL_FUNC) &_libs2_libs2_cpp_s2_nearestfeature, 2},
     {"_libs2_libs2_cpp_s2_centroid", (DL_FUNC) &_libs2_libs2_cpp_s2_centroid, 1},
     {"_libs2_libs2_cpp_s2_boundary", (DL_FUNC) &_libs2_libs2_cpp_s2_boundary, 1},
     {"_libs2_s2polygon_intersects", (DL_FUNC) &_libs2_s2polygon_intersects, 2},

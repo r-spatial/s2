@@ -98,6 +98,10 @@ libs2_cpp_s2_closestpoint <- function(geog1, geog2) {
     .Call(`_libs2_libs2_cpp_s2_closestpoint`, geog1, geog2)
 }
 
+libs2_cpp_s2_nearestfeature <- function(geog1, geog2) {
+    .Call(`_libs2_libs2_cpp_s2_nearestfeature`, geog1, geog2)
+}
+
 libs2_cpp_s2_centroid <- function(geog) {
     .Call(`_libs2_libs2_cpp_s2_centroid`, geog)
 }

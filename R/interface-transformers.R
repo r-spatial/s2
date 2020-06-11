@@ -41,6 +41,14 @@ s2_closestpoint <- function(x, y) {
 
 #' @rdname s2_boundary
 #' @export
+s2_nearestfeature <- function(x, y) {
+  recycled <- recycle_common(s2geography(y), s2geography(x)) # REVERSING x and y HERE!!
+  unlist(libs2_cpp_s2_nearestfeature(recycled[[1]], recycled[[2]]))
+}
+
+
+#' @rdname s2_boundary
+#' @export
 s2_difference <- function(x, y, model = -1L, snap_level = -1L) {
   on.exit(s2_set_snaplevel(s2_set_snaplevel(snap_level)))
   recycled <- recycle_common(s2geography(x), s2geography(y))
