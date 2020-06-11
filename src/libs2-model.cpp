@@ -11,7 +11,7 @@ S2BooleanOperation::PolygonModel get_polygon_model(int m) {
     case 2: return S2BooleanOperation::PolygonModel::CLOSED;
     default: ;
   }
-  stop("invalid value for model");
+  stop("invalid value for model"); // #nocov
 }
 S2BooleanOperation::PolylineModel get_polyline_model(int m) {
   switch (m) {
@@ -20,5 +20,5 @@ S2BooleanOperation::PolylineModel get_polyline_model(int m) {
     case 2: return S2BooleanOperation::PolylineModel::CLOSED;
     default: ;
   }
-  stop("invalid value for model");
+  stop("invalid value for model"); // #nocov
 }
