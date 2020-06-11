@@ -39,6 +39,8 @@ test_that("s2_closestpoint() works", {
 
   #expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
   expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
+  expect_wkt_equal(s2_closestpoint("LINESTRING(0 0,1 1)", "LINESTRING(1 0,0 1)"), "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
+  	precision = 6)
 })
 
 test_that("s2_difference() works", {
