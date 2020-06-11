@@ -101,36 +101,6 @@ libs2_cpp_s2_boundary <- function(geog) {
     .Call(`_libs2_libs2_cpp_s2_boundary`, geog)
 }
 
-#' Geometry operators for s2 geometries
-#' 
-#' @param x list with S2Polygons or S2Polyline pointers
-#' @param y list with S2Polygons or S2Polyline pointers
-#' @name s2ops
-#' @export
-s2polygon_intersects <- function(x, y) {
-    .Call(`_libs2_s2polygon_intersects`, x, y)
-}
-
-#' @name s2ops
-#' @export
-s2polyline_intersects <- function(x, y) {
-    .Call(`_libs2_s2polyline_intersects`, x, y)
-}
-
-#' @export
-#' @name s2ops
-#' @param ptrs list of S2Polygon or S2Polyline pointers
-s2polygon_is_valid <- function(ptrs) {
-    .Call(`_libs2_s2polygon_is_valid`, ptrs)
-}
-
-#' @export
-#' @name s2ops
-#' @param ptrs list of S2Polygon or S2Polyline pointers
-s2polyline_is_valid <- function(ptrs) {
-    .Call(`_libs2_s2polyline_is_valid`, ptrs)
-}
-
 s2geography_from_wkb <- function(wkb, oriented) {
     .Call(`_libs2_s2geography_from_wkb`, wkb, oriented)
 }
@@ -165,27 +135,6 @@ s2latlng_from_s2point <- function(s2point) {
 
 data_frame_from_s2latlng <- function(xptr) {
     .Call(`_libs2_data_frame_from_s2latlng`, xptr)
-}
-
-#' Get lengths of s2polylines
-#' 
-#' @name s2measures
-#' @param s2polyline object of class \link{s2polyline}
-#' @param degrees logical; if `FALSE`, return length in radians, else in degrees
-#' @export
-s2polyline_lengths <- function(s2polyline, degrees = FALSE) {
-    .Call(`_libs2_s2polyline_lengths`, s2polyline, degrees)
-}
-
-#' Get area of s2polygons
-#' 
-#' @name s2measures
-#' @param s2polygon object of class \link{s2polygon}
-#' @export
-#' @details note that all s2 measures are on the unit sphere, and need rescaling 
-#' by the Earth's radius to get measures on the Earth
-s2polygon_areas <- function(s2polygon) {
-    .Call(`_libs2_s2polygon_areas`, s2polygon)
 }
 
 s2point_from_numeric <- function(x, y, z) {

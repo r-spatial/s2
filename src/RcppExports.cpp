@@ -308,52 +308,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2polygon_intersects
-List s2polygon_intersects(List x, List y);
-RcppExport SEXP _libs2_s2polygon_intersects(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_intersects(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_intersects
-List s2polyline_intersects(List x, List y);
-RcppExport SEXP _libs2_s2polyline_intersects(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_intersects(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polygon_is_valid
-LogicalVector s2polygon_is_valid(List ptrs);
-RcppExport SEXP _libs2_s2polygon_is_valid(SEXP ptrsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_is_valid(ptrs));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_is_valid
-LogicalVector s2polyline_is_valid(List ptrs);
-RcppExport SEXP _libs2_s2polyline_is_valid(SEXP ptrsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type ptrs(ptrsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_is_valid(ptrs));
-    return rcpp_result_gen;
-END_RCPP
-}
 // s2geography_from_wkb
 List s2geography_from_wkb(List wkb, bool oriented);
 RcppExport SEXP _libs2_s2geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP) {
@@ -457,29 +411,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type xptr(xptrSEXP);
     rcpp_result_gen = Rcpp::wrap(data_frame_from_s2latlng(xptr));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_lengths
-NumericVector s2polyline_lengths(List s2polyline, bool degrees);
-RcppExport SEXP _libs2_s2polyline_lengths(SEXP s2polylineSEXP, SEXP degreesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
-    Rcpp::traits::input_parameter< bool >::type degrees(degreesSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_lengths(s2polyline, degrees));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polygon_areas
-NumericVector s2polygon_areas(List s2polygon);
-RcppExport SEXP _libs2_s2polygon_areas(SEXP s2polygonSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_areas(s2polygon));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -740,10 +671,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_libs2_cpp_s2_nearestfeature", (DL_FUNC) &_libs2_libs2_cpp_s2_nearestfeature, 2},
     {"_libs2_libs2_cpp_s2_centroid", (DL_FUNC) &_libs2_libs2_cpp_s2_centroid, 1},
     {"_libs2_libs2_cpp_s2_boundary", (DL_FUNC) &_libs2_libs2_cpp_s2_boundary, 1},
-    {"_libs2_s2polygon_intersects", (DL_FUNC) &_libs2_s2polygon_intersects, 2},
-    {"_libs2_s2polyline_intersects", (DL_FUNC) &_libs2_s2polyline_intersects, 2},
-    {"_libs2_s2polygon_is_valid", (DL_FUNC) &_libs2_s2polygon_is_valid, 1},
-    {"_libs2_s2polyline_is_valid", (DL_FUNC) &_libs2_s2polyline_is_valid, 1},
     {"_libs2_s2geography_from_wkb", (DL_FUNC) &_libs2_s2geography_from_wkb, 2},
     {"_libs2_s2geography_from_wkt", (DL_FUNC) &_libs2_s2geography_from_wkt, 2},
     {"_libs2_s2geography_full", (DL_FUNC) &_libs2_s2geography_full, 1},
@@ -753,8 +680,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_libs2_s2latlng_from_numeric", (DL_FUNC) &_libs2_s2latlng_from_numeric, 2},
     {"_libs2_s2latlng_from_s2point", (DL_FUNC) &_libs2_s2latlng_from_s2point, 1},
     {"_libs2_data_frame_from_s2latlng", (DL_FUNC) &_libs2_data_frame_from_s2latlng, 1},
-    {"_libs2_s2polyline_lengths", (DL_FUNC) &_libs2_s2polyline_lengths, 2},
-    {"_libs2_s2polygon_areas", (DL_FUNC) &_libs2_s2polygon_areas, 1},
     {"_libs2_s2point_from_numeric", (DL_FUNC) &_libs2_s2point_from_numeric, 3},
     {"_libs2_s2point_from_s2latlng", (DL_FUNC) &_libs2_s2point_from_s2latlng, 1},
     {"_libs2_data_frame_from_s2point", (DL_FUNC) &_libs2_data_frame_from_s2point, 1},
