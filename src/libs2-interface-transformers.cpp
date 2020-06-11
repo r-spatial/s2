@@ -291,6 +291,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
 	  // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
 	  
       S2ClosestEdgeQuery query1(feature1->ShapeIndex());
+	  query1.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::ShapeIndexTarget target2(feature2->ShapeIndex());
       auto result1 = query1.FindClosestEdge(&target2);
       if (result1.edge_id() == -1) {
@@ -301,6 +302,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   
       // Now find the edge from index2 (edge2) that is closest to edge1.
       S2ClosestEdgeQuery query2(feature2->ShapeIndex());
+	  query2.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::EdgeTarget target1(edge1.v0, edge1.v1);
       auto result2 = query2.FindClosestEdge(&target1);
 	  // what if result2 has no edges?
@@ -342,6 +344,7 @@ List libs2_cpp_s2_nearestfeature(List geog1, List geog2) {
 
     SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
+	  query.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 
       const auto& result = query.FindClosestEdge(&target);
