@@ -167,3 +167,8 @@ test_that("polygon construction works with oriented = TRUE and oriented = FALSE"
     "Inconsistent loop orientations"
   )
 })
+
+test_that("Full polygons work", {
+  expect_true(s2_intersects(s2geography(TRUE), "POINT(0 1)"))
+  expect_wkt_equal(s2_difference(s2geography(TRUE), "POINT(0 1)"), "POLYGON ((0 -90, 0 -90))")
+})

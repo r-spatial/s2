@@ -100,3 +100,4 @@ test_that("s2_dwithin() works", {
     c(TRUE, FALSE)
   )
 })
+
