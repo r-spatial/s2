@@ -252,7 +252,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
-	  /*
+      /*
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 
@@ -287,11 +287,11 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       } else {
         stop("Don't know how to find the closest point given two non-point edges");
       }
-	  */
-	  // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
-	  
+      */
+      // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
+
       S2ClosestEdgeQuery query1(feature1->ShapeIndex());
-	  query1.mutable_options()->set_include_interiors(false);
+      query1.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::ShapeIndexTarget target2(feature2->ShapeIndex());
       auto result1 = query1.FindClosestEdge(&target2);
       if (result1.edge_id() == -1) {
@@ -302,14 +302,12 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
   
       // Now find the edge from index2 (edge2) that is closest to edge1.
       S2ClosestEdgeQuery query2(feature2->ShapeIndex());
-	  query2.mutable_options()->set_include_interiors(false);
+      query2.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::EdgeTarget target1(edge1.v0, edge1.v1);
       auto result2 = query2.FindClosestEdge(&target1);
-	  // what if result2 has no edges?
-	  if (result2.is_interior())
-	  	stop("result is interior!");
-	  if (result2.edge_id() == -1) // similar to is_interior()
-	  	stop("0 edges!");
+      // what if result2 has no edges?
+      if (result2.is_interior())
+        stop("result is interior!");
       S2Shape::Edge edge2 = query2.GetEdge(result2);
 
       // Find the closest point pair on edge1 and edge2.
@@ -321,16 +319,16 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       std::vector<S2Point> pts(2);
       pts[0] = closest.first;
       pts[1] = closest.second;
-	  if (closest.first == closest.second) {
+      if (closest.first == closest.second) {
         return XPtr<LibS2Geography>(new LibS2PointGeography(pts));
-	  } else {
-	    S2Polyline *pl = new S2Polyline;
+      } else {
+        S2Polyline *pl = new S2Polyline;
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
-	    polyline->Init(pts);
+        polyline->Init(pts);
         std::vector<std::unique_ptr<S2Polyline>> polylines(1);
-	    polylines[0] = std::move(polyline);
+        polylines[0] = std::move(polyline);
         return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
-	  }
+      }
     }
   };
 
@@ -344,14 +342,14 @@ List libs2_cpp_s2_nearestfeature(List geog1, List geog2) {
 
     SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
-	  query.mutable_options()->set_include_interiors(false);
+      query.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
 
       const auto& result = query.FindClosestEdge(&target);
-	  int s = result.shape_id();
-	  if (s == -1) // geog1 or geog2 is empty:
+      int s = result.shape_id();
+      if (s == -1) // geog1 or geog2 is empty:
         return Rcpp::IntegerVector::create(NA_INTEGER);
-	  else
+      else
         return Rcpp::IntegerVector::create(result.shape_id() + 1); // R: 1-based index
     }
   };
