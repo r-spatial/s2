@@ -1,6 +1,6 @@
-Package: libs2
-Title: Spherical Geometry Operators, Using the s2geometry.io Library
-Version: 0.0.0.9000
+Package: s2
+Title: Spherical Geometry Operators, Using the S2 Geometry Library
+Version: 0.99-0
 Authors@R: c(
      person(given = "Dewey",
            family = "Dunnington",

@@ -1,4 +1,4 @@
 library(testthat)
-library(libs2)
+library(s2)
 
-test_check("libs2")
+test_check("s2")

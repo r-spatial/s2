@@ -34,7 +34,7 @@
 #' @rdname s2_data_world_borders
 #' @export
 s2data_countries <- function(name = NULL) {
-  df <- libs2::s2_data_world_borders
+  df <- s2::s2_data_world_borders
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
@@ -47,7 +47,7 @@ s2data_countries <- function(name = NULL) {
 #' @rdname s2_data_world_borders
 #' @export
 s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_min) {
-  df <- libs2::s2_data_timezones
+  df <- s2::s2_data_timezones
   if (is.null(utc_offset_min)) {
     wkb <- df$geometry
   } else {
@@ -61,7 +61,7 @@ s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_
 #' @rdname s2_data_world_borders
 #' @export
 s2data_cities <- function(name = NULL) {
-  df <- libs2::s2_data_cities
+  df <- s2::s2_data_cities
   if (is.null(name)) {
     wkb <- df$geometry
   } else {

@@ -2,183 +2,183 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 libs2_cpp_s2_iscollection <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_iscollection`, geog)
+    .Call(`_s2_libs2_cpp_s2_iscollection`, geog)
 }
 
 libs2_cpp_s2_dimension <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_dimension`, geog)
+    .Call(`_s2_libs2_cpp_s2_dimension`, geog)
 }
 
 libs2_cpp_s2_numpoints <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_numpoints`, geog)
+    .Call(`_s2_libs2_cpp_s2_numpoints`, geog)
 }
 
 libs2_cpp_s2_area <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_area`, geog)
+    .Call(`_s2_libs2_cpp_s2_area`, geog)
 }
 
 libs2_cpp_s2_length <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_length`, geog)
+    .Call(`_s2_libs2_cpp_s2_length`, geog)
 }
 
 libs2_cpp_s2_perimeter <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_perimeter`, geog)
+    .Call(`_s2_libs2_cpp_s2_perimeter`, geog)
 }
 
 libs2_cpp_s2_x <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_x`, geog)
+    .Call(`_s2_libs2_cpp_s2_x`, geog)
 }
 
 libs2_cpp_s2_y <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_y`, geog)
+    .Call(`_s2_libs2_cpp_s2_y`, geog)
 }
 
 libs2_cpp_s2_distance <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_distance`, geog1, geog2)
+    .Call(`_s2_libs2_cpp_s2_distance`, geog1, geog2)
 }
 
 libs2_cpp_s2_maxdistance <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_maxdistance`, geog1, geog2)
+    .Call(`_s2_libs2_cpp_s2_maxdistance`, geog1, geog2)
 }
 
 libs2_cpp_s2_intersects <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_intersects`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_intersects`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_equals <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_equals`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_equals`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_contains <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_contains`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_contains`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_dwithin <- function(geog1, geog2, distance) {
-    .Call(`_libs2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
+    .Call(`_s2_libs2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
 libs2_cpp_s2_intersectsbox <- function(geog, lng1, lat1, lng2, lat2, detail, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail, model)
+    .Call(`_s2_libs2_cpp_s2_intersectsbox`, geog, lng1, lat1, lng2, lat2, detail, model)
 }
 
 libs2_cpp_s2_intersection <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_intersection`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_intersection`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_union <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_union`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_union`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_difference <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_difference`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_difference`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_symdifference <- function(geog1, geog2, model = -1L) {
-    .Call(`_libs2_libs2_cpp_s2_symdifference`, geog1, geog2, model)
+    .Call(`_s2_libs2_cpp_s2_symdifference`, geog1, geog2, model)
 }
 
 libs2_cpp_s2_union_agg <- function(geog, naRm) {
-    .Call(`_libs2_libs2_cpp_s2_union_agg`, geog, naRm)
+    .Call(`_s2_libs2_cpp_s2_union_agg`, geog, naRm)
 }
 
 libs2_cpp_s2_centroid_agg <- function(geog, naRm) {
-    .Call(`_libs2_libs2_cpp_s2_centroid_agg`, geog, naRm)
+    .Call(`_s2_libs2_cpp_s2_centroid_agg`, geog, naRm)
 }
 
 libs2_cpp_s2_closestpoint <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_closestpoint`, geog1, geog2)
+    .Call(`_s2_libs2_cpp_s2_closestpoint`, geog1, geog2)
 }
 
 libs2_cpp_s2_nearestfeature <- function(geog1, geog2) {
-    .Call(`_libs2_libs2_cpp_s2_nearestfeature`, geog1, geog2)
+    .Call(`_s2_libs2_cpp_s2_nearestfeature`, geog1, geog2)
 }
 
 libs2_cpp_s2_centroid <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_centroid`, geog)
+    .Call(`_s2_libs2_cpp_s2_centroid`, geog)
 }
 
 libs2_cpp_s2_boundary <- function(geog) {
-    .Call(`_libs2_libs2_cpp_s2_boundary`, geog)
+    .Call(`_s2_libs2_cpp_s2_boundary`, geog)
 }
 
 s2geography_from_wkb <- function(wkb, oriented) {
-    .Call(`_libs2_s2geography_from_wkb`, wkb, oriented)
+    .Call(`_s2_s2geography_from_wkb`, wkb, oriented)
 }
 
 s2geography_from_wkt <- function(wkt, oriented) {
-    .Call(`_libs2_s2geography_from_wkt`, wkt, oriented)
+    .Call(`_s2_s2geography_from_wkt`, wkt, oriented)
 }
 
 s2geography_full <- function(x) {
-    .Call(`_libs2_s2geography_full`, x)
+    .Call(`_s2_s2geography_full`, x)
 }
 
 s2geography_to_wkt <- function(s2geography, precision, trim) {
-    .Call(`_libs2_s2geography_to_wkt`, s2geography, precision, trim)
+    .Call(`_s2_s2geography_to_wkt`, s2geography, precision, trim)
 }
 
 s2geography_to_wkb <- function(s2geography, endian) {
-    .Call(`_libs2_s2geography_to_wkb`, s2geography, endian)
+    .Call(`_s2_s2geography_to_wkb`, s2geography, endian)
 }
 
 s2geography_format <- function(s2geography, maxCoords) {
-    .Call(`_libs2_s2geography_format`, s2geography, maxCoords)
+    .Call(`_s2_s2geography_format`, s2geography, maxCoords)
 }
 
 s2latlng_from_numeric <- function(lat, lng) {
-    .Call(`_libs2_s2latlng_from_numeric`, lat, lng)
+    .Call(`_s2_s2latlng_from_numeric`, lat, lng)
 }
 
 s2latlng_from_s2point <- function(s2point) {
-    .Call(`_libs2_s2latlng_from_s2point`, s2point)
+    .Call(`_s2_s2latlng_from_s2point`, s2point)
 }
 
 data_frame_from_s2latlng <- function(xptr) {
-    .Call(`_libs2_data_frame_from_s2latlng`, xptr)
+    .Call(`_s2_data_frame_from_s2latlng`, xptr)
 }
 
 s2point_from_numeric <- function(x, y, z) {
-    .Call(`_libs2_s2point_from_numeric`, x, y, z)
+    .Call(`_s2_s2point_from_numeric`, x, y, z)
 }
 
 s2point_from_s2latlng <- function(s2latlng) {
-    .Call(`_libs2_s2point_from_s2latlng`, s2latlng)
+    .Call(`_s2_s2point_from_s2latlng`, s2latlng)
 }
 
 data_frame_from_s2point <- function(s2point) {
-    .Call(`_libs2_data_frame_from_s2point`, s2point)
+    .Call(`_s2_data_frame_from_s2point`, s2point)
 }
 
 s2polygon_from_s2polyline <- function(s2polyline, oriented, check) {
-    .Call(`_libs2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
+    .Call(`_s2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
 }
 
 s2polyline_from_s2polygon <- function(s2polygon, close = FALSE) {
-    .Call(`_libs2_s2polyline_from_s2polygon`, s2polygon, close)
+    .Call(`_s2_s2polyline_from_s2polygon`, s2polygon, close)
 }
 
 s2polygon_format <- function(s2polygon, nVertices) {
-    .Call(`_libs2_s2polygon_format`, s2polygon, nVertices)
+    .Call(`_s2_s2polygon_format`, s2polygon, nVertices)
 }
 
 s2polyline_from_s2latlng <- function(s2latlng) {
-    .Call(`_libs2_s2polyline_from_s2latlng`, s2latlng)
+    .Call(`_s2_s2polyline_from_s2latlng`, s2latlng)
 }
 
 s2polyline_to_s2latlng <- function(s2polyline) {
-    .Call(`_libs2_s2polyline_to_s2latlng`, s2polyline)
+    .Call(`_s2_s2polyline_to_s2latlng`, s2polyline)
 }
 
 s2polyline_format <- function(s2polyline, nVertices) {
-    .Call(`_libs2_s2polyline_format`, s2polyline, nVertices)
+    .Call(`_s2_s2polyline_format`, s2polyline, nVertices)
 }
 
 s2xptr_test <- function(size) {
-    .Call(`_libs2_s2xptr_test`, size)
+    .Call(`_s2_s2xptr_test`, size)
 }
 
 s2xptr_test_op <- function(s2xptr_test) {
-    invisible(.Call(`_libs2_s2xptr_test_op`, s2xptr_test))
+    invisible(.Call(`_s2_s2xptr_test_op`, s2xptr_test))
 }
 
 #' Set snap level for polygons and polylines
@@ -188,41 +188,41 @@ s2xptr_test_op <- function(s2xptr_test) {
 #' @returns s2_set_snaplevel returns the old value of snap level
 #' @export
 s2_set_snaplevel <- function(snap = -1L) {
-    .Call(`_libs2_s2_set_snaplevel`, snap)
+    .Call(`_s2_s2_set_snaplevel`, snap)
 }
 
 #' @param snap integer, snap level (max. 30, negative prevents snapping)
 #' @name snaplevel
 #' @export
 s2_get_snaplevel <- function(snap = -1L) {
-    .Call(`_libs2_s2_get_snaplevel`, snap)
+    .Call(`_s2_s2_get_snaplevel`, snap)
 }
 
 libs2_cpp_test_indexing <- function() {
-    invisible(.Call(`_libs2_libs2_cpp_test_indexing`))
+    invisible(.Call(`_s2_libs2_cpp_test_indexing`))
 }
 
 s2latlng_from_wkb <- function(wkb) {
-    .Call(`_libs2_s2latlng_from_wkb`, wkb)
+    .Call(`_s2_s2latlng_from_wkb`, wkb)
 }
 
 s2polyline_from_wkb <- function(wkb) {
-    .Call(`_libs2_s2polyline_from_wkb`, wkb)
+    .Call(`_s2_s2polyline_from_wkb`, wkb)
 }
 
 s2polygon_from_wkb <- function(wkb, oriented, check, omit_poles = 0.0) {
-    .Call(`_libs2_s2polygon_from_wkb`, wkb, oriented, check, omit_poles)
+    .Call(`_s2_s2polygon_from_wkb`, wkb, oriented, check, omit_poles)
 }
 
 wkb_from_s2latlng <- function(s2latlng, endian) {
-    .Call(`_libs2_wkb_from_s2latlng`, s2latlng, endian)
+    .Call(`_s2_wkb_from_s2latlng`, s2latlng, endian)
 }
 
 wkb_from_s2polyline <- function(s2polyline, endian) {
-    .Call(`_libs2_wkb_from_s2polyline`, s2polyline, endian)
+    .Call(`_s2_wkb_from_s2polyline`, s2polyline, endian)
 }
 
 wkb_from_s2polygon <- function(s2polygon, endian) {
-    .Call(`_libs2_wkb_from_s2polygon`, s2polygon, endian)
+    .Call(`_s2_wkb_from_s2polygon`, s2polygon, endian)
 }
 

@@ -234,7 +234,7 @@ test_that("s2_centroid_agg() works", {
 })
 
 test_that("real data survives the S2BooleanOperation", {
-  for (continent in unique(libs2::s2_data_world_borders$continent)) {
+  for (continent in unique(s2::s2_data_world_borders$continent)) {
     # this is primarily a test of the S2BooleanOperation -> LibS2Geography constructor
     unioned <- expect_is(s2_union_agg(s2data_countries(continent)), "s2geography")
 
