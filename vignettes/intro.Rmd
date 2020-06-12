@@ -1,5 +1,5 @@
 ---
-title: "Introduction to libs2"
+title: "Introduction to s2"
 output:
   html_document:
     toc: true
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 ```{r}
-library(libs2)
+library(s2)
 ```
 
 * S2LatLng points are always latitude-longitude
