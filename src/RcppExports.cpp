@@ -414,6 +414,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2latlng_from_wkb
+List s2latlng_from_wkb(List wkb);
+RcppExport SEXP _s2_s2latlng_from_wkb(SEXP wkbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2latlng_from_wkb(wkb));
+    return rcpp_result_gen;
+END_RCPP
+}
+// wkb_from_s2latlng
+List wkb_from_s2latlng(List s2latlng, int endian);
+RcppExport SEXP _s2_wkb_from_s2latlng(SEXP s2latlngSEXP, SEXP endianSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
+    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
+    rcpp_result_gen = Rcpp::wrap(wkb_from_s2latlng(s2latlng, endian));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2point_from_numeric
 List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
 RcppExport SEXP _s2_s2point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -446,77 +469,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type s2point(s2pointSEXP);
     rcpp_result_gen = Rcpp::wrap(data_frame_from_s2point(s2point));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polygon_from_s2polyline
-List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check);
-RcppExport SEXP _s2_s2polygon_from_s2polyline(SEXP s2polylineSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
-    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_from_s2polyline(s2polyline, oriented, check));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_from_s2polygon
-List s2polyline_from_s2polygon(List s2polygon, bool close);
-RcppExport SEXP _s2_s2polyline_from_s2polygon(SEXP s2polygonSEXP, SEXP closeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
-    Rcpp::traits::input_parameter< bool >::type close(closeSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_from_s2polygon(s2polygon, close));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polygon_format
-CharacterVector s2polygon_format(List s2polygon, int nVertices);
-RcppExport SEXP _s2_s2polygon_format(SEXP s2polygonSEXP, SEXP nVerticesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
-    Rcpp::traits::input_parameter< int >::type nVertices(nVerticesSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_format(s2polygon, nVertices));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_from_s2latlng
-List s2polyline_from_s2latlng(List s2latlng);
-RcppExport SEXP _s2_s2polyline_from_s2latlng(SEXP s2latlngSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_from_s2latlng(s2latlng));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_to_s2latlng
-List s2polyline_to_s2latlng(List s2polyline);
-RcppExport SEXP _s2_s2polyline_to_s2latlng(SEXP s2polylineSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_to_s2latlng(s2polyline));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_format
-CharacterVector s2polyline_format(List s2polyline, int nVertices);
-RcppExport SEXP _s2_s2polyline_format(SEXP s2polylineSEXP, SEXP nVerticesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
-    Rcpp::traits::input_parameter< int >::type nVertices(nVerticesSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_format(s2polyline, nVertices));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -563,87 +515,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_test_indexing
-void cpp_test_indexing();
-RcppExport SEXP _s2_cpp_test_indexing() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    cpp_test_indexing();
-    return R_NilValue;
-END_RCPP
-}
-// s2latlng_from_wkb
-List s2latlng_from_wkb(List wkb);
-RcppExport SEXP _s2_s2latlng_from_wkb(SEXP wkbSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2latlng_from_wkb(wkb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polyline_from_wkb
-List s2polyline_from_wkb(List wkb);
-RcppExport SEXP _s2_s2polyline_from_wkb(SEXP wkbSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polyline_from_wkb(wkb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2polygon_from_wkb
-List s2polygon_from_wkb(List wkb, bool oriented, bool check, double omit_poles);
-RcppExport SEXP _s2_s2polygon_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP, SEXP omit_polesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    Rcpp::traits::input_parameter< double >::type omit_poles(omit_polesSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2polygon_from_wkb(wkb, oriented, check, omit_poles));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wkb_from_s2latlng
-List wkb_from_s2latlng(List s2latlng, int endian);
-RcppExport SEXP _s2_wkb_from_s2latlng(SEXP s2latlngSEXP, SEXP endianSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
-    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkb_from_s2latlng(s2latlng, endian));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wkb_from_s2polyline
-List wkb_from_s2polyline(List s2polyline, int endian);
-RcppExport SEXP _s2_wkb_from_s2polyline(SEXP s2polylineSEXP, SEXP endianSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polyline(s2polylineSEXP);
-    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkb_from_s2polyline(s2polyline, endian));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wkb_from_s2polygon
-List wkb_from_s2polygon(List s2polygon, int endian);
-RcppExport SEXP _s2_wkb_from_s2polygon(SEXP s2polygonSEXP, SEXP endianSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2polygon(s2polygonSEXP);
-    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkb_from_s2polygon(s2polygon, endian));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_iscollection", (DL_FUNC) &_s2_cpp_s2_iscollection, 1},
@@ -680,26 +551,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2latlng_from_numeric", (DL_FUNC) &_s2_s2latlng_from_numeric, 2},
     {"_s2_s2latlng_from_s2point", (DL_FUNC) &_s2_s2latlng_from_s2point, 1},
     {"_s2_data_frame_from_s2latlng", (DL_FUNC) &_s2_data_frame_from_s2latlng, 1},
+    {"_s2_s2latlng_from_wkb", (DL_FUNC) &_s2_s2latlng_from_wkb, 1},
+    {"_s2_wkb_from_s2latlng", (DL_FUNC) &_s2_wkb_from_s2latlng, 2},
     {"_s2_s2point_from_numeric", (DL_FUNC) &_s2_s2point_from_numeric, 3},
     {"_s2_s2point_from_s2latlng", (DL_FUNC) &_s2_s2point_from_s2latlng, 1},
     {"_s2_data_frame_from_s2point", (DL_FUNC) &_s2_data_frame_from_s2point, 1},
-    {"_s2_s2polygon_from_s2polyline", (DL_FUNC) &_s2_s2polygon_from_s2polyline, 3},
-    {"_s2_s2polyline_from_s2polygon", (DL_FUNC) &_s2_s2polyline_from_s2polygon, 2},
-    {"_s2_s2polygon_format", (DL_FUNC) &_s2_s2polygon_format, 2},
-    {"_s2_s2polyline_from_s2latlng", (DL_FUNC) &_s2_s2polyline_from_s2latlng, 1},
-    {"_s2_s2polyline_to_s2latlng", (DL_FUNC) &_s2_s2polyline_to_s2latlng, 1},
-    {"_s2_s2polyline_format", (DL_FUNC) &_s2_s2polyline_format, 2},
     {"_s2_s2xptr_test", (DL_FUNC) &_s2_s2xptr_test, 1},
     {"_s2_s2xptr_test_op", (DL_FUNC) &_s2_s2xptr_test_op, 1},
     {"_s2_s2_set_snaplevel", (DL_FUNC) &_s2_s2_set_snaplevel, 1},
     {"_s2_s2_get_snaplevel", (DL_FUNC) &_s2_s2_get_snaplevel, 1},
-    {"_s2_cpp_test_indexing", (DL_FUNC) &_s2_cpp_test_indexing, 0},
-    {"_s2_s2latlng_from_wkb", (DL_FUNC) &_s2_s2latlng_from_wkb, 1},
-    {"_s2_s2polyline_from_wkb", (DL_FUNC) &_s2_s2polyline_from_wkb, 1},
-    {"_s2_s2polygon_from_wkb", (DL_FUNC) &_s2_s2polygon_from_wkb, 4},
-    {"_s2_wkb_from_s2latlng", (DL_FUNC) &_s2_wkb_from_s2latlng, 2},
-    {"_s2_wkb_from_s2polyline", (DL_FUNC) &_s2_wkb_from_s2polyline, 2},
-    {"_s2_wkb_from_s2polygon", (DL_FUNC) &_s2_wkb_from_s2polygon, 2},
     {NULL, NULL, 0}
 };
 

@@ -1,6 +1,11 @@
 
 #include "s2/s2latlng.h"
 #include "s2/s2point.h"
+#include "wk/rcpp-io.h"
+#include "wk/wkb-reader.h"
+#include "wk/wkb-writer.h"
+#include "snap.h"
+
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -56,3 +61,103 @@ List data_frame_from_s2latlng(List xptr) {
 
   return List::create(_["lat"] = lat, _["lng"] = lng);
 }
+
+// -------- importers ----------
+
+class WKS2LatLngWriter: public WKGeometryHandler {
+public:
+  List s2latlng;
+  R_xlen_t featureId;
+
+  WKS2LatLngWriter(R_xlen_t size): s2latlng(size) {}
+
+  void nextFeatureStart(size_t featureId) {
+    this->featureId = featureId;
+  }
+
+  void nextNull(size_t featureId) {
+    s2latlng[featureId] = R_NilValue;
+  }
+
+  void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
+    if (meta.geometryType != WKGeometryType::Point) {
+      stop("Can't create s2latlng object from an geometry that is not a point");
+    } else if(meta.size == 0) {
+      stop("Can't create s2latlng object from an empty point");
+    }
+  }
+
+  void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
+    S2LatLng feature = S2LatLng::FromDegrees(coord.y, coord.x);
+    s2latlng[this->featureId] = XPtr<S2LatLng>(new S2LatLng(feature));
+  }
+};
+
+// [[Rcpp::export]]
+List s2latlng_from_wkb(List wkb) {
+  WKRawVectorListProvider provider(wkb);
+  WKS2LatLngWriter writer(wkb.size());
+  WKBReader reader(provider);
+  reader.setHandler(&writer);
+
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return writer.s2latlng;
+}
+
+// -------- exporters ---------
+
+class WKS2LatLngReader: public WKReader {
+public:
+
+  WKS2LatLngReader(WKSEXPProvider& provider):
+  WKReader(provider), provider(provider) {}
+
+  void readFeature(size_t featureId) {
+    this->handler->nextFeatureStart(featureId);
+
+    if (this->provider.featureIsNull()) {
+      this->handler->nextNull(featureId);
+    } else {
+      this->readItem(this->provider.feature());
+    }
+
+    this->handler->nextFeatureEnd(featureId);
+  }
+
+  virtual void readItem(SEXP item) {
+    WKGeometryMeta meta(WKGeometryType::Point, false, false, false);
+    meta.hasSize = true;
+    meta.size = 1;
+
+    this->handler->nextGeometryStart(meta, PART_ID_NONE);
+
+    XPtr<S2LatLng> ptr(item);
+    const WKCoord coord = WKCoord::xy(ptr->lng().degrees(), ptr->lat().degrees());
+    this->handler->nextCoordinate(meta, coord, 0);
+    this->handler->nextGeometryEnd(meta, PART_ID_NONE);
+  }
+
+private:
+  WKSEXPProvider& provider;
+};
+
+// [[Rcpp::export]]
+List wkb_from_s2latlng(List s2latlng, int endian) {
+  WKSEXPProvider provider(s2latlng);
+  WKRawVectorListExporter exporter(s2latlng.size());
+  WKBWriter writer(exporter);
+  writer.setEndian(endian);
+
+  WKS2LatLngReader reader(provider);
+  reader.setHandler(&writer);
+
+  while (reader.hasNextFeature()) {
+    reader.iterateFeature();
+  }
+
+  return exporter.output;
+}
+

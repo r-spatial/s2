@@ -137,6 +137,14 @@ data_frame_from_s2latlng <- function(xptr) {
     .Call(`_s2_data_frame_from_s2latlng`, xptr)
 }
 
+s2latlng_from_wkb <- function(wkb) {
+    .Call(`_s2_s2latlng_from_wkb`, wkb)
+}
+
+wkb_from_s2latlng <- function(s2latlng, endian) {
+    .Call(`_s2_wkb_from_s2latlng`, s2latlng, endian)
+}
+
 s2point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2point_from_numeric`, x, y, z)
 }
@@ -147,30 +155,6 @@ s2point_from_s2latlng <- function(s2latlng) {
 
 data_frame_from_s2point <- function(s2point) {
     .Call(`_s2_data_frame_from_s2point`, s2point)
-}
-
-s2polygon_from_s2polyline <- function(s2polyline, oriented, check) {
-    .Call(`_s2_s2polygon_from_s2polyline`, s2polyline, oriented, check)
-}
-
-s2polyline_from_s2polygon <- function(s2polygon, close = FALSE) {
-    .Call(`_s2_s2polyline_from_s2polygon`, s2polygon, close)
-}
-
-s2polygon_format <- function(s2polygon, nVertices) {
-    .Call(`_s2_s2polygon_format`, s2polygon, nVertices)
-}
-
-s2polyline_from_s2latlng <- function(s2latlng) {
-    .Call(`_s2_s2polyline_from_s2latlng`, s2latlng)
-}
-
-s2polyline_to_s2latlng <- function(s2polyline) {
-    .Call(`_s2_s2polyline_to_s2latlng`, s2polyline)
-}
-
-s2polyline_format <- function(s2polyline, nVertices) {
-    .Call(`_s2_s2polyline_format`, s2polyline, nVertices)
 }
 
 s2xptr_test <- function(size) {
@@ -196,33 +180,5 @@ s2_set_snaplevel <- function(snap = -1L) {
 #' @export
 s2_get_snaplevel <- function(snap = -1L) {
     .Call(`_s2_s2_get_snaplevel`, snap)
-}
-
-cpp_test_indexing <- function() {
-    invisible(.Call(`_s2_cpp_test_indexing`))
-}
-
-s2latlng_from_wkb <- function(wkb) {
-    .Call(`_s2_s2latlng_from_wkb`, wkb)
-}
-
-s2polyline_from_wkb <- function(wkb) {
-    .Call(`_s2_s2polyline_from_wkb`, wkb)
-}
-
-s2polygon_from_wkb <- function(wkb, oriented, check, omit_poles = 0.0) {
-    .Call(`_s2_s2polygon_from_wkb`, wkb, oriented, check, omit_poles)
-}
-
-wkb_from_s2latlng <- function(s2latlng, endian) {
-    .Call(`_s2_wkb_from_s2latlng`, s2latlng, endian)
-}
-
-wkb_from_s2polyline <- function(s2polyline, endian) {
-    .Call(`_s2_wkb_from_s2polyline`, s2polyline, endian)
-}
-
-wkb_from_s2polygon <- function(s2polygon, endian) {
-    .Call(`_s2_wkb_from_s2polygon`, s2polygon, endian)
 }
 
