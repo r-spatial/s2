@@ -19,24 +19,16 @@ headers <- tibble(
   final_path = str_replace(path, ".*?s2/", "inst/include/s2/")
 )
 
-# If source files are in src/ with no subdirectories
-# We can use the built-in R Makefile with few modifications
-# in Makevars. Here, we replace "/" with "__"
+# Put S2 compilation units in src/s2/...
 source_files <- tibble(
   path = list.files(file.path(s2_dir, "src", "s2"), "\\.cc$", full.names = TRUE, recursive = TRUE),
   final_path = str_replace(path, ".*?src/", "src/") %>%
-    str_replace_all("/", "__") %>%
-    str_replace("^.*?s2__", "src/")
+    str_replace("^.*?s2/", "src/s2/")
 ) %>%
   filter(!str_detect(path, "_test\\."))
 
-# clean source dir
-current_source_files <- tibble(
-  path = list.files("src", "\\.(h|hpp|cpp|o|cc)$", full.names = TRUE, recursive = TRUE)
-) %>%
-  filter(!str_detect(path, "^src/(libs2-|Rcpp|Makevars)"))
-
-unlink(current_source_files$path)
+# clean current headers and source files
+unlink("src/s2", recursive = TRUE)
 unlink("inst/include/s2", recursive = TRUE)
 
 # create destination dirs
@@ -45,7 +37,8 @@ dest_dirs <- c(
   source_files %>% pull(final_path)
 ) %>%
   dirname() %>%
-  unique()
+  unique() %>%
+  sort()
 dest_dirs[!dir.exists(dest_dirs)] %>% walk(dir.create, recursive = TRUE)
 
 # copy source files
@@ -53,6 +46,12 @@ stopifnot(
   file.copy(headers$path, headers$final_path),
   file.copy(source_files$path, source_files$final_path)
 )
+
+# need to update objects
+objects <- list.files("src", pattern = "\\.(cpp|cc)$", recursive = TRUE, full.names = TRUE) %>%
+  gsub("\\.(cpp|cc)$", ".o", .) %>%
+  gsub("src/", "", .) %>%
+  paste("    ", ., "\\", collapse = "\n")
 
 # reminders about manual modifications that are needed
 # for build to succeed
@@ -74,6 +73,8 @@ print_next <- function() {
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
   cli::cat_bullet("Replace `srandom()` with `cpp_compat_srandom()`")
   cli::cat_bullet("Replace `random()` with `cpp_compat_random()`")
+  cli::cat_bullet("Update OBJECTS in Makevars.in and Makevars.win (copied to clipboard)")
+  clipr::write_clip(objects)
 }
 
 print_next()
