@@ -21,8 +21,8 @@ test_that("s2_asbinary() works", {
 })
 
 test_that("s2_asbinary works on (multi)polygons", {
-	w = s2data_countries()
-	b = s2_asbinary(w)
-	all.equal(object.size(b), structure(183840, class = 'object_size'))
-	all.equal(length(b), 177L)
+  w = s2data_countries()
+  b = s2_asbinary(w)
+  all.equal(object.size(b), structure(183840, class = 'object_size'))
+  all.equal(length(b), 177L)
 })
