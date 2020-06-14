@@ -21,19 +21,19 @@
 using namespace Rcpp;
 
 
-class WKLibS2GeographyWriter: public WKGeometryHandler {
+class WKGeographyWriter: public WKGeometryHandler {
 public:
   List s2geography;
   R_xlen_t featureId;
 
-  WKLibS2GeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr), oriented(false) {}
+  WKGeographyWriter(R_xlen_t size): s2geography(size), builder(nullptr), oriented(false) {}
 
   void setOriented(bool oriented) {
     this->oriented = oriented;
   }
 
   void nextFeatureStart(size_t featureId) {
-    this->builder = std::unique_ptr<LibS2GeographyBuilder>(nullptr);
+    this->builder = std::unique_ptr<GeographyBuilder>(nullptr);
     this->featureId = featureId;
   }
 
@@ -46,18 +46,18 @@ public:
       switch (meta.geometryType) {
       case WKGeometryType::Point:
       case WKGeometryType::MultiPoint:
-        this->builder = absl::make_unique<LibS2PointGeography::Builder>();
+        this->builder = absl::make_unique<PointGeography::Builder>();
         break;
       case WKGeometryType::LineString:
       case WKGeometryType::MultiLineString:
-        this->builder = absl::make_unique<LibS2PolylineGeography::Builder>();
+        this->builder = absl::make_unique<PolylineGeography::Builder>();
         break;
       case WKGeometryType::Polygon:
       case WKGeometryType::MultiPolygon:
-        this->builder = absl::make_unique<LibS2PolygonGeography::Builder>(this->oriented);
+        this->builder = absl::make_unique<PolygonGeography::Builder>(this->oriented);
         break;
       case WKGeometryType::GeometryCollection:
-        this->builder = absl::make_unique<LibS2GeographyCollection::Builder>(this->oriented);
+        this->builder = absl::make_unique<GeographyCollection::Builder>(this->oriented);
         break;
       default:
         std::stringstream err;
@@ -87,20 +87,20 @@ public:
 
   void nextFeatureEnd(size_t featureId) {
     if (this->builder) {
-      std::unique_ptr<LibS2Geography> feature = builder->build();
-      this->s2geography[featureId] = XPtr<LibS2Geography>(feature.release());
+      std::unique_ptr<Geography> feature = builder->build();
+      this->s2geography[featureId] = XPtr<Geography>(feature.release());
     }
   }
 
 private:
-  std::unique_ptr<LibS2GeographyBuilder> builder;
+  std::unique_ptr<GeographyBuilder> builder;
   bool oriented;
 };
 
 // [[Rcpp::export]]
 List s2geography_from_wkb(List wkb, bool oriented) {
   WKRawVectorListProvider provider(wkb);
-  WKLibS2GeographyWriter writer(wkb.size());
+  WKGeographyWriter writer(wkb.size());
   writer.setOriented(oriented);
   WKBReader reader(provider);
   reader.setHandler(&writer);
@@ -115,7 +115,7 @@ List s2geography_from_wkb(List wkb, bool oriented) {
 // [[Rcpp::export]]
 List s2geography_from_wkt(CharacterVector wkt, bool oriented) {
   WKCharacterVectorProvider provider(wkt);
-  WKLibS2GeographyWriter writer(wkt.size());
+  WKGeographyWriter writer(wkt.size());
   writer.setOriented(oriented);
   WKTReader reader(provider);
   reader.setHandler(&writer);
@@ -131,16 +131,16 @@ List s2geography_from_wkt(CharacterVector wkt, bool oriented) {
 List s2geography_full(LogicalVector x) { // create single geography with full polygon
   std::unique_ptr<S2Loop> l = absl::make_unique<S2Loop>(S2Loop::kFull());
   std::unique_ptr<S2Polygon> p = absl::make_unique<S2Polygon>(std::move(l));
-  LibS2Geography *pg = new LibS2PolygonGeography(std::move(p));
+  Geography *pg = new PolygonGeography(std::move(p));
   List ret(1);
-  ret(0) = Rcpp::XPtr<LibS2Geography>(pg);
+  ret(0) = Rcpp::XPtr<Geography>(pg);
   return ret;
 }
 
-class WKLibS2GeographyReader: public WKReader {
+class WKGeographyReader: public WKReader {
 public:
 
-  WKLibS2GeographyReader(WKSEXPProvider& provider):
+  WKGeographyReader(WKSEXPProvider& provider):
   WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -149,7 +149,7 @@ public:
     if (this->provider.featureIsNull()) {
       this->handler->nextNull(featureId);
     } else {
-      XPtr<LibS2Geography> geography(this->provider.feature());
+      XPtr<Geography> geography(this->provider.feature());
       geography->Export(handler, WKReader::PART_ID_NONE);
     }
 
@@ -163,7 +163,7 @@ private:
 // [[Rcpp::export]]
 CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim) {
   WKSEXPProvider provider(s2geography);
-  WKLibS2GeographyReader reader(provider);
+  WKGeographyReader reader(provider);
 
   WKCharacterVectorExporter exporter(reader.nFeatures());
   exporter.setRoundingPrecision(precision);
@@ -181,7 +181,7 @@ CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim) {
 // [[Rcpp::export]]
 List s2geography_to_wkb(List s2geography, int endian) {
   WKSEXPProvider provider(s2geography);
-  WKLibS2GeographyReader reader(provider);
+  WKGeographyReader reader(provider);
 
   WKRawVectorListExporter exporter(reader.nFeatures());
   WKBWriter writer(exporter);
@@ -198,7 +198,7 @@ List s2geography_to_wkb(List s2geography, int endian) {
 // [[Rcpp::export]]
 CharacterVector s2geography_format(List s2geography, int maxCoords) {
   WKSEXPProvider provider(s2geography);
-  WKLibS2GeographyReader reader(provider);
+  WKGeographyReader reader(provider);
 
   WKCharacterVectorExporter exporter(s2geography.size());
   WKGeometryFormatter formatter(exporter, maxCoords);

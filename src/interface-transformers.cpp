@@ -25,7 +25,7 @@
 using namespace Rcpp;
 
 template <S2BooleanOperation::OpType opType>
-Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2, 
+Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2, 
       S2BooleanOperation::Options options) {
 
   FLAGS_s2debug = false;
@@ -53,7 +53,7 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   std::vector<std::unique_ptr<S2Polyline>> polylines;
   std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
-  std::vector<std::unique_ptr<LibS2Geography>> features;
+  std::vector<std::unique_ptr<Geography>> features;
   std::vector<std::unique_ptr<S2Shape>> shapes(std::move(index.ReleaseAll()));
   int dims = 0; // bitfield with dimension flags in lower 3 bits
   for (int i = 0; i < shapes.size(); i++) {
@@ -88,35 +88,35 @@ Rcpp::XPtr<LibS2Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   int ndims = ((dims & 1) != 0) + ((dims & 2) != 0) + ((dims & 4) != 0);
   switch (ndims) {
     case 0: // EMPTY
-      return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection());
+      return Rcpp::XPtr<Geography>(new GeographyCollection());
     case 1: { // SINGLE DIM
       if (!polygon->is_empty()) {
-        return Rcpp::XPtr<LibS2Geography>(new LibS2PolygonGeography(std::move(polygon)));
+        return Rcpp::XPtr<Geography>(new PolygonGeography(std::move(polygon)));
       } else if (polylines.size() > 0) {
-        return Rcpp::XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
+        return Rcpp::XPtr<Geography>(new PolylineGeography(std::move(polylines)));
       } else {
-        return Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(std::move(points)));
+        return Rcpp::XPtr<Geography>(new PointGeography(std::move(points)));
       }
       break;
     }
     default: // GEOMETRYCOLLECTION
       if (points.size() > 0) {
-        features.push_back(absl::make_unique<LibS2PointGeography>(std::move(points)));
+        features.push_back(absl::make_unique<PointGeography>(std::move(points)));
       }
       if (polylines.size() > 0) {
-        features.push_back(absl::make_unique<LibS2PolylineGeography>(std::move(polylines)));
+        features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
       }
       if (!polygon->is_empty()) {
-        features.push_back(absl::make_unique<LibS2PolygonGeography>(std::move(polygon)));
+        features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
       }
-      return Rcpp::XPtr<LibS2Geography>(new LibS2GeographyCollection(std::move(features)));
+      return Rcpp::XPtr<Geography>(new GeographyCollection(std::move(features)));
     break; // never reached;
   }
 }
 
 template <S2BooleanOperation::OpType opType, int model>
-class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
-  SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
+  SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
     S2BooleanOperation::Options options;
     if (model >= 0) {
       options.set_polygon_model(get_polygon_model(model));
@@ -130,71 +130,71 @@ class LibS2BooleanOperationOp: public LibS2BinaryGeographyOperator<List, SEXP> {
 };
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_intersection(List geog1, List geog2, int model = -1L) {
+List cpp_s2_intersection(List geog1, List geog2, int model = -1L) {
   List ret;
   if (model == -1 || model == 1) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 1> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 1> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 0) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 0> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 0> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 2) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 2> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::INTERSECTION, 2> op;
     ret = op.processVector(geog1, geog2);
   }
   return ret;
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_union(List geog1, List geog2, int model = -1L) {
+List cpp_s2_union(List geog1, List geog2, int model = -1L) {
   List ret;
   if (model == -1 || model == 1) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 1> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::UNION, 1> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 0) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 0> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::UNION, 0> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 2) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::UNION, 2> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::UNION, 2> op;
     ret = op.processVector(geog1, geog2);
   }
   return ret;
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_difference(List geog1, List geog2, int model = -1L) {
+List cpp_s2_difference(List geog1, List geog2, int model = -1L) {
   List ret;
   if (model == -1 || model == 1) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 1> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 1> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 0) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 0> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 0> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 2) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 2> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::DIFFERENCE, 2> op;
     ret = op.processVector(geog1, geog2);
   }
   return ret;
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_symdifference(List geog1, List geog2, int model = -1L) {
+List cpp_s2_symdifference(List geog1, List geog2, int model = -1L) {
   List ret;
   if (model == -1 || model == 1) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 1> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 1> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 0) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 0> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 0> op;
     ret = op.processVector(geog1, geog2);
   } else if (model == 2) {
-    LibS2BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 2> op;
+    BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 2> op;
     ret = op.processVector(geog1, geog2);
   }
   return ret;
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_union_agg(List geog, bool naRm) {
+List cpp_s2_union_agg(List geog, bool naRm) {
   MutableS2ShapeIndex index;
 
   SEXP item;
@@ -205,7 +205,7 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
     }
 
     if (item != R_NilValue) {
-      Rcpp::XPtr<LibS2Geography> feature(item);
+      Rcpp::XPtr<Geography> feature(item);
       feature->BuildShapeIndex(&index);
     }
   }
@@ -218,7 +218,7 @@ List libs2_cpp_s2_union_agg(List geog, bool naRm) {
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_centroid_agg(List geog, bool naRm) {
+List cpp_s2_centroid_agg(List geog, bool naRm) {
   S2Point cumCentroid;
 
   SEXP item;
@@ -229,7 +229,7 @@ List libs2_cpp_s2_centroid_agg(List geog, bool naRm) {
     }
 
     if (item != R_NilValue) {
-      Rcpp::XPtr<LibS2Geography> feature(item);
+      Rcpp::XPtr<Geography> feature(item);
       S2Point centroid = feature->Centroid();
       if (centroid.Norm2() > 0) {
         cumCentroid += centroid.Normalize();
@@ -239,19 +239,19 @@ List libs2_cpp_s2_centroid_agg(List geog, bool naRm) {
 
   List output(1);
   if (cumCentroid.Norm2() == 0) {
-    output[0] = Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography());
+    output[0] = Rcpp::XPtr<Geography>(new PointGeography());
   } else {
-    output[0] = Rcpp::XPtr<LibS2Geography>(new LibS2PointGeography(cumCentroid));
+    output[0] = Rcpp::XPtr<Geography>(new PointGeography(cumCentroid));
   }
 
   return output;
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
+List cpp_s2_closestpoint(List geog1, List geog2) {
+  class Op: public BinaryGeographyOperator<List, SEXP> {
 
-    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       /*
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
@@ -260,7 +260,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
 
       //  result.edge_id() == -1 means there was no match
       if (result.edge_id() == -1) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography());
+        return XPtr<Geography>(new PointGeography());
       }
 
       // get the edge on feature1 that is closest to feature2
@@ -269,7 +269,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
 
       // the edge on feature 1 *is* a point: easy!
       if (edge1.v0 == edge1.v1) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography(edge1.v0));
+        return XPtr<Geography>(new PointGeography(edge1.v0));
       }
 
       // reverse query: find the edge on feature2 that is closest to feature1
@@ -283,7 +283,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       // the edge on feature 2 *is* a point: sort of easy!
       if (edge2.v0 == edge2.v1) {
         S2Point closest = query.Project(edge2.v0, result);
-        return XPtr<LibS2Geography>(new LibS2PointGeography(closest));
+        return XPtr<Geography>(new PointGeography(closest));
       } else {
         stop("Don't know how to find the closest point given two non-point edges");
       }
@@ -295,7 +295,7 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       S2ClosestEdgeQuery::ShapeIndexTarget target2(feature2->ShapeIndex());
       auto result1 = query1.FindClosestEdge(&target2);
       if (result1.edge_id() == -1) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography());
+        return XPtr<Geography>(new PointGeography());
       }
       // Get the edge from index1 (edge1) that is closest to index2.
       S2Shape::Edge edge1 = query1.GetEdge(result1);
@@ -320,27 +320,27 @@ List libs2_cpp_s2_closestpoint(List geog1, List geog2) {
       pts[0] = closest.first;
       pts[1] = closest.second;
       if (closest.first == closest.second) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography(pts));
+        return XPtr<Geography>(new PointGeography(pts));
       } else {
         S2Polyline *pl = new S2Polyline;
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
         polyline->Init(pts);
         std::vector<std::unique_ptr<S2Polyline>> polylines(1);
         polylines[0] = std::move(polyline);
-        return XPtr<LibS2Geography>(new LibS2PolylineGeography(std::move(polylines)));
+        return XPtr<Geography>(new PolylineGeography(std::move(polylines)));
       }
     }
   };
 
-  LibS2Op op;
+  Op op;
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_nearestfeature(List geog1, List geog2) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<List, SEXP> {
+List cpp_s2_nearestfeature(List geog1, List geog2) {
+  class Op: public BinaryGeographyOperator<List, SEXP> {
 
-    SEXP processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       query.mutable_options()->set_include_interiors(false);
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
@@ -354,36 +354,36 @@ List libs2_cpp_s2_nearestfeature(List geog1, List geog2) {
     }
   };
 
-  LibS2Op op;
+  Op op;
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_centroid(List geog) {
-  class LibS2Op: public LibS2UnaryGeographyOperator<List, SEXP> {
-    SEXP processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
+List cpp_s2_centroid(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       S2Point centroid = feature->Centroid();
       if (centroid.Norm2() == 0) {
-        return XPtr<LibS2Geography>(new LibS2PointGeography());
+        return XPtr<Geography>(new PointGeography());
       } else {
-        return XPtr<LibS2Geography>(new LibS2PointGeography(centroid.Normalize()));
+        return XPtr<Geography>(new PointGeography(centroid.Normalize()));
       }
     }
   };
 
-  LibS2Op op;
+  Op op;
   return op.processVector(geog);
 }
 
 // [[Rcpp::export]]
-List libs2_cpp_s2_boundary(List geog) {
-  class LibS2Op: public LibS2UnaryGeographyOperator<List, SEXP> {
-    SEXP processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
-      std::unique_ptr<LibS2Geography> ptr = feature->Boundary();
-      return XPtr<LibS2Geography>(ptr.release());
+List cpp_s2_boundary(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      std::unique_ptr<Geography> ptr = feature->Boundary();
+      return XPtr<Geography>(ptr.release());
     }
   };
 
-  LibS2Op op;
+  Op op;
   return op.processVector(geog);
 }

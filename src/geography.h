@@ -1,6 +1,6 @@
 
-#ifndef LIBS2_GEOGRAPHY_H
-#define LIBS2_GEOGRAPHY_H
+#ifndef GEOGRAPHY_H
+#define GEOGRAPHY_H
 
 #include <memory>
 #include "s2/s2latlng.h"
@@ -13,10 +13,10 @@
 #include "wk/reader.h"
 #include <Rcpp.h>
 
-class LibS2Geography {
+class Geography {
 public:
 
-  LibS2Geography(): hasIndex(false) {}
+  Geography(): hasIndex(false) {}
 
   // accessors need to be methods, since their calculation
   // depends on the geometry type
@@ -34,7 +34,7 @@ public:
   virtual double X() = 0;
   virtual double Y() = 0;
   virtual S2Point Centroid() = 0;
-  virtual std::unique_ptr<LibS2Geography> Boundary() = 0;
+  virtual std::unique_ptr<Geography> Boundary() = 0;
 
   // every type will build the index differently based on
   // the underlying data, and this can (should?) be done
@@ -45,7 +45,7 @@ public:
   // but exporting can be done here
   virtual void Export(WKGeometryHandler* handler, uint32_t partId) = 0;
 
-  virtual ~LibS2Geography() {}
+  virtual ~Geography() {}
 
   // other calculations use ShapeIndex
   virtual S2ShapeIndex* ShapeIndex() {
@@ -62,10 +62,10 @@ protected:
   bool hasIndex;
 };
 
-class LibS2GeographyBuilder: public WKGeometryHandler {
+class GeographyBuilder: public WKGeometryHandler {
 public:
-  virtual std::unique_ptr<LibS2Geography> build() = 0;
-  virtual ~LibS2GeographyBuilder() {}
+  virtual std::unique_ptr<Geography> build() = 0;
+  virtual ~GeographyBuilder() {}
 };
 
 #endif

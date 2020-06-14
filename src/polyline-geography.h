@@ -1,15 +1,15 @@
 
-#ifndef LIBS2_POLYLINE_GEOGRAPHY_H
-#define LIBS2_POLYLINE_GEOGRAPHY_H
+#ifndef POLYLINE_GEOGRAPHY_H
+#define POLYLINE_GEOGRAPHY_H
 
 #include "geography.h"
 
 // This class handles (vectors of) polylines (LINESTRING and MULTILINESTRING)
 // This is similar to an S2PolylineVectorLayer
-class LibS2PolylineGeography: public LibS2Geography {
+class PolylineGeography: public Geography {
 public:
-  LibS2PolylineGeography(): polylines(0) {}
-  LibS2PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
+  PolylineGeography(): polylines(0) {}
+  PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
   bool IsCollection() {
@@ -63,7 +63,7 @@ public:
     return output;
   }
 
-  std::unique_ptr<LibS2Geography> Boundary() {
+  std::unique_ptr<Geography> Boundary() {
     std::vector<S2Point> endpoints;
     for (size_t i = 0; i < this->polylines.size(); i++) {
       if (this->polylines[i]->num_vertices() >= 2) {
@@ -72,7 +72,7 @@ public:
       }
     }
     
-    return absl::make_unique<LibS2PointGeography>(endpoints);
+    return absl::make_unique<PointGeography>(endpoints);
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -136,7 +136,7 @@ public:
     }
   }
 
-  class Builder: public LibS2GeographyBuilder {
+  class Builder: public GeographyBuilder {
   public:
     void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
       if (meta.geometryType == WKGeometryType::LineString) {
@@ -154,8 +154,8 @@ public:
       }
     }
 
-    std::unique_ptr<LibS2Geography> build() {
-      return absl::make_unique<LibS2PolylineGeography>(std::move(this->polylines));
+    std::unique_ptr<Geography> build() {
+      return absl::make_unique<PolylineGeography>(std::move(this->polylines));
     }
 
     private:

@@ -1,6 +1,6 @@
 
-#ifndef LIBS2_POLYGON_GEOGRAPHY_H
-#define LIBS2_POLYGON_GEOGRAPHY_H
+#ifndef POLYGON_GEOGRAPHY_H
+#define POLYGON_GEOGRAPHY_H
 
 #include "geography.h"
 #include "point-geography.h"
@@ -8,10 +8,10 @@
 
 // This class handles polygons (POLYGON and MULTIPOLYGON)
 // This is similar to an S2PolygonLayer
-class LibS2PolygonGeography: public LibS2Geography {
+class PolygonGeography: public Geography {
 public:
-  LibS2PolygonGeography() {}
-  LibS2PolygonGeography(std::unique_ptr<S2Polygon> polygon):
+  PolygonGeography() {}
+  PolygonGeography(std::unique_ptr<S2Polygon> polygon):
     polygon(std::move(polygon)) {}
 
   bool IsCollection() {
@@ -35,7 +35,7 @@ public:
   }
 
   double Perimeter() {
-    std::unique_ptr<LibS2Geography> boundary = this->Boundary();
+    std::unique_ptr<Geography> boundary = this->Boundary();
     return boundary->Length();
   }
 
@@ -51,8 +51,8 @@ public:
     return this->polygon->GetCentroid();
   }
 
-  std::unique_ptr<LibS2Geography> Boundary() {
-    LibS2PolylineGeography::Builder builder;
+  std::unique_ptr<Geography> Boundary() {
+    PolylineGeography::Builder builder;
     std::vector<std::vector<int>> flatIndices = this->flatLoopIndices();
 
     // export multilinestring
@@ -118,7 +118,7 @@ public:
     }
   }
 
-  class Builder: public LibS2GeographyBuilder {
+  class Builder: public GeographyBuilder {
   public:
     Builder(bool oriented): oriented(oriented) {}
 
@@ -158,7 +158,7 @@ public:
       this->loops.push_back(std::move(loop));
     }
 
-    std::unique_ptr<LibS2Geography> build() {
+    std::unique_ptr<Geography> build() {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
       polygon->set_s2debug_override(S2Debug::DISABLE);
       if (this->loops.size() > 0 && oriented) {
@@ -179,7 +179,7 @@ public:
         polygon->InitToSnapped(polygon.get(), snap_level);
       }
 
-      return absl::make_unique<LibS2PolygonGeography>(std::move(polygon));
+      return absl::make_unique<PolygonGeography>(std::move(polygon));
     }
 
   private:

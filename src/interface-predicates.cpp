@@ -13,10 +13,10 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model = -1) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
+LogicalVector cpp_s2_intersects(List geog1, List geog2, int model = -1) {
+  class Op: public BinaryGeographyOperator<LogicalVector, int> {
 
-    int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex(),
         options);
     };
@@ -31,18 +31,18 @@ LogicalVector libs2_cpp_s2_intersects(List geog1, List geog2, int model = -1) {
     }
   };
 
-  LibS2Op op;
+  Op op;
   if (model >= 0)
     op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_equals(List geog1, List geog2, int model = -1) {
+LogicalVector cpp_s2_equals(List geog1, List geog2, int model = -1) {
   // for s2_equals(), handling polygon_model wouldn't make sense, right?
-  class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
+  class Op: public BinaryGeographyOperator<LogicalVector, int> {
 
-    int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Equals(*feature1->ShapeIndex(), *feature2->ShapeIndex());
     }
     S2BooleanOperation::Options options = S2BooleanOperation::Options();
@@ -56,17 +56,17 @@ LogicalVector libs2_cpp_s2_equals(List geog1, List geog2, int model = -1) {
     }
   };
 
-  LibS2Op op;
+  Op op;
   if (model >= 0)
     op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_contains(List geog1, List geog2, int model = -1) {
-  class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
+LogicalVector cpp_s2_contains(List geog1, List geog2, int model = -1) {
+  class Op: public BinaryGeographyOperator<LogicalVector, int> {
 
-    int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Contains(*feature1->ShapeIndex(), *feature2->ShapeIndex());
     }
     S2BooleanOperation::Options options = S2BooleanOperation::Options();
@@ -80,52 +80,52 @@ LogicalVector libs2_cpp_s2_contains(List geog1, List geog2, int model = -1) {
     }
   };
 
-  LibS2Op op;
+  Op op;
   if (model >= 0)
     op.set_model(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
+LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
   if (distance.size() != geog1.size())  {
     stop("Incompatible lengths"); // #nocov
   }
 
-  class LibS2Op: public LibS2BinaryGeographyOperator<LogicalVector, int> {
+  class Op: public BinaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector distance;
-    LibS2Op(NumericVector distance): distance(distance) {}
+    Op(NumericVector distance): distance(distance) {}
 
-    int processFeature(XPtr<LibS2Geography> feature1, XPtr<LibS2Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
       return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance[i]));
     }
   };
 
-  LibS2Op op(distance);
+  Op op(distance);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector libs2_cpp_s2_intersectsbox(List geog,
+LogicalVector cpp_s2_intersectsbox(List geog,
                                          NumericVector lng1, NumericVector lat1,
                                          NumericVector lng2, NumericVector lat2,
                                          IntegerVector detail,
 										 int model = -1) {
 
-  class LibS2Op: public LibS2UnaryGeographyOperator<LogicalVector, int> {
+  class Op: public UnaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector lng1, lat1, lng2, lat2;
     IntegerVector detail;
 
-    LibS2Op(NumericVector lng1, NumericVector lat1,
+    Op(NumericVector lng1, NumericVector lat1,
             NumericVector lng2, NumericVector lat2,
             IntegerVector detail):
       lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2), detail(detail) {}
 
-    int processFeature(XPtr<LibS2Geography> feature, R_xlen_t i) {
+    int processFeature(XPtr<Geography> feature, R_xlen_t i) {
       // construct polygon
       // this might be easier with an s2region intersection
       double xmin = this->lng1[i];
@@ -193,7 +193,7 @@ LogicalVector libs2_cpp_s2_intersectsbox(List geog,
     }
   };
 
-  LibS2Op op(lng1, lat1, lng2, lat2, detail);
+  Op op(lng1, lat1, lng2, lat2, detail);
   if (model >= 0)
     op.set_model(model);
   return op.processVector(geog);

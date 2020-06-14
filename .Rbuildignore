@@ -1,7 +1,8 @@
-^libs2\.Rproj$
+^s2\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
 ^src/Makevars$
 ^\.github$
+^\.vscode$
 ^\.covrignore$
 ^windows$

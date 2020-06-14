@@ -1,4 +1,4 @@
-> library(libs2)
+> library(s2)
 > s2_set_snaplevel(30) # for windows i386
 [1] -1
 > u = s2_union(

@@ -23,19 +23,19 @@
 #' - [ST_MAXDISTANCE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_maxdistance)
 #'
 s2_iscollection <- function(x) {
-  libs2_cpp_s2_iscollection(s2geography(x))
+  cpp_s2_iscollection(s2geography(x))
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_dimension <- function(x) {
-  libs2_cpp_s2_dimension(s2geography(x))
+  cpp_s2_dimension(s2geography(x))
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_numpoints <- function(x) {
-  libs2_cpp_s2_numpoints(s2geography(x))
+  cpp_s2_numpoints(s2geography(x))
 }
 
 #' @rdname s2_iscollection
@@ -48,45 +48,45 @@ s2_isempty <- function(x) {
 #' @export
 s2_area <- function(x, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
-  libs2_cpp_s2_area(recycled[[1]]) * radius ^ 2
+  cpp_s2_area(recycled[[1]]) * radius ^ 2
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_length <- function(x, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
-  libs2_cpp_s2_length(recycled[[1]]) * radius
+  cpp_s2_length(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_perimeter <- function(x, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
-  libs2_cpp_s2_perimeter(recycled[[1]]) * radius
+  cpp_s2_perimeter(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_x <- function(x) {
-  libs2_cpp_s2_x(s2geography(x))
+  cpp_s2_x(s2geography(x))
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_y <- function(x) {
-  libs2_cpp_s2_y(s2geography(x))
+  cpp_s2_y(s2geography(x))
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_distance <- function(x, y, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), s2geography(y), radius)
-  libs2_cpp_s2_distance(recycled[[1]], recycled[[2]]) * radius
+  cpp_s2_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
 s2_maxdistance <- function(x, y, radius = s2earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), s2geography(y), radius)
-  libs2_cpp_s2_maxdistance(recycled[[1]], recycled[[2]]) * radius
+  cpp_s2_maxdistance(recycled[[1]], recycled[[2]]) * radius
 }
