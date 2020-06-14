@@ -28,8 +28,8 @@ s2_data_timezones <- as.data.frame(
 )
 
 # make sure this will load into S2
-s2 <- libs2::s2geography(s2_data_timezones$geometry)
-s2_wkb <- libs2::s2_asbinary(s2)
+s2 <- s2::s2geography(s2_data_timezones$geometry)
+s2_wkb <- s2::s2_asbinary(s2)
 
 usethis::use_data(s2_data_timezones, overwrite = TRUE)
 

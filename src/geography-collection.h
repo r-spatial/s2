@@ -1,16 +1,16 @@
 
-#ifndef LIBS2_GEOGRAPHY_COLLECTION_H
-#define LIBS2_GEOGRAPHY_COLLECTION_H
+#ifndef GEOGRAPHY_COLLECTION_H
+#define GEOGRAPHY_COLLECTION_H
 
 #include <algorithm>
-#include "libs2-geography.h"
+#include "geography.h"
 
-// This class handles collections of other LibS2Geography
+// This class handles collections of other Geography
 // objects.
-class LibS2GeographyCollection: public LibS2Geography {
+class GeographyCollection: public Geography {
 public:
-  LibS2GeographyCollection(): features(0) {}
-  LibS2GeographyCollection(std::vector<std::unique_ptr<LibS2Geography>> features):
+  GeographyCollection(): features(0) {}
+  GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
   bool IsCollection() {
@@ -78,13 +78,13 @@ public:
     return cumCentroid;
   }
 
-  std::unique_ptr<LibS2Geography> Boundary() {
-    std::vector<std::unique_ptr<LibS2Geography>> featureBoundaries(this->features.size());
+  std::unique_ptr<Geography> Boundary() {
+    std::vector<std::unique_ptr<Geography>> featureBoundaries(this->features.size());
     for (size_t i = 0; i < this->features.size(); i++) {
       featureBoundaries[i] = this->features[i]->Boundary();
     }
 
-    return absl::make_unique<LibS2GeographyCollection>(std::move(featureBoundaries));
+    return absl::make_unique<GeographyCollection>(std::move(featureBoundaries));
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -105,7 +105,7 @@ public:
     handler->nextGeometryEnd(meta, partId);
   }
 
-  class Builder: public LibS2GeographyBuilder {
+  class Builder: public GeographyBuilder {
   public:
 
     Builder(bool oriented):
@@ -127,18 +127,18 @@ public:
         switch (meta.geometryType) {
         case WKGeometryType::Point:
         case WKGeometryType::MultiPoint:
-          this->builderPtr = absl::make_unique<LibS2PointGeography::Builder>();
+          this->builderPtr = absl::make_unique<PointGeography::Builder>();
           break;
         case WKGeometryType::LineString:
         case WKGeometryType::MultiLineString:
-          this->builderPtr = absl::make_unique<LibS2PolylineGeography::Builder>();
+          this->builderPtr = absl::make_unique<PolylineGeography::Builder>();
           break;
         case WKGeometryType::Polygon:
         case WKGeometryType::MultiPolygon:
-          this->builderPtr = absl::make_unique<LibS2PolygonGeography::Builder>(this->oriented);
+          this->builderPtr = absl::make_unique<PolygonGeography::Builder>(this->oriented);
           break;
         case WKGeometryType::GeometryCollection:
-          this->builderPtr = absl::make_unique<LibS2GeographyCollection::Builder>(this->oriented);
+          this->builderPtr = absl::make_unique<GeographyCollection::Builder>(this->oriented);
           break;
         default:
           std::stringstream err;
@@ -171,25 +171,25 @@ public:
       this->builder()->nextGeometryEnd(meta, partId);
 
       if (&meta == this->builderMetaPtr) {
-        std::unique_ptr<LibS2Geography> feature = this->builder()->build();
+        std::unique_ptr<Geography> feature = this->builder()->build();
         features.push_back(std::move(feature));
-        this->builderPtr = std::unique_ptr<LibS2GeographyBuilder>(nullptr);
+        this->builderPtr = std::unique_ptr<GeographyBuilder>(nullptr);
         this->builderMetaPtr = nullptr;
       }
     }
 
-    std::unique_ptr<LibS2Geography> build() {
-      return absl::make_unique<LibS2GeographyCollection>(std::move(this->features));
+    std::unique_ptr<Geography> build() {
+      return absl::make_unique<GeographyCollection>(std::move(this->features));
     }
 
   private:
-    std::vector<std::unique_ptr<LibS2Geography>> features;
+    std::vector<std::unique_ptr<Geography>> features;
     WKGeometryMeta* metaPtr;
-    std::unique_ptr<LibS2GeographyBuilder> builderPtr;
+    std::unique_ptr<GeographyBuilder> builderPtr;
     WKGeometryMeta* builderMetaPtr;
     bool oriented;
 
-    LibS2GeographyBuilder* builder() {
+    GeographyBuilder* builder() {
       if (this->builderPtr) {
         return this->builderPtr.get();
       } else {
@@ -199,7 +199,7 @@ public:
   };
 
 private:
-  std::vector<std::unique_ptr<LibS2Geography>> features;
+  std::vector<std::unique_ptr<Geography>> features;
 };
 
 #endif

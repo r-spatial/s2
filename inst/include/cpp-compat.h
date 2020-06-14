@@ -1,6 +1,6 @@
 
-#ifndef LIBS2_CPP_COMPAT_H
-#define LIBS2_CPP_COMPAT_H
+#ifndef CPP_COMPAT_H
+#define CPP_COMPAT_H
 
 #include <streambuf>
 

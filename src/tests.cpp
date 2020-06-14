@@ -25,7 +25,7 @@ DEFINE_double(query_radius_km, 1000, "Query radius in kilometers");
 static const char kPrefix[] = "s2:";
 
 // [[Rcpp::export]]
-void libs2_cpp_test_indexing() {
+void cpp_test_indexing() {
 
   // Create a set of "documents" to be indexed.  Each document consists of a
   // single point.  (You can easily substitute any S2Region type here, or even

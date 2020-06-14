@@ -1,19 +1,19 @@
 
-#ifndef LIBS2_POINT_GEOGRAPHY_H
-#define LIBS2_POINT_GEOGRAPHY_H
+#ifndef POINT_GEOGRAPHY_H
+#define POINT_GEOGRAPHY_H
 
-#include "libs2-geography.h"
+#include "geography.h"
 
 // This class handles both points and multipoints, as this is how
 // points are generally returned/required in S2 (vector of S2Point)
 // This is similar to an S2PointVectorLayer
-class LibS2PointGeography: public LibS2Geography {
+class PointGeography: public Geography {
 public:
-  LibS2PointGeography(): points(0) {}
-  LibS2PointGeography(S2Point point): points(1) {
+  PointGeography(): points(0) {}
+  PointGeography(S2Point point): points(1) {
     this->points[0] = point;
   }
-  LibS2PointGeography(std::vector<S2Point> points): points(points) {}
+  PointGeography(std::vector<S2Point> points): points(points) {}
 
   bool IsCollection() {
     return this->points.size() > 1;
@@ -66,8 +66,8 @@ public:
     return output;
   }
 
-  std::unique_ptr<LibS2Geography> Boundary() {
-    return absl::make_unique<LibS2PointGeography>();
+  std::unique_ptr<Geography> Boundary() {
+    return absl::make_unique<PointGeography>();
   }
 
   virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -123,14 +123,14 @@ public:
     }
   }
 
-  class Builder: public LibS2GeographyBuilder {
+  class Builder: public GeographyBuilder {
   public:
     void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
       points.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
     }
 
-    std::unique_ptr<LibS2Geography> build() {
-      return absl::make_unique<LibS2PointGeography>(std::move(this->points));
+    std::unique_ptr<Geography> build() {
+      return absl::make_unique<PointGeography>(std::move(this->points));
     }
 
     private:

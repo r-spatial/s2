@@ -1,5 +1,5 @@
 Package: s2
-Title: Spherical Geometry Operators, Using the S2 Geometry Library
+Title: Spherical Geometry Operators Using the S2 Geometry Library
 Version: 0.99-0
 Authors@R: c(
      person(given = "Dewey",
@@ -13,10 +13,11 @@ Authors@R: c(
              email = "edzer.pebesma@uni-muenster.de",
              comment = c(ORCID = "0000-0001-8049-7069")),
     person("Ege", "Rubak", email="rubak@math.aau.dk", role = c("aut")),
-    person("Jeroen", "Ooms", , "jeroen.ooms@stat.ucla.edu", role = "ctb", comment = "configure and cleanup script"),
+    person("Jeroen", "Ooms", , "jeroen.ooms@stat.ucla.edu", role = "ctb", comment = "configure script"),
     person(family = "Google, Inc.", role = "cph", comment = "Original s2geometry.io source code")
   )
-Description: Geometry operations on the sphere using s2geometry.
+Description: Provides R bindings for Google's s2 library for geometric calculations on
+    the sphere.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -28,9 +29,9 @@ Imports:
     Rcpp
 Suggests: 
     testthat,
-	knitr
+    knitr
 VignetteBuilder: knitr
-URL: https://github.com/r-spatial/libs2/ https://s2geometry.io/
-BugReports: https://github.com/r-spatial/libs2/issues
+URL: https://github.com/r-spatial/s2/, https://s2geometry.io/
+BugReports: https://github.com/r-spatial/s2/issues
 Depends: 
     R (>= 3.0.0)

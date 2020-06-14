@@ -8,7 +8,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "libs2-snap.h"
+#include "snap.h"
 
 // [[Rcpp::export]]
 List s2polygon_from_s2polyline(List s2polyline, bool oriented, bool check) {

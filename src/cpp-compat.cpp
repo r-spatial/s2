@@ -1,5 +1,5 @@
 
-#include "libs2-cpp-compat.h"
+#include "cpp-compat.h"
 #include <Rcpp.h>
 #include <Rmath.h>
 using namespace Rcpp;

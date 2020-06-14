@@ -8,7 +8,7 @@
 #include "wk/geometry-handler.h"
 #include "wk/geometry-debug-handler.h"
 
-#include "libs2-snap.h"
+#include "snap.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

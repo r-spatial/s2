@@ -17,7 +17,7 @@
 
 #ifndef S2_S2TESTING_H_
 #define S2_S2TESTING_H_
-#include "libs2-cpp-compat.h"
+#include "cpp-compat.h"
 
 #include <algorithm>
 #include <memory>

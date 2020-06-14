@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "libs2-snap.h"
+#include "snap.h"
 using namespace Rcpp;
 
 int snap_level = -1; // global variable

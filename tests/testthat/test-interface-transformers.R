@@ -235,10 +235,10 @@ test_that("s2_centroid_agg() works", {
 
 test_that("real data survives the S2BooleanOperation", {
   for (continent in unique(s2::s2_data_world_borders$continent)) {
-    # this is primarily a test of the S2BooleanOperation -> LibS2Geography constructor
+    # this is primarily a test of the S2BooleanOperation -> Geography constructor
     unioned <- expect_is(s2_union_agg(s2data_countries(continent)), "s2geography")
 
-    # this is a test of LibS2Geography::Export() on potentially complex polygons
+    # this is a test of Geography::Export() on potentially complex polygons
     exported <- expect_length(s2_asbinary(unioned), 1)
 
     # the output WKB should load as a polygon with oriented = TRUE and result in the
