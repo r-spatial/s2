@@ -1,0 +1,69 @@
+development:
+  mode: auto
+
+reference:
+
+- title: Geography Constructors and Exporters
+  desc: Convert objects to and from geography vectors
+  contents:
+  - s2_geogpoint
+  - s2_makeline
+  - s2_makepolygon
+  - s2_makepolygonoriented
+  - s2_geogfromtext
+  - s2_geogfromwkb
+  - s2_astext
+  - s2_asbinary
+
+- title: Geography Transformations
+  desc: Functions that operate on geography vectors and return geography vectors
+  contents:
+  - s2_boundary
+  - s2_centroid
+  - s2_closestpoint
+  - s2_difference
+  - s2_symdifference
+  - s2_intersection
+  - s2_union
+  - s2_snaptogrid
+  - s2_union_agg
+  - s2_centroid_agg
+
+- title: Binary Geography Predicates
+  desc: Functions that operate two geography vectors and return a logical vector
+  contents:
+  - s2_contains
+  - s2_coveredby
+  - s2_covers
+  - s2_disjoint
+  - s2_equals
+  - s2_intersects
+  - s2_intersectsbox
+  - s2_touches
+  - s2_within
+  - s2_dwithin
+
+- title: Geography Accessors
+  desc: Functions that operate one or more geography vectors and return a vector of values
+  contents:
+  - s2_iscollection
+  - s2_isempty
+  - s2_dimension
+  - s2_numpoints
+  - s2_isempty
+  - s2_area
+  - s2_length
+  - s2_perimeter
+  - s2_x
+  - s2_y
+  - s2_distance
+  - s2_maxdistance
+
+- title: Example Data
+  desc: Datasets useful for demonstrating s2 functions
+  contents:
+  - starts_with("s2_data")
+
+- title: S3 Details
+  contents:
+  - contains("s2xptr")

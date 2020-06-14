@@ -6,3 +6,6 @@
 ^\.vscode$
 ^\.covrignore$
 ^windows$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
