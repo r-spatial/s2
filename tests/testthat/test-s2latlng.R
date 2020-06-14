@@ -29,6 +29,15 @@ test_that("s2latlng objects can be created from and converted back to R objects"
   )
 })
 
+test_that("s2latlng can be imported from wkb", {
+  wkb_point <- wk::as_wkb("POINT (-64 45)")
+
+  expect_identical(
+    as.data.frame(s2latlng(wkb_point)),
+    data.frame(lat = 45, lng = -64)
+  )
+})
+
 test_that("s2latlng objects can be printed", {
   expect_output(print(s2latlng(45, 64)), "s2latlng")
 })

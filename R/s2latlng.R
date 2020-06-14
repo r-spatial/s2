@@ -45,6 +45,11 @@ s2latlng.matrix <- function(lat, ...) {
   s2latlng.numeric(lat[, 1, drop = TRUE], lat[, 2, drop = TRUE])
 }
 
+#' @export
+s2latlng.wk_wkb <- function(lat, ...) {
+  new_s2xptr(s2latlng_from_wkb(lat), "s2latlng")
+}
+
 #' @rdname s2latlng
 #' @export
 as.data.frame.s2latlng <- function(x, ...) {

@@ -26,7 +26,8 @@ RoxygenNote: 7.1.0
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp
+    Rcpp,
+    wk
 Suggests: 
     testthat,
     knitr
