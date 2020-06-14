@@ -18,7 +18,7 @@ Authors@R: c(
   )
 Description: Provides R bindings for Google's s2 library for geometric calculations on
     the sphere.
-License: GPL-3
+License: Apache License (== 2.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
