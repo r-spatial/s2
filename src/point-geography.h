@@ -2,7 +2,7 @@
 #ifndef LIBS2_POINT_GEOGRAPHY_H
 #define LIBS2_POINT_GEOGRAPHY_H
 
-#include "libs2-geography.h"
+#include "geography.h"
 
 // This class handles both points and multipoints, as this is how
 // points are generally returned/required in S2 (vector of S2Point)

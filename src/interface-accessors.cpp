@@ -1,5 +1,5 @@
 
-#include "libs2-geography-operator.h"
+#include "geography-operator.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2furthest_edge_query.h"
 #include <Rcpp.h>

@@ -13,13 +13,13 @@
 #include "s2/s2builderutil_closed_set_normalizer.h"
 #include "s2/s2builderutil_snap_functions.h"
 
-#include "libs2-snap.h"
-#include "libs2-model.h"
-#include "libs2-geography-operator.h"
-#include "libs2-point-geography.h"
-#include "libs2-polyline-geography.h"
-#include "libs2-polygon-geography.h"
-#include "libs2-geography-collection.h"
+#include "snap.h"
+#include "model.h"
+#include "geography-operator.h"
+#include "point-geography.h"
+#include "polyline-geography.h"
+#include "polygon-geography.h"
+#include "geography-collection.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

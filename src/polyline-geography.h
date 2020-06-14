@@ -2,7 +2,7 @@
 #ifndef LIBS2_POLYLINE_GEOGRAPHY_H
 #define LIBS2_POLYLINE_GEOGRAPHY_H
 
-#include "libs2-geography.h"
+#include "geography.h"
 
 // This class handles (vectors of) polylines (LINESTRING and MULTILINESTRING)
 // This is similar to an S2PolylineVectorLayer

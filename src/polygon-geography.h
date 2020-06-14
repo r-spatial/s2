@@ -2,9 +2,9 @@
 #ifndef LIBS2_POLYGON_GEOGRAPHY_H
 #define LIBS2_POLYGON_GEOGRAPHY_H
 
-#include "libs2-geography.h"
-#include "libs2-point-geography.h"
-#include "libs2-polyline-geography.h"
+#include "geography.h"
+#include "point-geography.h"
+#include "polyline-geography.h"
 
 // This class handles polygons (POLYGON and MULTIPOLYGON)
 // This is similar to an S2PolygonLayer

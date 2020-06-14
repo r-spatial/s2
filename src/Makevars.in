@@ -3,21 +3,21 @@ PKG_LIBS = @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 CXX_STD = CXX11
 
-OBJECTS = libs2-cpp-compat.o \
-     libs2-interface-accessors.o \
-     libs2-interface-predicates.o \
-     libs2-interface-transformers.o \
-     libs2-model.o \
-     libs2-s2geography.o \
-     libs2-s2latlng.o \
-     libs2-s2point.o \
-     libs2-s2polygon.o \
-     libs2-s2polyline.o \
-     libs2-s2xptr.o \
-     libs2-snap.o \
-     libs2-tests.o \
-     libs2-wkb.o \
+OBJECTS = cpp-compat.o \
+     interface-accessors.o \
+     interface-predicates.o \
+     interface-transformers.o \
+     model.o \
      RcppExports.o \
+     s2geography.o \
+     s2latlng.o \
+     s2point.o \
+     s2polygon.o \
+     s2polyline.o \
+     s2xptr.o \
+     snap.o \
+     tests.o \
+     wkb.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \

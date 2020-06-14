@@ -1,5 +1,5 @@
 #include "s2/s2boolean_operation.h"
-#include "libs2-model.h"
+#include "model.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

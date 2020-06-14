@@ -15,7 +15,7 @@
 
 #ifndef S2_BASE_LOGGING_H_
 #define S2_BASE_LOGGING_H_
-#include "libs2-cpp-compat.h"
+#include "cpp-compat.h"
 
 #ifdef S2_USE_GLOG
 

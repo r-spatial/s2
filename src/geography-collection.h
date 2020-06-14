@@ -3,7 +3,7 @@
 #define LIBS2_GEOGRAPHY_COLLECTION_H
 
 #include <algorithm>
-#include "libs2-geography.h"
+#include "geography.h"
 
 // This class handles collections of other LibS2Geography
 // objects.
