@@ -234,9 +234,9 @@ test_that("s2_centroid_agg() works", {
 })
 
 test_that("real data survives the S2BooleanOperation", {
-  for (continent in unique(s2::s2_data_world_borders$continent)) {
+  for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor
-    unioned <- expect_is(s2_union_agg(s2data_countries(continent)), "s2_geography")
+    unioned <- expect_is(s2_union_agg(s2_data_countries(continent)), "s2_geography")
 
     # this is a test of Geography::Export() on potentially complex polygons
     exported <- expect_length(s2_asbinary(unioned), 1)

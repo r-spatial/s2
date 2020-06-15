@@ -10,7 +10,7 @@ unzip("data-raw/cities.zip", exdir = "data-raw/cities")
 
 sf <- read_sf("data-raw/cities/ne_110m_populated_places.shp")
 
-s2_data_cities <- as.data.frame(
+s2_data_tbl_cities <- as.data.frame(
   tibble::tibble(
     name = sf$NAMEASCII,
     population = sf$POP_MIN,
@@ -18,6 +18,6 @@ s2_data_cities <- as.data.frame(
   )
 )
 
-usethis::use_data(s2_data_cities, overwrite = TRUE)
+usethis::use_data(s2_data_tbl_cities, overwrite = TRUE)
 unlink("data-raw/cities.zip")
 unlink("data-raw/cities", recursive = TRUE)

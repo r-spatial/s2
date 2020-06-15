@@ -21,7 +21,7 @@ test_that("s2_asbinary() works", {
 })
 
 test_that("s2_asbinary works on (multi)polygons", {
-	geog <- s2data_countries()
+	geog <- s2_data_countries()
 	wkb <- s2_asbinary(geog)
 
 	expect_identical(

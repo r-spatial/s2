@@ -19,7 +19,7 @@ ne$geometry[[ant_ind]][] <- lapply(ne$geometry[[ant_ind]], function(ply) {
 })
 
 ne_wkb <- st_as_binary(ne$geometry, EWKT = TRUE) %>% wk::wkb()
-s2_data_world_borders <- as.data.frame(
+s2_data_tbl_countries <- as.data.frame(
   tibble::tibble(
     name = ne$admin,
     continent = ne$continent,
@@ -30,4 +30,4 @@ s2_data_world_borders <- as.data.frame(
 # check to see if this will fly
 wb_s2 <- s2::as_s2_geography(ne_wkb)
 
-usethis::use_data(s2_data_world_borders, overwrite = TRUE)
+usethis::use_data(s2_data_tbl_countries, overwrite = TRUE)
