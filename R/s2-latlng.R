@@ -2,7 +2,7 @@
 #' Create an s2_latlng vector
 #'
 #' This class represents a latitude and longitude on the Earth's surface.
-#' Most calculations in S2 convert this to a [s2_point()], which is a
+#' Most calculations in S2 convert this to a [as_s2_point()], which is a
 #' unit vector representation of this value.
 #'
 #' @param lat,lng Vectors of latitude and longitude values in degrees.
