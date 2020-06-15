@@ -7,7 +7,7 @@ test_that("s2_latlng objects can be created from and converted back to R objects
   latlng <- as_s2_latlng(45, 64)
   expect_identical(as_s2_latlng(latlng), latlng)
   expect_identical(
-    as.data.frame(as_s2_latlng(as_s2_point(1, 0, 0))),
+    as.data.frame(as_s2_latlng(s2_point(1, 0, 0))),
     as.data.frame(as_s2_latlng(0, 0))
   )
 

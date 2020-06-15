@@ -15,42 +15,42 @@
 #' as_s2_point(latlng)
 #' as.data.frame(as_s2_point(latlng))
 #'
+s2_point <- function(x, y, z) {
+  recycled <- recycle_common(as.double(x), as.double(y), as.double(z))
+  new_s2_xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
+}
+
+#' @rdname s2_point
+#' @export
 as_s2_point <- function(x, ...) {
   UseMethod("as_s2_point")
 }
 
-#' @rdname as_s2_point
+#' @rdname s2_point
 #' @export
 as_s2_point.s2_point <- function(x, ...) {
   x
 }
 
-#' @rdname as_s2_point
+#' @rdname s2_point
 #' @export
 as_s2_point.s2_latlng <- function(x, ...) {
   new_s2_xptr(s2_point_from_s2_latlng(x), "s2_point")
 }
 
-#' @rdname as_s2_point
-#' @export
-as_s2_point.numeric <- function(x, y, z, ...) {
-  recycled <- recycle_common(x, y, z)
-  new_s2_xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
-}
-
-#' @rdname as_s2_point
+#' @rdname s2_point
 #' @export
 as_s2_point.matrix <- function(x, ...) {
-  as_s2_point.numeric(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
+  s2_point(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
 }
 
-#' @rdname as_s2_point
+#' @rdname s2_point
 #' @export
 as.data.frame.s2_point <- function(x, ...) {
   as.data.frame(data_frame_from_s2_point(x))
 }
 
-#' @rdname as_s2_point
+#' @rdname s2_point
 #' @export
 as.matrix.s2_point <- function(x, ...) {
   as.matrix(as.data.frame(data_frame_from_s2_point(x)))
