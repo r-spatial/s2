@@ -43,14 +43,14 @@ test_that("s2_closest_point() works", {
   	precision = 6)
 })
 
-test_that("s2_nearestfeature() works", {
+test_that("s2_nearest_feature() works", {
   x = c("GEOMETRYCOLLECTION(POINT(-10 -10),POINT(0 0))")
   y = c("POINT (30 10)", "GEOMETRYCOLLECTION(POINT(1 1),LINESTRING(0.1 0,1 1),POINT(1 1),POINT(-10 -10))")
   e = "POINT EMPTY"
-  expect_identical(s2_nearestfeature(x, y), c(1L, 4L))
-  expect_identical(s2_nearestfeature(y, x), c(2L, 1L))
-  expect_identical(s2_nearestfeature(e, x), NA_integer_)
-  expect_identical(s2_nearestfeature(y, e), c(NA_integer_, NA_integer_))
+  expect_identical(s2_nearest_feature(x, y), c(1L, 4L))
+  expect_identical(s2_nearest_feature(y, x), c(2L, 1L))
+  expect_identical(s2_nearest_feature(e, x), NA_integer_)
+  expect_identical(s2_nearest_feature(y, e), c(NA_integer_, NA_integer_))
 })
 
 test_that("s2_difference() works", {
