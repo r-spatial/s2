@@ -34,10 +34,10 @@ A \code{\link[=new_s2_xptr]{new_s2_xptr()}} with class s2_point
 }
 \description{
 In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
-to a \code{\link[=s2_latlng]{s2_latlng()}}, which is a position on the Earth's surface.
+to a \code{\link[=as_s2_latlng]{as_s2_latlng()}}, which is a position on the Earth's surface.
 }
 \examples{
-latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
+latlng <- as_s2_latlng(45, -64) # Halifax, Nova Scotia!
 as_s2_point(latlng)
 as.data.frame(as_s2_point(latlng))
 

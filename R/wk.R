@@ -27,7 +27,7 @@ as_wkt.s2_geography <- function(x, ..., precision = 16, trim = TRUE) {
 #' @importFrom wk as_wkt
 #' @export
 as_wkt.s2_latlng <- function(x, ...,  precision = 16, trim = TRUE) {
-  # wk::new_wk_wkb(wkt_from_s2_latlng(x, precision = precision, trim = trim))
+  # wk::new_wk_wkb(wkt_from_as_s2_latlng(x, precision = precision, trim = trim))
   stop("Not implemented")
 }
 
