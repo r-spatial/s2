@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' latlng <- as_s2_latlng(45, -64) # Halifax, Nova Scotia!
+#' latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
 #' as_s2_point(latlng)
 #' as.data.frame(as_s2_point(latlng))
 #'

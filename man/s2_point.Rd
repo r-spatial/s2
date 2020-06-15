@@ -37,7 +37,7 @@ In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
 to a \code{\link[=as_s2_latlng]{as_s2_latlng()}}, which is a position on the Earth's surface.
 }
 \examples{
-latlng <- as_s2_latlng(45, -64) # Halifax, Nova Scotia!
+latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
 as_s2_point(latlng)
 as.data.frame(as_s2_point(latlng))
 
