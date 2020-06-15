@@ -23,13 +23,13 @@ List s2_latlng_from_numeric(NumericVector lat, NumericVector lng) {
 }
 
 // [[Rcpp::export]]
-List s2_latlng_from_s2point(List s2point) {
-  List output(s2point.size());
+List s2_latlng_from_s2_point(List s2_point) {
+  List output(s2_point.size());
 
   SEXP item;
   S2LatLng newItem;
-  for (R_xlen_t i = 0; i < s2point.size(); i++) {
-    item = s2point[i];
+  for (R_xlen_t i = 0; i < s2_point.size(); i++) {
+    item = s2_point[i];
     if (item == R_NilValue) {
       output[i] = R_NilValue;
     } else {

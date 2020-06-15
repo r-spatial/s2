@@ -5,7 +5,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z) {
+List s2_point_from_numeric(NumericVector x, NumericVector y, NumericVector z) {
   List output(x.size());
 
   for (R_xlen_t i = 0; i < x.size(); i++) {
@@ -16,7 +16,7 @@ List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z) {
 }
 
 // [[Rcpp::export]]
-List s2point_from_s2_latlng(List s2_latlng) {
+List s2_point_from_s2_latlng(List s2_latlng) {
   List output(s2_latlng.size());
 
   SEXP item;
@@ -36,14 +36,14 @@ List s2point_from_s2_latlng(List s2_latlng) {
 }
 
 // [[Rcpp::export]]
-List data_frame_from_s2point(List s2point) {
-  NumericVector x(s2point.size());
-  NumericVector y(s2point.size());
-  NumericVector z(s2point.size());
+List data_frame_from_s2_point(List s2_point) {
+  NumericVector x(s2_point.size());
+  NumericVector y(s2_point.size());
+  NumericVector z(s2_point.size());
 
   SEXP item;
-  for (R_xlen_t i = 0; i < s2point.size(); i++) {
-    item = s2point[i];
+  for (R_xlen_t i = 0; i < s2_point.size(); i++) {
+    item = s2_point[i];
     if (item == R_NilValue) {
       x[i] = NA_REAL;
       y[i] = NA_REAL;

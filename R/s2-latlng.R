@@ -2,7 +2,7 @@
 #' Create an s2_latlng vector
 #'
 #' This class represents a latitude and longitude on the Earth's surface.
-#' Most calculations in S2 convert this to a [s2point()], which is a
+#' Most calculations in S2 convert this to a [s2_point()], which is a
 #' unit vector representation of this value.
 #'
 #' @param lat,lng Vectors of latitude and longitude values in degrees.
@@ -28,8 +28,8 @@ s2_latlng.s2_latlng <- function(lat, ...) {
 
 #' @rdname s2_latlng
 #' @export
-s2_latlng.s2point <- function(lat, ...) {
-  new_s2xptr(s2_latlng_from_s2point(lat), "s2_latlng")
+s2_latlng.s2_point <- function(lat, ...) {
+  new_s2xptr(s2_latlng_from_s2_point(lat), "s2_latlng")
 }
 
 #' @rdname s2_latlng

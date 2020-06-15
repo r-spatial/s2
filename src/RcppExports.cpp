@@ -201,14 +201,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_latlng_from_s2point
-List s2_latlng_from_s2point(List s2point);
-RcppExport SEXP _s2_s2_latlng_from_s2point(SEXP s2pointSEXP) {
+// s2_latlng_from_s2_point
+List s2_latlng_from_s2_point(List s2_point);
+RcppExport SEXP _s2_s2_latlng_from_s2_point(SEXP s2_pointSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2point(s2pointSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_s2point(s2point));
+    Rcpp::traits::input_parameter< List >::type s2_point(s2_pointSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_s2_point(s2_point));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -246,38 +246,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2point_from_numeric
-List s2point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
-RcppExport SEXP _s2_s2point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+// s2_point_from_numeric
+List s2_point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
+RcppExport SEXP _s2_s2_point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2point_from_numeric(x, y, z));
+    rcpp_result_gen = Rcpp::wrap(s2_point_from_numeric(x, y, z));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2point_from_s2_latlng
-List s2point_from_s2_latlng(List s2_latlng);
-RcppExport SEXP _s2_s2point_from_s2_latlng(SEXP s2_latlngSEXP) {
+// s2_point_from_s2_latlng
+List s2_point_from_s2_latlng(List s2_latlng);
+RcppExport SEXP _s2_s2_point_from_s2_latlng(SEXP s2_latlngSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type s2_latlng(s2_latlngSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2point_from_s2_latlng(s2_latlng));
+    rcpp_result_gen = Rcpp::wrap(s2_point_from_s2_latlng(s2_latlng));
     return rcpp_result_gen;
 END_RCPP
 }
-// data_frame_from_s2point
-List data_frame_from_s2point(List s2point);
-RcppExport SEXP _s2_data_frame_from_s2point(SEXP s2pointSEXP) {
+// data_frame_from_s2_point
+List data_frame_from_s2_point(List s2_point);
+RcppExport SEXP _s2_data_frame_from_s2_point(SEXP s2_pointSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2point(s2pointSEXP);
-    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2point(s2point));
+    Rcpp::traits::input_parameter< List >::type s2_point(s2_pointSEXP);
+    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2_point(s2_point));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -534,13 +534,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2geography_to_wkb", (DL_FUNC) &_s2_s2geography_to_wkb, 2},
     {"_s2_s2geography_format", (DL_FUNC) &_s2_s2geography_format, 2},
     {"_s2_s2_latlng_from_numeric", (DL_FUNC) &_s2_s2_latlng_from_numeric, 2},
-    {"_s2_s2_latlng_from_s2point", (DL_FUNC) &_s2_s2_latlng_from_s2point, 1},
+    {"_s2_s2_latlng_from_s2_point", (DL_FUNC) &_s2_s2_latlng_from_s2_point, 1},
     {"_s2_data_frame_from_s2_latlng", (DL_FUNC) &_s2_data_frame_from_s2_latlng, 1},
     {"_s2_s2_latlng_from_wkb", (DL_FUNC) &_s2_s2_latlng_from_wkb, 1},
     {"_s2_wkb_from_s2_latlng", (DL_FUNC) &_s2_wkb_from_s2_latlng, 2},
-    {"_s2_s2point_from_numeric", (DL_FUNC) &_s2_s2point_from_numeric, 3},
-    {"_s2_s2point_from_s2_latlng", (DL_FUNC) &_s2_s2point_from_s2_latlng, 1},
-    {"_s2_data_frame_from_s2point", (DL_FUNC) &_s2_data_frame_from_s2point, 1},
+    {"_s2_s2_point_from_numeric", (DL_FUNC) &_s2_s2_point_from_numeric, 3},
+    {"_s2_s2_point_from_s2_latlng", (DL_FUNC) &_s2_s2_point_from_s2_latlng, 1},
+    {"_s2_data_frame_from_s2_point", (DL_FUNC) &_s2_data_frame_from_s2_point, 1},
     {"_s2_cpp_s2_intersects", (DL_FUNC) &_s2_cpp_s2_intersects, 3},
     {"_s2_cpp_s2_equals", (DL_FUNC) &_s2_cpp_s2_equals, 3},
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},

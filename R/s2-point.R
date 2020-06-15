@@ -1,5 +1,5 @@
 
-#' Create an s2point vector
+#' Create an s2_point vector
 #'
 #' In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
 #' to a [s2_latlng()], which is a position on the Earth's surface.
@@ -7,57 +7,57 @@
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
 #' @param ... Unused
 #'
-#' @return A [new_s2xptr()] with class s2point
+#' @return A [new_s2xptr()] with class s2_point
 #' @export
 #'
 #' @examples
 #' latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
-#' s2point(latlng)
-#' as.data.frame(s2point(latlng))
+#' s2_point(latlng)
+#' as.data.frame(s2_point(latlng))
 #'
-s2point <- function(x, ...) {
-  UseMethod("s2point")
+s2_point <- function(x, ...) {
+  UseMethod("s2_point")
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-s2point.s2point <- function(x, ...) {
+s2_point.s2_point <- function(x, ...) {
   x
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-s2point.s2_latlng <- function(x, ...) {
-  new_s2xptr(s2point_from_s2_latlng(x), "s2point")
+s2_point.s2_latlng <- function(x, ...) {
+  new_s2xptr(s2_point_from_s2_latlng(x), "s2_point")
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-s2point.numeric <- function(x, y, z, ...) {
+s2_point.numeric <- function(x, y, z, ...) {
   recycled <- recycle_common(x, y, z)
-  new_s2xptr(s2point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2point")
+  new_s2xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-s2point.matrix <- function(x, ...) {
-  s2point.numeric(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
+s2_point.matrix <- function(x, ...) {
+  s2_point.numeric(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-as.data.frame.s2point <- function(x, ...) {
-  as.data.frame(data_frame_from_s2point(x))
+as.data.frame.s2_point <- function(x, ...) {
+  as.data.frame(data_frame_from_s2_point(x))
 }
 
-#' @rdname s2point
+#' @rdname s2_point
 #' @export
-as.matrix.s2point <- function(x, ...) {
-  as.matrix(as.data.frame(data_frame_from_s2point(x)))
+as.matrix.s2_point <- function(x, ...) {
+  as.matrix(as.data.frame(data_frame_from_s2_point(x)))
 }
 
 #' @export
-format.s2point <- function(x, ...) {
+format.s2_point <- function(x, ...) {
   df <- as.data.frame(x)
   sprintf(
     "[%s %s %s]",

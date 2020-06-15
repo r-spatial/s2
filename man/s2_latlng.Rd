@@ -3,7 +3,7 @@
 \name{s2_latlng}
 \alias{s2_latlng}
 \alias{s2_latlng.s2_latlng}
-\alias{s2_latlng.s2point}
+\alias{s2_latlng.s2_point}
 \alias{s2_latlng.numeric}
 \alias{s2_latlng.matrix}
 \alias{as.data.frame.s2_latlng}
@@ -14,7 +14,7 @@ s2_latlng(lat, ...)
 
 \method{s2_latlng}{s2_latlng}(lat, ...)
 
-\method{s2_latlng}{s2point}(lat, ...)
+\method{s2_latlng}{s2_point}(lat, ...)
 
 \method{s2_latlng}{numeric}(lat, lng, ...)
 
@@ -36,7 +36,7 @@ A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2_latlng
 }
 \description{
 This class represents a latitude and longitude on the Earth's surface.
-Most calculations in S2 convert this to a \code{\link[=s2point]{s2point()}}, which is a
+Most calculations in S2 convert this to a \code{\link[=s2_point]{s2_point()}}, which is a
 unit vector representation of this value.
 }
 \examples{

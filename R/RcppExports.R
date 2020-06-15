@@ -69,8 +69,8 @@ s2_latlng_from_numeric <- function(lat, lng) {
     .Call(`_s2_s2_latlng_from_numeric`, lat, lng)
 }
 
-s2_latlng_from_s2point <- function(s2point) {
-    .Call(`_s2_s2_latlng_from_s2point`, s2point)
+s2_latlng_from_s2_point <- function(s2_point) {
+    .Call(`_s2_s2_latlng_from_s2_point`, s2_point)
 }
 
 data_frame_from_s2_latlng <- function(xptr) {
@@ -85,16 +85,16 @@ wkb_from_s2_latlng <- function(s2_latlng, endian) {
     .Call(`_s2_wkb_from_s2_latlng`, s2_latlng, endian)
 }
 
-s2point_from_numeric <- function(x, y, z) {
-    .Call(`_s2_s2point_from_numeric`, x, y, z)
+s2_point_from_numeric <- function(x, y, z) {
+    .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }
 
-s2point_from_s2_latlng <- function(s2_latlng) {
-    .Call(`_s2_s2point_from_s2_latlng`, s2_latlng)
+s2_point_from_s2_latlng <- function(s2_latlng) {
+    .Call(`_s2_s2_point_from_s2_latlng`, s2_latlng)
 }
 
-data_frame_from_s2point <- function(s2point) {
-    .Call(`_s2_data_frame_from_s2point`, s2point)
+data_frame_from_s2_point <- function(s2_point) {
+    .Call(`_s2_data_frame_from_s2_point`, s2_point)
 }
 
 cpp_s2_intersects <- function(geog1, geog2, model = -1L) {
