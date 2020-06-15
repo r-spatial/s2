@@ -4,7 +4,7 @@
 \alias{s2_boundary}
 \alias{s2_centroid}
 \alias{s2_closest_point}
-\alias{s2_nearestfeature}
+\alias{s2_nearest_feature}
 \alias{s2_difference}
 \alias{s2_sym_difference}
 \alias{s2_intersection}
@@ -20,7 +20,7 @@ s2_centroid(x)
 
 s2_closest_point(x, y)
 
-s2_nearestfeature(x, y)
+s2_nearest_feature(x, y)
 
 s2_difference(x, y, model = -1L, snap_level = -1L)
 

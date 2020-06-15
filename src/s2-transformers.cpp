@@ -337,7 +337,7 @@ List cpp_s2_closest_point(List geog1, List geog2) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_nearestfeature(List geog1, List geog2) {
+List cpp_s2_nearest_feature(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
