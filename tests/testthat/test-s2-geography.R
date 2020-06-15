@@ -2,7 +2,7 @@
 test_that("s2_geography class works", {
   geog <- new_s2_xptr(list(NULL), class = "s2_geography")
   expect_output(print(geog), "s2_geography")
-  expect_identical(s2_geography(geog), geog)
+  expect_identical(as_s2_geography(geog), geog)
 })
 
 test_that("s2_geography vectors can be created from wkb points", {
@@ -11,42 +11,42 @@ test_that("s2_geography vectors can be created from wkb points", {
                              0x00, 0x00, 0x00, 0x80, 0x46, 0x40)))
   class(wkb_point) <- "wk_wkb"
 
-  expect_output(print(s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
+  expect_output(print(as_s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
 })
 
 test_that("s2_geography vectors can be created from wkt", {
-  expect_output(print(s2_geography("POINT (-64 45)")), "<POINT \\(-64 45\\)>")
-  expect_output(print(s2_geography("POINT EMPTY")), "<POINT EMPTY>")
+  expect_output(print(as_s2_geography("POINT (-64 45)")), "<POINT \\(-64 45\\)>")
+  expect_output(print(as_s2_geography("POINT EMPTY")), "<POINT EMPTY>")
   expect_output(
-    print(s2_geography("MULTIPOINT ((-64 45), (30 10))")),
+    print(as_s2_geography("MULTIPOINT ((-64 45), (30 10))")),
     "<MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)>"
   )
 
   expect_output(
-    print(s2_geography("LINESTRING (-64 45, 0 0)")),
+    print(as_s2_geography("LINESTRING (-64 45, 0 0)")),
     "<LINESTRING \\(-64 45, 0 0\\)>"
   )
   expect_output(
-    print(s2_geography("LINESTRING EMPTY")),
+    print(as_s2_geography("LINESTRING EMPTY")),
     "<LINESTRING EMPTY>"
   )
   expect_output(
-    print(s2_geography("MULTILINESTRING ((-64 45, 0 0), (0 1, 2 3))")),
+    print(as_s2_geography("MULTILINESTRING ((-64 45, 0 0), (0 1, 2 3))")),
     "<MULTILINESTRING \\(\\(-64 45, 0 0), \\(0 1, 2 3\\)\\)>"
   )
 
-  expect_output(print(s2_geography("POLYGON EMPTY"), "<POLYGON EMPTY>"))
+  expect_output(print(as_s2_geography("POLYGON EMPTY"), "<POLYGON EMPTY>"))
   expect_output(
-    print(s2_geography("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")),
+    print(as_s2_geography("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")),
     "<POLYGON \\(\\(0 0, 10 0, 10 10"
   )
   expect_output(
-    print(s2_geography("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)))")),
+    print(as_s2_geography("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)))")),
     "<POLYGON \\(\\(0 0, 10 0, 10 10"
   )
   expect_output(
     print(
-      s2_geography("MULTIPOLYGON (
+      as_s2_geography("MULTIPOLYGON (
         ((40 40, 20 45, 45 30, 40 40)),
         ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
       )")
@@ -55,13 +55,13 @@ test_that("s2_geography vectors can be created from wkt", {
   )
 
   expect_output(
-    print(s2_geography("GEOMETRYCOLLECTION (POINT (-64 45))")),
+    print(as_s2_geography("GEOMETRYCOLLECTION (POINT (-64 45))")),
     "<GEOMETRYCOLLECTION \\(POINT \\(-64 45\\)\\)>"
   )
 
   expect_output(
     print(
-      s2_geography(
+      as_s2_geography(
         "GEOMETRYCOLLECTION (
           POINT (30 10),
           MULTIPOINT (11 12, 12 13),
@@ -80,14 +80,14 @@ test_that("s2_geography vectors can be created from wkt", {
     )
   )
 
-  expect_output(print(s2_geography("GEOMETRYCOLLECTION EMPTY")), "<GEOMETRYCOLLECTION EMPTY>")
+  expect_output(print(as_s2_geography("GEOMETRYCOLLECTION EMPTY")), "<GEOMETRYCOLLECTION EMPTY>")
 })
 
 test_that("nested ring depths are correctly exported", {
   # polygon with hole
   expect_output(
     print(
-      s2_geography("MULTIPOLYGON (
+      as_s2_geography("MULTIPOLYGON (
         ((40 40, 20 45, 45 30, 40 40)),
         (
           (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
@@ -102,7 +102,7 @@ test_that("nested ring depths are correctly exported", {
   # polygon with a hole in a hole!
   expect_output(
     print(
-      s2_geography("MULTIPOLYGON (
+      as_s2_geography("MULTIPOLYGON (
         ((40 40, 20 45, 45 30, 40 40)),
         (
           (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
@@ -146,7 +146,7 @@ test_that("polygons with holes are interpreted as such by S2", {
 })
 
 test_that("polygon construction works with oriented = TRUE and oriented = FALSE", {
-  polygon_with_bad_hole_nested <- s2_geography("MULTIPOLYGON (
+  polygon_with_bad_hole_nested <- as_s2_geography("MULTIPOLYGON (
     ((40 40, 20 45, 45 30, 40 40)),
     (
       (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
@@ -157,7 +157,7 @@ test_that("polygon construction works with oriented = TRUE and oriented = FALSE"
   expect_false(s2_intersects(polygon_with_bad_hole_nested, "POINT (23 19.5)"))
 
   expect_error(
-    s2_geography("MULTIPOLYGON (
+    as_s2_geography("MULTIPOLYGON (
       ((40 40, 20 45, 45 30, 40 40)),
       (
         (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
@@ -169,6 +169,6 @@ test_that("polygon construction works with oriented = TRUE and oriented = FALSE"
 })
 
 test_that("Full polygons work", {
-  expect_true(s2_intersects(s2_geography(TRUE), "POINT(0 1)"))
-  expect_wkt_equal(s2_difference(s2_geography(TRUE), "POINT(0 1)"), "POLYGON ((0 -90, 0 -90))")
+  expect_true(s2_intersects(as_s2_geography(TRUE), "POINT(0 1)"))
+  expect_wkt_equal(s2_difference(as_s2_geography(TRUE), "POINT(0 1)"), "POLYGON ((0 -90, 0 -90))")
 })

@@ -28,6 +28,6 @@ s2_data_world_borders <- as.data.frame(
 )
 
 # check to see if this will fly
-wb_s2 <- s2::s2_geography(ne_wkb)
+wb_s2 <- s2::as_s2_geography(ne_wkb)
 
 usethis::use_data(s2_data_world_borders, overwrite = TRUE)

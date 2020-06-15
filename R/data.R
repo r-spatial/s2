@@ -41,7 +41,7 @@ s2data_countries <- function(name = NULL) {
     wkb <- structure(df$geometry[(df$name %in% name) | (df$continent %in% name)], class = "wk_wkb")
   }
 
-  s2_geography(wkb)
+  as_s2_geography(wkb)
 }
 
 #' @rdname s2_data_world_borders
@@ -55,7 +55,7 @@ s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_
     wkb <- structure(df$geometry[matches], class = "wk_wkb")
   }
 
-  s2_geography(wkb)
+  as_s2_geography(wkb)
 }
 
 #' @rdname s2_data_world_borders
@@ -68,7 +68,7 @@ s2data_cities <- function(name = NULL) {
     wkb <- structure(df$geometry[(df$name %in% name)], class = "wk_wkb")
   }
 
-  s2_geography(wkb)
+  as_s2_geography(wkb)
 }
 
 #' Geometry of the nc dataset of package sf

@@ -2,7 +2,7 @@
 #' Create and format geography vectors
 #'
 #' @inheritParams s2_iscollection
-#' @inheritParams s2_geography
+#' @inheritParams as_s2_geography
 #' @param longitude,latitude Vectors of latitude and longitude
 #' @param wkt_string Well-known text
 #' @param wkb_bytes A `list()` of `raw()`
@@ -59,11 +59,11 @@ s2_geogfromwkb <- function(wkb_bytes, oriented = FALSE) {
 #' @rdname s2_geogpoint
 #' @export
 s2_astext <- function(x) {
-  s2_geography_to_wkt(s2_geography(x), precision = 16, trim = TRUE)
+  s2_geography_to_wkt(as_s2_geography(x), precision = 16, trim = TRUE)
 }
 
 #' @rdname s2_geogpoint
 #' @export
 s2_asbinary <- function(x, endian = match(.Platform$endian, c("big", "little")) - 1) {
-  s2_geography_to_wkb(s2_geography(x), endian = endian)
+  s2_geography_to_wkb(as_s2_geography(x), endian = endian)
 }

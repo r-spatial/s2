@@ -209,7 +209,7 @@ test_that("s2_union_agg() works", {
   # NULL handling
   expect_identical(
     s2_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
-    s2_geography(NA_character_)
+    as_s2_geography(NA_character_)
   )
   expect_wkt_equal(
     s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
@@ -225,7 +225,7 @@ test_that("s2_centroid_agg() works", {
   # NULL handling
   expect_identical(
     s2_centroid_agg(c("POINT (30 10)", NA), na.rm = FALSE),
-    s2_geography(NA_character_)
+    as_s2_geography(NA_character_)
   )
   expect_wkt_equal(
     s2_centroid_agg(c("POINT (30 10)", NA), na.rm = TRUE),
@@ -243,12 +243,12 @@ test_that("real data survives the S2BooleanOperation", {
 
     # the output WKB should load as a polygon with oriented = TRUE and result in the
     # same number of points and similar area
-    reloaded <- s2_geography(structure(exported, class = "wk_wkb"), oriented = TRUE)
+    reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = TRUE)
     expect_equal(s2_numpoints(reloaded), s2_numpoints(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
 
     # also check with oriented = FALSE (may catch quirky nesting)
-    reloaded <- s2_geography(structure(exported, class = "wk_wkb"), oriented = FALSE)
+    reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = FALSE)
     expect_equal(s2_numpoints(reloaded), s2_numpoints(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
   }
