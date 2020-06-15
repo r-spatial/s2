@@ -2,12 +2,12 @@
 % Please edit documentation in R/s2-predicates.R
 \name{s2_contains}
 \alias{s2_contains}
-\alias{s2_coveredby}
+\alias{s2_covered_by}
 \alias{s2_covers}
 \alias{s2_disjoint}
 \alias{s2_equals}
 \alias{s2_intersects}
-\alias{s2_intersectsbox}
+\alias{s2_intersects_box}
 \alias{s2_touches}
 \alias{s2_within}
 \alias{s2_dwithin}
@@ -15,7 +15,7 @@
 \usage{
 s2_contains(x, y, model = 0)
 
-s2_coveredby(x, y, model = 2)
+s2_covered_by(x, y, model = 2)
 
 s2_covers(x, y, model = 2)
 
@@ -25,7 +25,7 @@ s2_equals(x, y, model = -1)
 
 s2_intersects(x, y, model = -1)
 
-s2_intersectsbox(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1)
+s2_intersects_box(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1)
 
 s2_touches(x, y)
 

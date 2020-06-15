@@ -109,7 +109,7 @@ LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
 }
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_intersectsbox(List geog,
+LogicalVector cpp_s2_intersects_box(List geog,
                                          NumericVector lng1, NumericVector lat1,
                                          NumericVector lng2, NumericVector lat2,
                                          IntegerVector detail,

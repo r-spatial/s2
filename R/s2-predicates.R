@@ -45,7 +45,7 @@ s2_contains <- function(x, y, model = 0) {
 
 #' @rdname s2_contains
 #' @export
-s2_coveredby <- function(x, y, model = 2) {
+s2_covered_by <- function(x, y, model = 2) {
   s2_covers(y, x, model = model)
 }
 
@@ -90,9 +90,9 @@ s2_intersects <- function(x, y, model = -1) {
 
 #' @rdname s2_contains
 #' @export
-s2_intersectsbox <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1) {
+s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1) {
   recycled <- recycle_common(as_s2_geography(x), lng1, lat1, lng2, lat2, detail)
-  cpp_s2_intersectsbox(
+  cpp_s2_intersects_box(
     recycled[[1]],
     recycled[[2]], recycled[[3]],
     recycled[[4]], recycled[[5]],

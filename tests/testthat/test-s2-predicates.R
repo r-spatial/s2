@@ -10,7 +10,7 @@ test_that("s2_contains() works", {
   expect_false(s2_contains("LINESTRING (0 0, 1 1)", "POINT (-1 -1)"))
 })
 
-test_that("s2_covers() and s2_coveredby() work", {
+test_that("s2_covers() and s2_covered_by() work", {
   expect_true(s2_covers("POINT (0 0)", "POINT (0 0)"))
   expect_false(s2_covers("POINT (0 0)", "POINT (1 1)"))
   expect_true(s2_covers("POINT (0 0)", "POINT EMPTY")) # surprising!
@@ -27,12 +27,12 @@ test_that("s2_covers() and s2_coveredby() work", {
   expect_true(s2_covers(p,pt,model=0))
   expect_true(s2_covers(p,pt,model=1))
   expect_true(s2_covers(p,pt,model=2))
-  expect_false(s2_coveredby(p,l,model=0))
-  expect_false(s2_coveredby(p,l,model=1))
-  expect_false(s2_coveredby(p,l,model=2))
-  expect_true(s2_coveredby(pt,p,model=0))
-  expect_true(s2_coveredby(pt,p,model=1))
-  expect_true(s2_coveredby(pt,p,model=2))
+  expect_false(s2_covered_by(p,l,model=0))
+  expect_false(s2_covered_by(p,l,model=1))
+  expect_false(s2_covered_by(p,l,model=2))
+  expect_true(s2_covered_by(pt,p,model=0))
+  expect_true(s2_covered_by(pt,p,model=1))
+  expect_true(s2_covered_by(pt,p,model=2))
 })
 
 test_that("s2_disjoint() works", {
@@ -84,21 +84,21 @@ test_that("s2_intersects() works", {
   expect_true(s2_intersects(p, "POINT (0 0)", model = 2))
 })
 
-test_that("s2_intersectsbox() works", {
+test_that("s2_intersects_box() works", {
   expect_error(
-    s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2, detail = 0),
+    s2_intersects_box("POINT (-1 -1)", -2, -2, 2, 2, detail = 0),
     "Can't create polygon"
   )
-  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0))
-  expect_false(s2_intersectsbox("POINT (0 0)", -1, 0, 1, 0))
-  expect_false(s2_intersectsbox("POINT (0 0)", 0, -1, 0, 1))
-  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 0))
-  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 1))
-  expect_false(s2_intersectsbox("POINT (0 0)", -1, 1, 0, 0, model = 2)) # FIXME: why is this FALSE?
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0))
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 0, 1, 0))
+  expect_false(s2_intersects_box("POINT (0 0)", 0, -1, 0, 1))
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 0))
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 1))
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 2)) # FIXME: why is this FALSE?
 
-  expect_true(s2_intersectsbox("POINT (-1 -1)", -2, -2, 2, 2))
-  expect_false(s2_intersectsbox("POINT (-1 -1)", 0, 0, 2, 2))
-  expect_false(s2_intersectsbox("POINT (0 0)", 1, 1, 2, 2))
+  expect_true(s2_intersects_box("POINT (-1 -1)", -2, -2, 2, 2))
+  expect_false(s2_intersects_box("POINT (-1 -1)", 0, 0, 2, 2))
+  expect_false(s2_intersects_box("POINT (0 0)", 1, 1, 2, 2))
 })
 
 test_that("s2_within() works", {

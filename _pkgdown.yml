@@ -33,12 +33,12 @@ reference:
   desc: Functions that operate two geography vectors and return a logical vector
   contents:
   - s2_contains
-  - s2_coveredby
+  - s2_covered_by
   - s2_covers
   - s2_disjoint
   - s2_equals
   - s2_intersects
-  - s2_intersectsbox
+  - s2_intersects_box
   - s2_touches
   - s2_within
   - s2_dwithin
