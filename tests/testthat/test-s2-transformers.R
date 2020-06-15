@@ -1,6 +1,6 @@
 test_that("s2_centroid() works", {
   expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
-  expect_true(s2_isempty(s2_centroid("POINT EMPTY")))
+  expect_true(s2_is_empty(s2_centroid("POINT EMPTY")))
   expect_wkt_equal(s2_centroid("MULTIPOINT ((0 0), (0 10))"), "POINT (0 5)")
   expect_wkt_equal(s2_centroid("LINESTRING (0 0, 0 10)"), "POINT (0 5)", precision = 15)
   expect_near(
@@ -14,9 +14,9 @@ test_that("s2_centroid() works", {
 })
 
 test_that("s2_boundary() works", {
-  expect_true(s2_isempty(s2_boundary("POINT (30 10)")))
-  expect_true(s2_isempty(s2_boundary("POINT EMPTY")))
-  expect_true(s2_isempty(s2_boundary("POLYGON EMPTY")))
+  expect_true(s2_is_empty(s2_boundary("POINT (30 10)")))
+  expect_true(s2_is_empty(s2_boundary("POINT EMPTY")))
+  expect_true(s2_is_empty(s2_boundary("POLYGON EMPTY")))
   expect_wkt_equal(s2_boundary("LINESTRING (0 0, 0 10)"), "MULTIPOINT ((0 0), (0 10))")
 
   expect_wkt_equal(
@@ -35,7 +35,7 @@ test_that("s2_boundary() works", {
 test_that("s2_closestpoint() works", {
   #expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
   expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
-  expect_true(s2_isempty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
+  expect_true(s2_is_empty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
 
   #expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
   expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
@@ -55,9 +55,9 @@ test_that("s2_nearestfeature() works", {
 
 test_that("s2_difference() works", {
   expect_wkt_equal(s2_difference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
-  expect_true(s2_isempty(s2_difference("POINT (30 10)", "POINT (30 10)")))
+  expect_true(s2_is_empty(s2_difference("POINT (30 10)", "POINT (30 10)")))
 
-  expect_true(s2_isempty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+  expect_true(s2_is_empty(s2_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
 
   #skip("this fails on Windows (probably needs some degree of snap rounding)")
   #skip_on_os("windows")
@@ -83,10 +83,10 @@ test_that("s2_difference() works", {
 
 test_that("s2_symdifference() works", {
   expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
-  expect_true(s2_isempty(s2_symdifference("POINT (30 10)", "POINT (30 10)")))
+  expect_true(s2_is_empty(s2_symdifference("POINT (30 10)", "POINT (30 10)")))
   expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT (30 20)"), "MULTIPOINT ((30 20), (30 10))")
 
-  expect_true(s2_isempty(s2_symdifference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+  expect_true(s2_is_empty(s2_symdifference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
 
   sn = s2_set_snaplevel(30)
   df = s2_symdifference(
@@ -110,7 +110,7 @@ test_that("s2_symdifference() works", {
 
 test_that("s2_intersection() works", {
   expect_wkt_equal(s2_intersection("POINT (30 10)", "POINT (30 10)"), "POINT (30 10)")
-  expect_true(s2_isempty(s2_intersection("POINT (30 10)", "POINT (30 11)")))
+  expect_true(s2_is_empty(s2_intersection("POINT (30 10)", "POINT (30 11)")))
 
   expect_wkt_equal(
     s2_intersection(
@@ -121,9 +121,9 @@ test_that("s2_intersection() works", {
     "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
     precision = 2
   )
-  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = -1)))
-  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 0)))
-  expect_true(s2_isempty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 1)))
+  expect_true(s2_is_empty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = -1)))
+  expect_true(s2_is_empty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 0)))
+  expect_true(s2_is_empty(s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 1)))
   expect_wkt_equal(
     s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", model = 2),
 	"POINT(0 0)")
@@ -244,12 +244,12 @@ test_that("real data survives the S2BooleanOperation", {
     # the output WKB should load as a polygon with oriented = TRUE and result in the
     # same number of points and similar area
     reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = TRUE)
-    expect_equal(s2_numpoints(reloaded), s2_numpoints(unioned))
+    expect_equal(s2_num_points(reloaded), s2_num_points(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
 
     # also check with oriented = FALSE (may catch quirky nesting)
     reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = FALSE)
-    expect_equal(s2_numpoints(reloaded), s2_numpoints(unioned))
+    expect_equal(s2_num_points(reloaded), s2_num_points(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
   }
 })

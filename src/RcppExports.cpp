@@ -5,14 +5,14 @@
 
 using namespace Rcpp;
 
-// cpp_s2_iscollection
-LogicalVector cpp_s2_iscollection(List geog);
-RcppExport SEXP _s2_cpp_s2_iscollection(SEXP geogSEXP) {
+// cpp_s2_is_collection
+LogicalVector cpp_s2_is_collection(List geog);
+RcppExport SEXP _s2_cpp_s2_is_collection(SEXP geogSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_iscollection(geog));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_is_collection(geog));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -27,14 +27,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_numpoints
-IntegerVector cpp_s2_numpoints(List geog);
-RcppExport SEXP _s2_cpp_s2_numpoints(SEXP geogSEXP) {
+// cpp_s2_num_points
+IntegerVector cpp_s2_num_points(List geog);
+RcppExport SEXP _s2_cpp_s2_num_points(SEXP geogSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_numpoints(geog));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_num_points(geog));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -105,15 +105,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_maxdistance
-NumericVector cpp_s2_maxdistance(List geog1, List geog2);
-RcppExport SEXP _s2_cpp_s2_maxdistance(SEXP geog1SEXP, SEXP geog2SEXP) {
+// cpp_s2_max_distance
+NumericVector cpp_s2_max_distance(List geog1, List geog2);
+RcppExport SEXP _s2_cpp_s2_max_distance(SEXP geog1SEXP, SEXP geog2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_maxdistance(geog1, geog2));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_max_distance(geog1, geog2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -517,16 +517,16 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_s2_cpp_s2_iscollection", (DL_FUNC) &_s2_cpp_s2_iscollection, 1},
+    {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
     {"_s2_cpp_s2_dimension", (DL_FUNC) &_s2_cpp_s2_dimension, 1},
-    {"_s2_cpp_s2_numpoints", (DL_FUNC) &_s2_cpp_s2_numpoints, 1},
+    {"_s2_cpp_s2_num_points", (DL_FUNC) &_s2_cpp_s2_num_points, 1},
     {"_s2_cpp_s2_area", (DL_FUNC) &_s2_cpp_s2_area, 1},
     {"_s2_cpp_s2_length", (DL_FUNC) &_s2_cpp_s2_length, 1},
     {"_s2_cpp_s2_perimeter", (DL_FUNC) &_s2_cpp_s2_perimeter, 1},
     {"_s2_cpp_s2_x", (DL_FUNC) &_s2_cpp_s2_x, 1},
     {"_s2_cpp_s2_y", (DL_FUNC) &_s2_cpp_s2_y, 1},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
-    {"_s2_cpp_s2_maxdistance", (DL_FUNC) &_s2_cpp_s2_maxdistance, 2},
+    {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_s2_geography_from_wkb", (DL_FUNC) &_s2_s2_geography_from_wkb, 2},
     {"_s2_s2_geography_from_wkt", (DL_FUNC) &_s2_s2_geography_from_wkt, 2},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},

@@ -1,7 +1,7 @@
 
 #' Create and format geography vectors
 #'
-#' @inheritParams s2_iscollection
+#' @inheritParams s2_is_collection
 #' @inheritParams as_s2_geography
 #' @param longitude,latitude Vectors of latitude and longitude
 #' @param wkt_string Well-known text

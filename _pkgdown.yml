@@ -46,18 +46,18 @@ reference:
 - title: Geography Accessors
   desc: Functions that operate one or more geography vectors and return a vector of values
   contents:
-  - s2_iscollection
-  - s2_isempty
+  - s2_is_collection
+  - s2_is_empty
   - s2_dimension
-  - s2_numpoints
-  - s2_isempty
+  - s2_num_points
+  - s2_is_empty
   - s2_area
   - s2_length
   - s2_perimeter
   - s2_x
   - s2_y
   - s2_distance
-  - s2_maxdistance
+  - s2_max_distance
 
 - title: Example Data
   desc: Datasets useful for demonstrating s2 functions

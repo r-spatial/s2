@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_iscollection(List geog) {
+LogicalVector cpp_s2_is_collection(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
       return feature->IsCollection();
@@ -30,7 +30,7 @@ IntegerVector cpp_s2_dimension(List geog) {
 }
 
 // [[Rcpp::export]]
-IntegerVector cpp_s2_numpoints(List geog) {
+IntegerVector cpp_s2_num_points(List geog) {
   class Op: public UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
       return feature->NumPoints();
@@ -129,7 +129,7 @@ NumericVector cpp_s2_distance(List geog1, List geog2) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_s2_maxdistance(List geog1, List geog2) {
+NumericVector cpp_s2_max_distance(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<NumericVector, double> {
 
     double processFeature(XPtr<Geography> feature1,

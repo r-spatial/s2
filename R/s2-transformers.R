@@ -1,7 +1,7 @@
 
 #' S2 Geography Transformations
 #'
-#' @inheritParams s2_iscollection
+#' @inheritParams s2_is_collection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
 #' @param model integer; specifies boundary model; see \link{s2_contains}
