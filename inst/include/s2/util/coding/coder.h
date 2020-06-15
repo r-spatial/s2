@@ -461,7 +461,16 @@ inline void DecoderExtensions::FillArray(Decoder* array, int num_decoders) {
                 "Decoder must be trivially copy-assignable");
   static_assert(absl::is_trivially_destructible<Decoder>::value,
                 "Decoder must be trivially destructible");
-  std::memset(array, 0, num_decoders * sizeof(Decoder));
+
+  // on R 4.0 on Windows, this line gives install warning
+  // warning: 'void* memset(void*, int, size_t)' clearing an object of non-trivial type 'class Decoder';
+  // use assignment or value-initialization instead [-Wclass-memaccess]
+  // std::memset(array, 0, num_decoders * sizeof(Decoder));
+  // using non-optimized version as suggested above (this is not called by R code)
+  for (int i = 0; i < num_decoders; i++) {
+    Decoder* decoder = array + i;
+    decoder->reset(nullptr, 0);
+  }
 }
 
 inline void Encoder::put8(unsigned char v) {
