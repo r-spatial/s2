@@ -23,6 +23,10 @@ test_that("s2_asbinary() works", {
 test_that("s2_asbinary works on (multi)polygons", {
 	geog <- s2data_countries()
 	wkb <- s2_asbinary(geog)
-	expect_identical(object.size(wkb), structure(183840, class = 'object_size'))
+
+	expect_identical(
+	  sum(vapply(wkb, length, integer(1))),
+	  173318L
+	)
 	expect_identical(length(wkb), length(geog))
 })
