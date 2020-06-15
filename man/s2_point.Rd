@@ -8,7 +8,7 @@
 \alias{as_s2_point.matrix}
 \alias{as.data.frame.s2_point}
 \alias{as.matrix.s2_point}
-\title{Create an s2_point vector}
+\title{Create an S2 Point vector}
 \usage{
 s2_point(x, y, z)
 

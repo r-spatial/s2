@@ -1,5 +1,5 @@
 
-#' Create an s2_latlng vector
+#' Create an S2 LatLng vector
 #'
 #' This class represents a latitude and longitude on the Earth's surface.
 #' Most calculations in S2 convert this to a [as_s2_point()], which is a

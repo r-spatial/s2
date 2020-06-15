@@ -1,5 +1,5 @@
 
-#' Create an s2_point vector
+#' Create an S2 Point vector
 #'
 #' In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
 #' to a [as_s2_latlng()], which is a position on the Earth's surface.

@@ -2,10 +2,12 @@ development:
   mode: auto
 
 reference:
-
 - title: Geography Constructors and Exporters
   desc: Convert objects to and from geography vectors
   contents:
+  - s2_latlng
+  - s2_point
+  - as_s2_geography
   - s2_geog_point
   - s2_make_line
   - s2_make_polygon
@@ -59,11 +61,11 @@ reference:
   - s2_distance
   - s2_max_distance
 
+- title: Utility Functions
+  contents:
+  - s2_earth_radius_meters
+
 - title: Example Data
-  desc: Datasets useful for demonstrating s2 functions
+  desc: Useful data for testing and demonstrating s2 functions
   contents:
   - starts_with("s2_data")
-
-- title: S3 Details
-  contents:
-  - contains("s2xptr")

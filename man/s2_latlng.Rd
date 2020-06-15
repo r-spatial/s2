@@ -8,7 +8,7 @@
 \alias{as_s2_latlng.matrix}
 \alias{as.data.frame.s2_latlng}
 \alias{as.matrix.s2_latlng}
-\title{Create an s2_latlng vector}
+\title{Create an S2 LatLng vector}
 \usage{
 s2_latlng(lat, lng)
 
