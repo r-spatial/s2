@@ -22,25 +22,25 @@ s2_numpoints(x)
 
 s2_isempty(x)
 
-s2_area(x, radius = s2earth_radius_meters())
+s2_area(x, radius = s2_earth_radius_meters())
 
-s2_length(x, radius = s2earth_radius_meters())
+s2_length(x, radius = s2_earth_radius_meters())
 
-s2_perimeter(x, radius = s2earth_radius_meters())
+s2_perimeter(x, radius = s2_earth_radius_meters())
 
 s2_x(x)
 
 s2_y(x)
 
-s2_distance(x, y, radius = s2earth_radius_meters())
+s2_distance(x, y, radius = s2_earth_radius_meters())
 
-s2_maxdistance(x, y, radius = s2earth_radius_meters())
+s2_maxdistance(x, y, radius = s2_earth_radius_meters())
 }
 \arguments{
 \item{x, y}{An object that can be interpreted as an S2 type.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
-the earth as defined by \code{\link[=s2earth_radius_meters]{s2earth_radius_meters()}}.}
+the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 }
 \description{
 S2 Geography Accessors

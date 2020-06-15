@@ -3,7 +3,7 @@
 #'
 #' @param x,y An object that can be interpreted as an S2 type.
 #' @param radius Radius of the earth. Defaults to the average radius of
-#'   the earth as defined by [s2earth_radius_meters()].
+#'   the earth as defined by [s2_earth_radius_meters()].
 #'
 #' @export
 #'
@@ -46,21 +46,21 @@ s2_isempty <- function(x) {
 
 #' @rdname s2_iscollection
 #' @export
-s2_area <- function(x, radius = s2earth_radius_meters()) {
+s2_area <- function(x, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
   cpp_s2_area(recycled[[1]]) * radius ^ 2
 }
 
 #' @rdname s2_iscollection
 #' @export
-s2_length <- function(x, radius = s2earth_radius_meters()) {
+s2_length <- function(x, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
   cpp_s2_length(recycled[[1]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
-s2_perimeter <- function(x, radius = s2earth_radius_meters()) {
+s2_perimeter <- function(x, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), radius)
   cpp_s2_perimeter(recycled[[1]]) * radius
 }
@@ -79,14 +79,14 @@ s2_y <- function(x) {
 
 #' @rdname s2_iscollection
 #' @export
-s2_distance <- function(x, y, radius = s2earth_radius_meters()) {
+s2_distance <- function(x, y, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), s2geography(y), radius)
   cpp_s2_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_iscollection
 #' @export
-s2_maxdistance <- function(x, y, radius = s2earth_radius_meters()) {
+s2_maxdistance <- function(x, y, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), s2geography(y), radius)
   cpp_s2_maxdistance(recycled[[1]], recycled[[2]]) * radius
 }

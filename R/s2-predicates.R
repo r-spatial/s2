@@ -115,7 +115,7 @@ s2_within <- function(x, y, ...) {
 
 #' @rdname s2_contains
 #' @export
-s2_dwithin <- function(x, y, distance, radius = s2earth_radius_meters()) {
+s2_dwithin <- function(x, y, distance, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(s2geography(x), s2geography(y), distance / radius)
   cpp_s2_dwithin(recycled[[1]], recycled[[2]], recycled[[3]])
 }
