@@ -9,7 +9,7 @@
 #' @param x A [as_s2_latlng()] vector
 #' @param ... Unused
 #'
-#' @return A [new_s2_xptr()] with class s2_latlng
+#' @return An object with class s2_latlng
 #' @export
 #'
 #' @examples

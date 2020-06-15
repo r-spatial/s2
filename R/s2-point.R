@@ -7,7 +7,7 @@
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
 #' @param ... Unused
 #'
-#' @return A [new_s2_xptr()] with class s2_point
+#' @return An object with class s2_point
 #' @export
 #'
 #' @examples

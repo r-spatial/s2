@@ -28,7 +28,7 @@ as_s2_geography(x, ...)
 rings are defined clockwise).}
 }
 \value{
-A \code{\link[=new_s2_xptr]{new_s2_xptr()}} with class s2_geography
+An object with class s2_geography
 }
 \description{
 Create an S2 Geography Vector

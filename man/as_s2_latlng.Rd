@@ -32,7 +32,7 @@ as_s2_latlng(lat, ...)
 \item{x}{A \code{\link[=as_s2_latlng]{as_s2_latlng()}} vector}
 }
 \value{
-A \code{\link[=new_s2_xptr]{new_s2_xptr()}} with class s2_latlng
+An object with class s2_latlng
 }
 \description{
 This class represents a latitude and longitude on the Earth's surface.

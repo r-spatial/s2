@@ -7,7 +7,7 @@
 #'   rings are defined clockwise).
 #' @param ... Unused
 #'
-#' @return A [new_s2_xptr()] with class s2_geography
+#' @return An object with class s2_geography
 #' @export
 #'
 as_s2_geography <- function(x, ...) {
