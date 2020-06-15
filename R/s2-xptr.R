@@ -23,7 +23,7 @@ validate_s2_xptr <- function(x) {
   type <- vapply(unclass(x), typeof, character(1))
   valid_items <- type %in% c("externalptr", "NULL")
   if (any(!valid_items)) {
-    stop(sprintf("Items must be externalptr objects or NULL"))
+    stop("Items must be externalptr objects or NULL")
   }
 
   invisible(x)
