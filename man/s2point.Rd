@@ -3,7 +3,7 @@
 \name{s2point}
 \alias{s2point}
 \alias{s2point.s2point}
-\alias{s2point.s2latlng}
+\alias{s2point.s2_latlng}
 \alias{s2point.numeric}
 \alias{s2point.matrix}
 \alias{as.data.frame.s2point}
@@ -14,7 +14,7 @@ s2point(x, ...)
 
 \method{s2point}{s2point}(x, ...)
 
-\method{s2point}{s2latlng}(x, ...)
+\method{s2point}{s2_latlng}(x, ...)
 
 \method{s2point}{numeric}(x, y, z, ...)
 
@@ -34,10 +34,10 @@ A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2point
 }
 \description{
 In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
-to a \code{\link[=s2latlng]{s2latlng()}}, which is a position on the Earth's surface.
+to a \code{\link[=s2_latlng]{s2_latlng()}}, which is a position on the Earth's surface.
 }
 \examples{
-latlng <- s2latlng(45, -64) # Halifax, Nova Scotia!
+latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
 s2point(latlng)
 as.data.frame(s2point(latlng))
 

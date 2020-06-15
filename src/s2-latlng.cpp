@@ -10,7 +10,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List s2latlng_from_numeric(NumericVector lat, NumericVector lng) {
+List s2_latlng_from_numeric(NumericVector lat, NumericVector lng) {
   List output(lat.size());
 
   S2LatLng item;
@@ -23,7 +23,7 @@ List s2latlng_from_numeric(NumericVector lat, NumericVector lng) {
 }
 
 // [[Rcpp::export]]
-List s2latlng_from_s2point(List s2point) {
+List s2_latlng_from_s2point(List s2point) {
   List output(s2point.size());
 
   SEXP item;
@@ -42,7 +42,7 @@ List s2latlng_from_s2point(List s2point) {
 }
 
 // [[Rcpp::export]]
-List data_frame_from_s2latlng(List xptr) {
+List data_frame_from_s2_latlng(List xptr) {
   NumericVector lat(xptr.size());
   NumericVector lng(xptr.size());
 
@@ -66,35 +66,35 @@ List data_frame_from_s2latlng(List xptr) {
 
 class WKS2LatLngWriter: public WKGeometryHandler {
 public:
-  List s2latlng;
+  List s2_latlng;
   R_xlen_t featureId;
 
-  WKS2LatLngWriter(R_xlen_t size): s2latlng(size) {}
+  WKS2LatLngWriter(R_xlen_t size): s2_latlng(size) {}
 
   void nextFeatureStart(size_t featureId) {
     this->featureId = featureId;
   }
 
   void nextNull(size_t featureId) {
-    s2latlng[featureId] = R_NilValue;
+    s2_latlng[featureId] = R_NilValue;
   }
 
   void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
     if (meta.geometryType != WKGeometryType::Point) {
-      stop("Can't create s2latlng object from an geometry that is not a point");
+      stop("Can't create s2_latlng object from an geometry that is not a point");
     } else if(meta.size == 0) {
-      stop("Can't create s2latlng object from an empty point");
+      stop("Can't create s2_latlng object from an empty point");
     }
   }
 
   void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
     S2LatLng feature = S2LatLng::FromDegrees(coord.y, coord.x);
-    s2latlng[this->featureId] = XPtr<S2LatLng>(new S2LatLng(feature));
+    s2_latlng[this->featureId] = XPtr<S2LatLng>(new S2LatLng(feature));
   }
 };
 
 // [[Rcpp::export]]
-List s2latlng_from_wkb(List wkb) {
+List s2_latlng_from_wkb(List wkb) {
   WKRawVectorListProvider provider(wkb);
   WKS2LatLngWriter writer(wkb.size());
   WKBReader reader(provider);
@@ -104,7 +104,7 @@ List s2latlng_from_wkb(List wkb) {
     reader.iterateFeature();
   }
 
-  return writer.s2latlng;
+  return writer.s2_latlng;
 }
 
 // -------- exporters ---------
@@ -145,9 +145,9 @@ private:
 };
 
 // [[Rcpp::export]]
-List wkb_from_s2latlng(List s2latlng, int endian) {
-  WKSEXPProvider provider(s2latlng);
-  WKRawVectorListExporter exporter(s2latlng.size());
+List wkb_from_s2_latlng(List s2_latlng, int endian) {
+  WKSEXPProvider provider(s2_latlng);
+  WKRawVectorListExporter exporter(s2_latlng.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);
 

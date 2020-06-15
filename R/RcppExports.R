@@ -65,32 +65,32 @@ s2geography_format <- function(s2geography, maxCoords) {
     .Call(`_s2_s2geography_format`, s2geography, maxCoords)
 }
 
-s2latlng_from_numeric <- function(lat, lng) {
-    .Call(`_s2_s2latlng_from_numeric`, lat, lng)
+s2_latlng_from_numeric <- function(lat, lng) {
+    .Call(`_s2_s2_latlng_from_numeric`, lat, lng)
 }
 
-s2latlng_from_s2point <- function(s2point) {
-    .Call(`_s2_s2latlng_from_s2point`, s2point)
+s2_latlng_from_s2point <- function(s2point) {
+    .Call(`_s2_s2_latlng_from_s2point`, s2point)
 }
 
-data_frame_from_s2latlng <- function(xptr) {
-    .Call(`_s2_data_frame_from_s2latlng`, xptr)
+data_frame_from_s2_latlng <- function(xptr) {
+    .Call(`_s2_data_frame_from_s2_latlng`, xptr)
 }
 
-s2latlng_from_wkb <- function(wkb) {
-    .Call(`_s2_s2latlng_from_wkb`, wkb)
+s2_latlng_from_wkb <- function(wkb) {
+    .Call(`_s2_s2_latlng_from_wkb`, wkb)
 }
 
-wkb_from_s2latlng <- function(s2latlng, endian) {
-    .Call(`_s2_wkb_from_s2latlng`, s2latlng, endian)
+wkb_from_s2_latlng <- function(s2_latlng, endian) {
+    .Call(`_s2_wkb_from_s2_latlng`, s2_latlng, endian)
 }
 
 s2point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2point_from_numeric`, x, y, z)
 }
 
-s2point_from_s2latlng <- function(s2latlng) {
-    .Call(`_s2_s2point_from_s2latlng`, s2latlng)
+s2point_from_s2_latlng <- function(s2_latlng) {
+    .Call(`_s2_s2point_from_s2_latlng`, s2_latlng)
 }
 
 data_frame_from_s2point <- function(s2point) {

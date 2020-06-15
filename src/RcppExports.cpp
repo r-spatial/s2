@@ -189,60 +189,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2latlng_from_numeric
-List s2latlng_from_numeric(NumericVector lat, NumericVector lng);
-RcppExport SEXP _s2_s2latlng_from_numeric(SEXP latSEXP, SEXP lngSEXP) {
+// s2_latlng_from_numeric
+List s2_latlng_from_numeric(NumericVector lat, NumericVector lng);
+RcppExport SEXP _s2_s2_latlng_from_numeric(SEXP latSEXP, SEXP lngSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lng(lngSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2latlng_from_numeric(lat, lng));
+    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_numeric(lat, lng));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2latlng_from_s2point
-List s2latlng_from_s2point(List s2point);
-RcppExport SEXP _s2_s2latlng_from_s2point(SEXP s2pointSEXP) {
+// s2_latlng_from_s2point
+List s2_latlng_from_s2point(List s2point);
+RcppExport SEXP _s2_s2_latlng_from_s2point(SEXP s2pointSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type s2point(s2pointSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2latlng_from_s2point(s2point));
+    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_s2point(s2point));
     return rcpp_result_gen;
 END_RCPP
 }
-// data_frame_from_s2latlng
-List data_frame_from_s2latlng(List xptr);
-RcppExport SEXP _s2_data_frame_from_s2latlng(SEXP xptrSEXP) {
+// data_frame_from_s2_latlng
+List data_frame_from_s2_latlng(List xptr);
+RcppExport SEXP _s2_data_frame_from_s2_latlng(SEXP xptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type xptr(xptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2latlng(xptr));
+    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2_latlng(xptr));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2latlng_from_wkb
-List s2latlng_from_wkb(List wkb);
-RcppExport SEXP _s2_s2latlng_from_wkb(SEXP wkbSEXP) {
+// s2_latlng_from_wkb
+List s2_latlng_from_wkb(List wkb);
+RcppExport SEXP _s2_s2_latlng_from_wkb(SEXP wkbSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2latlng_from_wkb(wkb));
+    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_wkb(wkb));
     return rcpp_result_gen;
 END_RCPP
 }
-// wkb_from_s2latlng
-List wkb_from_s2latlng(List s2latlng, int endian);
-RcppExport SEXP _s2_wkb_from_s2latlng(SEXP s2latlngSEXP, SEXP endianSEXP) {
+// wkb_from_s2_latlng
+List wkb_from_s2_latlng(List s2_latlng, int endian);
+RcppExport SEXP _s2_wkb_from_s2_latlng(SEXP s2_latlngSEXP, SEXP endianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
+    Rcpp::traits::input_parameter< List >::type s2_latlng(s2_latlngSEXP);
     Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkb_from_s2latlng(s2latlng, endian));
+    rcpp_result_gen = Rcpp::wrap(wkb_from_s2_latlng(s2_latlng, endian));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -259,14 +259,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2point_from_s2latlng
-List s2point_from_s2latlng(List s2latlng);
-RcppExport SEXP _s2_s2point_from_s2latlng(SEXP s2latlngSEXP) {
+// s2point_from_s2_latlng
+List s2point_from_s2_latlng(List s2_latlng);
+RcppExport SEXP _s2_s2point_from_s2_latlng(SEXP s2_latlngSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2latlng(s2latlngSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2point_from_s2latlng(s2latlng));
+    Rcpp::traits::input_parameter< List >::type s2_latlng(s2_latlngSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2point_from_s2_latlng(s2_latlng));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -533,13 +533,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2geography_to_wkt", (DL_FUNC) &_s2_s2geography_to_wkt, 3},
     {"_s2_s2geography_to_wkb", (DL_FUNC) &_s2_s2geography_to_wkb, 2},
     {"_s2_s2geography_format", (DL_FUNC) &_s2_s2geography_format, 2},
-    {"_s2_s2latlng_from_numeric", (DL_FUNC) &_s2_s2latlng_from_numeric, 2},
-    {"_s2_s2latlng_from_s2point", (DL_FUNC) &_s2_s2latlng_from_s2point, 1},
-    {"_s2_data_frame_from_s2latlng", (DL_FUNC) &_s2_data_frame_from_s2latlng, 1},
-    {"_s2_s2latlng_from_wkb", (DL_FUNC) &_s2_s2latlng_from_wkb, 1},
-    {"_s2_wkb_from_s2latlng", (DL_FUNC) &_s2_wkb_from_s2latlng, 2},
+    {"_s2_s2_latlng_from_numeric", (DL_FUNC) &_s2_s2_latlng_from_numeric, 2},
+    {"_s2_s2_latlng_from_s2point", (DL_FUNC) &_s2_s2_latlng_from_s2point, 1},
+    {"_s2_data_frame_from_s2_latlng", (DL_FUNC) &_s2_data_frame_from_s2_latlng, 1},
+    {"_s2_s2_latlng_from_wkb", (DL_FUNC) &_s2_s2_latlng_from_wkb, 1},
+    {"_s2_wkb_from_s2_latlng", (DL_FUNC) &_s2_wkb_from_s2_latlng, 2},
     {"_s2_s2point_from_numeric", (DL_FUNC) &_s2_s2point_from_numeric, 3},
-    {"_s2_s2point_from_s2latlng", (DL_FUNC) &_s2_s2point_from_s2latlng, 1},
+    {"_s2_s2point_from_s2_latlng", (DL_FUNC) &_s2_s2point_from_s2_latlng, 1},
     {"_s2_data_frame_from_s2point", (DL_FUNC) &_s2_data_frame_from_s2point, 1},
     {"_s2_cpp_s2_intersects", (DL_FUNC) &_s2_cpp_s2_intersects, 3},
     {"_s2_cpp_s2_equals", (DL_FUNC) &_s2_cpp_s2_equals, 3},

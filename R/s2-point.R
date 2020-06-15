@@ -2,7 +2,7 @@
 #' Create an s2point vector
 #'
 #' In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
-#' to a [s2latlng()], which is a position on the Earth's surface.
+#' to a [s2_latlng()], which is a position on the Earth's surface.
 #'
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
 #' @param ... Unused
@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' latlng <- s2latlng(45, -64) # Halifax, Nova Scotia!
+#' latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
 #' s2point(latlng)
 #' as.data.frame(s2point(latlng))
 #'
@@ -27,8 +27,8 @@ s2point.s2point <- function(x, ...) {
 
 #' @rdname s2point
 #' @export
-s2point.s2latlng <- function(x, ...) {
-  new_s2xptr(s2point_from_s2latlng(x), "s2point")
+s2point.s2_latlng <- function(x, ...) {
+  new_s2xptr(s2point_from_s2_latlng(x), "s2point")
 }
 
 #' @rdname s2point

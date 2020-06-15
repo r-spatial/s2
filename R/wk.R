@@ -1,8 +1,8 @@
 
 #' @importFrom wk as_wkb
 #' @export
-as_wkb.s2latlng <- function(x, ..., endian = wk::wk_platform_endian()) {
-  wk::new_wk_wkb(wkb_from_s2latlng(x, endian))
+as_wkb.s2_latlng <- function(x, ..., endian = wk::wk_platform_endian()) {
+  wk::new_wk_wkb(wkb_from_s2_latlng(x, endian))
 }
 
 #' @importFrom wk as_wkb
@@ -25,8 +25,8 @@ as_wkt.s2geography <- function(x, ..., precision = 16, trim = TRUE) {
 
 #' @importFrom wk as_wkt
 #' @export
-as_wkt.s2latlng <- function(x, ...,  precision = 16, trim = TRUE) {
-  wk::new_wk_wkb(wkt_from_s2latlng(x, precision = precision, trim = trim))
+as_wkt.s2_latlng <- function(x, ...,  precision = 16, trim = TRUE) {
+  wk::new_wk_wkb(wkt_from_s2_latlng(x, precision = precision, trim = trim))
 }
 
 #' @importFrom wk as_wkt
