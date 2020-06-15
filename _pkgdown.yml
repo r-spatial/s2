@@ -6,14 +6,14 @@ reference:
 - title: Geography Constructors and Exporters
   desc: Convert objects to and from geography vectors
   contents:
-  - s2_geogpoint
-  - s2_makeline
-  - s2_makepolygon
-  - s2_makepolygonoriented
-  - s2_geogfromtext
-  - s2_geogfromwkb
-  - s2_astext
-  - s2_asbinary
+  - s2_geog_point
+  - s2_make_line
+  - s2_make_polygon
+  - s2_make_polygon_oriented
+  - s2_geog_from_text
+  - s2_geog_from_wkb
+  - s2_as_text
+  - s2_as_binary
 
 - title: Geography Transformations
   desc: Functions that operate on geography vectors and return geography vectors

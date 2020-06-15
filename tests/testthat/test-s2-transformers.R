@@ -239,7 +239,7 @@ test_that("real data survives the S2BooleanOperation", {
     unioned <- expect_is(s2_union_agg(s2_data_countries(continent)), "s2_geography")
 
     # this is a test of Geography::Export() on potentially complex polygons
-    exported <- expect_length(s2_asbinary(unioned), 1)
+    exported <- expect_length(s2_as_binary(unioned), 1)
 
     # the output WKB should load as a polygon with oriented = TRUE and result in the
     # same number of points and similar area

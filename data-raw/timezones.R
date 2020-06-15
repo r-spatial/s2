@@ -29,7 +29,7 @@ s2_data_tbl_timezones <- as.data.frame(
 
 # make sure this will load into S2
 s2 <- s2::as_s2_geography(s2_data_tbl_timezones$geometry)
-s2_wkb <- s2::s2_asbinary(s2)
+s2_wkb <- s2::s2_as_binary(s2)
 
 usethis::use_data(s2_data_tbl_timezones, overwrite = TRUE)
 
