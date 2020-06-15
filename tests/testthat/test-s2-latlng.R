@@ -11,6 +11,15 @@ test_that("s2_latlng objects can be created from and converted back to R objects
     as.data.frame(as_s2_latlng(0, 0))
   )
 
+  # subset assignment
+  latlng2 <- latlng
+  latlng2[1] <- latlng
+  expect_identical(latlng2, latlng)
+
+  latlng2 <- latlng
+  latlng2[[1]] <- latlng
+  expect_identical(latlng2, latlng)
+
   # out
   expect_identical(as.data.frame(as_s2_latlng(45, 64)), data.frame(lat = 45, lng = 64))
   expect_identical(as.matrix(as_s2_latlng(45, 64)), as.matrix(data.frame(lat = 45, lng = 64)))
@@ -27,6 +36,14 @@ test_that("s2_latlng objects can be created from and converted back to R objects
     as.data.frame(as_s2_latlng(double(), double())[NA]),
     data.frame(lat = NA_real_, lng = NA_real_)
   )
+})
+
+test_that("s2_latlng vectors can't have other types of objects concatenated or asssigned", {
+  latlng <- new_s2_xptr(list(NULL), class = "s2_latlng")
+  expect_is(c(latlng, latlng), "s2_latlng")
+  expect_error(c(latlng, new_s2_xptr(list(), class = "some_other_class")), "All items must inherit")
+  expect_error(latlng[1] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
+  expect_error(latlng[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
 test_that("s2_latlng can be imported from wkb", {

@@ -6,19 +6,17 @@
 #' @param ... Unused
 #'
 #' @return An object of class s2_xptr
-#' @export
+#' @noRd
 #'
 new_s2_xptr <- function(x = list(), class = character()) {
   if (!is.list(x) || is.object(x)) {
-    stop("x must be a bare list of XPtr objects")
+    stop("x must be a bare list of 'externalptr' objects")
   }
 
   class(x) <- union(class, "s2_xptr")
   x
 }
 
-#' @rdname new_s2_xptr
-#' @export
 validate_s2_xptr <- function(x) {
   type <- vapply(unclass(x), typeof, character(1))
   valid_items <- type %in% c("externalptr", "NULL")
@@ -34,8 +32,7 @@ validate_s2_xptr <- function(x) {
   new_s2_xptr(NextMethod(), class(x))
 }
 
-# this seems odd, but it makes lapply() along these vectors
-# possible
+# makes lapply() along these vectors possible
 #' @export
 `[[.s2_xptr` <- function(x, i) {
   x[i]
@@ -43,12 +40,18 @@ validate_s2_xptr <- function(x) {
 
 #' @export
 `c.s2_xptr` <- function(...) {
-  xptr <- new_s2_xptr(NextMethod(), class(..1))
+  # make sure all items inherit the same top-level class
+  dots <- list(...)
+  inherits_first <- vapply(dots, inherits, class(dots[[1]])[1], FUN.VALUE = logical(1))
+  if (!all(inherits_first)) {
+    stop(sprintf("All items must inherit from '%s'", class(dots[[1]])[1]))
+  }
+
+  xptr <- new_s2_xptr(NextMethod(), class(dots[[1]]))
   validate_s2_xptr(xptr)
   xptr
 }
 
-#' @rdname new_s2_xptr
 #' @export
 rep.s2_xptr <- function(x, ...) {
   new_s2_xptr(NextMethod(), class(x))

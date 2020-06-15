@@ -41,6 +41,20 @@ as_s2_geography.character <- function(x, ..., oriented = FALSE) {
 }
 
 #' @export
+`[<-.s2_geography` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_geography(value)
+  new_s2_xptr(x, "s2_geography")
+}
+
+#' @export
+`[[<-.s2_geography` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_geography(value)
+  new_s2_xptr(x, "s2_geography")
+}
+
+#' @export
 format.s2_geography <- function(x, ..., max_coords = 5) {
   paste0("<", s2_geography_format(x, max_coords), ">")
 }

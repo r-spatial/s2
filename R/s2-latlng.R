@@ -63,6 +63,20 @@ as.matrix.s2_latlng <- function(x, ...) {
 }
 
 #' @export
+`[<-.s2_latlng` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_latlng(value)
+  new_s2_xptr(x, "s2_latlng")
+}
+
+#' @export
+`[[<-.s2_latlng` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_latlng(value)
+  new_s2_xptr(x, "s2_latlng")
+}
+
+#' @export
 format.s2_latlng <- function(x, ...) {
   df <- as.data.frame(x)
   sprintf("(%s, %s)", format(df$lat, trim = TRUE), format(df$lng, trim = TRUE))

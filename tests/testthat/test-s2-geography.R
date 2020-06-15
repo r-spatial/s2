@@ -3,6 +3,23 @@ test_that("s2_geography class works", {
   geog <- new_s2_xptr(list(NULL), class = "s2_geography")
   expect_output(print(geog), "s2_geography")
   expect_identical(as_s2_geography(geog), geog)
+
+  # subset assignment
+  geog2 <- geog
+  geog2[1] <- geog
+  expect_identical(geog2, geog)
+
+  geog2 <- geog
+  geog2[[1]] <- geog
+  expect_identical(geog2, geog)
+})
+
+test_that("s2_geography vectors can't have other types of objects concatenated or asssigned", {
+  geog <- new_s2_xptr(list(NULL), class = "s2_geography")
+  expect_is(c(geog, geog), "s2_geography")
+  expect_error(c(geog, new_s2_xptr(list(), class = "some_other_class")), "All items must inherit")
+  expect_error(geog[1] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
+  expect_error(geog[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
 test_that("s2_geography vectors can be created from wkb points", {

@@ -57,6 +57,20 @@ as.matrix.s2_point <- function(x, ...) {
 }
 
 #' @export
+`[<-.s2_point` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_point(value)
+  new_s2_xptr(x, "s2_point")
+}
+
+#' @export
+`[[<-.s2_point` <- function(x, i, value) {
+  x <- unclass(x)
+  x[i] <- as_s2_point(value)
+  new_s2_xptr(x, "s2_point")
+}
+
+#' @export
 format.s2_point <- function(x, ...) {
   df <- as.data.frame(x)
   sprintf(
