@@ -117,75 +117,75 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_from_wkb
-List s2geography_from_wkb(List wkb, bool oriented);
-RcppExport SEXP _s2_s2geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP) {
+// s2_geography_from_wkb
+List s2_geography_from_wkb(List wkb, bool oriented);
+RcppExport SEXP _s2_s2_geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkb(wkb, oriented));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkb(wkb, oriented));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_from_wkt
-List s2geography_from_wkt(CharacterVector wkt, bool oriented);
-RcppExport SEXP _s2_s2geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP) {
+// s2_geography_from_wkt
+List s2_geography_from_wkt(CharacterVector wkt, bool oriented);
+RcppExport SEXP _s2_s2_geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type wkt(wktSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_from_wkt(wkt, oriented));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkt(wkt, oriented));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_full
-List s2geography_full(LogicalVector x);
-RcppExport SEXP _s2_s2geography_full(SEXP xSEXP) {
+// s2_geography_full
+List s2_geography_full(LogicalVector x);
+RcppExport SEXP _s2_s2_geography_full(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_full(x));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_full(x));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_to_wkt
-CharacterVector s2geography_to_wkt(List s2geography, int precision, bool trim);
-RcppExport SEXP _s2_s2geography_to_wkt(SEXP s2geographySEXP, SEXP precisionSEXP, SEXP trimSEXP) {
+// s2_geography_to_wkt
+CharacterVector s2_geography_to_wkt(List s2_geography, int precision, bool trim);
+RcppExport SEXP _s2_s2_geography_to_wkt(SEXP s2_geographySEXP, SEXP precisionSEXP, SEXP trimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2geography(s2geographySEXP);
+    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
     Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
     Rcpp::traits::input_parameter< bool >::type trim(trimSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_to_wkt(s2geography, precision, trim));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_to_wkt(s2_geography, precision, trim));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_to_wkb
-List s2geography_to_wkb(List s2geography, int endian);
-RcppExport SEXP _s2_s2geography_to_wkb(SEXP s2geographySEXP, SEXP endianSEXP) {
+// s2_geography_to_wkb
+List s2_geography_to_wkb(List s2_geography, int endian);
+RcppExport SEXP _s2_s2_geography_to_wkb(SEXP s2_geographySEXP, SEXP endianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2geography(s2geographySEXP);
+    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
     Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_to_wkb(s2geography, endian));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_to_wkb(s2_geography, endian));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2geography_format
-CharacterVector s2geography_format(List s2geography, int maxCoords);
-RcppExport SEXP _s2_s2geography_format(SEXP s2geographySEXP, SEXP maxCoordsSEXP) {
+// s2_geography_format
+CharacterVector s2_geography_format(List s2_geography, int maxCoords);
+RcppExport SEXP _s2_s2_geography_format(SEXP s2_geographySEXP, SEXP maxCoordsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2geography(s2geographySEXP);
+    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
     Rcpp::traits::input_parameter< int >::type maxCoords(maxCoordsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2geography_format(s2geography, maxCoords));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_format(s2_geography, maxCoords));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -527,12 +527,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_y", (DL_FUNC) &_s2_cpp_s2_y, 1},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_maxdistance", (DL_FUNC) &_s2_cpp_s2_maxdistance, 2},
-    {"_s2_s2geography_from_wkb", (DL_FUNC) &_s2_s2geography_from_wkb, 2},
-    {"_s2_s2geography_from_wkt", (DL_FUNC) &_s2_s2geography_from_wkt, 2},
-    {"_s2_s2geography_full", (DL_FUNC) &_s2_s2geography_full, 1},
-    {"_s2_s2geography_to_wkt", (DL_FUNC) &_s2_s2geography_to_wkt, 3},
-    {"_s2_s2geography_to_wkb", (DL_FUNC) &_s2_s2geography_to_wkb, 2},
-    {"_s2_s2geography_format", (DL_FUNC) &_s2_s2geography_format, 2},
+    {"_s2_s2_geography_from_wkb", (DL_FUNC) &_s2_s2_geography_from_wkb, 2},
+    {"_s2_s2_geography_from_wkt", (DL_FUNC) &_s2_s2_geography_from_wkt, 2},
+    {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
+    {"_s2_s2_geography_to_wkt", (DL_FUNC) &_s2_s2_geography_to_wkt, 3},
+    {"_s2_s2_geography_to_wkb", (DL_FUNC) &_s2_s2_geography_to_wkb, 2},
+    {"_s2_s2_geography_format", (DL_FUNC) &_s2_s2_geography_format, 2},
     {"_s2_s2_latlng_from_numeric", (DL_FUNC) &_s2_s2_latlng_from_numeric, 2},
     {"_s2_s2_latlng_from_s2_point", (DL_FUNC) &_s2_s2_latlng_from_s2_point, 1},
     {"_s2_data_frame_from_s2_latlng", (DL_FUNC) &_s2_data_frame_from_s2_latlng, 1},

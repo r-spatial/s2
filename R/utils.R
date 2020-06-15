@@ -17,8 +17,8 @@ recycle_common <- function(...) {
 
 expect_wkt_equal <- function(x, y, precision = 16) {
   testthat::expect_equal(
-    s2geography_to_wkt(s2geography(x), precision = precision, trim = TRUE),
-    s2geography_to_wkt(s2geography(y), precision = precision, trim = TRUE)
+    s2_geography_to_wkt(s2_geography(x), precision = precision, trim = TRUE),
+    s2_geography_to_wkt(s2_geography(y), precision = precision, trim = TRUE)
   )
 }
 

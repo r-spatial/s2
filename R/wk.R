@@ -14,14 +14,14 @@ as_wkb.s2_point <- function(x, ..., endian = wk::wk_platform_endian()) {
 
 #' @importFrom wk as_wkb
 #' @export
-as_wkb.s2geography <- function(x, ..., endian = wk::wk_platform_endian()) {
-  wk::new_wk_wkb(s2geography_to_wkb(x, endian))
+as_wkb.s2_geography <- function(x, ..., endian = wk::wk_platform_endian()) {
+  wk::new_wk_wkb(s2_geography_to_wkb(x, endian))
 }
 
 #' @importFrom wk as_wkt
 #' @export
-as_wkt.s2geography <- function(x, ..., precision = 16, trim = TRUE) {
-  wk::new_wk_wkt(s2geography_to_wkt(x, precision = precision, trim = trim))
+as_wkt.s2_geography <- function(x, ..., precision = 16, trim = TRUE) {
+  wk::new_wk_wkt(s2_geography_to_wkt(x, precision = precision, trim = trim))
 }
 
 #' @importFrom wk as_wkt

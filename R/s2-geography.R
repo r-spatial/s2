@@ -1,46 +1,46 @@
 
 #' Create an S2 Geography Vector
 #'
-#' @param x An object that can be converted to an s2geography vector
+#' @param x An object that can be converted to an s2_geography vector
 #' @param oriented TRUE if polygon ring directions are known to be correct
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
 #' @param ... Unused
 #'
-#' @return A [new_s2_xptr()] with class s2geography
+#' @return A [new_s2_xptr()] with class s2_geography
 #' @export
 #'
-s2geography <- function(x, ...) {
-  UseMethod("s2geography")
+s2_geography <- function(x, ...) {
+  UseMethod("s2_geography")
 }
 
-#' @rdname s2geography
+#' @rdname s2_geography
 #' @export
-s2geography.s2geography <- function(x, ...) {
+s2_geography.s2_geography <- function(x, ...) {
   x
 }
 
-#' @rdname s2geography
+#' @rdname s2_geography
 #' @export
-s2geography.wk_wkb <- function(x, ..., oriented = FALSE) {
-  new_s2_xptr(s2geography_from_wkb(x, oriented = oriented), "s2geography")
+s2_geography.wk_wkb <- function(x, ..., oriented = FALSE) {
+  new_s2_xptr(s2_geography_from_wkb(x, oriented = oriented), "s2_geography")
 }
 
-#' @rdname s2geography
+#' @rdname s2_geography
 #' @export
-s2geography.logical <- function(x, ...) {
+s2_geography.logical <- function(x, ...) {
   stopifnot(isTRUE(x))
-  new_s2_xptr(s2geography_full(TRUE), "s2geography")
+  new_s2_xptr(s2_geography_full(TRUE), "s2_geography")
 }
 
 
-#' @rdname s2geography
+#' @rdname s2_geography
 #' @export
-s2geography.character <- function(x, ..., oriented = FALSE) {
-  new_s2_xptr(s2geography_from_wkt(x, oriented = oriented), "s2geography")
+s2_geography.character <- function(x, ..., oriented = FALSE) {
+  new_s2_xptr(s2_geography_from_wkt(x, oriented = oriented), "s2_geography")
 }
 
 #' @export
-format.s2geography <- function(x, ..., max_coords = 5) {
-  paste0("<", s2geography_format(x, max_coords), ">")
+format.s2_geography <- function(x, ..., max_coords = 5) {
+  paste0("<", s2_geography_format(x, max_coords), ">")
 }

@@ -41,28 +41,28 @@ cpp_s2_maxdistance <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_maxdistance`, geog1, geog2)
 }
 
-s2geography_from_wkb <- function(wkb, oriented) {
-    .Call(`_s2_s2geography_from_wkb`, wkb, oriented)
+s2_geography_from_wkb <- function(wkb, oriented) {
+    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented)
 }
 
-s2geography_from_wkt <- function(wkt, oriented) {
-    .Call(`_s2_s2geography_from_wkt`, wkt, oriented)
+s2_geography_from_wkt <- function(wkt, oriented) {
+    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented)
 }
 
-s2geography_full <- function(x) {
-    .Call(`_s2_s2geography_full`, x)
+s2_geography_full <- function(x) {
+    .Call(`_s2_s2_geography_full`, x)
 }
 
-s2geography_to_wkt <- function(s2geography, precision, trim) {
-    .Call(`_s2_s2geography_to_wkt`, s2geography, precision, trim)
+s2_geography_to_wkt <- function(s2_geography, precision, trim) {
+    .Call(`_s2_s2_geography_to_wkt`, s2_geography, precision, trim)
 }
 
-s2geography_to_wkb <- function(s2geography, endian) {
-    .Call(`_s2_s2geography_to_wkb`, s2geography, endian)
+s2_geography_to_wkb <- function(s2_geography, endian) {
+    .Call(`_s2_s2_geography_to_wkb`, s2_geography, endian)
 }
 
-s2geography_format <- function(s2geography, maxCoords) {
-    .Call(`_s2_s2geography_format`, s2geography, maxCoords)
+s2_geography_format <- function(s2_geography, maxCoords) {
+    .Call(`_s2_s2_geography_format`, s2_geography, maxCoords)
 }
 
 s2_latlng_from_numeric <- function(lat, lng) {
