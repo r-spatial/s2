@@ -13,41 +13,41 @@
 #'   `geometry` (wk_wkb)
 #' @source [Natural Earth Data](https://www.naturalearthdata.com/)
 #' @examples
-#' head(s2data_countries())
-#' s2data_countries("Germany")
-#' s2data_countries("Europe")
+#' head(s2_data_countries())
+#' s2_data_countries("Germany")
+#' s2_data_countries("Europe")
 #'
-#' head(s2data_timezones())
-#' s2data_timezones(-4)
+#' head(s2_data_timezones())
+#' s2_data_timezones(-4)
 #'
-#' head(s2data_cities())
-#' s2data_cities("Cairo")
+#' head(s2_data_cities())
+#' s2_data_cities("Cairo")
 #'
-"s2_data_world_borders"
+"s2_data_tbl_countries"
 
-#' @rdname s2_data_world_borders
-"s2_data_timezones"
+#' @rdname s2_data_tbl_countries
+"s2_data_tbl_timezones"
 
-#' @rdname s2_data_world_borders
-"s2_data_cities"
+#' @rdname s2_data_tbl_countries
+"s2_data_tbl_cities"
 
-#' @rdname s2_data_world_borders
+#' @rdname s2_data_tbl_countries
 #' @export
-s2data_countries <- function(name = NULL) {
-  df <- s2::s2_data_world_borders
+s2_data_countries <- function(name = NULL) {
+  df <- s2::s2_data_tbl_countries
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
     wkb <- structure(df$geometry[(df$name %in% name) | (df$continent %in% name)], class = "wk_wkb")
   }
 
-  s2geography(wkb)
+  as_s2_geography(wkb)
 }
 
-#' @rdname s2_data_world_borders
+#' @rdname s2_data_tbl_countries
 #' @export
-s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_min) {
-  df <- s2::s2_data_timezones
+s2_data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_min) {
+  df <- s2::s2_data_tbl_timezones
   if (is.null(utc_offset_min)) {
     wkb <- df$geometry
   } else {
@@ -55,44 +55,18 @@ s2data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset_
     wkb <- structure(df$geometry[matches], class = "wk_wkb")
   }
 
-  s2geography(wkb)
+  as_s2_geography(wkb)
 }
 
-#' @rdname s2_data_world_borders
+#' @rdname s2_data_tbl_countries
 #' @export
-s2data_cities <- function(name = NULL) {
-  df <- s2::s2_data_cities
+s2_data_cities <- function(name = NULL) {
+  df <- s2::s2_data_tbl_cities
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
     wkb <- structure(df$geometry[(df$name %in% name)], class = "wk_wkb")
   }
 
-  s2geography(wkb)
+  as_s2_geography(wkb)
 }
-
-#' Geometry of the nc dataset of package sf
-#'
-#' The raw output of st_geometry(nc) when read with package sf
-#'
-#' @format A list with sfg objects
-#' @source \url{http://r-spatial.github.io/sf/}
-#' @examples
-#' # Created with:
-#' # library(sf)
-#' # read_sf(system.file("gpkg/nc.gpkg", package="sf"), check_ring_dir = TRUE) %>%
-#' # 	st_geometry() -> nc_correct
-"nc_correct"
-
-#' Geometry of the nc dataset of package sf
-#'
-#' The raw output of st_geometry(nc) when read with package sf
-#'
-#' @format A list with sfg objects
-#' @source \url{http://r-spatial.github.io/sf/}
-#' @examples
-#' # Created with:
-#' # library(sf)
-#' # read_sf(system.file("gpkg/nc.gpkg", package="sf"), check_ring_dir = FALSE) %>%
-#' #	st_geometry() -> nc_raw
-"nc_raw"

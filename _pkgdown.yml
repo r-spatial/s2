@@ -1,0 +1,71 @@
+development:
+  mode: auto
+
+reference:
+- title: Geography Constructors and Exporters
+  desc: Convert objects to and from geography vectors
+  contents:
+  - s2_latlng
+  - s2_point
+  - as_s2_geography
+  - s2_geog_point
+  - s2_make_line
+  - s2_make_polygon
+  - s2_make_polygon_oriented
+  - s2_geog_from_text
+  - s2_geog_from_wkb
+  - s2_as_text
+  - s2_as_binary
+
+- title: Geography Transformations
+  desc: Functions that operate on geography vectors and return geography vectors
+  contents:
+  - s2_boundary
+  - s2_centroid
+  - s2_closest_point
+  - s2_difference
+  - s2_sym_difference
+  - s2_intersection
+  - s2_union
+  - s2_snap_to_grid
+  - s2_union_agg
+  - s2_centroid_agg
+
+- title: Binary Geography Predicates
+  desc: Functions that operate two geography vectors and return a logical vector
+  contents:
+  - s2_contains
+  - s2_covered_by
+  - s2_covers
+  - s2_disjoint
+  - s2_equals
+  - s2_intersects
+  - s2_intersects_box
+  - s2_touches
+  - s2_within
+  - s2_dwithin
+
+- title: Geography Accessors
+  desc: Functions that operate one or more geography vectors and return a vector of values
+  contents:
+  - s2_is_collection
+  - s2_is_empty
+  - s2_dimension
+  - s2_num_points
+  - s2_is_empty
+  - s2_area
+  - s2_length
+  - s2_perimeter
+  - s2_x
+  - s2_y
+  - s2_distance
+  - s2_max_distance
+
+- title: Utility Functions
+  contents:
+  - s2_earth_radius_meters
+
+- title: Example Data
+  desc: Useful data for testing and demonstrating s2 functions
+  contents:
+  - starts_with("s2_data")

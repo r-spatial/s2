@@ -1,0 +1,76 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# s2
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
+[![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/s2)
+<!-- badges: end -->
+
+The goal of s2 is to provide R bindings to Google's [S2Geometry](https://s2geometry.io) library. The package exposes an API similar to Google's [BigQuery Geography API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions), whose functions also operate on spherical geometries.
+
+## Installation
+
+You can install the released version of s2 from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("s2")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("r-spatial/libs2")
+```
+
+## Example
+
+The s2 package provides geometry transformers and predicates similar to those found in [GEOS](https://trac.osgeo.org/geos/), except instead of assuming a planar geometry, s2's functions work in latitude and longitude and assume a spherical geometry:
+
+```{r example}
+library(s2)
+
+s2_contains(
+  # polygon containing much  of the northern hemisphere
+  "POLYGON ((-63.5 44.6, -149.75 61.20, 116.4 40.2, 13.5 52.51, -63.5 44.6))",
+  # ...should contain the north pole
+  "POINT (0 90)"
+)
+```
+
+The [sf package](https://r-spatial.gitub.io/sf) will soon support s2, but until it does, you can use the [wk package](https://paleolimbot.github.io/wk) to convert data from sf to s2:
+
+```{r, warning=FALSE, message = FALSE}
+library(dplyr)
+library(sf)
+
+nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
+  mutate(geometry = as_s2_geography(wk::wkb(st_as_binary(geometry)))) %>% 
+  as_tibble() %>% 
+  select(NAME, geometry)
+
+nc_s2
+```
+
+## Acknowledgment
+
+This project gratefully acknowledges financial [support](https://www.r-consortium.org/projects) from the
+
+<a href="https://www.r-consortium.org/projects/awarded-projects">
+<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300">
+</a>

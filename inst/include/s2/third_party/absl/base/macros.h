@@ -170,7 +170,8 @@ using absl::base_internal::LINKER_INITIALIZED;
 // clang's `-Wdeprecated-declarations` option. This option is turned off by
 // default, but the warnings will be reported by clang-tidy.
 #if defined(__clang__) && __cplusplus >= 201103L
-#define ABSL_DEPRECATED(message) __attribute__((deprecated(message)))
+// #define ABSL_DEPRECATED(message) __attribute__((deprecated(message)))
+#define ABSL_DEPRECATED(message)
 #endif
 
 #ifndef ABSL_DEPRECATED
