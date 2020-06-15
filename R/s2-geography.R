@@ -16,6 +16,12 @@ as_s2_geography <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
+as_s2_geography.default <- function(x, ...) {
+  as_s2_geography(wk::as_wkb(x))
+}
+
+#' @rdname as_s2_geography
+#' @export
 as_s2_geography.s2_geography <- function(x, ...) {
   x
 }
@@ -28,16 +34,21 @@ as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.logical <- function(x, ...) {
-  stopifnot(isTRUE(x))
-  new_s2_xptr(s2_geography_full(TRUE), "s2_geography")
+as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE) {
+  new_s2_xptr(s2_geography_from_wkt(x, oriented = oriented), "s2_geography")
 }
-
 
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.character <- function(x, ..., oriented = FALSE) {
   new_s2_xptr(s2_geography_from_wkt(x, oriented = oriented), "s2_geography")
+}
+
+#' @rdname as_s2_geography
+#' @export
+as_s2_geography.logical <- function(x, ...) {
+  stopifnot(isTRUE(x))
+  new_s2_xptr(s2_geography_full(TRUE), "s2_geography")
 }
 
 #' @export

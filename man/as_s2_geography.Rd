@@ -2,21 +2,27 @@
 % Please edit documentation in R/s2-geography.R
 \name{as_s2_geography}
 \alias{as_s2_geography}
+\alias{as_s2_geography.default}
 \alias{as_s2_geography.s2_geography}
 \alias{as_s2_geography.wk_wkb}
-\alias{as_s2_geography.logical}
+\alias{as_s2_geography.wk_wkt}
 \alias{as_s2_geography.character}
+\alias{as_s2_geography.logical}
 \title{Create an S2 Geography Vector}
 \usage{
 as_s2_geography(x, ...)
+
+\method{as_s2_geography}{default}(x, ...)
 
 \method{as_s2_geography}{s2_geography}(x, ...)
 
 \method{as_s2_geography}{wk_wkb}(x, ..., oriented = FALSE)
 
-\method{as_s2_geography}{logical}(x, ...)
+\method{as_s2_geography}{wk_wkt}(x, ..., oriented = FALSE)
 
 \method{as_s2_geography}{character}(x, ..., oriented = FALSE)
+
+\method{as_s2_geography}{logical}(x, ...)
 }
 \arguments{
 \item{x}{An object that can be converted to an s2_geography vector}

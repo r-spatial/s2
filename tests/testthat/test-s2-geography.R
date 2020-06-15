@@ -22,13 +22,18 @@ test_that("s2_geography vectors can't have other types of objects concatenated o
   expect_error(geog[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
-test_that("s2_geography vectors can be created from wkb points", {
-  wkb_point <- list(as.raw(c(0x01, 0x01, 0x00, 0x00, 0x20, 0xe6, 0x10, 0x00,
-                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xc0, 0x00, 0x00,
-                             0x00, 0x00, 0x00, 0x80, 0x46, 0x40)))
-  class(wkb_point) <- "wk_wkb"
-
+test_that("s2_geography vectors can be created from wk::wkb() and wk::wkt()", {
+  wkb_point <- wk::as_wkb("POINT (-64 45)")
   expect_output(print(as_s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
+
+  wkt_point <- wk::as_wkt("POINT (-64 45)")
+  expect_output(print(as_s2_geography(wkt_point)), "<POINT \\(-64 45\\)>")
+})
+
+test_that("s2_geography default method uses as_wkb()", {
+  skip("need to update wk on CRAN for this test to work")
+  wksxp_point <- wk::wksxp(list(structure(matrix(c(-64, 45), ncol = 2), class = "wk_point")))
+  expect_output(print(as_s2_geography(wksxp_point)), "<POINT \\(-64 45\\)>")
 })
 
 test_that("s2_geography vectors can be created from wkt", {
