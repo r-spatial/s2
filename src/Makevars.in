@@ -9,10 +9,10 @@ OBJECTS = cpp-compat.o \
      s2-transformers.o \
      model.o \
      RcppExports.o \
-     s2geography.o \
-     s2latlng.o \
-     s2point.o \
-     s2xptr.o \
+     s2-geography.o \
+     s2-latlng.o \
+     s2-point.o \
+     s2-xptr.o \
      snap.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
