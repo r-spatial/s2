@@ -9,7 +9,7 @@
 #' @param x A [s2_latlng()] vector
 #' @param ... Unused
 #'
-#' @return A [new_s2xptr()] with class s2_latlng
+#' @return A [new_s2_xptr()] with class s2_latlng
 #' @export
 #'
 #' @examples
@@ -29,14 +29,14 @@ s2_latlng.s2_latlng <- function(lat, ...) {
 #' @rdname s2_latlng
 #' @export
 s2_latlng.s2_point <- function(lat, ...) {
-  new_s2xptr(s2_latlng_from_s2_point(lat), "s2_latlng")
+  new_s2_xptr(s2_latlng_from_s2_point(lat), "s2_latlng")
 }
 
 #' @rdname s2_latlng
 #' @export
 s2_latlng.numeric <- function(lat, lng, ...) {
   recycled <- recycle_common(lat = lat, lng = lng)
-  new_s2xptr(s2_latlng_from_numeric(recycled$lat, recycled$lng), "s2_latlng")
+  new_s2_xptr(s2_latlng_from_numeric(recycled$lat, recycled$lng), "s2_latlng")
 }
 
 #' @rdname s2_latlng
@@ -47,7 +47,7 @@ s2_latlng.matrix <- function(lat, ...) {
 
 #' @export
 s2_latlng.wk_wkb <- function(lat, ...) {
-  new_s2xptr(s2_latlng_from_wkb(lat), "s2_latlng")
+  new_s2_xptr(s2_latlng_from_wkb(lat), "s2_latlng")
 }
 
 #' @rdname s2_latlng

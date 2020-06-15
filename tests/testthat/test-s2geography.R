@@ -1,6 +1,6 @@
 
 test_that("s2geography class works", {
-  geog <- new_s2xptr(list(NULL), class = "s2geography")
+  geog <- new_s2_xptr(list(NULL), class = "s2geography")
   expect_output(print(geog), "s2geography")
   expect_identical(s2geography(geog), geog)
 })

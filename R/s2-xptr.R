@@ -5,21 +5,21 @@
 #' @param class A character vector subclass
 #' @param ... Unused
 #'
-#' @return An object of class s2xptr
+#' @return An object of class s2_xptr
 #' @export
 #'
-new_s2xptr <- function(x = list(), class = character()) {
+new_s2_xptr <- function(x = list(), class = character()) {
   if (!is.list(x) || is.object(x)) {
     stop("x must be a bare list of XPtr objects")
   }
 
-  class(x) <- union(class, "s2xptr")
+  class(x) <- union(class, "s2_xptr")
   x
 }
 
-#' @rdname new_s2xptr
+#' @rdname new_s2_xptr
 #' @export
-validate_s2xptr <- function(x) {
+validate_s2_xptr <- function(x) {
   type <- vapply(unclass(x), typeof, character(1))
   valid_items <- type %in% c("externalptr", "NULL")
   if (any(!valid_items)) {
@@ -30,40 +30,40 @@ validate_s2xptr <- function(x) {
 }
 
 #' @export
-`[.s2xptr` <- function(x, i) {
-  new_s2xptr(NextMethod(), class(x))
+`[.s2_xptr` <- function(x, i) {
+  new_s2_xptr(NextMethod(), class(x))
 }
 
 # this seems odd, but it makes lapply() along these vectors
 # possible
 #' @export
-`[[.s2xptr` <- function(x, i) {
+`[[.s2_xptr` <- function(x, i) {
   x[i]
 }
 
 #' @export
-`c.s2xptr` <- function(...) {
-  xptr <- new_s2xptr(NextMethod(), class(..1))
-  validate_s2xptr(xptr)
+`c.s2_xptr` <- function(...) {
+  xptr <- new_s2_xptr(NextMethod(), class(..1))
+  validate_s2_xptr(xptr)
   xptr
 }
 
-#' @rdname new_s2xptr
+#' @rdname new_s2_xptr
 #' @export
-rep.s2xptr <- function(x, ...) {
-  new_s2xptr(NextMethod(), class(x))
+rep.s2_xptr <- function(x, ...) {
+  new_s2_xptr(NextMethod(), class(x))
 }
 
 # EP: this seems obsolete for R >= 4.0, as rep_len is not a generic and seems to work as rep_len
-#' @rdname new_s2xptr
+#' @rdname new_s2_xptr
 #' @export
-rep_len.s2xptr <- function(x, ...) {
-  new_s2xptr(NextMethod(), class(x))
+rep_len.s2_xptr <- function(x, ...) {
+  new_s2_xptr(NextMethod(), class(x))
 }
 
 
 #' @export
-print.s2xptr <- function(x, ...) {
+print.s2_xptr <- function(x, ...) {
   cat(sprintf("<%s[%s]>\n", class(x)[1], length(x)))
   if (length(x) == 0) {
     return(invisible(x))

@@ -7,7 +7,7 @@
 #'   rings are defined clockwise).
 #' @param ... Unused
 #'
-#' @return A [new_s2xptr()] with class s2geography
+#' @return A [new_s2_xptr()] with class s2geography
 #' @export
 #'
 s2geography <- function(x, ...) {
@@ -23,21 +23,21 @@ s2geography.s2geography <- function(x, ...) {
 #' @rdname s2geography
 #' @export
 s2geography.wk_wkb <- function(x, ..., oriented = FALSE) {
-  new_s2xptr(s2geography_from_wkb(x, oriented = oriented), "s2geography")
+  new_s2_xptr(s2geography_from_wkb(x, oriented = oriented), "s2geography")
 }
 
 #' @rdname s2geography
 #' @export
 s2geography.logical <- function(x, ...) {
   stopifnot(isTRUE(x))
-  new_s2xptr(s2geography_full(TRUE), "s2geography")
+  new_s2_xptr(s2geography_full(TRUE), "s2geography")
 }
 
 
 #' @rdname s2geography
 #' @export
 s2geography.character <- function(x, ..., oriented = FALSE) {
-  new_s2xptr(s2geography_from_wkt(x, oriented = oriented), "s2geography")
+  new_s2_xptr(s2geography_from_wkt(x, oriented = oriented), "s2geography")
 }
 
 #' @export

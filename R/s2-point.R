@@ -7,7 +7,7 @@
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
 #' @param ... Unused
 #'
-#' @return A [new_s2xptr()] with class s2_point
+#' @return A [new_s2_xptr()] with class s2_point
 #' @export
 #'
 #' @examples
@@ -28,14 +28,14 @@ s2_point.s2_point <- function(x, ...) {
 #' @rdname s2_point
 #' @export
 s2_point.s2_latlng <- function(x, ...) {
-  new_s2xptr(s2_point_from_s2_latlng(x), "s2_point")
+  new_s2_xptr(s2_point_from_s2_latlng(x), "s2_point")
 }
 
 #' @rdname s2_point
 #' @export
 s2_point.numeric <- function(x, y, z, ...) {
   recycled <- recycle_common(x, y, z)
-  new_s2xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
+  new_s2_xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
 }
 
 #' @rdname s2_point

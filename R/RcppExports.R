@@ -157,12 +157,12 @@ cpp_s2_boundary <- function(geog) {
     .Call(`_s2_cpp_s2_boundary`, geog)
 }
 
-s2xptr_test <- function(size) {
-    .Call(`_s2_s2xptr_test`, size)
+s2_xptr_test <- function(size) {
+    .Call(`_s2_s2_xptr_test`, size)
 }
 
-s2xptr_test_op <- function(s2xptr_test) {
-    invisible(.Call(`_s2_s2xptr_test_op`, s2xptr_test))
+s2_xptr_test_op <- function(s2_xptr_test) {
+    invisible(.Call(`_s2_s2_xptr_test_op`, s2_xptr_test))
 }
 
 #' Set snap level for polygons and polylines

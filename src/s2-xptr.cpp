@@ -25,7 +25,7 @@ public:
 };
 
 // [[Rcpp::export]]
-List s2xptr_test(R_xlen_t size) {
+List s2_xptr_test(R_xlen_t size) {
   List output(size);
   for (R_xlen_t i = 0; i < size; i++) {
     output[i] = XPtr<XPtrTest>(new XPtrTest());
@@ -34,10 +34,10 @@ List s2xptr_test(R_xlen_t size) {
 }
 
 // [[Rcpp::export]]
-void s2xptr_test_op(List s2xptr_test) {
+void s2_xptr_test_op(List s2_xptr_test) {
   SEXP item;
-  for (R_xlen_t i = 0; i < s2xptr_test.size(); i++) {
-    item = s2xptr_test[i];
+  for (R_xlen_t i = 0; i < s2_xptr_test.size(); i++) {
+    item = s2_xptr_test[i];
     if (item == R_NilValue) {
       Rcout << "Item is NULL\n";
     } else  {

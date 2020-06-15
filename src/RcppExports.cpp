@@ -472,24 +472,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2xptr_test
-List s2xptr_test(R_xlen_t size);
-RcppExport SEXP _s2_s2xptr_test(SEXP sizeSEXP) {
+// s2_xptr_test
+List s2_xptr_test(R_xlen_t size);
+RcppExport SEXP _s2_s2_xptr_test(SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< R_xlen_t >::type size(sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2xptr_test(size));
+    rcpp_result_gen = Rcpp::wrap(s2_xptr_test(size));
     return rcpp_result_gen;
 END_RCPP
 }
-// s2xptr_test_op
-void s2xptr_test_op(List s2xptr_test);
-RcppExport SEXP _s2_s2xptr_test_op(SEXP s2xptr_testSEXP) {
+// s2_xptr_test_op
+void s2_xptr_test_op(List s2_xptr_test);
+RcppExport SEXP _s2_s2_xptr_test_op(SEXP s2_xptr_testSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2xptr_test(s2xptr_testSEXP);
-    s2xptr_test_op(s2xptr_test);
+    Rcpp::traits::input_parameter< List >::type s2_xptr_test(s2_xptr_testSEXP);
+    s2_xptr_test_op(s2_xptr_test);
     return R_NilValue;
 END_RCPP
 }
@@ -556,8 +556,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_nearestfeature", (DL_FUNC) &_s2_cpp_s2_nearestfeature, 2},
     {"_s2_cpp_s2_centroid", (DL_FUNC) &_s2_cpp_s2_centroid, 1},
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},
-    {"_s2_s2xptr_test", (DL_FUNC) &_s2_s2xptr_test, 1},
-    {"_s2_s2xptr_test_op", (DL_FUNC) &_s2_s2xptr_test_op, 1},
+    {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
+    {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
     {"_s2_s2_set_snaplevel", (DL_FUNC) &_s2_s2_set_snaplevel, 1},
     {"_s2_s2_get_snaplevel", (DL_FUNC) &_s2_s2_get_snaplevel, 1},
     {NULL, NULL, 0}

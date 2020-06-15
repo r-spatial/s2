@@ -23,20 +23,20 @@
 #' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
 #'
 s2_boundary <- function(x) {
-  new_s2xptr(cpp_s2_boundary(s2geography(x)), "s2geography")
+  new_s2_xptr(cpp_s2_boundary(s2geography(x)), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_centroid <- function(x) {
-  new_s2xptr(cpp_s2_centroid(s2geography(x)), "s2geography")
+  new_s2_xptr(cpp_s2_centroid(s2geography(x)), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_closestpoint <- function(x, y) {
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(cpp_s2_closestpoint(recycled[[1]], recycled[[2]]), "s2geography")
+  new_s2_xptr(cpp_s2_closestpoint(recycled[[1]], recycled[[2]]), "s2geography")
 }
 
 #' @rdname s2_boundary
@@ -52,7 +52,7 @@ s2_nearestfeature <- function(x, y) {
 s2_difference <- function(x, y, model = -1L, snap_level = -1L) {
   on.exit(s2_set_snaplevel(s2_set_snaplevel(snap_level)))
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(cpp_s2_difference(recycled[[1]], recycled[[2]], model), "s2geography")
+  new_s2_xptr(cpp_s2_difference(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
@@ -60,7 +60,7 @@ s2_difference <- function(x, y, model = -1L, snap_level = -1L) {
 s2_symdifference <- function(x, y, model = -1L, snap_level = -1L) {
   on.exit(s2_set_snaplevel(s2_set_snaplevel(snap_level)))
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(cpp_s2_symdifference(recycled[[1]], recycled[[2]], model), "s2geography")
+  new_s2_xptr(cpp_s2_symdifference(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
@@ -68,7 +68,7 @@ s2_symdifference <- function(x, y, model = -1L, snap_level = -1L) {
 s2_intersection <- function(x, y, model = -1L, snap_level = -1L) {
   on.exit(s2_set_snaplevel(s2_set_snaplevel(snap_level)))
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(cpp_s2_intersection(recycled[[1]], recycled[[2]], model), "s2geography")
+  new_s2_xptr(cpp_s2_intersection(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
@@ -80,7 +80,7 @@ s2_union <- function(x, y = NULL, model = -1L, snap_level = -1L) {
   }
 
   recycled <- recycle_common(s2geography(x), s2geography(y))
-  new_s2xptr(cpp_s2_union(recycled[[1]], recycled[[2]], model), "s2geography")
+  new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], model), "s2geography")
 }
 
 #' @rdname s2_boundary
@@ -92,12 +92,12 @@ s2_snaptogrid <- function(x) {
 #' @rdname s2_boundary
 #' @export
 s2_union_agg <- function(x, na.rm = FALSE) {
-  new_s2xptr(cpp_s2_union_agg(s2geography(x), na.rm), "s2geography")
+  new_s2_xptr(cpp_s2_union_agg(s2geography(x), na.rm), "s2geography")
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_centroid_agg <- function(x, na.rm = FALSE) {
-  new_s2xptr(cpp_s2_centroid_agg(s2geography(x), na.rm), "s2geography")
+  new_s2_xptr(cpp_s2_centroid_agg(s2geography(x), na.rm), "s2geography")
 }
 

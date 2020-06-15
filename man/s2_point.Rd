@@ -30,7 +30,7 @@ s2_point(x, ...)
 \item{...}{Unused}
 }
 \value{
-A \code{\link[=new_s2xptr]{new_s2xptr()}} with class s2_point
+A \code{\link[=new_s2_xptr]{new_s2_xptr()}} with class s2_point
 }
 \description{
 In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
