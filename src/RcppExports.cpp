@@ -389,16 +389,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_symdifference
-List cpp_s2_symdifference(List geog1, List geog2, int model);
-RcppExport SEXP _s2_cpp_s2_symdifference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
+// cpp_s2_sym_difference
+List cpp_s2_sym_difference(List geog1, List geog2, int model);
+RcppExport SEXP _s2_cpp_s2_sym_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
     Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_symdifference(geog1, geog2, model));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_sym_difference(geog1, geog2, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -426,15 +426,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_closestpoint
-List cpp_s2_closestpoint(List geog1, List geog2);
-RcppExport SEXP _s2_cpp_s2_closestpoint(SEXP geog1SEXP, SEXP geog2SEXP) {
+// cpp_s2_closest_point
+List cpp_s2_closest_point(List geog1, List geog2);
+RcppExport SEXP _s2_cpp_s2_closest_point(SEXP geog1SEXP, SEXP geog2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_closestpoint(geog1, geog2));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_closest_point(geog1, geog2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -549,10 +549,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 3},
     {"_s2_cpp_s2_union", (DL_FUNC) &_s2_cpp_s2_union, 3},
     {"_s2_cpp_s2_difference", (DL_FUNC) &_s2_cpp_s2_difference, 3},
-    {"_s2_cpp_s2_symdifference", (DL_FUNC) &_s2_cpp_s2_symdifference, 3},
+    {"_s2_cpp_s2_sym_difference", (DL_FUNC) &_s2_cpp_s2_sym_difference, 3},
     {"_s2_cpp_s2_union_agg", (DL_FUNC) &_s2_cpp_s2_union_agg, 2},
     {"_s2_cpp_s2_centroid_agg", (DL_FUNC) &_s2_cpp_s2_centroid_agg, 2},
-    {"_s2_cpp_s2_closestpoint", (DL_FUNC) &_s2_cpp_s2_closestpoint, 2},
+    {"_s2_cpp_s2_closest_point", (DL_FUNC) &_s2_cpp_s2_closest_point, 2},
     {"_s2_cpp_s2_nearestfeature", (DL_FUNC) &_s2_cpp_s2_nearestfeature, 2},
     {"_s2_cpp_s2_centroid", (DL_FUNC) &_s2_cpp_s2_centroid, 1},
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},

@@ -129,8 +129,8 @@ cpp_s2_difference <- function(geog1, geog2, model = -1L) {
     .Call(`_s2_cpp_s2_difference`, geog1, geog2, model)
 }
 
-cpp_s2_symdifference <- function(geog1, geog2, model = -1L) {
-    .Call(`_s2_cpp_s2_symdifference`, geog1, geog2, model)
+cpp_s2_sym_difference <- function(geog1, geog2, model = -1L) {
+    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, model)
 }
 
 cpp_s2_union_agg <- function(geog, naRm) {
@@ -141,8 +141,8 @@ cpp_s2_centroid_agg <- function(geog, naRm) {
     .Call(`_s2_cpp_s2_centroid_agg`, geog, naRm)
 }
 
-cpp_s2_closestpoint <- function(geog1, geog2) {
-    .Call(`_s2_cpp_s2_closestpoint`, geog1, geog2)
+cpp_s2_closest_point <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_closest_point`, geog1, geog2)
 }
 
 cpp_s2_nearestfeature <- function(geog1, geog2) {

@@ -178,7 +178,7 @@ List cpp_s2_difference(List geog1, List geog2, int model = -1L) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_symdifference(List geog1, List geog2, int model = -1L) {
+List cpp_s2_sym_difference(List geog1, List geog2, int model = -1L) {
   List ret;
   if (model == -1 || model == 1) {
     BooleanOperationOp<S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, 1> op;
@@ -248,7 +248,7 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_closestpoint(List geog1, List geog2) {
+List cpp_s2_closest_point(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {

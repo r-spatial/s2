@@ -32,14 +32,14 @@ test_that("s2_boundary() works", {
   )
 })
 
-test_that("s2_closestpoint() works", {
-  #expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
-  expect_wkt_equal(s2_closestpoint("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
-  expect_true(s2_is_empty(s2_closestpoint("POINT (30 10)", "POINT EMPTY")))
+test_that("s2_closest_point() works", {
+  #expect_wkt_equal(s2_closest_point("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closest_point("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
+  expect_true(s2_is_empty(s2_closest_point("POINT (30 10)", "POINT EMPTY")))
 
-  #expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
-  expect_wkt_equal(s2_closestpoint("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
-  expect_wkt_equal(s2_closestpoint("LINESTRING(0 0,1 1)", "LINESTRING(1 0,0 1)"), "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
+  #expect_wkt_equal(s2_closest_point("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closest_point("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
+  expect_wkt_equal(s2_closest_point("LINESTRING(0 0,1 1)", "LINESTRING(1 0,0 1)"), "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
   	precision = 6)
 })
 
@@ -81,21 +81,21 @@ test_that("s2_difference() works", {
   )
 })
 
-test_that("s2_symdifference() works", {
-  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
-  expect_true(s2_is_empty(s2_symdifference("POINT (30 10)", "POINT (30 10)")))
-  expect_wkt_equal(s2_symdifference("POINT (30 10)", "POINT (30 20)"), "MULTIPOINT ((30 20), (30 10))")
+test_that("s2_sym_difference() works", {
+  expect_wkt_equal(s2_sym_difference("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
+  expect_true(s2_is_empty(s2_sym_difference("POINT (30 10)", "POINT (30 10)")))
+  expect_wkt_equal(s2_sym_difference("POINT (30 10)", "POINT (30 20)"), "MULTIPOINT ((30 20), (30 10))")
 
-  expect_true(s2_is_empty(s2_symdifference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
+  expect_true(s2_is_empty(s2_sym_difference("LINESTRING (0 0, 45 0)", "LINESTRING (0 0, 45 0)")))
 
   sn = s2_set_snaplevel(30)
-  df = s2_symdifference(
+  df = s2_sym_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" )
-  df0 = s2_symdifference(
+  df0 = s2_sym_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 0)
-  df2 = s2_symdifference(
+  df2 = s2_sym_difference(
         "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
         "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" , model = 2)
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)

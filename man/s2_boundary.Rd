@@ -3,13 +3,13 @@
 \name{s2_boundary}
 \alias{s2_boundary}
 \alias{s2_centroid}
-\alias{s2_closestpoint}
+\alias{s2_closest_point}
 \alias{s2_nearestfeature}
 \alias{s2_difference}
-\alias{s2_symdifference}
+\alias{s2_sym_difference}
 \alias{s2_intersection}
 \alias{s2_union}
-\alias{s2_snaptogrid}
+\alias{s2_snap_to_grid}
 \alias{s2_union_agg}
 \alias{s2_centroid_agg}
 \title{S2 Geography Transformations}
@@ -18,19 +18,19 @@ s2_boundary(x)
 
 s2_centroid(x)
 
-s2_closestpoint(x, y)
+s2_closest_point(x, y)
 
 s2_nearestfeature(x, y)
 
 s2_difference(x, y, model = -1L, snap_level = -1L)
 
-s2_symdifference(x, y, model = -1L, snap_level = -1L)
+s2_sym_difference(x, y, model = -1L, snap_level = -1L)
 
 s2_intersection(x, y, model = -1L, snap_level = -1L)
 
 s2_union(x, y = NULL, model = -1L, snap_level = -1L)
 
-s2_snaptogrid(x)
+s2_snap_to_grid(x)
 
 s2_union_agg(x, na.rm = FALSE)
 

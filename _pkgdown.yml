@@ -20,12 +20,12 @@ reference:
   contents:
   - s2_boundary
   - s2_centroid
-  - s2_closestpoint
+  - s2_closest_point
   - s2_difference
-  - s2_symdifference
+  - s2_sym_difference
   - s2_intersection
   - s2_union
-  - s2_snaptogrid
+  - s2_snap_to_grid
   - s2_union_agg
   - s2_centroid_agg
 

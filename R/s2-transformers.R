@@ -34,9 +34,9 @@ s2_centroid <- function(x) {
 
 #' @rdname s2_boundary
 #' @export
-s2_closestpoint <- function(x, y) {
+s2_closest_point <- function(x, y) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_closestpoint(recycled[[1]], recycled[[2]]), "s2_geography")
+  new_s2_xptr(cpp_s2_closest_point(recycled[[1]], recycled[[2]]), "s2_geography")
 }
 
 #' @rdname s2_boundary
@@ -57,10 +57,10 @@ s2_difference <- function(x, y, model = -1L, snap_level = -1L) {
 
 #' @rdname s2_boundary
 #' @export
-s2_symdifference <- function(x, y, model = -1L, snap_level = -1L) {
+s2_sym_difference <- function(x, y, model = -1L, snap_level = -1L) {
   on.exit(s2_set_snaplevel(s2_set_snaplevel(snap_level)))
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_symdifference(recycled[[1]], recycled[[2]], model), "s2_geography")
+  new_s2_xptr(cpp_s2_sym_difference(recycled[[1]], recycled[[2]], model), "s2_geography")
 }
 
 #' @rdname s2_boundary
@@ -85,7 +85,7 @@ s2_union <- function(x, y = NULL, model = -1L, snap_level = -1L) {
 
 #' @rdname s2_boundary
 #' @export
-s2_snaptogrid <- function(x) {
+s2_snap_to_grid <- function(x) {
   stop("Not implemented")
 }
 
