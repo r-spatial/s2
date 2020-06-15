@@ -6,7 +6,7 @@
 #' unit vector representation of this value.
 #'
 #' @param lat,lng Vectors of latitude and longitude values in degrees.
-#' @param x A [as_s2_latlng()] vector
+#' @param x A [s2_latlng()] vector or an object that can be coerced to one.
 #' @param ... Unused
 #'
 #' @return An object with class s2_latlng

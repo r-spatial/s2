@@ -27,7 +27,7 @@ as_s2_latlng(x, ...)
 \arguments{
 \item{lat, lng}{Vectors of latitude and longitude values in degrees.}
 
-\item{x}{A \code{\link[=as_s2_latlng]{as_s2_latlng()}} vector}
+\item{x}{A \code{\link[=s2_latlng]{s2_latlng()}} vector or an object that can be coerced to one.}
 
 \item{...}{Unused}
 }
