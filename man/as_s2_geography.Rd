@@ -5,6 +5,7 @@
 \alias{as_s2_geography.default}
 \alias{as_s2_geography.s2_geography}
 \alias{as_s2_geography.wk_wkb}
+\alias{as_s2_geography.WKB}
 \alias{as_s2_geography.wk_wkt}
 \alias{as_s2_geography.character}
 \alias{as_s2_geography.logical}
@@ -17,6 +18,8 @@ as_s2_geography(x, ...)
 \method{as_s2_geography}{s2_geography}(x, ...)
 
 \method{as_s2_geography}{wk_wkb}(x, ..., oriented = FALSE)
+
+\method{as_s2_geography}{WKB}(x, ..., oriented = FALSE)
 
 \method{as_s2_geography}{wk_wkt}(x, ..., oriented = FALSE)
 
