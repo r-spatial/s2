@@ -92,16 +92,21 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the released version of s2 from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"s2"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"s2"</span>)
+</pre></div>
 <p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("remotes")</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"r-spatial/libs2"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># install.packages("remotes")</span>
+<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"r-spatial/libs2"</span>)
+</pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>The s2 package provides geometry transformers and predicates similar to those found in <a href="https://trac.osgeo.org/geos/">GEOS</a>, except instead of assuming a planar geometry, s2’s functions work in latitude and longitude and assume a spherical geometry:</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">s2</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/r-spatial/s2">s2</a></span>)
 
 <span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span>(
   <span class="co"># polygon containing much  of the northern hemisphere</span>
@@ -109,17 +114,19 @@
   <span class="co"># ...should contain the north pole</span>
   <span class="st">"POINT (0 90)"</span>
 )
-<span class="co">#&gt; [1] TRUE</span></pre></div>
+<span class="co">#&gt; [1] TRUE</span>
+</pre></div>
 <p>The <a href="https://r-spatial.gitub.io/sf">sf package</a> will soon support s2, but until it does, you can use the <a href="https://paleolimbot.github.io/wk">wk package</a> to convert data from sf to s2:</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">sf</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">sf</span>)
 
-<span class="no">nc_s2</span> <span class="kw">&lt;-</span> <span class="fu">read_sf</span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"shape/nc.shp"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"sf"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">geometry</span> <span class="kw">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span>(<span class="kw pkg">wk</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/wk/man/wkb.html">wkb</a></span>(<span class="fu">st_as_binary</span>(<span class="no">geometry</span>)))) <span class="kw">%&gt;%</span>
-  <span class="fu">as_tibble</span>() <span class="kw">%&gt;%</span>
-  <span class="fu">select</span>(<span class="no">NAME</span>, <span class="no">geometry</span>)
+<span class="kw">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"shape/nc.shp"</span>, package = <span class="st">"sf"</span>)) <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span>(geometry = <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span>(<span class="kw">wk</span>::<span class="fu"><a href="https://rdrr.io/pkg/wk/man/wkb.html">wkb</a></span>(<span class="fu">st_as_binary</span>(<span class="kw">geometry</span>)))) <span class="op">%&gt;%</span> 
+  <span class="fu">as_tibble</span>() <span class="op">%&gt;%</span> 
+  <span class="fu">select</span>(<span class="kw">NAME</span>, <span class="kw">geometry</span>)
 
-<span class="no">nc_s2</span>
+<span class="kw">nc_s2</span>
 <span class="co">#&gt; # A tibble: 100 x 2</span>
 <span class="co">#&gt;    NAME        geometry                                                         </span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
@@ -133,7 +140,8 @@
 <span class="co">#&gt;  8 Gates       &lt;POLYGON ((-76.4604 36.3739, -76.5025 36.4523, -76.4983 36.5039,…</span>
 <span class="co">#&gt;  9 Warren      &lt;POLYGON ((-78.1347 36.2366, -78.1096 36.2135, -78.0583 36.2113,…</span>
 <span class="co">#&gt; 10 Stokes      &lt;POLYGON ((-80.0241 36.545, -80.0481 36.5471, -80.4353 36.551, -…</span>
-<span class="co">#&gt; # … with 90 more rows</span></pre></div>
+<span class="co">#&gt; # … with 90 more rows</span>
+</pre></div>
 </div>
 <div id="acknowledgment" class="section level2">
 <h2 class="hasAnchor">
