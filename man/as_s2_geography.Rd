@@ -26,15 +26,45 @@ as_s2_geography(x, ...)
 
 \method{as_s2_geography}{s2_point}(x, ...)
 
-\method{as_s2_geography}{wk_wkb}(x, ..., oriented = FALSE)
+\method{as_s2_geography}{wk_wkb}(
+  x,
+  ...,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
-\method{as_s2_geography}{WKB}(x, ..., oriented = FALSE)
+\method{as_s2_geography}{WKB}(
+  x,
+  ...,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
-\method{as_s2_geography}{blob}(x, ..., oriented = FALSE)
+\method{as_s2_geography}{blob}(
+  x,
+  ...,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
-\method{as_s2_geography}{wk_wkt}(x, ..., oriented = FALSE)
+\method{as_s2_geography}{wk_wkt}(
+  x,
+  ...,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
-\method{as_s2_geography}{character}(x, ..., oriented = FALSE)
+\method{as_s2_geography}{character}(
+  x,
+  ...,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
 \method{as_s2_geography}{logical}(x, ...)
 

@@ -49,16 +49,16 @@ cpp_s2_make_line <- function(x, y, featureId) {
     .Call(`_s2_cpp_s2_make_line`, x, y, featureId)
 }
 
-cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented) {
-    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented)
+cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented, check, snapLevel) {
+    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented, check, snapLevel)
 }
 
-s2_geography_from_wkb <- function(wkb, oriented) {
-    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented)
+s2_geography_from_wkb <- function(wkb, oriented, check, snapLevel) {
+    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented, check, snapLevel)
 }
 
-s2_geography_from_wkt <- function(wkt, oriented) {
-    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented)
+s2_geography_from_wkt <- function(wkt, oriented, check, snapLevel) {
+    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented, check, snapLevel)
 }
 
 s2_geography_full <- function(x) {

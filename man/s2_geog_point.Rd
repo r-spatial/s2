@@ -19,12 +19,19 @@ s2_make_polygon(
   latitude,
   feature_id = 1L,
   ring_id = 1L,
-  oriented = FALSE
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
 )
 
 s2_geog_from_text(wkt_string, oriented = FALSE)
 
-s2_geog_from_wkb(wkb_bytes, oriented = FALSE)
+s2_geog_from_wkb(
+  wkb_bytes,
+  oriented = FALSE,
+  check = FALSE,
+  snap_level = s2_get_snaplevel()
+)
 
 s2_as_text(x, precision = 16, trim = TRUE)
 

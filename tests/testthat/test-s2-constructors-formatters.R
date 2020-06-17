@@ -85,7 +85,7 @@ test_that("s2_as_binary works on (multi)polygons", {
 	expect_identical(length(wkb), length(geog))
 })
 
-test_that("polygon constructors respect oriented argument", {
+test_that("polygon constructors respect oriented and check arguments", {
   polygon_with_bad_hole_wkt <- "POLYGON (
     (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
     (30 20, 20 25, 20 15, 30 20)

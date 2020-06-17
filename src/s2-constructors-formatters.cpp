@@ -53,7 +53,7 @@ List cpp_s2_make_line(NumericVector x, NumericVector y, IntegerVector featureId)
 // [[Rcpp::export]]
 List cpp_s2_make_polygon(NumericVector x, NumericVector y,
                          IntegerVector featureId, IntegerVector ringId,
-                         bool oriented) {
+                         bool oriented, bool check, int snapLevel) {
   NumericVector z(x.size());
   z.fill(NA_REAL);
   NumericVector m(x.size());
@@ -64,8 +64,8 @@ List cpp_s2_make_polygon(NumericVector x, NumericVector y,
 
   WKGeographyWriter writer(provider.nFeatures());
   writer.setOriented(oriented);
-  writer.setCheck(true);
-  writer.setSnapLevel(snap_level);
+  writer.setCheck(check);
+  writer.setSnapLevel(snapLevel);
 
   reader.setHandler(&writer);
 
