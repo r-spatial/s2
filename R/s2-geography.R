@@ -130,3 +130,10 @@ as_wkt.s2_geography <- function(x, ..., precision = 16, trim = TRUE) {
 format.s2_geography <- function(x, ..., max_coords = 5) {
   paste0("<", s2_geography_format(x, max_coords), ">")
 }
+
+# this is what gets called by the RStudio viewer, for which
+# format() is best suited (s2_as_text() is more explicit for WKT output)
+#' @export
+as.character.s2_geography <- function(x, ..., max_coords = 5) {
+  format(x, ..., max_coords = max_coords)
+}

@@ -24,12 +24,17 @@ s2_make_polygon(
   snap_level = s2_get_snaplevel()
 )
 
-s2_geog_from_text(wkt_string, oriented = FALSE)
+s2_geog_from_text(
+  wkt_string,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_get_snaplevel()
+)
 
 s2_geog_from_wkb(
   wkb_bytes,
   oriented = FALSE,
-  check = FALSE,
+  check = TRUE,
   snap_level = s2_get_snaplevel()
 )
 
