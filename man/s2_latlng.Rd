@@ -5,6 +5,7 @@
 \alias{as_s2_latlng}
 \alias{as_s2_latlng.s2_latlng}
 \alias{as_s2_latlng.s2_point}
+\alias{as_s2_latlng.s2_geography}
 \alias{as_s2_latlng.matrix}
 \alias{as.data.frame.s2_latlng}
 \alias{as.matrix.s2_latlng}
@@ -17,6 +18,8 @@ as_s2_latlng(x, ...)
 \method{as_s2_latlng}{s2_latlng}(x, ...)
 
 \method{as_s2_latlng}{s2_point}(x, ...)
+
+\method{as_s2_latlng}{s2_geography}(x, ...)
 
 \method{as_s2_latlng}{matrix}(x, ...)
 

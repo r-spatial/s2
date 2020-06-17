@@ -34,6 +34,19 @@ as_s2_geography.s2_geography <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
+as_s2_geography.s2_latlng <- function(x, ...) {
+  df <- data_frame_from_s2_latlng(x)
+  new_s2_xptr(cpp_s2_geog_point(df[[2]], df[[1]]), "s2_geography")
+}
+
+#' @rdname as_s2_geography
+#' @export
+as_s2_geography.s2_point <- function(x, ...) {
+  as_s2_geography(as_s2_latlng(x))
+}
+
+#' @rdname as_s2_geography
+#' @export
 as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE) {
   new_s2_xptr(s2_geography_from_wkb(x, oriented = oriented), "s2_geography")
 }

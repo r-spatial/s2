@@ -45,6 +45,13 @@ test_that("s2_point vectors can't have other types of objects concatenated or as
   expect_error(point[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
+test_that("s2_point can be imported from s2_geography", {
+  expect_equal(
+    as.data.frame(as_s2_point(as_s2_geography("POINT (-64 45)"))),
+    as.data.frame(as_s2_point(as_s2_latlng(as_s2_geography("POINT (-64 45)")))),
+  )
+})
+
 test_that("s2_point objects can be printed", {
   expect_output(print(s2_point(1, 2, 3)), "s2_point")
 })
