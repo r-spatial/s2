@@ -11,7 +11,6 @@ reference:
   - s2_geog_point
   - s2_make_line
   - s2_make_polygon
-  - s2_make_polygon_oriented
   - s2_geog_from_text
   - s2_geog_from_wkb
   - s2_as_text
