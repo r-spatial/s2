@@ -4,8 +4,8 @@
 
 #include <cstdint>
 #include <string>
-#include "parse-exception.h"
-#include "error-formatter.h"
+#include "parse-exception.hpp"
+#include "error-formatter.hpp"
 
 // https://github.com/postgis/postgis/blob/2.1.0/doc/ZMSgeoms.txt
 // https://github.com/r-spatial/sf/blob/master/src/wkb.cpp
@@ -35,7 +35,6 @@ public:
   bool hasZ;
   bool hasM;
   bool hasSRID;
-  uint32_t ewkbType;
   bool hasSize;
   uint32_t size;
   uint32_t srid;
@@ -45,19 +44,17 @@ public:
     hasZ(false),
     hasM(false),
     hasSRID(false),
-    ewkbType(0),
     hasSize(false),
     size(SIZE_UNKNOWN),
     srid(SRID_NONE) {}
 
-  WKGeometryMeta(uint32_t ewkbType):
-    geometryType(ewkbType & 0x000000ff),
-    hasZ(ewkbType & EWKB_Z_BIT),
-    hasM(ewkbType & EWKB_M_BIT),
-    hasSRID(ewkbType & EWKB_SRID_BIT),
-    ewkbType(ewkbType),
-    hasSize(false),
-    size(SIZE_UNKNOWN),
+  WKGeometryMeta(uint32_t geometryType, uint32_t size = SIZE_UNKNOWN):
+    geometryType(geometryType & 0x000000ff),
+    hasZ(geometryType & EWKB_Z_BIT),
+    hasM(geometryType & EWKB_M_BIT),
+    hasSRID(geometryType & EWKB_SRID_BIT),
+    hasSize(size != SIZE_UNKNOWN),
+    size(size),
     srid(SRID_NONE) {}
 
   WKGeometryMeta(int geometryType, bool hasZ, bool hasM, bool hasSRID):
@@ -65,10 +62,13 @@ public:
     hasZ(hasZ),
     hasM(hasM),
     hasSRID(hasSRID),
-    ewkbType(calcEWKBType(geometryType, hasZ, hasM, hasSRID)),
     hasSize(false),
     size(SIZE_UNKNOWN),
     srid(SRID_NONE) {}
+
+  uint32_t ewkbType() {
+    return calcEWKBType(this->geometryType, this->hasZ, this->hasM, this->hasSRID);
+  }
 
   std::string wktType() const {
     ErrorFormatter f;

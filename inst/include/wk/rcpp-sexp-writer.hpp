@@ -2,13 +2,13 @@
 #ifndef WK_SEXP_WRITER_H
 #define WK_SEXP_WRITER_H
 
-#include "wk/writer.h"
-#include "wk/rcpp-io.h"
+#include "wk/writer.hpp"
+#include "wk/rcpp-io.hpp"
 
 
-class WKSEXPWriter: public WKWriter {
+class WKRcppSEXPWriter: public WKWriter {
 public:
-  WKSEXPWriter(WKSEXPExporter& exporter): WKWriter(exporter), feature(R_NilValue), exporter(exporter) {}
+  WKRcppSEXPWriter(WKSEXPExporter& exporter): WKWriter(exporter), feature(R_NilValue), exporter(exporter) {}
 
 protected:
   // I'm sure there's a way to do this without as much copying

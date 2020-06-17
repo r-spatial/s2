@@ -2,10 +2,10 @@
 #ifndef WK_GEOMETRY_FORMATTER_H
 #define WK_GEOMETRY_FORMATTER_H
 
-#include "wk/geometry-handler.h"
-#include "wk/wkb-reader.h"
-#include "wk/wkt-streamer.h"
-#include "wk/wkt-writer.h"
+#include "wk/geometry-handler.hpp"
+#include "wk/wkb-reader.hpp"
+#include "wk/wkt-streamer.hpp"
+#include "wk/wkt-writer.hpp"
 
 class WKMaxCoordinatesException: public WKParseException {
 public:

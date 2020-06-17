@@ -2,16 +2,16 @@
 #ifndef WK_SEXP_READER
 #define WK_SEXP_READER
 
-#include "wk/reader.h"
+#include "wk/reader.hpp"
 #include <Rcpp.h>
-#include "wk/rcpp-io.h"
+#include "wk/rcpp-io.hpp"
 
-class WKSEXPReader: public WKReader {
+class WKRcppSEXPReader: public WKReader {
 public:
-  WKSEXPReader(WKSEXPProvider& provider): WKReader(provider), provider(provider) {}
+  WKRcppSEXPReader(WKRcppSEXPProvider& provider): WKReader(provider), provider(provider) {}
 
 protected:
-  WKSEXPProvider& provider;
+  WKRcppSEXPProvider& provider;
 
   void readFeature(size_t featureId) {
     this->handler->nextFeatureStart(featureId);

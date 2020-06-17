@@ -2,9 +2,9 @@
 #ifndef WK_GEOMETRY_HANDLER_H
 #define WK_GEOMETRY_HANDLER_H
 
-#include "wk/coord.h"
-#include "wk/parse-exception.h"
-#include "wk/geometry-meta.h"
+#include "wk/coord.hpp"
+#include "wk/parse-exception.hpp"
+#include "wk/geometry-meta.hpp"
 
 class WKGeometryHandler {
 public:

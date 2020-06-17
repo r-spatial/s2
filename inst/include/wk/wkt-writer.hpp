@@ -3,10 +3,10 @@
 #define WK_WKT_WRITER_H
 
 #include <iostream>
-#include "wk/io-string.h"
-#include "wk/geometry-handler.h"
-#include "wk/writer.h"
-#include "wk/wkb-reader.h"
+#include "wk/io-string.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/writer.hpp"
+#include "wk/wkb-reader.hpp"
 
 class WKTWriter: public WKWriter {
 public:

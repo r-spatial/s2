@@ -19,6 +19,20 @@ public:
   WKCoord(double x, double y, double z, double m, bool hasZ, bool hasM):
     x(x), y(y), z(z), m(m), hasZ(hasZ), hasM(hasM) {}
 
+  bool operator == (WKCoord& other) {
+    if (this->hasZ != other.hasZ || this->hasM != other.hasM) {
+      return false;
+    }
+
+    for (size_t i = 0; i < this->size(); i++) {
+      if ((*this)[i] != other[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   const double& operator[](std::size_t idx) const {
     switch (idx) {
     case 0: return x;
