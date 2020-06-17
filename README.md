@@ -52,17 +52,15 @@ s2_contains(
 #> [1] TRUE
 ```
 
-The [sf package](https://r-spatial.gitub.io/sf) will soon support s2,
-but until it does, you can use the [wk
-package](https://paleolimbot.github.io/wk) to convert data from sf to
-s2:
+The [sf package](https://r-spatial.gitub.io/sf) will soon support s2
+natively, but s2 can also read well-known text and well-known binary:
 
 ``` r
 library(dplyr)
 library(sf)
 
 nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
-  mutate(geometry = as_s2_geography(wk::wkb(st_as_binary(geometry)))) %>% 
+  mutate(geometry = as_s2_geography(st_as_binary(geometry))) %>% 
   as_tibble() %>% 
   select(NAME, geometry)
 
