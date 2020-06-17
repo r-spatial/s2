@@ -2,12 +2,12 @@
 #ifndef WK_WKB_READER_H
 #define WK_WKB_READER_H
 
-#include "wk/reader.h"
-#include "wk/parse-exception.h"
-#include "wk/geometry-meta.h"
-#include "wk/io-bytes.h"
-#include "wk/geometry-handler.h"
-#include "wk/coord.h"
+#include "wk/reader.hpp"
+#include "wk/parse-exception.hpp"
+#include "wk/geometry-meta.hpp"
+#include "wk/io-bytes.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/coord.hpp"
 
 class WKBReader: public WKReader {
 

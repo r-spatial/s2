@@ -41,6 +41,18 @@ cpp_s2_max_distance <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_max_distance`, geog1, geog2)
 }
 
+cpp_s2_geog_point <- function(x, y) {
+    .Call(`_s2_cpp_s2_geog_point`, x, y)
+}
+
+cpp_s2_make_line <- function(x, y, featureId) {
+    .Call(`_s2_cpp_s2_make_line`, x, y, featureId)
+}
+
+cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented) {
+    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented)
+}
+
 s2_geography_from_wkb <- function(wkb, oriented) {
     .Call(`_s2_s2_geography_from_wkb`, wkb, oriented)
 }

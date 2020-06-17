@@ -2,9 +2,9 @@
 #ifndef WK_WRITER_H
 #define WK_WRITER_H
 
-#include "wk/geometry-handler.h"
-#include "wk/geometry-meta.h"
-#include "wk/io.h"
+#include "wk/geometry-handler.hpp"
+#include "wk/geometry-meta.hpp"
+#include "wk/io.hpp"
 
 class WKWriter: public WKGeometryHandler {
 public:

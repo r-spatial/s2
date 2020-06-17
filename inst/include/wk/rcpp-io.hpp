@@ -2,18 +2,18 @@
 #ifndef WK_RCPP_IO_H
 #define WK_RCPP_IO_H
 
-#include "wk/parse-exception.h"
-#include "wk/io-bytes.h"
-#include "wk/io-string.h"
+#include "wk/parse-exception.hpp"
+#include "wk/io-bytes.hpp"
+#include "wk/io-string.hpp"
 
 #include <Rcpp.h>
 
-class WKSEXPProvider: public WKProvider {
+class WKRcppSEXPProvider: public WKProvider {
 public:
   Rcpp::List input;
   R_xlen_t index;
 
-  WKSEXPProvider(Rcpp::List input): input(input) {
+  WKRcppSEXPProvider(Rcpp::List input): input(input) {
     this->reset();
   }
 

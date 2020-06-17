@@ -1,9 +1,9 @@
 
 #include "s2/s2latlng.h"
 #include "s2/s2point.h"
-#include "wk/rcpp-io.h"
-#include "wk/wkb-reader.h"
-#include "wk/wkb-writer.h"
+#include "wk/rcpp-io.hpp"
+#include "wk/wkb-reader.hpp"
+#include "wk/wkb-writer.hpp"
 #include "snap.h"
 
 #include <Rcpp.h>
@@ -112,7 +112,7 @@ List s2_latlng_from_wkb(List wkb) {
 class WKS2LatLngReader: public WKReader {
 public:
 
-  WKS2LatLngReader(WKSEXPProvider& provider):
+  WKS2LatLngReader(WKRcppSEXPProvider& provider):
   WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -141,12 +141,12 @@ public:
   }
 
 private:
-  WKSEXPProvider& provider;
+  WKRcppSEXPProvider& provider;
 };
 
 // [[Rcpp::export]]
 List wkb_from_s2_latlng(List s2_latlng, int endian) {
-  WKSEXPProvider provider(s2_latlng);
+  WKRcppSEXPProvider provider(s2_latlng);
   WKRawVectorListExporter exporter(s2_latlng.size());
   WKBWriter writer(exporter);
   writer.setEndian(endian);

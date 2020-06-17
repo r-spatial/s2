@@ -2,9 +2,9 @@
 #ifndef WK_READER_H
 #define WK_READER_H
 
-#include "wk/geometry-meta.h"
-#include "wk/geometry-handler.h"
-#include "wk/io.h"
+#include "wk/geometry-meta.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/io.hpp"
 
 class WKReader {
 public:

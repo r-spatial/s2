@@ -46,6 +46,13 @@ test_that("s2_latlng vectors can't have other types of objects concatenated or a
   expect_error(latlng[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
+test_that("s2_latlng can be imported from s2_geography", {
+  expect_equal(
+    as.data.frame(as_s2_latlng(as_s2_geography("POINT (-64 45)"))),
+    data.frame(lat = 45, lng = -64)
+  )
+})
+
 test_that("s2_latlng can be imported from wkb", {
   wkb_point <- wk::as_wkb("POINT (-64 45)")
 

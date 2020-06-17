@@ -26,13 +26,13 @@
 #include <string>
 #include <clocale>
 
-#include "wk/reader.h"
-#include "wk/io-string.h"
-#include "wk/error-formatter.h"
-#include "wk/geometry-handler.h"
-#include "wk/string-tokenizer.h"
-#include "wk/parse-exception.h"
-#include "wk/coord.h"
+#include "wk/reader.hpp"
+#include "wk/io-string.hpp"
+#include "wk/error-formatter.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/string-tokenizer.hpp"
+#include "wk/parse-exception.hpp"
+#include "wk/coord.hpp"
 
 
 class WKTStreamer: public WKReader {

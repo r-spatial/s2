@@ -3,14 +3,14 @@
 #define WK_WKT_READER_H
 
 #include <memory>
-#include "wk/wkt-streamer.h"
-#include "wk/geometry.h"
-#include "wk/reader.h"
-#include "wk/io-string.h"
-#include "wk/error-formatter.h"
-#include "wk/geometry-handler.h"
-#include "wk/parse-exception.h"
-#include "wk/coord.h"
+#include "wk/wkt-streamer.hpp"
+#include "wk/geometry.hpp"
+#include "wk/reader.hpp"
+#include "wk/io-string.hpp"
+#include "wk/error-formatter.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/parse-exception.hpp"
+#include "wk/coord.hpp"
 
 class WKTReader: public WKReader, private WKGeometryHandler {
 public:

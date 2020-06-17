@@ -2,11 +2,11 @@
 #ifndef WK_GEOMETRY_DEBUG_HANDLER_H
 #define WK_GEOMETRY_DEBUG_HANDLER_H
 
-#include "wk/coord.h"
-#include "wk/geometry-handler.h"
-#include "wk/parse-exception.h"
-#include "wk/geometry-meta.h"
-#include "wk/geometry-debug-handler.h"
+#include "wk/coord.hpp"
+#include "wk/geometry-handler.hpp"
+#include "wk/parse-exception.hpp"
+#include "wk/geometry-meta.hpp"
+#include "wk/geometry-debug-handler.hpp"
 
 class WKGeometryDebugHandler: public WKGeometryHandler {
 public:

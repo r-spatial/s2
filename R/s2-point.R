@@ -40,6 +40,12 @@ as_s2_point.s2_latlng <- function(x, ...) {
 
 #' @rdname s2_point
 #' @export
+as_s2_point.s2_geography <- function(x, ...) {
+  as_s2_point(as_s2_latlng(x))
+}
+
+#' @rdname s2_point
+#' @export
 as_s2_point.matrix <- function(x, ...) {
   s2_point(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
 }

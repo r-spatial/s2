@@ -1,9 +1,9 @@
 
-#ifndef WK_IO_UTILS_H
-#define WK_IO_UTILS_H
+#ifndef WK_IO_BYTES_H
+#define WK_IO_BYTES_H
 
 #include <cstdint>
-#include "wk/io.h"
+#include "wk/io.hpp"
 
 class WKBytesUtils {
 public:

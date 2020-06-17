@@ -1,6 +1,6 @@
 
-#ifndef WK_IO
-#define WK_IO
+#ifndef WK_IO_H
+#define WK_IO_H
 
 class WKProvider {
 public:

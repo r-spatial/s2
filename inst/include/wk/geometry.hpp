@@ -4,8 +4,8 @@
 
 #include <vector>
 #include <cstdint>
-#include "wk/geometry-meta.h"
-#include "wk/coord.h"
+#include "wk/geometry-meta.hpp"
+#include "wk/coord.hpp"
 
 class WKGeometry {
 public:
