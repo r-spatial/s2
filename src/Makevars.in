@@ -8,6 +8,7 @@ OBJECTS = cpp-compat.o \
      s2-constructors-formatters.o \
      s2-predicates.o \
      s2-transformers.o \
+     init.o \
      model.o \
      RcppExports.o \
      s2-geography.o \

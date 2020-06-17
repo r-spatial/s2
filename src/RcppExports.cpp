@@ -5,6 +5,15 @@
 
 using namespace Rcpp;
 
+// cpp_s2_init
+void cpp_s2_init();
+RcppExport SEXP _s2_cpp_s2_init() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    cpp_s2_init();
+    return R_NilValue;
+END_RCPP
+}
 // cpp_s2_is_collection
 LogicalVector cpp_s2_is_collection(List geog);
 RcppExport SEXP _s2_cpp_s2_is_collection(SEXP geogSEXP) {
@@ -563,6 +572,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
     {"_s2_cpp_s2_dimension", (DL_FUNC) &_s2_cpp_s2_dimension, 1},
     {"_s2_cpp_s2_num_points", (DL_FUNC) &_s2_cpp_s2_num_points, 1},
