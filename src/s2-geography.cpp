@@ -2,14 +2,14 @@
 #include "s2/s2latlng.h"
 #include "s2/s2polyline.h"
 #include "s2/s2polygon.h"
-#include "wk/rcpp-io.h"
 
-#include "wk/wkb-reader.h"
-#include "wk/wkt-reader.h"
-#include "wk/wkb-writer.h"
-#include "wk/wkt-writer.h"
-#include "wk/geometry-formatter.h"
-#include "wk/geometry-handler.h"
+#include "wk/rcpp-io.hpp"
+#include "wk/wkb-reader.hpp"
+#include "wk/wkt-reader.hpp"
+#include "wk/wkb-writer.hpp"
+#include "wk/wkt-writer.hpp"
+#include "wk/geometry-formatter.hpp"
+#include "wk/geometry-handler.hpp"
 
 #include "snap.h"
 #include "geography.h"
@@ -140,7 +140,7 @@ List s2_geography_full(LogicalVector x) { // create single geography with full p
 class WKGeographyReader: public WKReader {
 public:
 
-  WKGeographyReader(WKSEXPProvider& provider):
+  WKGeographyReader(WKRcppSEXPProvider& provider):
   WKReader(provider), provider(provider) {}
 
   void readFeature(size_t featureId) {
@@ -157,12 +157,12 @@ public:
   }
 
 private:
-  WKSEXPProvider& provider;
+  WKRcppSEXPProvider& provider;
 };
 
 // [[Rcpp::export]]
 CharacterVector s2_geography_to_wkt(List s2_geography, int precision, bool trim) {
-  WKSEXPProvider provider(s2_geography);
+  WKRcppSEXPProvider provider(s2_geography);
   WKGeographyReader reader(provider);
 
   WKCharacterVectorExporter exporter(reader.nFeatures());
@@ -180,7 +180,7 @@ CharacterVector s2_geography_to_wkt(List s2_geography, int precision, bool trim)
 
 // [[Rcpp::export]]
 List s2_geography_to_wkb(List s2_geography, int endian) {
-  WKSEXPProvider provider(s2_geography);
+  WKRcppSEXPProvider provider(s2_geography);
   WKGeographyReader reader(provider);
 
   WKRawVectorListExporter exporter(reader.nFeatures());
@@ -197,7 +197,7 @@ List s2_geography_to_wkb(List s2_geography, int endian) {
 
 // [[Rcpp::export]]
 CharacterVector s2_geography_format(List s2_geography, int maxCoords) {
-  WKSEXPProvider provider(s2_geography);
+  WKRcppSEXPProvider provider(s2_geography);
   WKGeographyReader reader(provider);
 
   WKCharacterVectorExporter exporter(s2_geography.size());

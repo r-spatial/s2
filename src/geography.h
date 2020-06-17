@@ -9,8 +9,8 @@
 #include "s2/s2shape_index.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2point_vector_shape.h"
-#include "wk/geometry-handler.h"
-#include "wk/reader.h"
+#include "wk/geometry-handler.hpp"
+#include "wk/reader.hpp"
 #include <Rcpp.h>
 
 class Geography {
