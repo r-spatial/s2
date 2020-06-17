@@ -108,8 +108,9 @@ public:
   class Builder: public GeographyBuilder {
   public:
 
-    Builder(bool oriented):
-      metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr), oriented(oriented) {}
+    Builder(bool oriented, bool check, int snapLevel):
+      metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr),
+      oriented(oriented), check(check), snapLevel(snapLevel) {}
 
     virtual void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
       // if this is the first call, store the meta reference associated with this geometry
@@ -135,10 +136,18 @@ public:
           break;
         case WKGeometryType::Polygon:
         case WKGeometryType::MultiPolygon:
-          this->builderPtr = absl::make_unique<PolygonGeography::Builder>(this->oriented);
+          this->builderPtr = absl::make_unique<PolygonGeography::Builder>(
+            this->oriented,
+            this->check,
+            this->snapLevel
+          );
           break;
         case WKGeometryType::GeometryCollection:
-          this->builderPtr = absl::make_unique<GeographyCollection::Builder>(this->oriented);
+          this->builderPtr = absl::make_unique<GeographyCollection::Builder>(
+            this->oriented,
+            this->check,
+            this->snapLevel
+          );
           break;
         default:
           std::stringstream err;
@@ -188,6 +197,8 @@ public:
     std::unique_ptr<GeographyBuilder> builderPtr;
     WKGeometryMeta* builderMetaPtr;
     bool oriented;
+    bool check;
+    int snapLevel;
 
     GeographyBuilder* builder() {
       if (this->builderPtr) {

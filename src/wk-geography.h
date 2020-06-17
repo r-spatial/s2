@@ -20,10 +20,23 @@ public:
   Rcpp::List output;
   R_xlen_t featureId;
 
-  WKGeographyWriter(R_xlen_t size): output(size), builder(nullptr), oriented(false) {}
+  WKGeographyWriter(R_xlen_t size):
+    output(size),
+    builder(nullptr),
+    oriented(false),
+    check(true),
+    snapLevel(-1) {}
 
   void setOriented(bool oriented) {
     this->oriented = oriented;
+  }
+
+  void setCheck(bool check) {
+    this->check = check;
+  }
+
+  void setSnapLevel(int snapLevel) {
+    this->snapLevel = snapLevel;
   }
 
   void nextFeatureStart(size_t featureId) {
@@ -48,10 +61,18 @@ public:
         break;
       case WKGeometryType::Polygon:
       case WKGeometryType::MultiPolygon:
-        this->builder = absl::make_unique<PolygonGeography::Builder>(this->oriented);
+        this->builder = absl::make_unique<PolygonGeography::Builder>(
+          this->oriented,
+          this->check,
+          this->snapLevel
+        );
         break;
       case WKGeometryType::GeometryCollection:
-        this->builder = absl::make_unique<GeographyCollection::Builder>(this->oriented);
+        this->builder = absl::make_unique<GeographyCollection::Builder>(
+          this->oriented,
+          this->check,
+          this->snapLevel
+        );
         break;
       default:
         std::stringstream err;
@@ -89,6 +110,8 @@ public:
 private:
   std::unique_ptr<GeographyBuilder> builder;
   bool oriented;
+  bool check;
+  int snapLevel;
 };
 
 

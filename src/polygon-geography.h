@@ -4,7 +4,6 @@
 
 #include "wk/reader.hpp"
 
-#include "snap.h"
 #include "geography.h"
 #include "point-geography.h"
 #include "polyline-geography.h"
@@ -123,7 +122,8 @@ public:
 
   class Builder: public GeographyBuilder {
   public:
-    Builder(bool oriented): oriented(oriented) {}
+    Builder(bool oriented, bool check, int snapLevel):
+      oriented(oriented), check(check), snapLevel(snapLevel) {}
 
     void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
       // skip the last vertex (WKB rings are theoretically closed)
@@ -149,7 +149,7 @@ public:
         loop->Normalize();
       }
 
-      if (!loop->IsValid()) {
+      if (this->check && !loop->IsValid()) {
         std::stringstream err;
         err << "Loop " << (this->loops.size()) << " is not valid: ";
         S2Error error;
@@ -171,15 +171,15 @@ public:
       }
 
       // make sure polygon is valid
-      if (!polygon->IsValid()) {
+      if (this->check && !polygon->IsValid()) {
         S2Error error;
         polygon->FindValidationError(&error);
         Rcpp::stop(error.text());
       }
 
-	  // snap if needed:
-      if (snap_level > 0) {
-        polygon->InitToSnapped(polygon.get(), snap_level);
+	    // snap if needed:
+      if (this->snapLevel > 0) {
+        polygon->InitToSnapped(polygon.get(), this->snapLevel);
       }
 
       return absl::make_unique<PolygonGeography>(std::move(polygon));
@@ -187,6 +187,8 @@ public:
 
   private:
     bool oriented;
+    bool check;
+    int snapLevel;
     std::vector<S2Point> vertices;
     std::vector<std::unique_ptr<S2Loop>> loops;
   };

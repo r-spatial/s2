@@ -26,6 +26,9 @@ List s2_geography_from_wkb(List wkb, bool oriented) {
   WKRawVectorListProvider provider(wkb);
   WKGeographyWriter writer(wkb.size());
   writer.setOriented(oriented);
+  writer.setCheck(true);
+  writer.setSnapLevel(snap_level);
+
   WKBReader reader(provider);
   reader.setHandler(&writer);
 

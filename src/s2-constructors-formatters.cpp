@@ -3,6 +3,7 @@
 #include "wk/rcpp-translate.hpp"
 #include "wk/rcpp-coord-reader.hpp"
 
+#include "snap.h"
 #include "wk-geography.h"
 
 using namespace Rcpp;
@@ -63,6 +64,9 @@ List cpp_s2_make_polygon(NumericVector x, NumericVector y,
 
   WKGeographyWriter writer(provider.nFeatures());
   writer.setOriented(oriented);
+  writer.setCheck(true);
+  writer.setSnapLevel(snap_level);
+
   reader.setHandler(&writer);
 
   while (reader.hasNextFeature()) {
