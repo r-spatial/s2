@@ -140,10 +140,19 @@
 <span class='co'># S3 method for s2_geography</span>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
+<span class='co'># S3 method for s2_latlng</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_point</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
 <span class='co'># S3 method for wk_wkb</span>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for WKB</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for blob</span>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for wk_wkt</span>
@@ -153,7 +162,13 @@
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for logical</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_geography</span>
+<span class='fu'>as_wkb</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, endian = <span class='kw'>wk</span>::<span class='fu'><a href='https://rdrr.io/pkg/wk/man/wkb_translate_wkt.html'>wk_platform_endian</a></span>())
+
+<span class='co'># S3 method for s2_geography</span>
+<span class='fu'>as_wkt</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, precision = <span class='fl'>16</span>, trim = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,6 +186,21 @@
       <td><p>TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).</p></td>
+    </tr>
+    <tr>
+      <th>endian</th>
+      <td><p>The endian to use when writing well-known binary.
+Deaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>precision</th>
+      <td><p>The number of significant digits to export when
+writing well-known text. If <code>trim = FALSE</code>, the number of
+digits after the decimal place.</p></td>
+    </tr>
+    <tr>
+      <th>trim</th>
+      <td><p>Should trailing zeroes be included after the decimal place?</p></td>
     </tr>
     </table>
 

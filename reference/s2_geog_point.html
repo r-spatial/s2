@@ -40,7 +40,10 @@
 
 
 <meta property="og:title" content="Create and format geography vectors — s2_geog_point" />
-<meta property="og:description" content="Create and format geography vectors" />
+<meta property="og:description" content="These functions create and export s2_geography vectors.
+Unlike the BigQuery geography constructors, these functions do not sanitize
+invalid or redundant input using s2_union(). Note that when creating polygons
+using s2_make_polygon(), rings can be open or closed." />
 
 
 
@@ -129,22 +132,29 @@
     </div>
 
     <div class="ref-description">
-    <p>Create and format geography vectors</p>
+    <p>These functions create and export <a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>s2_geography</a> vectors.
+Unlike the BigQuery geography constructors, these functions do not sanitize
+invalid or redundant input using <code><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union()</a></code>. Note that when creating polygons
+using <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon()</a></code>, rings can be open or closed.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_point</a></span>(<span class='kw'>longitude</span>, <span class='kw'>latitude</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_line</a></span>(<span class='kw'>longitude</span>, <span class='kw'>latitude</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_line</a></span>(<span class='kw'>longitude</span>, <span class='kw'>latitude</span>, feature_id = <span class='fl'>1L</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon</a></span>(<span class='kw'>longitude</span>, <span class='kw'>latitude</span>)
-
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon_oriented</a></span>(<span class='kw'>longitude</span>, <span class='kw'>latitude</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon</a></span>(
+  <span class='kw'>longitude</span>,
+  <span class='kw'>latitude</span>,
+  feature_id = <span class='fl'>1L</span>,
+  ring_id = <span class='fl'>1L</span>,
+  oriented = <span class='fl'>FALSE</span>
+)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_text</a></span>(<span class='kw'>wkt_string</span>, oriented = <span class='fl'>FALSE</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb</a></span>(<span class='kw'>wkb_bytes</span>, oriented = <span class='fl'>FALSE</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_text</a></span>(<span class='kw'>x</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_text</a></span>(<span class='kw'>x</span>, precision = <span class='fl'>16</span>, trim = <span class='fl'>TRUE</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_binary</a></span>(<span class='kw'>x</span>, endian = <span class='kw'>wk</span>::<span class='fu'><a href='https://rdrr.io/pkg/wk/man/wkb_translate_wkt.html'>wk_platform_endian</a></span>())</pre>
 
@@ -156,14 +166,20 @@
       <td><p>Vectors of latitude and longitude</p></td>
     </tr>
     <tr>
-      <th>wkt_string</th>
-      <td><p>Well-known text</p></td>
+      <th>feature_id, ring_id</th>
+      <td><p>Vectors for which a change in
+sequential values indicates a new feature or ring. Use <code><a href='https://rdrr.io/r/base/factor.html'>factor()</a></code>
+to convert from a character vector.</p></td>
     </tr>
     <tr>
       <th>oriented</th>
       <td><p>TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).</p></td>
+    </tr>
+    <tr>
+      <th>wkt_string</th>
+      <td><p>Well-known text</p></td>
     </tr>
     <tr>
       <th>wkb_bytes</th>
@@ -174,8 +190,19 @@ rings are defined clockwise).</p></td>
       <td><p>An object that can be interpreted as an S2 type.</p></td>
     </tr>
     <tr>
+      <th>precision</th>
+      <td><p>The number of significant digits to export when
+writing well-known text. If <code>trim = FALSE</code>, the number of
+digits after the decimal place.</p></td>
+    </tr>
+    <tr>
+      <th>trim</th>
+      <td><p>Should trailing zeroes be included after the decimal place?</p></td>
+    </tr>
+    <tr>
       <th>endian</th>
-      <td><p>0 for big endian and 1 for little endian.</p></td>
+      <td><p>The endian to use when writing well-known binary.
+Deaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -185,7 +212,6 @@ rings are defined clockwise).</p></td>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint'>ST_GEOGPOINT</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline'>ST_MAKELINE</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon'>ST_MAKEPOLYGON</a></p></li>
-<li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygonoriented'>ST_MAKEPOLYGONORIENTED</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext'>ST_GEOGFROMTEXT</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb'>ST_GEOGFROMWKB</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext'>ST_ASTEXT</a></p></li>
@@ -193,6 +219,41 @@ rings are defined clockwise).</p></td>
 </ul>
 </div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># create point geographies using coordinate values:</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_point</a></span>(<span class='op'>-</span><span class='fl'>64</span>, <span class='fl'>45</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (-64 45)&gt;</div><div class='input'>
+<span class='co'># create line geographies using coordinate values:</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_line</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>64</span>, <span class='fl'>8</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>45</span>, <span class='fl'>71</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;LINESTRING (-64 45, 8 71)&gt;</div><div class='input'>
+<span class='co'># optionally, separate features using feature_id:</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_line</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>64</span>, <span class='fl'>8</span>, <span class='op'>-</span><span class='fl'>27</span>, <span class='op'>-</span><span class='fl'>27</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>45</span>, <span class='fl'>71</span>, <span class='fl'>0</span>, <span class='fl'>45</span>),
+  feature_id = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>)
+)</div><div class='output co'>#&gt; &lt;s2_geography[2]&gt;
+#&gt; [1] &lt;LINESTRING (-64 45, 8 71)&gt;  &lt;LINESTRING (-27 0, -27 45)&gt;</div><div class='input'>
+<span class='co'># create polygon geographies using coordinate values:</span>
+<span class='co'># (rings can be open or closed)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>45</span>, <span class='fl'>8</span>, <span class='fl'>0</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>64</span>, <span class='fl'>71</span>, <span class='fl'>90</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((-45 64, 8 71, 0 90, -45 64))&gt;</div><div class='input'>
+<span class='co'># optionally, separate rings and/or features using</span>
+<span class='co'># ring_id and/or feature_id</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>20</span>, <span class='fl'>10</span>, <span class='fl'>10</span>, <span class='fl'>30</span>, <span class='fl'>45</span>, <span class='fl'>30</span>, <span class='fl'>20</span>, <span class='fl'>20</span>, <span class='fl'>40</span>, <span class='fl'>20</span>, <span class='fl'>45</span>),
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>35</span>, <span class='fl'>30</span>, <span class='fl'>10</span>, <span class='fl'>5</span>, <span class='fl'>20</span>, <span class='fl'>20</span>, <span class='fl'>15</span>, <span class='fl'>25</span>, <span class='fl'>40</span>, <span class='fl'>45</span>, <span class='fl'>30</span>),
+  feature_id = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fl'>8</span>), <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>)),
+  ring_id = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)
+)</div><div class='output co'>#&gt; &lt;s2_geography[2]&gt;
+#&gt; [1] &lt;POLYGON ((20 35, 10 30, 10 10, 30 5, 45 20...&gt;
+#&gt; [2] &lt;POLYGON ((40 40, 20 45, 45 30, 40 40))&gt;       </div><div class='input'>
+<span class='co'># import and export well-known text</span>
+(<span class='kw'>geog</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_text</a></span>(<span class='st'>"POINT (-64 45)"</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (-64 45)&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_text</a></span>(<span class='kw'>geog</span>)</div><div class='output co'>#&gt; [1] "POINT (-64 44.99999999999999)"</div><div class='input'>
+<span class='co'># import and export well-known binary</span>
+(<span class='kw'>geog</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb</a></span>(<span class='kw'>wk</span>::<span class='fu'><a href='https://rdrr.io/pkg/wk/man/wkb.html'>as_wkb</a></span>(<span class='st'>"POINT (-64 45)"</span>)))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (-64 45)&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_binary</a></span>(<span class='kw'>geog</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;  [1] 01 01 00 00 00 00 00 00 00 00 00 50 c0 ff ff ff ff ff 7f 46 40
+#&gt; </div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

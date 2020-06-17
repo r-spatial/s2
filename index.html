@@ -116,13 +116,13 @@
 )
 <span class="co">#&gt; [1] TRUE</span>
 </pre></div>
-<p>The <a href="https://r-spatial.gitub.io/sf">sf package</a> will soon support s2, but until it does, you can use the <a href="https://paleolimbot.github.io/wk">wk package</a> to convert data from sf to s2:</p>
+<p>The <a href="https://r-spatial.gitub.io/sf">sf package</a> will soon support s2 natively, but s2 can also read well-known text and well-known binary:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">sf</span>)
 
 <span class="kw">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"shape/nc.shp"</span>, package = <span class="st">"sf"</span>)) <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span>(geometry = <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span>(<span class="kw">wk</span>::<span class="fu"><a href="https://rdrr.io/pkg/wk/man/wkb.html">wkb</a></span>(<span class="fu">st_as_binary</span>(<span class="kw">geometry</span>)))) <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span>(geometry = <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span>(<span class="fu">st_as_binary</span>(<span class="kw">geometry</span>))) <span class="op">%&gt;%</span> 
   <span class="fu">as_tibble</span>() <span class="op">%&gt;%</span> 
   <span class="fu">select</span>(<span class="kw">NAME</span>, <span class="kw">geometry</span>)
 
