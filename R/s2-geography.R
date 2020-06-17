@@ -40,6 +40,12 @@ as_s2_geography.WKB <- function(x, ..., oriented = FALSE) {
 
 #' @rdname as_s2_geography
 #' @export
+as_s2_geography.blob <- function(x, ..., oriented = FALSE) {
+  new_s2_xptr(s2_geography_from_wkb(x, oriented = oriented), "s2_geography")
+}
+
+#' @rdname as_s2_geography
+#' @export
 as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE) {
   new_s2_xptr(s2_geography_from_wkt(x, oriented = oriented), "s2_geography")
 }
