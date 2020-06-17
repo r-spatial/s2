@@ -5,6 +5,7 @@ CXX_STD = CXX11
 
 OBJECTS = cpp-compat.o \
      s2-accessors.o \
+     s2-constructors-formatters.o \
      s2-predicates.o \
      s2-transformers.o \
      model.o \

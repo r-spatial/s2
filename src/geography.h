@@ -10,7 +10,6 @@
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2point_vector_shape.h"
 #include "wk/geometry-handler.hpp"
-#include "wk/reader.hpp"
 #include <Rcpp.h>
 
 class Geography {
@@ -61,6 +60,7 @@ protected:
   MutableS2ShapeIndex shape_index_;
   bool hasIndex;
 };
+
 
 class GeographyBuilder: public WKGeometryHandler {
 public:

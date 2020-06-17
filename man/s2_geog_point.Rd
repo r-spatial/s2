@@ -4,7 +4,6 @@
 \alias{s2_geog_point}
 \alias{s2_make_line}
 \alias{s2_make_polygon}
-\alias{s2_make_polygon_oriented}
 \alias{s2_geog_from_text}
 \alias{s2_geog_from_wkb}
 \alias{s2_as_text}
@@ -13,37 +12,90 @@
 \usage{
 s2_geog_point(longitude, latitude)
 
-s2_make_line(longitude, latitude)
+s2_make_line(longitude, latitude, feature_id = 1L)
 
-s2_make_polygon(longitude, latitude)
-
-s2_make_polygon_oriented(longitude, latitude)
+s2_make_polygon(
+  longitude,
+  latitude,
+  feature_id = 1L,
+  ring_id = 1L,
+  oriented = FALSE
+)
 
 s2_geog_from_text(wkt_string, oriented = FALSE)
 
 s2_geog_from_wkb(wkb_bytes, oriented = FALSE)
 
-s2_as_text(x)
+s2_as_text(x, precision = 16, trim = TRUE)
 
 s2_as_binary(x, endian = wk::wk_platform_endian())
 }
 \arguments{
 \item{longitude, latitude}{Vectors of latitude and longitude}
 
-\item{wkt_string}{Well-known text}
+\item{feature_id, ring_id}{Vectors for which a change in
+sequential values indicates a new feature or ring. Use \code{\link[=factor]{factor()}}
+to convert from a character vector.}
 
 \item{oriented}{TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
+\item{wkt_string}{Well-known text}
+
 \item{wkb_bytes}{A \code{list()} of \code{raw()}}
 
 \item{x}{An object that can be interpreted as an S2 type.}
 
-\item{endian}{0 for big endian and 1 for little endian.}
+\item{precision}{The number of significant digits to export when
+writing well-known text. If \code{trim = FALSE}, the number of
+digits after the decimal place.}
+
+\item{trim}{Should trailing zeroes be included after the decimal place?}
+
+\item{endian}{The endian to use when writing well-known binary.
+Deaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}
 }
 \description{
-Create and format geography vectors
+These functions create and export \link[=as_s2_geography]{s2_geography} vectors.
+Unlike the BigQuery geography constructors, these functions do not sanitize
+invalid or redundant input using \code{\link[=s2_union]{s2_union()}}. Note that when creating polygons
+using \code{\link[=s2_make_polygon]{s2_make_polygon()}}, rings can be open or closed.
+}
+\examples{
+# create point geographies using coordinate values:
+s2_geog_point(-64, 45)
+
+# create line geographies using coordinate values:
+s2_make_line(c(-64, 8), c(45, 71))
+
+# optionally, separate features using feature_id:
+s2_make_line(
+  c(-64, 8, -27, -27), c(45, 71, 0, 45),
+  feature_id = c(1, 1, 2, 2)
+)
+
+# create polygon geographies using coordinate values:
+# (rings can be open or closed)
+s2_make_polygon(c(-45, 8, 0), c(64, 71, 90))
+
+# optionally, separate rings and/or features using
+# ring_id and/or feature_id
+s2_make_polygon(
+  c(20, 10, 10, 30, 45, 30, 20, 20, 40, 20, 45),
+  c(35, 30, 10, 5, 20, 20, 15, 25, 40, 45, 30),
+  feature_id = c(rep(1, 8), rep(2, 3)),
+  ring_id = c(1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1)
+)
+
+# import and export well-known text
+(geog <- s2_geog_from_text("POINT (-64 45)"))
+s2_as_text(geog)
+
+# import and export well-known binary
+(geog <- s2_geog_from_wkb(wk::as_wkb("POINT (-64 45)")))
+s2_as_binary(geog)
+
 }
 \seealso{
 BigQuery's geography function reference:
@@ -51,7 +103,6 @@ BigQuery's geography function reference:
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint}{ST_GEOGPOINT}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline}{ST_MAKELINE}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon}{ST_MAKEPOLYGON}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygonoriented}{ST_MAKEPOLYGONORIENTED}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext}{ST_GEOGFROMTEXT}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb}{ST_GEOGFROMWKB}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext}{ST_ASTEXT}

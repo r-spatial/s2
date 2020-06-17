@@ -25,7 +25,7 @@
 using namespace Rcpp;
 
 template <S2BooleanOperation::OpType opType>
-Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2, 
+Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
       S2BooleanOperation::Options options) {
 
   FLAGS_s2debug = false;
@@ -54,7 +54,7 @@ Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* ind
   std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
   std::vector<std::unique_ptr<Geography>> features;
-  std::vector<std::unique_ptr<S2Shape>> shapes(std::move(index.ReleaseAll()));
+  std::vector<std::unique_ptr<S2Shape>> shapes(index.ReleaseAll());
   int dims = 0; // bitfield with dimension flags in lower 3 bits
   for (int i = 0; i < shapes.size(); i++) {
     std::unique_ptr<S2Shape> shape = std::move(shapes[i]);
@@ -62,7 +62,7 @@ Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* ind
       case 0: {
         dims = dims | 1;
         std::unique_ptr<S2PointVectorShape> p(static_cast<S2PointVectorShape*>(shape.release()));
-        for (int j = 0; j < p->num_points(); j++) 
+        for (int j = 0; j < p->num_points(); j++)
           points.push_back(p->point(j));
         break;
       }
@@ -299,7 +299,7 @@ List cpp_s2_closest_point(List geog1, List geog2) {
       }
       // Get the edge from index1 (edge1) that is closest to index2.
       S2Shape::Edge edge1 = query1.GetEdge(result1);
-  
+
       // Now find the edge from index2 (edge2) that is closest to edge1.
       S2ClosestEdgeQuery query2(feature2->ShapeIndex());
       query2.mutable_options()->set_include_interiors(false);
@@ -322,7 +322,6 @@ List cpp_s2_closest_point(List geog1, List geog2) {
       if (closest.first == closest.second) {
         return XPtr<Geography>(new PointGeography(pts));
       } else {
-        S2Polyline *pl = new S2Polyline;
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
         polyline->Init(pts);
         std::vector<std::unique_ptr<S2Polyline>> polylines(1);

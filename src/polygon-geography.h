@@ -2,6 +2,9 @@
 #ifndef POLYGON_GEOGRAPHY_H
 #define POLYGON_GEOGRAPHY_H
 
+#include "wk/reader.hpp"
+
+#include "snap.h"
 #include "geography.h"
 #include "point-geography.h"
 #include "polyline-geography.h"

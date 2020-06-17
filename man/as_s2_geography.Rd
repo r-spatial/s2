@@ -10,6 +10,8 @@
 \alias{as_s2_geography.wk_wkt}
 \alias{as_s2_geography.character}
 \alias{as_s2_geography.logical}
+\alias{as_wkb.s2_geography}
+\alias{as_wkt.s2_geography}
 \title{Create an S2 Geography Vector}
 \usage{
 as_s2_geography(x, ...)
@@ -29,6 +31,10 @@ as_s2_geography(x, ...)
 \method{as_s2_geography}{character}(x, ..., oriented = FALSE)
 
 \method{as_s2_geography}{logical}(x, ...)
+
+\method{as_wkb}{s2_geography}(x, ..., endian = wk::wk_platform_endian())
+
+\method{as_wkt}{s2_geography}(x, ..., precision = 16, trim = TRUE)
 }
 \arguments{
 \item{x}{An object that can be converted to an s2_geography vector}
@@ -38,6 +44,15 @@ as_s2_geography(x, ...)
 \item{oriented}{TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
+
+\item{endian}{The endian to use when writing well-known binary.
+Deaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}
+
+\item{precision}{The number of significant digits to export when
+writing well-known text. If \code{trim = FALSE}, the number of
+digits after the decimal place.}
+
+\item{trim}{Should trailing zeroes be included after the decimal place?}
 }
 \value{
 An object with class s2_geography
