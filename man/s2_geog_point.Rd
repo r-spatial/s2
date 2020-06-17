@@ -53,6 +53,10 @@ to convert from a character vector.}
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
+\item{check}{Use \code{check = FALSE} to error on invalid geometries}
+
+\item{snap_level}{An integer between 1 and 30, or 0 to skip snapping.}
+
 \item{wkt_string}{Well-known text}
 
 \item{wkb_bytes}{A \code{list()} of \code{raw()}}

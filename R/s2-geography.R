@@ -5,6 +5,8 @@
 #' @param oriented TRUE if polygon ring directions are known to be correct
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
+#' @param check Use `check = FALSE` to error on invalid geometries
+#' @param snap_level An integer between 1 and 30, or 0 to skip snapping.
 #' @param endian The endian to use when writing well-known binary.
 #'   Deaults to the platform endian. See [wk::as_wkb()].
 #' @param precision The number of significant digits to export when

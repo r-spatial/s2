@@ -81,6 +81,10 @@ as_s2_geography(x, ...)
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
+\item{check}{Use \code{check = FALSE} to error on invalid geometries}
+
+\item{snap_level}{An integer between 1 and 30, or 0 to skip snapping.}
+
 \item{endian}{The endian to use when writing well-known binary.
 Deaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}
 
