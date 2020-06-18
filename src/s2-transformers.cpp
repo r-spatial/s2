@@ -26,9 +26,6 @@ using namespace Rcpp;
 Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
                                          S2BooleanOperation::OpType opType,
                                          S2BooleanOperation::Options options) {
-
-  FLAGS_s2debug = false;
-
   MutableS2ShapeIndex index;
   s2builderutil::IndexedS2PolylineVectorLayer::Options polyline_options;
   polyline_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
@@ -109,31 +106,30 @@ Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* ind
         features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
       }
       return Rcpp::XPtr<Geography>(new GeographyCollection(std::move(features)));
-    break; // never reached;
   }
 }
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, int model, int snapLevel):
-    opType(opType), model(model), snapLevel(snapLevel) {}
+    opType(opType) {
 
-  SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-    S2BooleanOperation::Options options;
     if (model >= 0) {
-      options.set_polygon_model(get_polygon_model(model));
-      options.set_polyline_model(get_polyline_model(model));
+      this->options.set_polygon_model(get_polygon_model(model));
+      this->options.set_polyline_model(get_polyline_model(model));
     }
     if (snapLevel > 0) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+      this->options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
     }
-    return doBooleanOperation(feature1->ShapeIndex(), feature2->ShapeIndex(), opType, options);
+  }
+
+  SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    return doBooleanOperation(feature1->ShapeIndex(), feature2->ShapeIndex(), this->opType, this->options);
   }
 
 private:
   S2BooleanOperation::OpType opType;
-  int model;
-  int snapLevel;
+  S2BooleanOperation::Options options;
 };
 
 // [[Rcpp::export]]

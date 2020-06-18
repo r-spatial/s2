@@ -1,3 +1,6 @@
+
+#include <sstream>
+
 #include "s2/s2boolean_operation.h"
 #include "model.h"
 
@@ -9,16 +12,25 @@ S2BooleanOperation::PolygonModel get_polygon_model(int m) {
     case 0: return S2BooleanOperation::PolygonModel::OPEN;
     case 1: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
     case 2: return S2BooleanOperation::PolygonModel::CLOSED;
-    default: ;
+    default:
+      // # nocov start
+      std::stringstream err;
+      err << "Invalid value for model: " << m;
+      stop(err.str());
+      // # nocov end
   }
-  stop("invalid value for model"); // #nocov
 }
+
 S2BooleanOperation::PolylineModel get_polyline_model(int m) {
   switch (m) {
     case 0: return S2BooleanOperation::PolylineModel::OPEN;
     case 1: return S2BooleanOperation::PolylineModel::SEMI_OPEN;
     case 2: return S2BooleanOperation::PolylineModel::CLOSED;
-    default: ;
+    default:
+      // # nocov start
+      std::stringstream err;
+      err << "Invalid value for model: " << m;
+      stop(err.str());
+      // # nocov end
   }
-  stop("invalid value for model"); // #nocov
 }
