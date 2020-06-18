@@ -63,9 +63,9 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   }
 }
 
-Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
-                                         S2BooleanOperation::OpType opType,
-                                         S2BooleanOperation::Options options) {
+std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
+                                              S2BooleanOperation::OpType opType,
+                                              S2BooleanOperation::Options options) {
 
   // create the data structures that will contain the output
   std::vector<S2Point> points;
@@ -82,33 +82,32 @@ Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* ind
 
   // do the boolean operation
   S2BooleanOperation booleanOp(
-    opType, 
+    opType,
     // normalizing the closed set here is required for line intersections
     // to work as expected
-    s2builderutil::NormalizeClosedSet(std::move(layers)), 
+    s2builderutil::NormalizeClosedSet(std::move(layers)),
     options
   );
+
+  // check for errors
   S2Error error;
   if (!booleanOp.Build(*index1, *index2, &error)) {
     stop(error.text()); // # nocov
   }
 
   // construct output
-  std::unique_ptr<Geography> geography = geographyFromLayers(
-    std::move(points), 
-    std::move(polylines), 
+  return geographyFromLayers(
+    std::move(points),
+    std::move(polylines),
     std::move(polygon)
   );
-
-  // return XPtr
-  return Rcpp::XPtr<Geography>(geography.release());
 }
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, int model, int snapLevel):
     opType(opType) {
-
+  
     if (model >= 0) {
       this->options.set_polygon_model(get_polygon_model(model));
       this->options.set_polyline_model(get_polyline_model(model));
@@ -119,7 +118,14 @@ public:
   }
 
   SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-    return doBooleanOperation(feature1->ShapeIndex(), feature2->ShapeIndex(), this->opType, this->options);
+    std::unique_ptr<Geography> geography = doBooleanOperation(
+      feature1->ShapeIndex(),
+      feature2->ShapeIndex(),
+      this->opType,
+      this->options
+    );
+
+    return Rcpp::XPtr<Geography>(geography.release());
   }
 
 private:
@@ -177,10 +183,15 @@ List cpp_s2_union_agg(List geog, int model, int snapLevel, bool naRm) {
     options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
   }
 
-  List output(1);
   MutableS2ShapeIndex emptyIndex;
-  output[0] = doBooleanOperation(&index, &emptyIndex,S2BooleanOperation::OpType::UNION, options);
-  return output;
+  std::unique_ptr<Geography> geography = doBooleanOperation(
+    &index, 
+    &emptyIndex,
+    S2BooleanOperation::OpType::UNION, 
+    options
+  );
+
+  return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
 // [[Rcpp::export]]
