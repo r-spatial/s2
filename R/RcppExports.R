@@ -161,8 +161,8 @@ cpp_s2_closest_point <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_closest_point`, geog1, geog2)
 }
 
-cpp_s2_nearest_feature <- function(geog1, geog2) {
-    .Call(`_s2_cpp_s2_nearest_feature`, geog1, geog2)
+cpp_s2_minimum_clearance_line_between <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_minimum_clearance_line_between`, geog1, geog2)
 }
 
 cpp_s2_centroid <- function(geog) {

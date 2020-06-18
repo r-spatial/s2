@@ -33,24 +33,26 @@ test_that("s2_boundary() works", {
 })
 
 test_that("s2_closest_point() works", {
-  #expect_wkt_equal(s2_closest_point("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
-  expect_wkt_equal(s2_closest_point("POINT (0 1)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
-  expect_true(s2_is_empty(s2_closest_point("POINT (30 10)", "POINT EMPTY")))
-
-  #expect_wkt_equal(s2_closest_point("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
-  expect_wkt_equal(s2_closest_point("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "LINESTRING (0 1, 30 10)")
-  expect_wkt_equal(s2_closest_point("LINESTRING(0 0,1 1)", "LINESTRING(1 0,0 1)"), "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
-  	precision = 6)
+  expect_wkt_equal(s2_closest_point("POINT (0 1)", "POINT (30 10)"), "POINT (0 1)")
+  expect_wkt_equal(s2_closest_point("LINESTRING (0 1, -12 -12)", "POINT (30 10)"), "POINT (0 1)")
 })
 
-test_that("s2_nearest_feature() works", {
-  x = c("GEOMETRYCOLLECTION(POINT(-10 -10),POINT(0 0))")
-  y = c("POINT (30 10)", "GEOMETRYCOLLECTION(POINT(1 1),LINESTRING(0.1 0,1 1),POINT(1 1),POINT(-10 -10))")
-  e = "POINT EMPTY"
-  expect_identical(s2_nearest_feature(x, y), c(1L, 4L))
-  expect_identical(s2_nearest_feature(y, x), c(2L, 1L))
-  expect_identical(s2_nearest_feature(e, x), NA_integer_)
-  expect_identical(s2_nearest_feature(y, e), c(NA_integer_, NA_integer_))
+test_that("s2_minimum_clearance_line_between() works", {
+  expect_wkt_equal(
+    s2_minimum_clearance_line_between("POINT (0 1)", "POINT (30 10)"),
+    "LINESTRING (0 1, 30 10)"
+  )
+  expect_true(s2_is_empty(s2_minimum_clearance_line_between("POINT (30 10)", "POINT EMPTY")))
+
+  expect_wkt_equal(
+    s2_minimum_clearance_line_between("LINESTRING (0 1, -12 -12)", "POINT (30 10)"),
+    "LINESTRING (0 1, 30 10)"
+  )
+  expect_wkt_equal(
+    s2_minimum_clearance_line_between("LINESTRING (0 0, 1 1)", "LINESTRING (1 0, 0 1)"),
+    "MULTIPOINT ((0.5 0.500057), (0.5 0.500057))",
+  	precision = 6
+  )
 })
 
 test_that("s2_difference() works", {

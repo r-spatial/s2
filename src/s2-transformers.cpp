@@ -177,9 +177,9 @@ List cpp_s2_union_agg(List geog, int model, int snapLevel, bool naRm) {
 
   MutableS2ShapeIndex emptyIndex;
   std::unique_ptr<Geography> geography = doBooleanOperation(
-    &index, 
+    &index,
     &emptyIndex,
-    S2BooleanOperation::OpType::UNION, 
+    S2BooleanOperation::OpType::UNION,
     options.booleanOperationOptions()
   );
 
@@ -250,10 +250,10 @@ std::vector<S2Point> findClosestPoints(S2ShapeIndex* index1, S2ShapeIndex* index
         edge2.v0, edge2.v1
       );
 
-      std::vector<S2Point> out(2);
-      out[0] = closest.first;
-      out[1] = closest.second;
-      return out;
+      std::vector<S2Point> pts(2);
+      pts[0] = closest.first;
+      pts[1] = closest.second;
+      return pts;
 }
 
 // [[Rcpp::export]]
@@ -265,16 +265,8 @@ List cpp_s2_closest_point(List geog1, List geog2) {
 
       if (pts.size() == 0) {
         return XPtr<Geography>(new PointGeography());
-      }
-
-      if (pts[0] == pts[1]) {
-        return XPtr<Geography>(new PointGeography(pts));
       } else {
-        std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
-        polyline->Init(pts);
-        std::vector<std::unique_ptr<S2Polyline>> polylines(1);
-        polylines[0] = std::move(polyline);
-        return XPtr<Geography>(new PolylineGeography(std::move(polylines)));
+        return XPtr<Geography>(new PointGeography(pts[0]));
       }
     }
   };
@@ -284,20 +276,23 @@ List cpp_s2_closest_point(List geog1, List geog2) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_nearest_feature(List geog1, List geog2) {
+List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      query.mutable_options()->set_include_interiors(false);
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      std::vector<S2Point> pts = findClosestPoints(feature1->ShapeIndex(), feature2->ShapeIndex());
 
-      const auto& result = query.FindClosestEdge(&target);
-      int s = result.shape_id();
-      if (s == -1) // geog1 or geog2 is empty:
-        return Rcpp::IntegerVector::create(NA_INTEGER);
-      else
-        return Rcpp::IntegerVector::create(result.shape_id() + 1); // R: 1-based index
+      if (pts.size() == 0) {
+        return XPtr<Geography>(new PolylineGeography());
+      } else if (pts[0] == pts[1]) {
+        return XPtr<Geography>(new PointGeography(pts));
+      } else {
+        std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
+        polyline->Init(pts);
+        std::vector<std::unique_ptr<S2Polyline>> polylines(1);
+        polylines[0] = std::move(polyline);
+        return XPtr<Geography>(new PolylineGeography(std::move(polylines)));
+      }
     }
   };
 

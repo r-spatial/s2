@@ -43,9 +43,9 @@ s2_closest_point <- function(x, y) {
 
 #' @rdname s2_boundary
 #' @export
-s2_nearest_feature <- function(x, y) {
-  recycled <- recycle_common(as_s2_geography(y), as_s2_geography(x)) # REVERSING x and y HERE!!
-  unlist(cpp_s2_nearest_feature(recycled[[1]], recycled[[2]]))
+s2_minimum_clearance_line_between <- function(x, y) {
+  recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
+  new_s2_xptr(cpp_s2_minimum_clearance_line_between(recycled[[1]], recycled[[2]]), "s2_geography")
 }
 
 #' @rdname s2_boundary
