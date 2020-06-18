@@ -23,90 +23,85 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
+                                               std::vector<std::unique_ptr<S2Polyline>> polylines,
+                                               std::unique_ptr<S2Polygon> polygon) {
+  // count non-empty dimensions
+  int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
+
+  // return empty output
+  if (nonEmptyDimensions == 0) {
+    return absl::make_unique<GeographyCollection>();
+  }
+
+  // return mixed dimension output
+  if (nonEmptyDimensions > 1) {
+    std::vector<std::unique_ptr<Geography>> features;
+
+    if (points.size() > 0) {
+      features.push_back(absl::make_unique<PointGeography>(std::move(points)));
+    }
+
+    if (polylines.size() > 0) {
+      features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
+    }
+
+    if (!polygon->is_empty()) {
+      features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
+    }
+
+    return absl::make_unique<GeographyCollection>(std::move(features));
+  }
+
+  // return single dimension output
+  if (!polygon->is_empty()) {
+    return absl::make_unique<PolygonGeography>(std::move(polygon));
+  } else if (polylines.size() > 0) {
+    return absl::make_unique<PolylineGeography>(std::move(polylines));
+  } else {
+    return absl::make_unique<PointGeography>(std::move(points));
+  }
+}
+
 Rcpp::XPtr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
                                          S2BooleanOperation::OpType opType,
                                          S2BooleanOperation::Options options) {
-  MutableS2ShapeIndex index;
-  s2builderutil::IndexedS2PolylineVectorLayer::Options polyline_options;
-  polyline_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
-  polyline_options.set_polyline_type(S2Builder::Graph::PolylineType::WALK);
-  polyline_options.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
-  s2builderutil::IndexedS2PolygonLayer::Options polygon_options;
-  s2builderutil::LayerVector layers(3);
-  layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(&index);
-  layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(
-     &index, polyline_options);
-  layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(&index, polygon_options);
 
-  S2BooleanOperation op2(opType, s2builderutil::NormalizeClosedSet(std::move(layers)), options);
-
-  S2Error error;
-  if (!op2.Build(*index1, *index2, &error)) {
-    stop(error.text()); // #nocov
-  }
-
+  // create the data structures that will contain the output
   std::vector<S2Point> points;
   std::vector<std::unique_ptr<S2Polyline>> polylines;
   std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
-  std::vector<std::unique_ptr<Geography>> features;
-  std::vector<std::unique_ptr<S2Shape>> shapes(index.ReleaseAll());
-  int dims = 0; // bitfield with dimension flags in lower 3 bits
-  for (int i = 0; i < shapes.size(); i++) {
-    std::unique_ptr<S2Shape> shape = std::move(shapes[i]);
-    switch (shape->dimension()) {
-      case 0: {
-        dims = dims | 1;
-        std::unique_ptr<S2PointVectorShape> p(static_cast<S2PointVectorShape*>(shape.release()));
-        for (int j = 0; j < p->num_points(); j++)
-          points.push_back(p->point(j));
-        break;
-      }
-      case 1: {
-        dims = dims | 2;
-        std::unique_ptr<S2Polyline::Shape> polyline_shape(static_cast<S2Polyline::Shape*>(shape.release()));
-        S2Polyline *clone = polyline_shape->polyline()->Clone();
-        std::unique_ptr<S2Polyline> polyline(clone);
-        polylines.push_back(std::move(polyline));
-        break;
-      }
-      case 2: {
-        dims = dims | 4;
-        std::unique_ptr<S2Polygon::Shape> polygon_shape(static_cast<S2Polygon::Shape*>(shape.release()));
-        S2Polygon *clone = polygon_shape->polygon()->Clone();
-        std::unique_ptr<S2Polygon> polyg(clone);
-        polygon = std::move(polyg);
-        break;
-      }
-    }
+  s2builderutil::LayerVector layers(3);
+  // currently using the default S2PointVectorLayer::Options
+  layers[0] = absl::make_unique<s2builderutil::S2PointVectorLayer>(&points);
+  // currently using the default S2PolylineVectorLayer::Options
+  layers[1] = absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines);
+  // currently using the default S2PolygonLayer::Options
+  layers[2] = absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get());
+
+  // do the boolean operation
+  S2BooleanOperation booleanOp(
+    opType, 
+    // normalizing the closed set here is required for line intersections
+    // to work as expected
+    s2builderutil::NormalizeClosedSet(std::move(layers)), 
+    options
+  );
+  S2Error error;
+  if (!booleanOp.Build(*index1, *index2, &error)) {
+    stop(error.text()); // # nocov
   }
 
-  int ndims = ((dims & 1) != 0) + ((dims & 2) != 0) + ((dims & 4) != 0);
-  switch (ndims) {
-    case 0: // EMPTY
-      return Rcpp::XPtr<Geography>(new GeographyCollection());
-    case 1: { // SINGLE DIM
-      if (!polygon->is_empty()) {
-        return Rcpp::XPtr<Geography>(new PolygonGeography(std::move(polygon)));
-      } else if (polylines.size() > 0) {
-        return Rcpp::XPtr<Geography>(new PolylineGeography(std::move(polylines)));
-      } else {
-        return Rcpp::XPtr<Geography>(new PointGeography(std::move(points)));
-      }
-      break;
-    }
-    default: // GEOMETRYCOLLECTION
-      if (points.size() > 0) {
-        features.push_back(absl::make_unique<PointGeography>(std::move(points)));
-      }
-      if (polylines.size() > 0) {
-        features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
-      }
-      if (!polygon->is_empty()) {
-        features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
-      }
-      return Rcpp::XPtr<Geography>(new GeographyCollection(std::move(features)));
-  }
+  // construct output
+  std::unique_ptr<Geography> geography = geographyFromLayers(
+    std::move(points), 
+    std::move(polylines), 
+    std::move(polygon)
+  );
+
+  // return XPtr
+  return Rcpp::XPtr<Geography>(geography.release());
 }
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
