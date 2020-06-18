@@ -1,6 +1,9 @@
 
 #' S2 Geography Predicates
 #'
+#' These functions operate two geography vectors (pairwise), and return
+#' a logical vector.
+#'
 #' @inheritParams s2_is_collection
 #' @inheritParams s2_boundary
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
@@ -26,9 +29,77 @@
 #' - [ST_WITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
 #' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
+#' @examples
+#' s2_contains(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_within(
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"
+#' )
+#'
+#' s2_covered_by(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_covers(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_disjoint(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_intersects(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_equals(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c(
+#'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'     "POLYGON ((10 0, 10 10, 0 10, 0 0, 10 0))",
+#'     "POLYGON ((-1 -1, 10 0, 10 10, 0 10, -1 -1))"
+#'   )
+#' )
+#'
+#' s2_intersects(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_intersects_box(
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   0, 0, 10, 10
+#' )
+#'
+#' s2_dwithin(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   0 # distance in meters
+#' )
+#'
+#' s2_dwithin(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   1e6 # distance in meters
+#' )
+#'
 s2_contains <- function(x, y, model = 0) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
   cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
+}
+
+#' @rdname s2_contains
+#' @export
+s2_within <- function(x, y, model = 0) {
+  s2_contains(y, x, model = model)
 }
 
 #' @rdname s2_contains
@@ -52,16 +123,16 @@ s2_disjoint <- function(x, y, model = s2_model_default()) {
 
 #' @rdname s2_contains
 #' @export
-s2_equals <- function(x, y, model = s2_model_default()) {
+s2_intersects <- function(x, y, model = s2_model_default()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_equals(recycled[[1]], recycled[[2]], model)
+  cpp_s2_intersects(recycled[[1]], recycled[[2]], model)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_intersects <- function(x, y, model = s2_model_default()) {
+s2_equals <- function(x, y, model = s2_model_default()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_intersects(recycled[[1]], recycled[[2]], model)
+  cpp_s2_equals(recycled[[1]], recycled[[2]], model)
 }
 
 #' @rdname s2_contains
@@ -81,12 +152,6 @@ s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = 
 #' @export
 s2_touches <- function(x, y) {
   stop("Not implemented")
-}
-
-#' @rdname s2_contains
-#' @export
-s2_within <- function(x, y, model = 0) {
-  s2_contains(y, x, model = model)
 }
 
 #' @rdname s2_contains
