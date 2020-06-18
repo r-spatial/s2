@@ -147,19 +147,49 @@
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for wk_wkb</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  oriented = <span class='fl'>FALSE</span>,
+  check = <span class='fl'>TRUE</span>,
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='co'># S3 method for WKB</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  oriented = <span class='fl'>FALSE</span>,
+  check = <span class='fl'>TRUE</span>,
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='co'># S3 method for blob</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  oriented = <span class='fl'>FALSE</span>,
+  check = <span class='fl'>TRUE</span>,
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='co'># S3 method for wk_wkt</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  oriented = <span class='fl'>FALSE</span>,
+  check = <span class='fl'>TRUE</span>,
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  oriented = <span class='fl'>FALSE</span>,
+  check = <span class='fl'>TRUE</span>,
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='co'># S3 method for logical</span>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
@@ -186,6 +216,14 @@
       <td><p>TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).</p></td>
+    </tr>
+    <tr>
+      <th>check</th>
+      <td><p>Use <code>check = FALSE</code> to error on invalid geometries</p></td>
+    </tr>
+    <tr>
+      <th>snap_level</th>
+      <td><p>An integer between 1 and 30, or 0 to skip snapping.</p></td>
     </tr>
     <tr>
       <th>endian</th>

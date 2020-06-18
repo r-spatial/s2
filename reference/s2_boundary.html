@@ -140,17 +140,37 @@
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_nearest_feature</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='op'>-</span><span class='fl'>1L</span>, snap_level = <span class='op'>-</span><span class='fl'>1L</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(), snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='op'>-</span><span class='fl'>1L</span>, snap_level = <span class='op'>-</span><span class='fl'>1L</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='op'>-</span><span class='fl'>1L</span>, snap_level = <span class='op'>-</span><span class='fl'>1L</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(<span class='kw'>x</span>, y = <span class='kw'>NULL</span>, model = <span class='op'>-</span><span class='fl'>1L</span>, snap_level = <span class='op'>-</span><span class='fl'>1L</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(
+  <span class='kw'>x</span>,
+  y = <span class='kw'>NULL</span>,
+  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(
+  <span class='kw'>x</span>,
+  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
+  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>(),
+  na.rm = <span class='fl'>FALSE</span>
+)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)</pre>
 
@@ -167,11 +187,11 @@
     </tr>
     <tr>
       <th>model</th>
-      <td><p>integer; specifies boundary model; see <a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></p></td>
+      <td><p>integer; specifies boundary model. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default()</a></code>.</p></td>
     </tr>
     <tr>
       <th>snap_level</th>
-      <td><p>integer; if positive, specifies the snap level; see <a href='https://rdrr.io/pkg/s2/man/snaplevel.html'>s2_set_snaplevel</a></p></td>
+      <td><p>integer; if positive, specifies the snap level. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default()</a></code>.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
