@@ -126,6 +126,19 @@ test_that("s2_within() works", {
   expect_false(s2_within("POINT (0 0)", "LINESTRING (1 1, 2 2)"))
 })
 
+test_that("s2_touches() works", {
+  # is inside
+  expect_false(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)"))
+  # is outside
+  expect_false(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (-0.5 0.75)"))
+
+  # is vertex
+  expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)"))
+
+  # is very close to the edge
+  expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", epsilon = 1e-6))
+})
+
 test_that("s2_dwithin() works", {
   expect_identical(s2_dwithin("POINT (0 0)", NA_character_, 0), NA)
 

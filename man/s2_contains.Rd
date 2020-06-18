@@ -37,7 +37,12 @@ s2_intersects_box(
   model = s2_model_default()
 )
 
-s2_touches(x, y)
+s2_touches(
+  x,
+  y,
+  radius = s2_earth_radius_meters(),
+  epsilon = .Machine$double.eps^2
+)
 
 s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 }
@@ -53,10 +58,13 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 \item{detail}{The number of points with which to approximate
 non-geodesic edges.}
 
-\item{distance}{A distance in meters on the surface of the earth}
-
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
+
+\item{epsilon}{The distance within the boundary to consider "touching",
+in the same units as \code{distance}.}
+
+\item{distance}{A distance in meters on the surface of the earth}
 }
 \description{
 These functions operate two geography vectors (pairwise), and return
@@ -126,6 +134,13 @@ s2_intersects(
 s2_intersects_box(
   c("POINT (5 5)", "POINT (-1 1)"),
   0, 0, 10, 10
+)
+
+s2_touches(
+  "POLYGON ((0 0, 0 1, 1 1, 0 0))",
+  c("POINT (0 0)", "POINT (0.5 0.75)", "POINT (0 0.5)"),
+  # epsilon (in meters)
+  epsilon = 1e-6
 )
 
 s2_dwithin(
