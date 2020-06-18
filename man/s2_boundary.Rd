@@ -22,17 +22,37 @@ s2_closest_point(x, y)
 
 s2_nearest_feature(x, y)
 
-s2_difference(x, y, model = -1L, snap_level = -1L)
+s2_difference(x, y, model = s2_model_default(), snap_level = s2_snap_default())
 
-s2_sym_difference(x, y, model = -1L, snap_level = -1L)
+s2_sym_difference(
+  x,
+  y,
+  model = s2_model_default(),
+  snap_level = s2_snap_default()
+)
 
-s2_intersection(x, y, model = -1L, snap_level = -1L)
+s2_intersection(
+  x,
+  y,
+  model = s2_model_default(),
+  snap_level = s2_snap_default()
+)
 
-s2_union(x, y = NULL, model = -1L, snap_level = -1L)
+s2_union(
+  x,
+  y = NULL,
+  model = s2_model_default(),
+  snap_level = s2_snap_default()
+)
 
 s2_snap_to_grid(x)
 
-s2_union_agg(x, na.rm = FALSE)
+s2_union_agg(
+  x,
+  model = s2_model_default(),
+  snap_level = s2_snap_default(),
+  na.rm = FALSE
+)
 
 s2_centroid_agg(x, na.rm = FALSE)
 }
@@ -41,9 +61,9 @@ s2_centroid_agg(x, na.rm = FALSE)
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
-\item{model}{integer; specifies boundary model; see \link{s2_contains}}
+\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
 
-\item{snap_level}{integer; if positive, specifies the snap level; see \link{s2_set_snaplevel}}
+\item{snap_level}{integer; if positive, specifies the snap level. See \code{\link[=s2_snap_default]{s2_snap_default()}}.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}

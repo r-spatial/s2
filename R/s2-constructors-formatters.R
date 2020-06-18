@@ -76,14 +76,17 @@ s2_make_line <- function(longitude, latitude, feature_id = 1L) {
 
 #' @rdname s2_geog_point
 #' @export
-s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L, oriented = FALSE) {
+s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L,
+                            oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   recycled <- recycle_common(longitude, latitude, feature_id, ring_id)
   new_s2_xptr(
     cpp_s2_make_polygon(
       recycled[[1]], recycled[[2]],
       featureId = recycled[[3]],
       ringId = recycled[[4]],
-      oriented = oriented
+      oriented = oriented,
+      check = check,
+      snapLevel = snap_level
     ),
     "s2_geography"
   )
@@ -91,16 +94,32 @@ s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L, 
 
 #' @rdname s2_geog_point
 #' @export
-s2_geog_from_text <- function(wkt_string, oriented = FALSE) {
+s2_geog_from_text <- function(wkt_string, oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   wk::validate_wk_wkt(wkt_string)
-  new_s2_xptr(s2_geography_from_wkt(wkt_string, oriented = oriented), "s2_geography")
+  new_s2_xptr(
+    s2_geography_from_wkt(
+      wkt_string,
+      oriented = oriented,
+      check = check,
+      snapLevel = snap_level
+    ),
+    "s2_geography"
+  )
 }
 
 #' @rdname s2_geog_point
 #' @export
-s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE) {
+s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   wk::validate_wk_wkb(wkb_bytes)
-  new_s2_xptr(s2_geography_from_wkb(wkb_bytes, oriented = oriented), "s2_geography")
+  new_s2_xptr(
+    s2_geography_from_wkb(
+      wkb_bytes,
+      oriented = oriented,
+      check = check,
+      snapLevel = snap_level
+    ),
+    "s2_geography"
+  )
 }
 
 #' @rdname s2_geog_point

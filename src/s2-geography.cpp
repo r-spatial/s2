@@ -9,7 +9,6 @@
 #include "wk/wkt-writer.hpp"
 #include "wk/geometry-formatter.hpp"
 
-#include "snap.h"
 #include "geography.h"
 #include "wk-geography.h"
 #include "point-geography.h"
@@ -22,10 +21,13 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-List s2_geography_from_wkb(List wkb, bool oriented) {
+List s2_geography_from_wkb(List wkb, bool oriented, bool check, int snapLevel) {
   WKRawVectorListProvider provider(wkb);
   WKGeographyWriter writer(wkb.size());
   writer.setOriented(oriented);
+  writer.setCheck(check);
+  writer.setSnapLevel(snapLevel);
+
   WKBReader reader(provider);
   reader.setHandler(&writer);
 
@@ -38,10 +40,13 @@ List s2_geography_from_wkb(List wkb, bool oriented) {
 }
 
 // [[Rcpp::export]]
-List s2_geography_from_wkt(CharacterVector wkt, bool oriented) {
+List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check, int snapLevel) {
   WKCharacterVectorProvider provider(wkt);
   WKGeographyWriter writer(wkt.size());
   writer.setOriented(oriented);
+  writer.setCheck(check);
+  writer.setSnapLevel(snapLevel);
+
   WKTReader reader(provider);
   reader.setHandler(&writer);
 

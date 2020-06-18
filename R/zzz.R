@@ -1,6 +1,9 @@
 
 # nocov start
 .onLoad <- function(...) {
+  # call c++ init
+  cpp_s2_init()
+
   # dynamically register vctrs dependencies
   for (cls in c("s2_geography", "s2_point", "s2_latlng")) {
     s3_register("vctrs::vec_proxy", cls)

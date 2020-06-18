@@ -85,7 +85,7 @@ test_that("s2_as_binary works on (multi)polygons", {
 	expect_identical(length(wkb), length(geog))
 })
 
-test_that("polygon constructors respect oriented argument", {
+test_that("polygon constructors respect oriented and check arguments", {
   polygon_with_bad_hole_wkt <- "POLYGON (
     (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
     (30 20, 20 25, 20 15, 30 20)
@@ -121,14 +121,14 @@ test_that("polygon constructors respect oriented argument", {
 
   expect_error(
     s2_intersects(
-      s2_geog_from_text(polygon_with_bad_hole_wkt, oriented = TRUE),
+      s2_geog_from_text(polygon_with_bad_hole_wkt, oriented = TRUE, check = TRUE),
       "POINT (23 19.5)"
     ),
     "Inconsistent loop orientations"
   )
   expect_error(
     s2_intersects(
-      s2_geog_from_wkb(polygon_with_bad_hole_wkb, oriented = TRUE),
+      s2_geog_from_wkb(polygon_with_bad_hole_wkb, oriented = TRUE, check = TRUE),
       "POINT (23 19.5)"
     ),
     "Inconsistent loop orientations"
@@ -137,10 +137,32 @@ test_that("polygon constructors respect oriented argument", {
     s2_intersects(
       with(
         polygon_with_bad_hole_df,
-        s2_make_polygon(x, y, ring_id = ring_id, oriented = TRUE)
+        s2_make_polygon(x, y, ring_id = ring_id, oriented = TRUE, check = TRUE)
       ),
       "POINT (23 19.5)"
     ),
     "Inconsistent loop orientations"
+  )
+
+  expect_silent(
+    s2_intersects(
+      s2_geog_from_text(polygon_with_bad_hole_wkt, oriented = TRUE, check = FALSE),
+      "POINT (23 19.5)"
+    )
+  )
+  expect_silent(
+    s2_intersects(
+      s2_geog_from_wkb(polygon_with_bad_hole_wkb, oriented = TRUE, check = FALSE),
+      "POINT (23 19.5)"
+    )
+  )
+  expect_silent(
+    s2_intersects(
+      with(
+        polygon_with_bad_hole_df,
+        s2_make_polygon(x, y, ring_id = ring_id, oriented = TRUE, check = FALSE)
+      ),
+      "POINT (23 19.5)"
+    )
   )
 })

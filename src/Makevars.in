@@ -8,13 +8,13 @@ OBJECTS = cpp-compat.o \
      s2-constructors-formatters.o \
      s2-predicates.o \
      s2-transformers.o \
+     init.o \
      model.o \
      RcppExports.o \
      s2-geography.o \
      s2-latlng.o \
      s2-point.o \
      s2-xptr.o \
-     snap.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \

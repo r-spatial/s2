@@ -19,12 +19,24 @@ s2_make_polygon(
   latitude,
   feature_id = 1L,
   ring_id = 1L,
-  oriented = FALSE
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_snap_default()
 )
 
-s2_geog_from_text(wkt_string, oriented = FALSE)
+s2_geog_from_text(
+  wkt_string,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_snap_default()
+)
 
-s2_geog_from_wkb(wkb_bytes, oriented = FALSE)
+s2_geog_from_wkb(
+  wkb_bytes,
+  oriented = FALSE,
+  check = TRUE,
+  snap_level = s2_snap_default()
+)
 
 s2_as_text(x, precision = 16, trim = TRUE)
 
@@ -40,6 +52,10 @@ to convert from a character vector.}
 \item{oriented}{TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
+
+\item{check}{Use \code{check = FALSE} to error on invalid geometries}
+
+\item{snap_level}{An integer between 1 and 30, or 0 to skip snapping.}
 
 \item{wkt_string}{Well-known text}
 
