@@ -1,88 +1,81 @@
 
-#include "geography-operator.h"
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2latlng_rect.h"
 #include "s2/s2polygon.h"
 #include "s2/s2testing.h"
 #include "s2/s2builderutil_snap_functions.h"
-#include "model.h"
+
+#include "geography-operator.h"
+#include "geography-operation-options.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
+class BinaryPredicateOperator: public BinaryGeographyOperator<LogicalVector, int> {
+public:
+  S2BooleanOperation::Options options;
+
+  BinaryPredicateOperator(int model) {
+    GeographyOperationOptions options;
+    options.setPolygonModel(model);
+    options.setPolylineModel(model);
+    this->options = options.booleanOperationOptions();
+  }
+};
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_intersects(List geog1, List geog2, int model = -1) {
-  class Op: public BinaryGeographyOperator<LogicalVector, int> {
-
+LogicalVector cpp_s2_intersects(List geog1, List geog2, int model) {
+  class Op: public BinaryPredicateOperator {
+  public:
+    Op(int model): BinaryPredicateOperator(model) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Intersects(*feature1->ShapeIndex(), *feature2->ShapeIndex(),
-        options);
+      return S2BooleanOperation::Intersects(
+        *feature1->ShapeIndex(),
+        *feature2->ShapeIndex(),
+        options
+      );
     };
-    S2BooleanOperation::Options options = S2BooleanOperation::Options();
-    public:
-    void set_snap_level(int snap_level) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
-    };
-    void set_model(int model) {
-      options.set_polygon_model(get_polygon_model(model));
-      options.set_polyline_model(get_polyline_model(model));
-    }
   };
 
-  Op op;
-  if (model >= 0)
-    op.set_model(model);
+  Op op(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_equals(List geog1, List geog2, int model = -1) {
+LogicalVector cpp_s2_equals(List geog1, List geog2, int model) {
   // for s2_equals(), handling polygon_model wouldn't make sense, right?
-  class Op: public BinaryGeographyOperator<LogicalVector, int> {
-
+  class Op: public BinaryPredicateOperator {
+  public:
+    Op(int model): BinaryPredicateOperator(model) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Equals(*feature1->ShapeIndex(), *feature2->ShapeIndex());
-    }
-    S2BooleanOperation::Options options = S2BooleanOperation::Options();
-    public:
-    void set_snap_level(int snap_level) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
-    };
-    void set_model(int model) {
-      options.set_polygon_model(get_polygon_model(model));
-      options.set_polyline_model(get_polyline_model(model));
+      return S2BooleanOperation::Equals(
+        *feature1->ShapeIndex(), 
+        *feature2->ShapeIndex(),
+        this->options
+      );
     }
   };
 
-  Op op;
-  if (model >= 0)
-    op.set_model(model);
+  Op op(model);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_contains(List geog1, List geog2, int model = -1) {
-  class Op: public BinaryGeographyOperator<LogicalVector, int> {
-
+LogicalVector cpp_s2_contains(List geog1, List geog2, int model) {
+  class Op: public BinaryPredicateOperator {
+  public:
+    Op(int model): BinaryPredicateOperator(model) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Contains(*feature1->ShapeIndex(), *feature2->ShapeIndex());
-    }
-    S2BooleanOperation::Options options = S2BooleanOperation::Options();
-    public:
-    void set_snap_level(int snap_level) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
-    };
-    void set_model(int model) {
-      options.set_polygon_model(get_polygon_model(model));
-      options.set_polyline_model(get_polyline_model(model));
+      return S2BooleanOperation::Contains(
+        *feature1->ShapeIndex(), 
+        *feature2->ShapeIndex(),
+        this->options
+      );
     }
   };
 
-  Op op;
-  if (model >= 0)
-    op.set_model(model);
+  Op op(model);
   return op.processVector(geog1, geog2);
 }
 
@@ -110,20 +103,27 @@ LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
 
 // [[Rcpp::export]]
 LogicalVector cpp_s2_intersects_box(List geog,
-                                         NumericVector lng1, NumericVector lat1,
-                                         NumericVector lng2, NumericVector lat2,
-                                         IntegerVector detail,
-										 int model = -1) {
+                                    NumericVector lng1, NumericVector lat1,
+                                    NumericVector lng2, NumericVector lat2,
+                                    IntegerVector detail,
+										                int model) {
 
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector lng1, lat1, lng2, lat2;
     IntegerVector detail;
+    S2BooleanOperation::Options options;
 
     Op(NumericVector lng1, NumericVector lat1,
-            NumericVector lng2, NumericVector lat2,
-            IntegerVector detail):
-      lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2), detail(detail) {}
+       NumericVector lng2, NumericVector lat2,
+       IntegerVector detail, int model):
+      lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2), detail(detail) {
+      
+      GeographyOperationOptions options;
+      options.setPolygonModel(model);
+      options.setPolylineModel(model);
+      this->options = options.booleanOperationOptions();
+    }
 
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
       // construct polygon
@@ -133,7 +133,7 @@ LogicalVector cpp_s2_intersects_box(List geog,
       double xmax = this->lng2[i];
       double ymax = this->lat2[i];
       int detail = this->detail[i];
-      
+
       if (detail < 1) {
         stop("Can't create polygon from bounding box with detail < 1");
       }
@@ -145,7 +145,7 @@ LogicalVector cpp_s2_intersects_box(List geog,
       double widthDegrees = width.degrees();
       double deltaDegrees = widthDegrees / (double) detail;
       double heightDegrees = ymax - ymin;
-      
+
       // these situations would result in an error below because of
       // duplicate vertices
       if (widthDegrees == 0 || heightDegrees == 0) {
@@ -173,28 +173,17 @@ LogicalVector cpp_s2_intersects_box(List geog,
       loop->set_s2debug_override(S2Debug::DISABLE);
       loop->Init(points);
       loop->Normalize();
-      
+
       std::vector<std::unique_ptr<S2Loop>> loops(1);
       loops[0] = std::move(loop);
       S2Polygon polygon;
       polygon.InitOriented(std::move(loops));
-      
+
       // test intersection
       return S2BooleanOperation::Intersects(polygon.index(), *feature->ShapeIndex());
     }
-    S2BooleanOperation::Options options = S2BooleanOperation::Options();
-    public:
-    void set_snap_level(int snap_level) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snap_level));
-    };
-    void set_model(int model) {
-      options.set_polygon_model(get_polygon_model(model));
-      options.set_polyline_model(get_polyline_model(model));
-    }
   };
 
-  Op op(lng1, lat1, lng2, lat2, detail);
-  if (model >= 0)
-    op.set_model(model);
+  Op op(lng1, lat1, lng2, lat2, detail, model);
   return op.processVector(geog);
 }

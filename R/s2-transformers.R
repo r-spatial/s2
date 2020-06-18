@@ -7,6 +7,8 @@
 #' @param model integer; specifies boundary model. See [s2_model_default()].
 #' @param snap_level integer; if positive, specifies the snap level. See [s2_snap_default()].
 #'
+#' @inheritSection s2_model_default Model
+#'
 #' @export
 #'
 #' @seealso

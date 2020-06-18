@@ -19,17 +19,25 @@ s2_covered_by(x, y, model = 2)
 
 s2_covers(x, y, model = 2)
 
-s2_disjoint(x, y, ...)
+s2_disjoint(x, y, model = s2_model_default())
 
-s2_equals(x, y, model = -1)
+s2_equals(x, y, model = s2_model_default())
 
-s2_intersects(x, y, model = -1)
+s2_intersects(x, y, model = s2_model_default())
 
-s2_intersects_box(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1)
+s2_intersects_box(
+  x,
+  lng1,
+  lat1,
+  lng2,
+  lat2,
+  detail = 1000,
+  model = s2_model_default()
+)
 
 s2_touches(x, y)
 
-s2_within(x, y, ...)
+s2_within(x, y, model = 0)
 
 s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 }
@@ -38,10 +46,7 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
-\item{model}{integer or character; specify polygon and polyline model
-as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)}
-
-\item{...}{arguments passed on}
+\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 
@@ -56,7 +61,8 @@ the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_met
 \description{
 S2 Geography Predicates
 }
-\details{
+\section{Model}{
+
 The geometry model indicates whether a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
 OPEN geometries do not contain their boundary (model = 0); CLOSED
@@ -66,10 +72,11 @@ do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for \code{s2_contains} (0)
+S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
 and covers/coveredby (2) correspond to the SFA standard specification
 of these operators.
 }
+
 \seealso{
 BigQuery's geography function reference:
 \itemize{

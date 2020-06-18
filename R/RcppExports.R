@@ -113,15 +113,15 @@ data_frame_from_s2_point <- function(s2_point) {
     .Call(`_s2_data_frame_from_s2_point`, s2_point)
 }
 
-cpp_s2_intersects <- function(geog1, geog2, model = -1L) {
+cpp_s2_intersects <- function(geog1, geog2, model) {
     .Call(`_s2_cpp_s2_intersects`, geog1, geog2, model)
 }
 
-cpp_s2_equals <- function(geog1, geog2, model = -1L) {
+cpp_s2_equals <- function(geog1, geog2, model) {
     .Call(`_s2_cpp_s2_equals`, geog1, geog2, model)
 }
 
-cpp_s2_contains <- function(geog1, geog2, model = -1L) {
+cpp_s2_contains <- function(geog1, geog2, model) {
     .Call(`_s2_cpp_s2_contains`, geog1, geog2, model)
 }
 
@@ -129,7 +129,7 @@ cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
-cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, model = -1L) {
+cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, model) {
     .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, model)
 }
 
