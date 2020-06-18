@@ -213,79 +213,58 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
   return output;
 }
 
+std::vector<S2Point> findClosestPoints(S2ShapeIndex* index1, S2ShapeIndex* index2) {
+      // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
+
+      // Find the edge from index2 that is closest to index1
+      S2ClosestEdgeQuery query1(index1);
+      query1.mutable_options()->set_include_interiors(false);
+      S2ClosestEdgeQuery::ShapeIndexTarget target1(index2);
+      auto result1 = query1.FindClosestEdge(&target1);
+
+      if (result1.edge_id() == -1) {
+        return std::vector<S2Point>();
+      }
+
+      // Get the edge from index1 (edge1) that is closest to index2.
+      S2Shape::Edge edge1 = query1.GetEdge(result1);
+
+      // Now find the edge from index2 (edge2) that is closest to edge1.
+      S2ClosestEdgeQuery query2(index2);
+      query2.mutable_options()->set_include_interiors(false);
+      S2ClosestEdgeQuery::EdgeTarget target2(edge1.v0, edge1.v1);
+      auto result2 = query2.FindClosestEdge(&target2);
+
+      // what if result2 has no edges?
+      if (result2.is_interior()) {
+        stop("S2ClosestEdgeQuery result is interior!");
+      }
+      S2Shape::Edge edge2 = query2.GetEdge(result2);
+
+      // Find the closest point pair on edge1 and edge2.
+      std::pair<S2Point, S2Point> closest = S2::GetEdgePairClosestPoints(
+        edge1.v0, edge1.v1,
+        edge2.v0, edge2.v1
+      );
+
+      std::vector<S2Point> out(2);
+      out[0] = closest.first;
+      out[1] = closest.second;
+      return out;
+}
+
 // [[Rcpp::export]]
 List cpp_s2_closest_point(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      /*
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      std::vector<S2Point> pts = findClosestPoints(feature1->ShapeIndex(), feature2->ShapeIndex());
 
-      const auto& result = query.FindClosestEdge(&target);
-
-      //  result.edge_id() == -1 means there was no match
-      if (result.edge_id() == -1) {
+      if (pts.size() == 0) {
         return XPtr<Geography>(new PointGeography());
       }
 
-      // get the edge on feature1 that is closest to feature2
-      // the point returned here must be somewhere along this edge
-      const S2Shape::Edge edge1 = query.GetEdge(result);
-
-      // the edge on feature 1 *is* a point: easy!
-      if (edge1.v0 == edge1.v1) {
-        return XPtr<Geography>(new PointGeography(edge1.v0));
-      }
-
-      // reverse query: find the edge on feature2 that is closest to feature1
-      S2ClosestEdgeQuery reverseQuery(feature2->ShapeIndex());
-      S2ClosestEdgeQuery::EdgeTarget reverseTarget(edge1.v0, edge1.v1);
-      const auto& reverseResult = reverseQuery.FindClosestEdge(&target);
-
-      // get the edge on feature2 that is closest to feature1
-      const S2Shape::Edge edge2 = reverseQuery.GetEdge(reverseResult);
-
-      // the edge on feature 2 *is* a point: sort of easy!
-      if (edge2.v0 == edge2.v1) {
-        S2Point closest = query.Project(edge2.v0, result);
-        return XPtr<Geography>(new PointGeography(closest));
-      } else {
-        stop("Don't know how to find the closest point given two non-point edges");
-      }
-      */
-      // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
-
-      S2ClosestEdgeQuery query1(feature1->ShapeIndex());
-      query1.mutable_options()->set_include_interiors(false);
-      S2ClosestEdgeQuery::ShapeIndexTarget target2(feature2->ShapeIndex());
-      auto result1 = query1.FindClosestEdge(&target2);
-      if (result1.edge_id() == -1) {
-        return XPtr<Geography>(new PointGeography());
-      }
-      // Get the edge from index1 (edge1) that is closest to index2.
-      S2Shape::Edge edge1 = query1.GetEdge(result1);
-
-      // Now find the edge from index2 (edge2) that is closest to edge1.
-      S2ClosestEdgeQuery query2(feature2->ShapeIndex());
-      query2.mutable_options()->set_include_interiors(false);
-      S2ClosestEdgeQuery::EdgeTarget target1(edge1.v0, edge1.v1);
-      auto result2 = query2.FindClosestEdge(&target1);
-      // what if result2 has no edges?
-      if (result2.is_interior())
-        stop("result is interior!");
-      S2Shape::Edge edge2 = query2.GetEdge(result2);
-
-      // Find the closest point pair on edge1 and edge2.
-      auto closest = S2::GetEdgePairClosestPoints(edge1.v0, edge1.v1,
-                                                  edge2.v0, edge2.v1);
-      // meters = GeoidDistance(closest.first, closest.second);
-      // return LINESTRING with these two points:
-
-      std::vector<S2Point> pts(2);
-      pts[0] = closest.first;
-      pts[1] = closest.second;
-      if (closest.first == closest.second) {
+      if (pts[0] == pts[1]) {
         return XPtr<Geography>(new PointGeography(pts));
       } else {
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
