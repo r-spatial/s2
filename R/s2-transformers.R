@@ -1,6 +1,9 @@
 
 #' S2 Geography Transformations
 #'
+#' These functions operate on one or more geography vectors and
+#' return a geography vector.
+#'
 #' @inheritParams s2_is_collection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
@@ -23,6 +26,72 @@
 #' - [ST_SNAPTOGRID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
 #' - [ST_UNION_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg)
 #' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
+#'
+#' @examples
+#' # returns the boundary:
+#' # empty for point, endpoints of a linestring,
+#' # perimeter of a polygon
+#' s2_boundary("POINT (-64 45)")
+#' s2_boundary("LINESTRING (0 0, 10 0)")
+#' s2_boundary("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+#'
+#' # returns the area-weighted centroid, element-wise
+#' s2_centroid("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+#' s2_centroid("LINESTRING (0 0, 10 0)")
+#'
+#' # returns the unweighted centroid of the entire input
+#' s2_centroid_agg(c("POINT (0 0)", "POINT (10 0)"))
+#'
+#' # returns the closest point on x to y
+#' s2_closest_point(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POINT (0 90)" # north pole!
+#' )
+#'
+#' # returns the shortest possible line between x and y
+#' s2_minimum_clearance_line_between(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POINT (0 90)" # north pole!
+#' )
+#'
+#' # binary operations: difference, symmetric difference, intersection and union
+#' s2_difference(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+#'   # 32 bit platforms may need to set snap rounding
+#'   snap_level = 30
+#' )
+#'
+#' s2_sym_difference(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+#'   # 32 bit platforms may need to set snap rounding
+#'   snap_level = 30
+#' )
+#'
+#' s2_intersection(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+#'   # 32 bit platforms may need to set snap rounding
+#'   snap_level = 30
+#' )
+#'
+#' s2_union(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+#'   # 32 bit platforms may need to set snap rounding
+#'   snap_level = 30
+#' )
+#'
+#' # use s2_union_agg() to aggregate geographies in a vector
+#' s2_union_agg(
+#'   c(
+#'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+#'   ),
+#'   # 32 bit platforms may need to set snap rounding
+#'   snap_level = 30
+#' )
 #'
 s2_boundary <- function(x) {
   new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
@@ -88,12 +157,12 @@ s2_snap_to_grid <- function(x) {
 
 #' @rdname s2_boundary
 #' @export
-s2_union_agg <- function(x, model = s2_model_default(), snap_level = s2_snap_default(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), model, snap_level, na.rm), "s2_geography")
+s2_centroid_agg <- function(x, na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm), "s2_geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_centroid_agg <- function(x, na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm), "s2_geography")
+s2_union_agg <- function(x, model = s2_model_default(), snap_level = s2_snap_default(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), model, snap_level, na.rm), "s2_geography")
 }

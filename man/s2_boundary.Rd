@@ -10,8 +10,8 @@
 \alias{s2_intersection}
 \alias{s2_union}
 \alias{s2_snap_to_grid}
-\alias{s2_union_agg}
 \alias{s2_centroid_agg}
+\alias{s2_union_agg}
 \title{S2 Geography Transformations}
 \usage{
 s2_boundary(x)
@@ -47,14 +47,14 @@ s2_union(
 
 s2_snap_to_grid(x)
 
+s2_centroid_agg(x, na.rm = FALSE)
+
 s2_union_agg(
   x,
   model = s2_model_default(),
   snap_level = s2_snap_default(),
   na.rm = FALSE
 )
-
-s2_centroid_agg(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{An object that can be interpreted as an S2 type.}
@@ -69,7 +69,8 @@ s2_centroid_agg(x, na.rm = FALSE)
 to drop missing values.}
 }
 \description{
-S2 Geography Transformations
+These functions operate on one or more geography vectors and
+return a geography vector.
 }
 \section{Model}{
 
@@ -87,6 +88,73 @@ and covers/coveredby (2) correspond to the SFA standard specification
 of these operators.
 }
 
+\examples{
+# returns the boundary:
+# empty for point, endpoints of a linestring,
+# perimeter of a polygon
+s2_boundary("POINT (-64 45)")
+s2_boundary("LINESTRING (0 0, 10 0)")
+s2_boundary("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+
+# returns the area-weighted centroid, element-wise
+s2_centroid("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+s2_centroid("LINESTRING (0 0, 10 0)")
+
+# returns the unweighted centroid of the entire input
+s2_centroid_agg(c("POINT (0 0)", "POINT (10 0)"))
+
+# returns the closest point on x to y
+s2_closest_point(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POINT (0 90)" # north pole!
+)
+
+# returns the shortest possible line between x and y
+s2_minimum_clearance_line_between(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POINT (0 90)" # north pole!
+)
+
+# binary operations: difference, symmetric difference, intersection and union
+s2_difference(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+  # 32 bit platforms may need to set snap rounding
+  snap_level = 30
+)
+
+s2_sym_difference(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+  # 32 bit platforms may need to set snap rounding
+  snap_level = 30
+)
+
+s2_intersection(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+  # 32 bit platforms may need to set snap rounding
+  snap_level = 30
+)
+
+s2_union(
+  "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+  "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+  # 32 bit platforms may need to set snap rounding
+  snap_level = 30
+)
+
+# use s2_union_agg() to aggregate geographies in a vector
+s2_union_agg(
+  c(
+    "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+    "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+  ),
+  # 32 bit platforms may need to set snap rounding
+  snap_level = 30
+)
+
+}
 \seealso{
 BigQuery's geography function reference:
 \itemize{

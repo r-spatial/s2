@@ -1,3 +1,4 @@
+
 test_that("s2_centroid() works", {
   expect_wkt_equal(s2_centroid("POINT (30 10)"), "POINT (30 10)")
   expect_true(s2_is_empty(s2_centroid("POINT EMPTY")))
