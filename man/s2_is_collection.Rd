@@ -45,6 +45,47 @@ the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_met
 \description{
 S2 Geography Accessors
 }
+\examples{
+# s2_is_collection() tests for multiple geometries in one feature
+s2_is_collection(c("POINT (-64 45)", "MULTIPOINT ((-64 45), (8 72))"))
+
+# s2_dimension() returns 0 for point, 1  for line, 2 for polygon
+s2_dimension(
+  c(
+    "GEOMETRYCOLLECTION EMPTY",
+    "POINT (-64 45)",
+    "LINESTRING (-64 45, 8 72)",
+    "POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))",
+    "GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 8 72))"
+   )
+)
+
+# s2_num_points() counts points
+s2_num_points(c("POINT (-64 45)", "LINESTRING (-64 45, 8 72)"))
+
+# s2_is_empty tests for emptiness
+s2_is_empty(c("POINT (-64 45)", "POINT EMPTY"))
+
+# calculate area, length, and perimeter
+s2_area("POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))")
+s2_perimeter("POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))")
+s2_length(s2_boundary("POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"))
+
+# extract x and y coordinates from points
+s2_x(c("POINT (-64 45)", "POINT EMPTY"))
+s2_y(c("POINT (-64 45)", "POINT EMPTY"))
+
+# calculate minimum and maximum distance between two geometries
+s2_distance(
+  "POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))",
+  "POINT (-64 45)"
+)
+s2_max_distance(
+  "POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))",
+  "POINT (-64 45)"
+)
+
+}
 \seealso{
 BigQuery's geography function reference:
 \itemize{
