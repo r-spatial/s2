@@ -21,21 +21,21 @@ s2_make_polygon(
   ring_id = 1L,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 s2_geog_from_text(
   wkt_string,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 s2_geog_from_wkb(
   wkb_bytes,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 s2_as_text(x, precision = 16, trim = TRUE)

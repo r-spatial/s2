@@ -22,17 +22,17 @@ s2_closest_point(x, y)
 
 s2_nearest_feature(x, y)
 
-s2_difference(x, y, model = -1L, snap_level = -1L)
+s2_difference(x, y, model = -1L, snap_level = s2_snap_default())
 
-s2_sym_difference(x, y, model = -1L, snap_level = -1L)
+s2_sym_difference(x, y, model = -1L, snap_level = s2_snap_default())
 
-s2_intersection(x, y, model = -1L, snap_level = -1L)
+s2_intersection(x, y, model = -1L, snap_level = s2_snap_default())
 
-s2_union(x, y = NULL, model = -1L, snap_level = -1L)
+s2_union(x, y = NULL, model = -1L, snap_level = s2_snap_default())
 
 s2_snap_to_grid(x)
 
-s2_union_agg(x, na.rm = FALSE)
+s2_union_agg(x, model = -1L, snap_level = s2_snap_default(), na.rm = FALSE)
 
 s2_centroid_agg(x, na.rm = FALSE)
 }

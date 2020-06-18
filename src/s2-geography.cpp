@@ -9,7 +9,6 @@
 #include "wk/wkt-writer.hpp"
 #include "wk/geometry-formatter.hpp"
 
-#include "snap.h"
 #include "geography.h"
 #include "wk-geography.h"
 #include "point-geography.h"

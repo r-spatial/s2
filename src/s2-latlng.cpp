@@ -4,7 +4,6 @@
 #include "wk/rcpp-io.hpp"
 #include "wk/wkb-reader.hpp"
 #include "wk/wkb-writer.hpp"
-#include "snap.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

@@ -133,24 +133,24 @@ cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, model = 
     .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, model)
 }
 
-cpp_s2_intersection <- function(geog1, geog2, model = -1L) {
-    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, model)
+cpp_s2_intersection <- function(geog1, geog2, model, snapLevel) {
+    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, model, snapLevel)
 }
 
-cpp_s2_union <- function(geog1, geog2, model = -1L) {
-    .Call(`_s2_cpp_s2_union`, geog1, geog2, model)
+cpp_s2_union <- function(geog1, geog2, model, snapLevel) {
+    .Call(`_s2_cpp_s2_union`, geog1, geog2, model, snapLevel)
 }
 
-cpp_s2_difference <- function(geog1, geog2, model = -1L) {
-    .Call(`_s2_cpp_s2_difference`, geog1, geog2, model)
+cpp_s2_difference <- function(geog1, geog2, model, snapLevel) {
+    .Call(`_s2_cpp_s2_difference`, geog1, geog2, model, snapLevel)
 }
 
-cpp_s2_sym_difference <- function(geog1, geog2, model = -1L) {
-    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, model)
+cpp_s2_sym_difference <- function(geog1, geog2, model, snapLevel) {
+    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, model, snapLevel)
 }
 
-cpp_s2_union_agg <- function(geog, naRm) {
-    .Call(`_s2_cpp_s2_union_agg`, geog, naRm)
+cpp_s2_union_agg <- function(geog, model, snapLevel, naRm) {
+    .Call(`_s2_cpp_s2_union_agg`, geog, model, snapLevel, naRm)
 }
 
 cpp_s2_centroid_agg <- function(geog, naRm) {
@@ -179,22 +179,5 @@ s2_xptr_test <- function(size) {
 
 s2_xptr_test_op <- function(s2_xptr_test) {
     invisible(.Call(`_s2_s2_xptr_test_op`, s2_xptr_test))
-}
-
-#' Set snap level for polygons and polylines
-#' 
-#' @param snap integer, snap level (max. 30, negative prevents snapping)
-#' @name snaplevel
-#' @returns s2_set_snaplevel returns the old value of snap level
-#' @export
-s2_set_snaplevel <- function(snap = -1L) {
-    .Call(`_s2_s2_set_snaplevel`, snap)
-}
-
-#' @param snap integer, snap level (max. 30, negative prevents snapping)
-#' @name snaplevel
-#' @export
-s2_get_snaplevel <- function(snap = -1L) {
-    .Call(`_s2_s2_get_snaplevel`, snap)
 }
 

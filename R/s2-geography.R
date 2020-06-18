@@ -49,7 +49,7 @@ as_s2_geography.s2_point <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_get_snaplevel()) {
+as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   new_s2_xptr(
     s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
     "s2_geography"
@@ -58,7 +58,7 @@ as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE, snap_
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_get_snaplevel()) {
+as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   new_s2_xptr(
     s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
     "s2_geography"
@@ -67,7 +67,7 @@ as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE, snap_lev
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_get_snaplevel()) {
+as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   new_s2_xptr(
     s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
     "s2_geography"
@@ -76,7 +76,7 @@ as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE, snap_le
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_get_snaplevel()) {
+as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   new_s2_xptr(
     s2_geography_from_wkt(x, oriented = oriented, check = check, snapLevel = snap_level),
     "s2_geography"
@@ -85,7 +85,7 @@ as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE, snap_
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_get_snaplevel()) {
+as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
   new_s2_xptr(
     s2_geography_from_wkt(x, oriented = oriented, check = check, snapLevel = snap_level),
     "s2_geography"

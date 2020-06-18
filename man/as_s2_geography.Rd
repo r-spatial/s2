@@ -31,7 +31,7 @@ as_s2_geography(x, ...)
   ...,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 \method{as_s2_geography}{WKB}(
@@ -39,7 +39,7 @@ as_s2_geography(x, ...)
   ...,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 \method{as_s2_geography}{blob}(
@@ -47,7 +47,7 @@ as_s2_geography(x, ...)
   ...,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 \method{as_s2_geography}{wk_wkt}(
@@ -55,7 +55,7 @@ as_s2_geography(x, ...)
   ...,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 \method{as_s2_geography}{character}(
@@ -63,7 +63,7 @@ as_s2_geography(x, ...)
   ...,
   oriented = FALSE,
   check = TRUE,
-  snap_level = s2_get_snaplevel()
+  snap_level = s2_snap_default()
 )
 
 \method{as_s2_geography}{logical}(x, ...)

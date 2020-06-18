@@ -3,7 +3,6 @@
 #include "wk/rcpp-translate.hpp"
 #include "wk/rcpp-coord-reader.hpp"
 
-#include "snap.h"
 #include "wk-geography.h"
 
 using namespace Rcpp;
