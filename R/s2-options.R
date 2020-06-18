@@ -21,8 +21,44 @@
 #' @export
 #'
 #' @examples
+#' # get default values for snap_level and model
 #' s2_snap_default()
 #' s2_model_default()
+#'
+#' # model value affects boolean operations and binary predicates
+#' # in the open model, lines do not contain endpoints (but do contain other points)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 0)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 0)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 0)
+#'
+#' # in the semi-open and closed models, endpoints are contained
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 1)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 1)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 1)
+#'
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 2)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 2)
+#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 2)
+#'
+#' # for polygons, the still does not include the edges between boundaries
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 0)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 0)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 0)
+#'
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 1)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 1)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 1)
+#'
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 2)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 2)
+#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 2)
+#'
+#' # s2_dwithin(x, y, epsilon) is a more reliable test if boundaries are important
+#' s2_dwithin(
+#'   "LINESTRING (0 0, 0 1, 1 1)",
+#'   c("POINT (0 0)", "POINT (0 1)", "POINT (0 0.5)"),
+#'   1e-7
+#' )
 #'
 s2_snap_default <- function() {
   -1

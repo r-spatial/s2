@@ -8,17 +8,18 @@ test_that("s2_contains() works", {
 
   # make sure model is passed on to at least one binary predicate
   # in the open model, lines do not contain endpoints (but do contain other points)
-  expect_false(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0 0)", model = 0))
-  expect_true(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.5 0.5)", model = 0))
-  expect_false(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.25 0.25)", model = 0))
+  expect_false(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 0))
+  expect_true(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 0))
+  expect_false(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 0))
 
   # semi-open and closed: endpoints are contained
-  expect_true(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0 0)", model = 1))
-  expect_true(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.5 0.5)", model = 1))
-  expect_false(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.25 0.25)", model = 1))
-  expect_true(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0 0)", model = 2))
-  expect_true(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.5 0.5)", model = 2))
-  expect_false(s2_contains("LINESTRING (0 0, 0.5 0.5, 1 1)", "POINT (0.25 0.25)", model = 2))
+  expect_true(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 1))
+  expect_true(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 1))
+  expect_false(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 1))
+
+  expect_true(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 2))
+  expect_true(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 2))
+  expect_false(s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 2))
 })
 
 test_that("s2_covers() and s2_covered_by() work", {
@@ -105,7 +106,8 @@ test_that("s2_intersects_box() works", {
   expect_false(s2_intersects_box("POINT (0 0)", 0, -1, 0, 1))
   expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 0))
   expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 1))
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 2)) # FIXME: why is this FALSE?
+  warning("Unclear why `s2_intersects_box('POINT (0 0)', -1, 1, 0, 0, model = 2)` is false")
+  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, model = 2))
 
   expect_true(s2_intersects_box("POINT (-1 -1)", -2, -2, 2, 2))
   expect_false(s2_intersects_box("POINT (-1 -1)", 0, 0, 2, 2))
