@@ -68,7 +68,7 @@ test_that("s2_difference() works for polygons", {
   df <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-    s2_options(snap_level = 30)
+    s2_options(snap = s2_snap_level(30))
   )
 
   expect_near(
@@ -81,17 +81,17 @@ test_that("s2_difference() works for polygons", {
   df0 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap_level = 30)
+    s2_options(model = 0, snap = s2_snap_level(30))
   )
   df1 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap_level = 30)
+    s2_options(model = 1, snap = s2_snap_level(30))
   )
   df2 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 2, snap_level = 30)
+    s2_options(model = 2, snap = s2_snap_level(30))
   )
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
   expect_equal(s2_area(df0) - s2_area(df1), 0.0)
@@ -110,7 +110,7 @@ test_that("s2_sym_difference() works for polygons", {
   df <- s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-    s2_options(snap_level = 30)
+    s2_options(snap = s2_snap_level(30))
   )
 
   expect_near(
@@ -123,19 +123,19 @@ test_that("s2_sym_difference() works for polygons", {
   df0 <- s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap_level = 30)
+    s2_options(model = 0, snap = s2_snap_level(30))
   )
 
   df1 <- s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap_level = 30)
+    s2_options(model = 1, snap = s2_snap_level(30))
   )
 
   df2 = s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-    s2_options(model = 2, snap_level = 30)
+    s2_options(model = 2, snap = s2_snap_level(30))
   )
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
   expect_equal(s2_area(df0) - s2_area(df1), 0.0)
@@ -167,7 +167,7 @@ test_that("s2_intersction() works for polygons", {
     s2_intersection(
       "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
       "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-      s2_options(snap_level = 30)
+      s2_options(snap = s2_snap_level(30))
     ),
     "POLYGON ((5 5, 10 5, 10 10, 5 10, 5 5))",
     precision = 2
@@ -241,22 +241,22 @@ test_that("s2_union() works for polygons", {
   u <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-    s2_options(snap_level = 30)
+    s2_options(snap = s2_snap_level(30))
   )
   u0 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap_level = 30)
+    s2_options(model = 0, snap = s2_snap_level(30))
   )
   u1 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap_level = 30)
+    s2_options(model = 1, snap = s2_snap_level(30))
   )
   u2 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 2, snap_level = 30)
+    s2_options(model = 2, snap = s2_snap_level(30))
   )
   expect_equal(s2_area(u0) - s2_area(u2), 0.0)
   expect_equal(s2_area(u0) - s2_area(u1), 0.0)

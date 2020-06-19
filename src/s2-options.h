@@ -9,10 +9,10 @@ class GeographyOperationOptions {
 public:
   int polygonModel;
   int polylineModel;
-  int snapLevel;
+  SEXP snap;
 
   // deaults: use S2 defaults
-  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1), snapLevel(-1) {}
+  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1), snap(R_NilValue) {}
 
   // create from s2_options() object
   GeographyOperationOptions(Rcpp::List s2options) {
@@ -39,10 +39,10 @@ public:
     }
 
     try {
-      this->setSnapLevel(s2options["snap_level"]);
+      this->setSnap(s2options["snap"]);
     } catch (std::exception& e) {
       std::stringstream err;
-      err << "Error setting s2_options() `snap_level`: " << e.what();
+      err << "Error setting s2_options() `snap`: " << e.what();
       Rcpp::stop(err.str());
     }
   }
@@ -57,10 +57,8 @@ public:
     this->polylineModel = model;
   }
 
-  // this refers to the cell level, not the rounding
-  // precision
-  void setSnapLevel(int snapLevel) {
-    this->snapLevel = snapLevel;
+  void setSnap(Rcpp::List snap) {
+    this->snap = snap;
   }
 
   // build options for passing this to the S2BooleanOperation
@@ -74,8 +72,34 @@ public:
       options.set_polyline_model(getPolylineModel(this->polylineModel));
     }
 
-    if (this->snapLevel > 0) {
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(this->snapLevel));
+    // setting the snap value here instead of in a function because
+    // S2Builder::SnapFunction is abstract and can't be returned
+
+    if (this->snap == R_NilValue) {
+      // do nothing
+    } else {
+      Rcpp::List snap = this->snap;
+      if (Rf_inherits(snap, "snap_identity")) {
+        options.set_snap_function(s2builderutil::IdentitySnapFunction());
+
+      } else if (Rf_inherits(this->snap, "snap_level")) {
+        int snapLevel = snap["level"];
+        options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+
+      } else if (Rf_inherits(this->snap, "snap_precision")) {
+        int exponent = snap["exponent"];
+        options.set_snap_function(s2builderutil::IntLatLngSnapFunction(exponent));
+
+      } else if (Rf_inherits(this->snap, "snap_distance")) {
+        double distance = snap["distance"];
+        double snapLevel = s2builderutil::S2CellIdSnapFunction::LevelForMaxSnapRadius(
+          S1Angle::Radians(distance)
+        );
+        options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+
+      } else {
+        Rcpp::stop("`snap` must be specified using s2_snap_*()");
+      }
     }
 
     return options;

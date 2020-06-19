@@ -1,7 +1,7 @@
 
 test_that("s2_options() works", {
   expect_is(s2_options(), "s2_options")
-  expect_named(s2_options(), c("polygon_model", "polyline_model", "snap_level"))
+  expect_named(s2_options(), c("polygon_model", "polyline_model", "snap"))
 })
 
 test_that("s2_options() errors are readable", {
@@ -25,7 +25,7 @@ test_that("s2_options() errors are readable", {
     "Error setting.*?polyline_model"
   )
   expect_error(
-    s2_intersects("POINT EMPTY", "POINT EMPTY", options = s2_options(snap_level = NULL)),
-    "Error setting.*?snap_level"
+    s2_intersects("POINT EMPTY", "POINT EMPTY", options = s2_options(snap = 5)),
+    "must be specified using s2_snap"
   )
 })

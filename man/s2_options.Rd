@@ -2,14 +2,44 @@
 % Please edit documentation in R/s2-options.R
 \name{s2_options}
 \alias{s2_options}
+\alias{s2_snap_identity}
+\alias{s2_snap_level}
+\alias{s2_snap_precision}
+\alias{s2_snap_distance}
 \title{Geography Operation Options}
 \usage{
 s2_options(
   model = -1,
-  snap_level = -1,
+  snap = snap_identity(),
   polygon_model = model,
   polyline_model = model
 )
+
+s2_snap_identity()
+
+s2_snap_level(level)
+
+s2_snap_precision(precision)
+
+s2_snap_distance(distance, radius = s2_earth_radius_meters())
+}
+\arguments{
+\item{model, polygon_model, polyline_model}{See section 'Model'}
+
+\item{snap}{Use \code{s2_snap_identity()}, \code{s2_snap_distance()}, \code{s2_snap_level()},
+or \code{s2_snap_precision()} to specify how or if coordinate rounding should
+occur.}
+
+\item{level}{A value from 0 to 30 corresponding to the cell level
+at which snapping should occur.}
+
+\item{precision}{A number by which coordinates should be multiplied
+before being rounded. Rounded to the nearest exponent of 10.}
+
+\item{distance}{A distance (in units of \code{radius}) denoting the maximum
+distance a vertex should move in the snapping process.}
+
+\item{radius}{The radius to be used for specifying \code{distance}}
 }
 \description{
 These functions specify defaults for options used to perform operations
@@ -27,14 +57,14 @@ more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
-and covers/coveredby (2) correspond to the SFA standard specification
+and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.
 }
 
 \examples{
 # use s2_options() to specify polygon/polyline models
 # and/or snap level
-s2_options(model = 1)
+s2_options(model = 1, snap = s2_snap_level(30))
 
 # model value affects boolean operations and binary predicates
 # in the open model, lines do not contain endpoints (but do contain other points)
