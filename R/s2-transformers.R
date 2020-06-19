@@ -7,8 +7,6 @@
 #' @inheritParams s2_is_collection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
-#' @param distance A distance on the surface of the earth in the same units
-#'   as `radius`.
 #' @param grid_size The grid size to which coordinates should be snapped;
 #'   will be rounded to the nearest power of 10.
 #' @param options An [s2_options()] object describing the polygon/polyline
@@ -101,14 +99,6 @@
 #' # snap to grid rounds coordinates to a specified grid size
 #' s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
 #'
-#' # simplify can remove redundant vertices according to a distance
-#' # this function is still experimental
-#' s2_simplify(
-#'   "LINESTRING (0 0, 0 1, 0 2, 0 3, 0 4, 0 5)",
-#'   distance = 200000
-#' )
-#'
-#'
 s2_boundary <- function(x) {
   new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
 }
@@ -169,13 +159,6 @@ s2_union <- function(x, y = NULL, options = s2_options()) {
 #' @export
 s2_snap_to_grid <- function(x, grid_size) {
   s2_union(x, options = s2_options(snap = s2_snap_precision(10^(-log10(grid_size)))))
-}
-
-#' @rdname s2_boundary
-#' @export
-s2_simplify <- function(x, distance, radius = s2_earth_radius_meters(), options = s2_options()) {
-  options$snap_radius <- distance / radius
-  s2_union(x, options = options)
 }
 
 #' @rdname s2_boundary

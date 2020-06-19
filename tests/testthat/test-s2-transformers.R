@@ -310,17 +310,6 @@ test_that("s2_snap_to_grid() works", {
   )
 })
 
-test_that("s2_simplify() works", {
-  expect_wkt_equal(
-    s2_simplify("LINESTRING (0 0, 0 1, 0 2, 0 3, 0 4, 0 5)", distance = 0.5, radius = 180 / pi),
-    "LINESTRING (0 0, 0 1, 0 2, 0 3, 0 4, 0 5)"
-  )
-  expect_wkt_equal(
-    s2_simplify("LINESTRING (0 0, 0 1, 0 2, 0 3, 0 4, 0 5)", distance = 2, radius = 180 / pi),
-    "LINESTRING (0 0, 0 2, 0 4)"
-  )
-})
-
 test_that("real data survives the S2BooleanOperation", {
   for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor

@@ -6,6 +6,8 @@
 #'
 #' @inheritParams s2_is_collection
 #' @inheritParams s2_boundary
+#' @param distance A distance on the surface of the earth in the same units
+#'   as `radius`.
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
