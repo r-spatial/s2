@@ -137,8 +137,8 @@ test_that("s2_touches() works", {
 
   # is very close to the edge
   # on 64-bit, this works with epsilon up to 1e-8
-  # windows 32 bit needs at least 1e-4
-  expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", epsilon = 1e-4))
+  # windows 32 bit needs at least 1e-2
+  expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", epsilon = 1e-2))
 })
 
 test_that("s2_dwithin() works", {
