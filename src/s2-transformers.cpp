@@ -13,7 +13,7 @@
 #include "s2/s2builderutil_closed_set_normalizer.h"
 #include "s2/s2builderutil_snap_functions.h"
 
-#include "geography-operation-options.h"
+#include "s2-options.h"
 #include "geography-operator.h"
 #include "point-geography.h"
 #include "polyline-geography.h"
@@ -92,7 +92,7 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   // check for errors
   S2Error error;
   if (!booleanOp.Build(*index1, *index2, &error)) {
-    stop(error.text()); // # nocov
+    stop(error.text());
   }
 
   // construct output
@@ -105,12 +105,9 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
-  BooleanOperationOp(S2BooleanOperation::OpType opType, int model, int snapLevel):
+  BooleanOperationOp(S2BooleanOperation::OpType opType, List s2options):
     opType(opType) {
-      GeographyOperationOptions options;
-      options.setPolygonModel(model);
-      options.setPolylineModel(model);
-      options.setSnapLevel(snapLevel);
+      GeographyOperationOptions options(s2options);
       this->options = options.booleanOperationOptions();
     }
 
@@ -131,35 +128,32 @@ private:
 };
 
 // [[Rcpp::export]]
-List cpp_s2_intersection(List geog1, List geog2, int model, int snapLevel) {
-  BooleanOperationOp op(S2BooleanOperation::OpType::INTERSECTION, model, snapLevel);
+List cpp_s2_intersection(List geog1, List geog2, List s2options) {
+  BooleanOperationOp op(S2BooleanOperation::OpType::INTERSECTION, s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_union(List geog1, List geog2, int model, int snapLevel) {
-  BooleanOperationOp op(S2BooleanOperation::OpType::UNION, model, snapLevel);
+List cpp_s2_union(List geog1, List geog2, List s2options) {
+  BooleanOperationOp op(S2BooleanOperation::OpType::UNION, s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_difference(List geog1, List geog2, int model, int snapLevel) {
-  BooleanOperationOp op(S2BooleanOperation::OpType::DIFFERENCE, model, snapLevel);
+List cpp_s2_difference(List geog1, List geog2, List s2options) {
+  BooleanOperationOp op(S2BooleanOperation::OpType::DIFFERENCE, s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_sym_difference(List geog1, List geog2, int model, int snapLevel) {
-  BooleanOperationOp op(S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, model, snapLevel);
+List cpp_s2_sym_difference(List geog1, List geog2, List s2options) {
+  BooleanOperationOp op(S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE, s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_union_agg(List geog, int model, int snapLevel, bool naRm) {
-  GeographyOperationOptions options;
-  options.setPolygonModel(model);
-  options.setPolylineModel(model);
-  options.setSnapLevel(snapLevel);
+List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
+  GeographyOperationOptions options(s2options);
 
   MutableS2ShapeIndex index;
   SEXP item;

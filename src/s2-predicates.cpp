@@ -7,7 +7,7 @@
 #include "s2/s2builderutil_snap_functions.h"
 
 #include "geography-operator.h"
-#include "geography-operation-options.h"
+#include "s2-options.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -16,19 +16,17 @@ class BinaryPredicateOperator: public BinaryGeographyOperator<LogicalVector, int
 public:
   S2BooleanOperation::Options options;
 
-  BinaryPredicateOperator(int model) {
-    GeographyOperationOptions options;
-    options.setPolygonModel(model);
-    options.setPolylineModel(model);
+  BinaryPredicateOperator(List s2options) {
+    GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
   }
 };
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_intersects(List geog1, List geog2, int model) {
+LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options) {
   class Op: public BinaryPredicateOperator {
   public:
-    Op(int model): BinaryPredicateOperator(model) {}
+    Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Intersects(
         *feature1->ShapeIndex(),
@@ -38,44 +36,44 @@ LogicalVector cpp_s2_intersects(List geog1, List geog2, int model) {
     };
   };
 
-  Op op(model);
+  Op op(s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_equals(List geog1, List geog2, int model) {
+LogicalVector cpp_s2_equals(List geog1, List geog2, List s2options) {
   // for s2_equals(), handling polygon_model wouldn't make sense, right?
   class Op: public BinaryPredicateOperator {
   public:
-    Op(int model): BinaryPredicateOperator(model) {}
+    Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Equals(
-        *feature1->ShapeIndex(), 
+        *feature1->ShapeIndex(),
         *feature2->ShapeIndex(),
         this->options
       );
     }
   };
 
-  Op op(model);
+  Op op(s2options);
   return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
-LogicalVector cpp_s2_contains(List geog1, List geog2, int model) {
+LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options) {
   class Op: public BinaryPredicateOperator {
   public:
-    Op(int model): BinaryPredicateOperator(model) {}
+    Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
       return S2BooleanOperation::Contains(
-        *feature1->ShapeIndex(), 
+        *feature1->ShapeIndex(),
         *feature2->ShapeIndex(),
         this->options
       );
     }
   };
 
-  Op op(model);
+  Op op(s2options);
   return op.processVector(geog1, geog2);
 }
 
@@ -106,7 +104,7 @@ LogicalVector cpp_s2_intersects_box(List geog,
                                     NumericVector lng1, NumericVector lat1,
                                     NumericVector lng2, NumericVector lat2,
                                     IntegerVector detail,
-										                int model) {
+                                    List s2options) {
 
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
   public:
@@ -116,12 +114,10 @@ LogicalVector cpp_s2_intersects_box(List geog,
 
     Op(NumericVector lng1, NumericVector lat1,
        NumericVector lng2, NumericVector lat2,
-       IntegerVector detail, int model):
+       IntegerVector detail, List s2options):
       lng1(lng1), lat1(lat1), lng2(lng2), lat2(lat2), detail(detail) {
-      
-      GeographyOperationOptions options;
-      options.setPolygonModel(model);
-      options.setPolylineModel(model);
+
+      GeographyOperationOptions options(s2options);
       this->options = options.booleanOperationOptions();
     }
 
@@ -184,6 +180,6 @@ LogicalVector cpp_s2_intersects_box(List geog,
     }
   };
 
-  Op op(lng1, lat1, lng2, lat2, detail, model);
+  Op op(lng1, lat1, lng2, lat2, detail, s2options);
   return op.processVector(geog);
 }

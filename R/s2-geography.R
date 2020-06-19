@@ -6,7 +6,6 @@
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
 #' @param check Use `check = FALSE` to error on invalid geometries
-#' @param snap_level An integer between 1 and 30, or 0 to skip snapping.
 #' @param endian The endian to use when writing well-known binary.
 #'   Deaults to the platform endian. See [wk::as_wkb()].
 #' @param precision The number of significant digits to export when
@@ -49,45 +48,45 @@ as_s2_geography.s2_point <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
+as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
+    s2_geography_from_wkb(x, oriented = oriented, check = check),
     "s2_geography"
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
+as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
+    s2_geography_from_wkb(x, oriented = oriented, check = check),
     "s2_geography"
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
+as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check, snapLevel = snap_level),
+    s2_geography_from_wkb(x, oriented = oriented, check = check),
     "s2_geography"
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
+as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2_xptr(
-    s2_geography_from_wkt(x, oriented = oriented, check = check, snapLevel = snap_level),
+    s2_geography_from_wkt(x, oriented = oriented, check = check),
     "s2_geography"
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE, snap_level = s2_snap_default()) {
+as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE) {
   new_s2_xptr(
-    s2_geography_from_wkt(x, oriented = oriented, check = check, snapLevel = snap_level),
+    s2_geography_from_wkt(x, oriented = oriented, check = check),
     "s2_geography"
   )
 }

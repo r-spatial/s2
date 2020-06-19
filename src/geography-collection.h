@@ -108,9 +108,9 @@ public:
   class Builder: public GeographyBuilder {
   public:
 
-    Builder(bool oriented, bool check, int snapLevel):
+    Builder(bool oriented, bool check):
       metaPtr(nullptr), builderPtr(nullptr), builderMetaPtr(nullptr),
-      oriented(oriented), check(check), snapLevel(snapLevel) {}
+      oriented(oriented), check(check) {}
 
     virtual void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
       // if this is the first call, store the meta reference associated with this geometry
@@ -138,15 +138,13 @@ public:
         case WKGeometryType::MultiPolygon:
           this->builderPtr = absl::make_unique<PolygonGeography::Builder>(
             this->oriented,
-            this->check,
-            this->snapLevel
+            this->check
           );
           break;
         case WKGeometryType::GeometryCollection:
           this->builderPtr = absl::make_unique<GeographyCollection::Builder>(
             this->oriented,
-            this->check,
-            this->snapLevel
+            this->check
           );
           break;
         default:
@@ -198,7 +196,6 @@ public:
     WKGeometryMeta* builderMetaPtr;
     bool oriented;
     bool check;
-    int snapLevel;
 
     GeographyBuilder* builder() {
       if (this->builderPtr) {

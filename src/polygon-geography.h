@@ -122,8 +122,8 @@ public:
 
   class Builder: public GeographyBuilder {
   public:
-    Builder(bool oriented, bool check, int snapLevel):
-      oriented(oriented), check(check), snapLevel(snapLevel) {}
+    Builder(bool oriented, bool check):
+      oriented(oriented), check(check) {}
 
     void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
       // skip the last vertex (WKB rings are theoretically closed)
@@ -176,19 +176,13 @@ public:
         polygon->FindValidationError(&error);
         Rcpp::stop(error.text());
       }
-
-	    // snap if needed:
-      if (this->snapLevel > 0) {
-        polygon->InitToSnapped(polygon.get(), this->snapLevel);
-      }
-
+      
       return absl::make_unique<PolygonGeography>(std::move(polygon));
     }
 
   private:
     bool oriented;
     bool check;
-    int snapLevel;
     std::vector<S2Point> vertices;
     std::vector<std::unique_ptr<S2Loop>> loops;
   };

@@ -26,45 +26,15 @@ as_s2_geography(x, ...)
 
 \method{as_s2_geography}{s2_point}(x, ...)
 
-\method{as_s2_geography}{wk_wkb}(
-  x,
-  ...,
-  oriented = FALSE,
-  check = TRUE,
-  snap_level = s2_snap_default()
-)
+\method{as_s2_geography}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{as_s2_geography}{WKB}(
-  x,
-  ...,
-  oriented = FALSE,
-  check = TRUE,
-  snap_level = s2_snap_default()
-)
+\method{as_s2_geography}{WKB}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{as_s2_geography}{blob}(
-  x,
-  ...,
-  oriented = FALSE,
-  check = TRUE,
-  snap_level = s2_snap_default()
-)
+\method{as_s2_geography}{blob}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{as_s2_geography}{wk_wkt}(
-  x,
-  ...,
-  oriented = FALSE,
-  check = TRUE,
-  snap_level = s2_snap_default()
-)
+\method{as_s2_geography}{wk_wkt}(x, ..., oriented = FALSE, check = TRUE)
 
-\method{as_s2_geography}{character}(
-  x,
-  ...,
-  oriented = FALSE,
-  check = TRUE,
-  snap_level = s2_snap_default()
-)
+\method{as_s2_geography}{character}(x, ..., oriented = FALSE, check = TRUE)
 
 \method{as_s2_geography}{logical}(x, ...)
 
@@ -82,8 +52,6 @@ as_s2_geography(x, ...)
 rings are defined clockwise).}
 
 \item{check}{Use \code{check = FALSE} to error on invalid geometries}
-
-\item{snap_level}{An integer between 1 and 30, or 0 to skip snapping.}
 
 \item{endian}{The endian to use when writing well-known binary.
 Deaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}

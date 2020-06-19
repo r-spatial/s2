@@ -24,8 +24,7 @@ public:
     output(size),
     builder(nullptr),
     oriented(false),
-    check(true),
-    snapLevel(-1) {}
+    check(true) {}
 
   void setOriented(bool oriented) {
     this->oriented = oriented;
@@ -33,10 +32,6 @@ public:
 
   void setCheck(bool check) {
     this->check = check;
-  }
-
-  void setSnapLevel(int snapLevel) {
-    this->snapLevel = snapLevel;
   }
 
   void nextFeatureStart(size_t featureId) {
@@ -63,15 +58,13 @@ public:
       case WKGeometryType::MultiPolygon:
         this->builder = absl::make_unique<PolygonGeography::Builder>(
           this->oriented,
-          this->check,
-          this->snapLevel
+          this->check
         );
         break;
       case WKGeometryType::GeometryCollection:
         this->builder = absl::make_unique<GeographyCollection::Builder>(
           this->oriented,
-          this->check,
-          this->snapLevel
+          this->check
         );
         break;
       default:
@@ -111,7 +104,6 @@ private:
   std::unique_ptr<GeographyBuilder> builder;
   bool oriented;
   bool check;
-  int snapLevel;
 };
 
 

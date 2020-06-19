@@ -22,48 +22,30 @@ s2_closest_point(x, y)
 
 s2_minimum_clearance_line_between(x, y)
 
-s2_difference(x, y, model = s2_model_default(), snap_level = s2_snap_default())
+s2_difference(x, y, options = s2_options())
 
-s2_sym_difference(
-  x,
-  y,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_sym_difference(x, y, options = s2_options())
 
-s2_intersection(
-  x,
-  y,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_intersection(x, y, options = s2_options())
 
-s2_union(
-  x,
-  y = NULL,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_union(x, y = NULL, options = s2_options())
 
-s2_snap_to_grid(x)
+s2_snap_to_grid(x, grid_size)
 
 s2_centroid_agg(x, na.rm = FALSE)
 
-s2_union_agg(
-  x,
-  model = s2_model_default(),
-  snap_level = s2_snap_default(),
-  na.rm = FALSE
-)
+s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 }
 \arguments{
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
-\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
+\item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
+model to use and the snap level.}
 
-\item{snap_level}{integer; if positive, specifies the snap level. See \code{\link[=s2_snap_default]{s2_snap_default()}}.}
+\item{grid_size}{The grid size to which coordinates should be snapped;
+will be rounded to the nearest power of 10.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}
@@ -84,7 +66,7 @@ more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
-and covers/coveredby (2) correspond to the SFA standard specification
+and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.
 }
 
@@ -120,28 +102,28 @@ s2_difference(
   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
   # 32 bit platforms may need to set snap rounding
-  snap_level = 30
+  s2_options(snap = s2_snap_level(30))
 )
 
 s2_sym_difference(
   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
   # 32 bit platforms may need to set snap rounding
-  snap_level = 30
+  s2_options(snap = s2_snap_level(30))
 )
 
 s2_intersection(
   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
   # 32 bit platforms may need to set snap rounding
-  snap_level = 30
+  s2_options(snap = s2_snap_level(30))
 )
 
 s2_union(
   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
   # 32 bit platforms may need to set snap rounding
-  snap_level = 30
+  s2_options(snap = s2_snap_level(30))
 )
 
 # use s2_union_agg() to aggregate geographies in a vector
@@ -151,8 +133,11 @@ s2_union_agg(
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
   ),
   # 32 bit platforms may need to set snap rounding
-  snap_level = 30
+  s2_options(snap = s2_snap_level(30))
 )
+
+# snap to grid rounds coordinates to a specified grid size
+s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
 
 }
 \seealso{
@@ -165,6 +150,7 @@ BigQuery's geography function reference:
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection}{ST_INTERSECTION}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union}{ST_UNION}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid}{ST_SNAPTOGRID}
+\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify}{ST_SIMPLIFY}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg}{ST_UNION_AGG}
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg}{ST_CENTROID_AGG}
 }

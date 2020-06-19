@@ -53,16 +53,16 @@ cpp_s2_make_line <- function(x, y, featureId) {
     .Call(`_s2_cpp_s2_make_line`, x, y, featureId)
 }
 
-cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented, check, snapLevel) {
-    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented, check, snapLevel)
+cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented, check) {
+    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented, check)
 }
 
-s2_geography_from_wkb <- function(wkb, oriented, check, snapLevel) {
-    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented, check, snapLevel)
+s2_geography_from_wkb <- function(wkb, oriented, check) {
+    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented, check)
 }
 
-s2_geography_from_wkt <- function(wkt, oriented, check, snapLevel) {
-    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented, check, snapLevel)
+s2_geography_from_wkt <- function(wkt, oriented, check) {
+    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented, check)
 }
 
 s2_geography_full <- function(x) {
@@ -113,44 +113,44 @@ data_frame_from_s2_point <- function(s2_point) {
     .Call(`_s2_data_frame_from_s2_point`, s2_point)
 }
 
-cpp_s2_intersects <- function(geog1, geog2, model) {
-    .Call(`_s2_cpp_s2_intersects`, geog1, geog2, model)
+cpp_s2_intersects <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_intersects`, geog1, geog2, s2options)
 }
 
-cpp_s2_equals <- function(geog1, geog2, model) {
-    .Call(`_s2_cpp_s2_equals`, geog1, geog2, model)
+cpp_s2_equals <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_equals`, geog1, geog2, s2options)
 }
 
-cpp_s2_contains <- function(geog1, geog2, model) {
-    .Call(`_s2_cpp_s2_contains`, geog1, geog2, model)
+cpp_s2_contains <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_contains`, geog1, geog2, s2options)
 }
 
 cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
-cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, model) {
-    .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, model)
+cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, s2options) {
+    .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, s2options)
 }
 
-cpp_s2_intersection <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, model, snapLevel)
+cpp_s2_intersection <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, s2options)
 }
 
-cpp_s2_union <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_union`, geog1, geog2, model, snapLevel)
+cpp_s2_union <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_union`, geog1, geog2, s2options)
 }
 
-cpp_s2_difference <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_difference`, geog1, geog2, model, snapLevel)
+cpp_s2_difference <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_difference`, geog1, geog2, s2options)
 }
 
-cpp_s2_sym_difference <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, model, snapLevel)
+cpp_s2_sym_difference <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, s2options)
 }
 
-cpp_s2_union_agg <- function(geog, model, snapLevel, naRm) {
-    .Call(`_s2_cpp_s2_union_agg`, geog, model, snapLevel, naRm)
+cpp_s2_union_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_union_agg`, geog, s2options, naRm)
 }
 
 cpp_s2_centroid_agg <- function(geog, naRm) {

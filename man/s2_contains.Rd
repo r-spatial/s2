@@ -13,19 +13,19 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y, model = 0)
+s2_contains(x, y, options = s2_options(model = 0))
 
-s2_within(x, y, model = 0)
+s2_within(x, y, options = s2_options(model = 0))
 
-s2_covered_by(x, y, model = 2)
+s2_covered_by(x, y, options = s2_options(model = 2))
 
-s2_covers(x, y, model = 2)
+s2_covers(x, y, options = s2_options(model = 2))
 
-s2_disjoint(x, y, model = s2_model_default())
+s2_disjoint(x, y, options = s2_options())
 
-s2_intersects(x, y, model = s2_model_default())
+s2_intersects(x, y, options = s2_options())
 
-s2_equals(x, y, model = s2_model_default())
+s2_equals(x, y, options = s2_options())
 
 s2_intersects_box(
   x,
@@ -34,7 +34,7 @@ s2_intersects_box(
   lng2,
   lat2,
   detail = 1000,
-  model = s2_model_default()
+  options = s2_options()
 )
 
 s2_touches(x, y)
@@ -46,14 +46,16 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
-\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
+\item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
+model to use and the snap level.}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 
 \item{detail}{The number of points with which to approximate
 non-geodesic edges.}
 
-\item{distance}{A distance in meters on the surface of the earth}
+\item{distance}{A distance on the surface of the earth in the same units
+as \code{radius}.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
@@ -74,7 +76,7 @@ more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
-and covers/coveredby (2) correspond to the SFA standard specification
+and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.
 }
 
