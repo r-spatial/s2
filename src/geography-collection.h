@@ -87,13 +87,18 @@ public:
     return absl::make_unique<GeographyCollection>(std::move(featureBoundaries));
   }
 
-  virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
+  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
+    std::vector<int> shapeIds;
     for (size_t i = 0; i < this->features.size(); i++) {
-      this->features[i]->BuildShapeIndex(index);
+      std::vector<int> newShapeIds = this->features[i]->BuildShapeIndex(index);
+      for (size_t j = 0; j < newShapeIds.size(); j++) {
+        shapeIds.push_back(newShapeIds[j]);
+      }
     }
+    return shapeIds;
   }
 
-  virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
+  void Export(WKGeometryHandler* handler, uint32_t partId) {
     WKGeometryMeta meta(WKGeometryType::GeometryCollection, false, false, false);
     meta.hasSize = true;
     meta.size = this->features.size();

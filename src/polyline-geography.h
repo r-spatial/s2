@@ -75,15 +75,17 @@ public:
     return absl::make_unique<PointGeography>(endpoints);
   }
 
-  virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
+  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
+    std::vector<int> shapeIds(this->polylines.size());
     for (size_t i = 0; i < this->polylines.size(); i++) {
       std::unique_ptr<S2Polyline::Shape> shape = absl::make_unique<S2Polyline::Shape>();
       shape->Init(this->polylines[i].get());
-      index->Add(std::move(shape));
+      shapeIds[i] = index->Add(std::move(shape));
     }
+    return shapeIds;
   }
 
-  virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
+  void Export(WKGeometryHandler* handler, uint32_t partId) {
     S2LatLng point;
 
     if (this->polylines.size() > 1) {
