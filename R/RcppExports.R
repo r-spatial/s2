@@ -133,24 +133,24 @@ cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, s2option
     .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, s2options)
 }
 
-cpp_s2_intersection <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, model, snapLevel)
+cpp_s2_intersection <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_intersection`, geog1, geog2, s2options)
 }
 
-cpp_s2_union <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_union`, geog1, geog2, model, snapLevel)
+cpp_s2_union <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_union`, geog1, geog2, s2options)
 }
 
-cpp_s2_difference <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_difference`, geog1, geog2, model, snapLevel)
+cpp_s2_difference <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_difference`, geog1, geog2, s2options)
 }
 
-cpp_s2_sym_difference <- function(geog1, geog2, model, snapLevel) {
-    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, model, snapLevel)
+cpp_s2_sym_difference <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, s2options)
 }
 
-cpp_s2_union_agg <- function(geog, model, snapLevel, naRm) {
-    .Call(`_s2_cpp_s2_union_agg`, geog, model, snapLevel, naRm)
+cpp_s2_union_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_union_agg`, geog, s2options, naRm)
 }
 
 cpp_s2_centroid_agg <- function(geog, naRm) {

@@ -46,6 +46,9 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
+\item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
+model to use and the snap level.}
+
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 
 \item{detail}{The number of points with which to approximate

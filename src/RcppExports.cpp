@@ -406,72 +406,67 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_intersection
-List cpp_s2_intersection(List geog1, List geog2, int model, int snapLevel);
-RcppExport SEXP _s2_cpp_s2_intersection(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP, SEXP snapLevelSEXP) {
+List cpp_s2_intersection(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_intersection(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersection(geog1, geog2, model, snapLevel));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersection(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_union
-List cpp_s2_union(List geog1, List geog2, int model, int snapLevel);
-RcppExport SEXP _s2_cpp_s2_union(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP, SEXP snapLevelSEXP) {
+List cpp_s2_union(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_union(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_union(geog1, geog2, model, snapLevel));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_union(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_difference
-List cpp_s2_difference(List geog1, List geog2, int model, int snapLevel);
-RcppExport SEXP _s2_cpp_s2_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP, SEXP snapLevelSEXP) {
+List cpp_s2_difference(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_difference(geog1, geog2, model, snapLevel));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_difference(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_sym_difference
-List cpp_s2_sym_difference(List geog1, List geog2, int model, int snapLevel);
-RcppExport SEXP _s2_cpp_s2_sym_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP, SEXP snapLevelSEXP) {
+List cpp_s2_sym_difference(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_sym_difference(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_sym_difference(geog1, geog2, model, snapLevel));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_sym_difference(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_union_agg
-List cpp_s2_union_agg(List geog, int model, int snapLevel, bool naRm);
-RcppExport SEXP _s2_cpp_s2_union_agg(SEXP geogSEXP, SEXP modelSEXP, SEXP snapLevelSEXP, SEXP naRmSEXP) {
+List cpp_s2_union_agg(List geog, List s2options, bool naRm);
+RcppExport SEXP _s2_cpp_s2_union_agg(SEXP geogSEXP, SEXP s2optionsSEXP, SEXP naRmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
     Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_union_agg(geog, model, snapLevel, naRm));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_union_agg(geog, s2options, naRm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -589,11 +584,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
     {"_s2_cpp_s2_dwithin", (DL_FUNC) &_s2_cpp_s2_dwithin, 3},
     {"_s2_cpp_s2_intersects_box", (DL_FUNC) &_s2_cpp_s2_intersects_box, 7},
-    {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 4},
-    {"_s2_cpp_s2_union", (DL_FUNC) &_s2_cpp_s2_union, 4},
-    {"_s2_cpp_s2_difference", (DL_FUNC) &_s2_cpp_s2_difference, 4},
-    {"_s2_cpp_s2_sym_difference", (DL_FUNC) &_s2_cpp_s2_sym_difference, 4},
-    {"_s2_cpp_s2_union_agg", (DL_FUNC) &_s2_cpp_s2_union_agg, 4},
+    {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 3},
+    {"_s2_cpp_s2_union", (DL_FUNC) &_s2_cpp_s2_union, 3},
+    {"_s2_cpp_s2_difference", (DL_FUNC) &_s2_cpp_s2_difference, 3},
+    {"_s2_cpp_s2_sym_difference", (DL_FUNC) &_s2_cpp_s2_sym_difference, 3},
+    {"_s2_cpp_s2_union_agg", (DL_FUNC) &_s2_cpp_s2_union_agg, 3},
     {"_s2_cpp_s2_centroid_agg", (DL_FUNC) &_s2_cpp_s2_centroid_agg, 2},
     {"_s2_cpp_s2_closest_point", (DL_FUNC) &_s2_cpp_s2_closest_point, 2},
     {"_s2_cpp_s2_minimum_clearance_line_between", (DL_FUNC) &_s2_cpp_s2_minimum_clearance_line_between, 2},

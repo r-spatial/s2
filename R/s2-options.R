@@ -72,8 +72,8 @@ s2_model_default <- function() {
 
 #' @rdname s2_snap_default
 #' @export
-s2_options <- function(model = -1, polygon_model = model, polyline_model = model,
-                       snap_level = -1) {
+s2_options <- function(model = -1, snap_level = -1,
+                       polygon_model = model, polyline_model = model) {
   structure(
     list(
       polygon_model = polygon_model,

@@ -7,8 +7,8 @@
 #' @inheritParams s2_is_collection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
-#' @param model integer; specifies boundary model. See [s2_model_default()].
-#' @param snap_level integer; if positive, specifies the snap level. See [s2_snap_default()].
+#' @param options An [s2_options()] object describing the polygon/polyline
+#'   model to use and the snap level.
 #'
 #' @inheritSection s2_model_default Model
 #'
@@ -119,34 +119,34 @@ s2_minimum_clearance_line_between <- function(x, y) {
 
 #' @rdname s2_boundary
 #' @export
-s2_difference <- function(x, y, model = s2_model_default(), snap_level = s2_snap_default()) {
+s2_difference <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_difference(recycled[[1]], recycled[[2]], model, snap_level), "s2_geography")
+  new_s2_xptr(cpp_s2_difference(recycled[[1]], recycled[[2]], options), "s2_geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_sym_difference <- function(x, y, model = s2_model_default(), snap_level = s2_snap_default()) {
+s2_sym_difference <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_sym_difference(recycled[[1]], recycled[[2]], model, snap_level), "s2_geography")
+  new_s2_xptr(cpp_s2_sym_difference(recycled[[1]], recycled[[2]], options), "s2_geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_intersection <- function(x, y, model = s2_model_default(), snap_level = s2_snap_default()) {
+s2_intersection <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_intersection(recycled[[1]], recycled[[2]], model, snap_level), "s2_geography")
+  new_s2_xptr(cpp_s2_intersection(recycled[[1]], recycled[[2]], options), "s2_geography")
 }
 
 #' @rdname s2_boundary
 #' @export
-s2_union <- function(x, y = NULL, model = s2_model_default(), snap_level = s2_snap_default()) {
+s2_union <- function(x, y = NULL, options = s2_options()) {
   if (is.null(y)) {
     y <- as_s2_geography("POINT EMPTY")
   }
 
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], model, snap_level), "s2_geography")
+  new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
 }
 
 #' @rdname s2_boundary
@@ -163,6 +163,6 @@ s2_centroid_agg <- function(x, na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
-s2_union_agg <- function(x, model = s2_model_default(), snap_level = s2_snap_default(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), model, snap_level, na.rm), "s2_geography")
+s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
 }

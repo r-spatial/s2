@@ -7,7 +7,7 @@
 #include "s2/s2builderutil_snap_functions.h"
 
 #include "geography-operator.h"
-#include "geography-operation-options.h"
+#include "s2-options.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

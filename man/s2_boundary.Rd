@@ -22,48 +22,27 @@ s2_closest_point(x, y)
 
 s2_minimum_clearance_line_between(x, y)
 
-s2_difference(x, y, model = s2_model_default(), snap_level = s2_snap_default())
+s2_difference(x, y, options = s2_options())
 
-s2_sym_difference(
-  x,
-  y,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_sym_difference(x, y, options = s2_options())
 
-s2_intersection(
-  x,
-  y,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_intersection(x, y, options = s2_options())
 
-s2_union(
-  x,
-  y = NULL,
-  model = s2_model_default(),
-  snap_level = s2_snap_default()
-)
+s2_union(x, y = NULL, options = s2_options())
 
 s2_snap_to_grid(x)
 
 s2_centroid_agg(x, na.rm = FALSE)
 
-s2_union_agg(
-  x,
-  model = s2_model_default(),
-  snap_level = s2_snap_default(),
-  na.rm = FALSE
-)
+s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 }
 \arguments{
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
 
-\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
-
-\item{snap_level}{integer; if positive, specifies the snap level. See \code{\link[=s2_snap_default]{s2_snap_default()}}.}
+\item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
+model to use and the snap level.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}

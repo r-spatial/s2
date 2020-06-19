@@ -12,9 +12,9 @@ s2_model_default()
 
 s2_options(
   model = -1,
+  snap_level = -1,
   polygon_model = model,
-  polyline_model = model,
-  snap_level = -1
+  polyline_model = model
 )
 }
 \description{
