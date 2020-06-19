@@ -1,27 +1,18 @@
+
 #' S2 Geography Predicates
 #'
+#' These functions operate two geography vectors (pairwise), and return
+#' a logical vector.
+#'
 #' @inheritParams s2_is_collection
+#' @inheritParams s2_boundary
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
 #' @param distance A distance in meters on the surface of the earth
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
-#' @param model integer indicating the geometry model used; see Details.
-#' @param ... arguments passed on
 #'
-#' @details
-#' The geometry model indicates whether a geometry includes its boundaries.
-#' Boundaries of line geometries are its end points.
-#' OPEN geometries do not contain their boundary (model = 0); CLOSED
-#' geometries (model = 2) contain their boundary; HALF-CLOSED geometries 
-#' contain, like, half of their boundaries, such that when two polygons
-#' do not overlap or two lines do not cross, no point exist that belong to 
-#' more than one of the geometries. (This latter form, half-closed, is 
-#' not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on 
-#' which that is based). A value of -1 does not set the model, leaving the
-#' S2 default (HALF-CLOSED). The default values for \code{s2_contains} (0)
-#' and covers/coveredby (2) correspond to the SFA standard specification 
-#' of these operators.
-#' 
+#' @inheritSection s2_model_default Model
+#'
 #' @export
 #'
 #' @seealso
@@ -38,9 +29,82 @@
 #' - [ST_WITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
 #' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
+#' @examples
+#' s2_contains(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_within(
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"
+#' )
+#'
+#' s2_covered_by(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_covers(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_disjoint(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_intersects(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_equals(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c(
+#'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'     "POLYGON ((10 0, 10 10, 0 10, 0 0, 10 0))",
+#'     "POLYGON ((-1 -1, 10 0, 10 10, 0 10, -1 -1))"
+#'   )
+#' )
+#'
+#' s2_intersects(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)")
+#' )
+#'
+#' s2_intersects_box(
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   0, 0, 10, 10
+#' )
+#'
+#' s2_touches(
+#'   "POLYGON ((0 0, 0 1, 1 1, 0 0))",
+#'   c("POINT (0 0)", "POINT (0.5 0.75)", "POINT (0 0.5)")
+#' )
+#'
+#' s2_dwithin(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   0 # distance in meters
+#' )
+#'
+#' s2_dwithin(
+#'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+#'   c("POINT (5 5)", "POINT (-1 1)"),
+#'   1e6 # distance in meters
+#' )
+#'
 s2_contains <- function(x, y, model = 0) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
   cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
+}
+
+#' @rdname s2_contains
+#' @export
+s2_within <- function(x, y, model = 0) {
+  s2_contains(y, x, model = model)
 }
 
 #' @rdname s2_contains
@@ -58,59 +122,41 @@ s2_covers <- function(x, y, model = 2) {
 
 #' @rdname s2_contains
 #' @export
-s2_disjoint <- function(x, y, ...) {
-  !s2_intersects(x, y, ...)
+s2_disjoint <- function(x, y, model = s2_model_default()) {
+  !s2_intersects(x, y, model = model)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_equals <- function(x, y, model = -1) {
-  recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_equals(recycled[[1]], recycled[[2]], model)
-}
-
-sort_out_model = function(x) {
-  switch(x,
-    OPEN = 0,
-    SEMI_OPEN = 1,
-    CLOSED = 2,
-    -1)
-}
-
-#' @rdname s2_contains
-#' @param model integer or character; specify polygon and polyline model 
-#' as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)
-#' @export
-s2_intersects <- function(x, y, model = -1) {
-  if (!is.numeric(model))
-    model = sort_out_model(as.character(model))
+s2_intersects <- function(x, y, model = s2_model_default()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
   cpp_s2_intersects(recycled[[1]], recycled[[2]], model)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = -1) {
+s2_equals <- function(x, y, model = s2_model_default()) {
+  recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
+  cpp_s2_equals(recycled[[1]], recycled[[2]], model)
+}
+
+#' @rdname s2_contains
+#' @export
+s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = s2_model_default()) {
   recycled <- recycle_common(as_s2_geography(x), lng1, lat1, lng2, lat2, detail)
   cpp_s2_intersects_box(
     recycled[[1]],
     recycled[[2]], recycled[[3]],
     recycled[[4]], recycled[[5]],
     detail = recycled[[6]],
-	model
+	  model
   )
 }
 
 #' @rdname s2_contains
 #' @export
 s2_touches <- function(x, y) {
-  stop("Not implemented")
-}
-
-#' @rdname s2_contains
-#' @export
-s2_within <- function(x, y, ...) {
-  s2_contains(y, x, ...)
+  s2_intersects(x, y, model = 2) & !s2_intersects(x, y, model = 0)
 }
 
 #' @rdname s2_contains
