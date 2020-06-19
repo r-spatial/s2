@@ -75,31 +75,31 @@ s2_options(model = 1, snap = s2_snap_level(30))
 
 # model value affects boolean operations and binary predicates
 # in the open model, lines do not contain endpoints (but do contain other points)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 0)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 0)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 0)
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 0))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 0))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 0))
 
 # in the semi-open and closed models, endpoints are contained
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 1)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 1)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 1)
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 1))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 1))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 1))
 
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", model = 2)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", model = 2)
-s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", model = 2)
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 2))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 2))
+s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 2))
 
 # for polygons, the still does not include the edges between boundaries
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 0)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 0)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 0)
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 0))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 0))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 0))
 
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 1)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 1)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 1)
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 1))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 1))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 1))
 
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", model = 2)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", model = 2)
-s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", model = 2)
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 2))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 2))
+s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 2))
 
 # s2_dwithin(x, y, epsilon) is a more reliable test if boundaries are important
 s2_dwithin(
