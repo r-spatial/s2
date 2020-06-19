@@ -8,8 +8,6 @@
 #' @inheritParams s2_boundary
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
 #' @param distance A distance in meters on the surface of the earth
-#' @param epsilon The distance within the boundary to consider "touching",
-#'   in the same units as `distance`.
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
 #'
@@ -83,9 +81,7 @@
 #'
 #' s2_touches(
 #'   "POLYGON ((0 0, 0 1, 1 1, 0 0))",
-#'   c("POINT (0 0)", "POINT (0.5 0.75)", "POINT (0 0.5)"),
-#'   # epsilon (in meters)
-#'   epsilon = 1e-6
+#'   c("POINT (0 0)", "POINT (0.5 0.75)", "POINT (0 0.5)")
 #' )
 #'
 #' s2_dwithin(
@@ -159,9 +155,8 @@ s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = 
 
 #' @rdname s2_contains
 #' @export
-s2_touches <- function(x, y, radius = s2_earth_radius_meters(), epsilon = .Machine$double.eps^2) {
-  s2_dwithin(x, y, epsilon, radius = radius) &
-    !s2_intersects(x, y, model = 0)
+s2_touches <- function(x, y) {
+  s2_intersects(x, y, model = 2) & !s2_intersects(x, y, model = 0)
 }
 
 #' @rdname s2_contains
