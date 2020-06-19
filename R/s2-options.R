@@ -15,7 +15,6 @@
 #'   to simplify the result of a boolean operation.
 #' @param level A value from 0 to 30 corresponding to the cell level
 #'   at which snapping should occur.
-#' @param radius The radius to be used for specifying `distance`.
 #' @param distance A distance (in radians) denoting the maximum
 #'   distance a vertex should move in the snapping process.
 #' @param precision A number by which coordinates should be multiplied

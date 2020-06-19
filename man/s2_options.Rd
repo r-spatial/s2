@@ -45,8 +45,6 @@ before being rounded. Rounded to the nearest exponent of 10.}
 
 \item{distance}{A distance (in radians) denoting the maximum
 distance a vertex should move in the snapping process.}
-
-\item{radius}{The radius to be used for specifying \code{distance}.}
 }
 \description{
 These functions specify defaults for options used to perform operations

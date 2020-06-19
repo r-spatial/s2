@@ -61,8 +61,6 @@ writing well-known text. If \code{trim = FALSE}, the number of
 digits after the decimal place.}
 
 \item{trim}{Should trailing zeroes be included after the decimal place?}
-
-\item{snap_level}{An integer between 1 and 30, or 0 to skip snapping.}
 }
 \value{
 An object with class s2_geography

@@ -52,6 +52,12 @@ s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 \item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
 model to use and the snap level.}
 
+\item{grid_size}{The grid size to which coordinates should be snapped;
+will be rounded to the nearest power of 10.}
+
+\item{distance}{A distance on the surface of the earth in the same units
+as \code{radius}.}
+
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 

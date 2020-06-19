@@ -7,6 +7,10 @@
 #' @inheritParams s2_is_collection
 #' @param na.rm For aggregate calculations use `na.rm = TRUE`
 #'   to drop missing values.
+#' @param distance A distance on the surface of the earth in the same units
+#'   as `radius`.
+#' @param grid_size The grid size to which coordinates should be snapped;
+#'   will be rounded to the nearest power of 10.
 #' @param options An [s2_options()] object describing the polygon/polyline
 #'   model to use and the snap level.
 #'

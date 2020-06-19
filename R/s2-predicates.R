@@ -7,7 +7,6 @@
 #' @inheritParams s2_is_collection
 #' @inheritParams s2_boundary
 #' @param lng1,lat1,lng2,lat2 A latitude/longitude range
-#' @param distance A distance in meters on the surface of the earth
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
 #'

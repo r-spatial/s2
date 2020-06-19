@@ -54,7 +54,8 @@ model to use and the snap level.}
 \item{detail}{The number of points with which to approximate
 non-geodesic edges.}
 
-\item{distance}{A distance in meters on the surface of the earth}
+\item{distance}{A distance on the surface of the earth in the same units
+as \code{radius}.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
