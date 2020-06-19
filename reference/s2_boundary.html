@@ -142,39 +142,19 @@ return a geography vector.</p>
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_minimum_clearance_line_between</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(), snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>y</span>,
-  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
-)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>y</span>,
-  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
-)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(
-  <span class='kw'>x</span>,
-  y = <span class='kw'>NULL</span>,
-  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
-)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(<span class='kw'>x</span>, y = <span class='kw'>NULL</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(
-  <span class='kw'>x</span>,
-  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>(),
-  na.rm = <span class='fl'>FALSE</span>
-)</pre>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(<span class='kw'>x</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(), na.rm = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,12 +168,14 @@ return a geography vector.</p>
       <td><p>An object that can be interpreted as an S2 type.</p></td>
     </tr>
     <tr>
-      <th>model</th>
-      <td><p>integer; specifies boundary model. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default()</a></code>.</p></td>
+      <th>options</th>
+      <td><p>An <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options()</a></code> object describing the polygon/polyline
+model to use and the snap level.</p></td>
     </tr>
     <tr>
-      <th>snap_level</th>
-      <td><p>integer; if positive, specifies the snap level. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default()</a></code>.</p></td>
+      <th>grid_size</th>
+      <td><p>The grid size to which coordinates should be snapped;
+will be rounded to the nearest power of 10.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -216,7 +198,7 @@ more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
-and covers/coveredby (2) correspond to the SFA standard specification
+and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -228,6 +210,7 @@ of these operators.</p>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection'>ST_INTERSECTION</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union'>ST_UNION</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid'>ST_SNAPTOGRID</a></p></li>
+<li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify'>ST_SIMPLIFY</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg'>ST_UNION_AGG</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg'>ST_CENTROID_AGG</a></p></li>
 </ul>
@@ -265,28 +248,28 @@ of these operators.</p>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  snap_level = <span class='fl'>30</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  snap_level = <span class='fl'>30</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;MULTIPOLYGON (((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  snap_level = <span class='fl'>30</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 5, 10 5.019, 10 10, 5 10.0374, 5 5...&gt;</div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  snap_level = <span class='fl'>30</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='co'># use s2_union_agg() to aggregate geographies in a vector</span>
@@ -296,9 +279,12 @@ of these operators.</p>
     <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>
   ),
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  snap_level = <span class='fl'>30</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'></div></pre>
+#&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
+<span class='co'># snap to grid rounds coordinates to a specified grid size</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='st'>"POINT (0.333333333333 0.666666666666)"</span>, <span class='fl'>1e-2</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (0.33 0.67)&gt;</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

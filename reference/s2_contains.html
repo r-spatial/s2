@@ -134,19 +134,19 @@ a logical vector." />
 a logical vector.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>0</span>)
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>0</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>2</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>2</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_equals</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_equals</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects_box</a></span>(
   <span class='kw'>x</span>,
@@ -155,7 +155,7 @@ a logical vector.</p>
   <span class='kw'>lng2</span>,
   <span class='kw'>lat2</span>,
   detail = <span class='fl'>1000</span>,
-  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>()
+  options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>()
 )
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_touches</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
@@ -174,8 +174,9 @@ a logical vector.</p>
       <td><p>An object that can be interpreted as an S2 type.</p></td>
     </tr>
     <tr>
-      <th>model</th>
-      <td><p>integer; specifies boundary model. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default()</a></code>.</p></td>
+      <th>options</th>
+      <td><p>An <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options()</a></code> object describing the polygon/polyline
+model to use and the snap level.</p></td>
     </tr>
     <tr>
       <th>lng1, lat1, lng2, lat2</th>
@@ -188,7 +189,8 @@ non-geodesic edges.</p></td>
     </tr>
     <tr>
       <th>distance</th>
-      <td><p>A distance in meters on the surface of the earth</p></td>
+      <td><p>A distance on the surface of the earth in the same units
+as <code>radius</code>.</p></td>
     </tr>
     <tr>
       <th>radius</th>
@@ -211,7 +213,7 @@ more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
-and covers/coveredby (2) correspond to the SFA standard specification
+and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

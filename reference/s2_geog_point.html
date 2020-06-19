@@ -148,23 +148,12 @@ using <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_poly
   feature_id = <span class='fl'>1L</span>,
   ring_id = <span class='fl'>1L</span>,
   oriented = <span class='fl'>FALSE</span>,
-  check = <span class='fl'>TRUE</span>,
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
+  check = <span class='fl'>TRUE</span>
 )
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_text</a></span>(
-  <span class='kw'>wkt_string</span>,
-  oriented = <span class='fl'>FALSE</span>,
-  check = <span class='fl'>TRUE</span>,
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
-)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_text</a></span>(<span class='kw'>wkt_string</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb</a></span>(
-  <span class='kw'>wkb_bytes</span>,
-  oriented = <span class='fl'>FALSE</span>,
-  check = <span class='fl'>TRUE</span>,
-  snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
-)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb</a></span>(<span class='kw'>wkb_bytes</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_text</a></span>(<span class='kw'>x</span>, precision = <span class='fl'>16</span>, trim = <span class='fl'>TRUE</span>)
 
@@ -192,10 +181,6 @@ rings are defined clockwise).</p></td>
     <tr>
       <th>check</th>
       <td><p>Use <code>check = FALSE</code> to error on invalid geometries</p></td>
-    </tr>
-    <tr>
-      <th>snap_level</th>
-      <td><p>An integer between 1 and 30, or 0 to skip snapping.</p></td>
     </tr>
     <tr>
       <th>wkt_string</th>
