@@ -21,12 +21,11 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-List s2_geography_from_wkb(List wkb, bool oriented, bool check, int snapLevel) {
+List s2_geography_from_wkb(List wkb, bool oriented, bool check) {
   WKRawVectorListProvider provider(wkb);
   WKGeographyWriter writer(wkb.size());
   writer.setOriented(oriented);
   writer.setCheck(check);
-  writer.setSnapLevel(snapLevel);
 
   WKBReader reader(provider);
   reader.setHandler(&writer);
@@ -40,12 +39,11 @@ List s2_geography_from_wkb(List wkb, bool oriented, bool check, int snapLevel) {
 }
 
 // [[Rcpp::export]]
-List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check, int snapLevel) {
+List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check) {
   WKCharacterVectorProvider provider(wkt);
   WKGeographyWriter writer(wkt.size());
   writer.setOriented(oriented);
   writer.setCheck(check);
-  writer.setSnapLevel(snapLevel);
 
   WKTReader reader(provider);
   reader.setHandler(&writer);

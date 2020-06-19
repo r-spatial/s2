@@ -152,8 +152,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_make_polygon
-List cpp_s2_make_polygon(NumericVector x, NumericVector y, IntegerVector featureId, IntegerVector ringId, bool oriented, bool check, int snapLevel);
-RcppExport SEXP _s2_cpp_s2_make_polygon(SEXP xSEXP, SEXP ySEXP, SEXP featureIdSEXP, SEXP ringIdSEXP, SEXP orientedSEXP, SEXP checkSEXP, SEXP snapLevelSEXP) {
+List cpp_s2_make_polygon(NumericVector x, NumericVector y, IntegerVector featureId, IntegerVector ringId, bool oriented, bool check);
+RcppExport SEXP _s2_cpp_s2_make_polygon(SEXP xSEXP, SEXP ySEXP, SEXP featureIdSEXP, SEXP ringIdSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -163,36 +163,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type ringId(ringIdSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
     Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_make_polygon(x, y, featureId, ringId, oriented, check, snapLevel));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_make_polygon(x, y, featureId, ringId, oriented, check));
     return rcpp_result_gen;
 END_RCPP
 }
 // s2_geography_from_wkb
-List s2_geography_from_wkb(List wkb, bool oriented, bool check, int snapLevel);
-RcppExport SEXP _s2_s2_geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP, SEXP snapLevelSEXP) {
+List s2_geography_from_wkb(List wkb, bool oriented, bool check);
+RcppExport SEXP _s2_s2_geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
     Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkb(wkb, oriented, check, snapLevel));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkb(wkb, oriented, check));
     return rcpp_result_gen;
 END_RCPP
 }
 // s2_geography_from_wkt
-List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check, int snapLevel);
-RcppExport SEXP _s2_s2_geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP, SEXP checkSEXP, SEXP snapLevelSEXP) {
+List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check);
+RcppExport SEXP _s2_s2_geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type wkt(wktSEXP);
     Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
     Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    Rcpp::traits::input_parameter< int >::type snapLevel(snapLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkt(wkt, oriented, check, snapLevel));
+    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkt(wkt, oriented, check));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -564,9 +561,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
-    {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 7},
-    {"_s2_s2_geography_from_wkb", (DL_FUNC) &_s2_s2_geography_from_wkb, 4},
-    {"_s2_s2_geography_from_wkt", (DL_FUNC) &_s2_s2_geography_from_wkt, 4},
+    {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},
+    {"_s2_s2_geography_from_wkb", (DL_FUNC) &_s2_s2_geography_from_wkb, 3},
+    {"_s2_s2_geography_from_wkt", (DL_FUNC) &_s2_s2_geography_from_wkt, 3},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
     {"_s2_s2_geography_to_wkt", (DL_FUNC) &_s2_s2_geography_to_wkt, 3},
     {"_s2_s2_geography_to_wkb", (DL_FUNC) &_s2_s2_geography_to_wkb, 2},

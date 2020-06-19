@@ -63,7 +63,7 @@ reference:
 - title: Utility Functions
   contents:
   - s2_earth_radius_meters
-  - s2_snap_default
+  - s2_options
 
 - title: Example Data
   desc: Useful data for testing and demonstrating s2 functions

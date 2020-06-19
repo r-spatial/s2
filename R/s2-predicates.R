@@ -11,7 +11,7 @@
 #' @param detail The number of points with which to approximate
 #'   non-geodesic edges.
 #'
-#' @inheritSection s2_model_default Model
+#' @inheritSection s2_options Model
 #'
 #' @export
 #'

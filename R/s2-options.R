@@ -60,18 +60,6 @@
 #'   1e-7
 #' )
 #'
-s2_snap_default <- function() {
-  -1
-}
-
-#' @rdname s2_snap_default
-#' @export
-s2_model_default <- function() {
-  -1
-}
-
-#' @rdname s2_snap_default
-#' @export
 s2_options <- function(model = -1, snap_level = -1,
                        polygon_model = model, polyline_model = model) {
   structure(

@@ -10,7 +10,7 @@
 #' @param options An [s2_options()] object describing the polygon/polyline
 #'   model to use and the snap level.
 #'
-#' @inheritSection s2_model_default Model
+#' @inheritSection s2_options Model
 #'
 #' @export
 #'
