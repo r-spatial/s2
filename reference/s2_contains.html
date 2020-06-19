@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="S2 Geography Predicates — s2_contains" />
-<meta property="og:description" content="S2 Geography Predicates" />
+<meta property="og:description" content="These functions operate two geography vectors (pairwise), and return
+a logical vector." />
 
 
 
@@ -129,26 +130,35 @@
     </div>
 
     <div class="ref-description">
-    <p>S2 Geography Predicates</p>
+    <p>These functions operate two geography vectors (pairwise), and return
+a logical vector.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>0</span>)
+
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>0</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>2</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fl'>2</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_equals</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='op'>-</span><span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='op'>-</span><span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_equals</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects_box</a></span>(<span class='kw'>x</span>, <span class='kw'>lng1</span>, <span class='kw'>lat1</span>, <span class='kw'>lng2</span>, <span class='kw'>lat2</span>, detail = <span class='fl'>1000</span>, model = <span class='op'>-</span><span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects_box</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>lng1</span>,
+  <span class='kw'>lat1</span>,
+  <span class='kw'>lng2</span>,
+  <span class='kw'>lat2</span>,
+  detail = <span class='fl'>1000</span>,
+  model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>()
+)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_touches</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
-
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>...</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>distance</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())</pre>
 
@@ -165,12 +175,7 @@
     </tr>
     <tr>
       <th>model</th>
-      <td><p>integer or character; specify polygon and polyline model
-as "OPEN" (or 0), "SEMI_OPEN" (or 1), or "CLOSED" (or 2)</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>arguments passed on</p></td>
+      <td><p>integer; specifies boundary model. See <code><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default()</a></code>.</p></td>
     </tr>
     <tr>
       <th>lng1, lat1, lng2, lat2</th>
@@ -192,9 +197,11 @@ the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radiu
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="model"><a class="anchor" href="#model"></a>Model</h2>
 
-    <p>The geometry model indicates whether a geometry includes its boundaries.
+    
+
+<p>The geometry model indicates whether a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
 OPEN geometries do not contain their boundary (model = 0); CLOSED
 geometries (model = 2) contain their boundary; HALF-CLOSED geometries
@@ -203,7 +210,7 @@ do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for <code>s2_contains</code> (0)
+S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
 and covers/coveredby (2) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -222,6 +229,61 @@ of these operators.</p>
 </ul>
 </div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>),
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1] FALSE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_equals</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+    <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+    <span class='st'>"POLYGON ((10 0, 10 10, 0 10, 0 0, 10 0))"</span>,
+    <span class='st'>"POLYGON ((-1 -1, 10 0, 10 10, 0 10, -1 -1))"</span>
+  )
+)</div><div class='output co'>#&gt; [1]  TRUE  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>)
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects_box</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>),
+  <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>10</span>, <span class='fl'>10</span>
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_touches</a></span>(
+  <span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, <span class='st'>"POINT (0 0.5)"</span>)
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>),
+  <span class='fl'>0</span> <span class='co'># distance in meters</span>
+)</div><div class='output co'>#&gt; [1]  TRUE FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (5 5)"</span>, <span class='st'>"POINT (-1 1)"</span>),
+  <span class='fl'>1e6</span> <span class='co'># distance in meters</span>
+)</div><div class='output co'>#&gt; [1] TRUE TRUE</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

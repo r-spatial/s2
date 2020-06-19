@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Default states — s2_snap_default • s2</title>
+<title>Geography Operation Options — s2_snap_default • s2</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Default states — s2_snap_default" />
-<meta property="og:description" content="Default states" />
+<meta property="og:title" content="Geography Operation Options — s2_snap_default" />
+<meta property="og:description" content="These functions specify defaults for options used to perform operations
+and construct geometries." />
 
 
 
@@ -123,13 +124,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Default states</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-state.R'><code>R/s2-state.R</code></a></small>
+    <h1>Geography Operation Options</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-options.R'><code>R/s2-options.R</code></a></small>
     <div class="hidden name"><code>s2_snap_default.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Default states</p>
+    <p>These functions specify defaults for options used to perform operations
+and construct geometries.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()
@@ -137,9 +139,42 @@
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>()</pre>
 
 
+    <h2 class="hasAnchor" id="model"><a class="anchor" href="#model"></a>Model</h2>
+
+    
+
+<p>The geometry model indicates whether a geometry includes its boundaries.
+Boundaries of line geometries are its end points.
+OPEN geometries do not contain their boundary (model = 0); CLOSED
+geometries (model = 2) contain their boundary; HALF-CLOSED geometries
+contain, like, half of their boundaries, such that when two polygons
+do not overlap or two lines do not cross, no point exist that belong to
+more than one of the geometries. (This latter form, half-closed, is
+not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+which that is based). A value of -1 does not set the model, leaving the
+S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
+and covers/coveredby (2) correspond to the SFA standard specification
+of these operators.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()</div><div class='output co'>#&gt; [1] -1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>()</div><div class='output co'>#&gt; [1] -1</div><div class='input'></div></pre>
+    <pre class="examples"><div class='input'><span class='co'># get default values for snap_level and model</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>()</div><div class='output co'>#&gt; [1] -1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>()</div><div class='output co'>#&gt; [1] -1</div><div class='input'>
+<span class='co'># model value affects boolean operations and binary predicates</span>
+<span class='co'># in the open model, lines do not contain endpoints (but do contain other points)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='co'># in the semi-open and closed models, endpoints are contained</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='co'># for polygons, the still does not include the edges between boundaries</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>0</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0.5)"</span>, model = <span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='co'># s2_dwithin(x, y, epsilon) is a more reliable test if boundaries are important</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin</a></span>(
+  <span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (0 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>),
+  <span class='fl'>1e-7</span>
+)</div><div class='output co'>#&gt; [1] TRUE TRUE TRUE</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

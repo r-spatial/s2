@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="S2 Geography Transformations — s2_boundary" />
-<meta property="og:description" content="S2 Geography Transformations" />
+<meta property="og:description" content="These functions operate on one or more geography vectors and
+return a geography vector." />
 
 
 
@@ -129,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>S2 Geography Transformations</p>
+    <p>These functions operate on one or more geography vectors and
+return a geography vector.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='kw'>x</span>)
@@ -138,7 +140,7 @@
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_closest_point</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_nearest_feature</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_minimum_clearance_line_between</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(), snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>())
 
@@ -165,14 +167,14 @@
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>)
 
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
+
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(
   <span class='kw'>x</span>,
   model = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_model_default</a></span>(),
   snap_level = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_snap_default.html'>s2_snap_default</a></span>(),
   na.rm = <span class='fl'>FALSE</span>
-)
-
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)</pre>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -200,6 +202,22 @@ to drop missing values.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="model"><a class="anchor" href="#model"></a>Model</h2>
+
+    
+
+<p>The geometry model indicates whether a geometry includes its boundaries.
+Boundaries of line geometries are its end points.
+OPEN geometries do not contain their boundary (model = 0); CLOSED
+geometries (model = 2) contain their boundary; HALF-CLOSED geometries
+contain, like, half of their boundaries, such that when two polygons
+do not overlap or two lines do not cross, no point exist that belong to
+more than one of the geometries. (This latter form, half-closed, is
+not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+which that is based). A value of -1 does not set the model, leaving the
+S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
+and covers/coveredby (2) correspond to the SFA standard specification
+of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>BigQuery's geography function reference:</p><ul>
@@ -215,6 +233,72 @@ to drop missing values.</p></td>
 </ul>
 </div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># returns the boundary:</span>
+<span class='co'># empty for point, endpoints of a linestring,</span>
+<span class='co'># perimeter of a polygon</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POINT (-64 45)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT EMPTY&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;MULTIPOINT ((0 0), (10 0))&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;LINESTRING (0 0, 10 0, 10 10, 0 10, 0 0...&gt;</div><div class='input'>
+<span class='co'># returns the area-weighted centroid, element-wise</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid</a></span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 5.00596)&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid</a></span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
+<span class='co'># returns the unweighted centroid of the entire input</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (10 0)"</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
+<span class='co'># returns the closest point on x to y</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_closest_point</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 10.0374)&gt;</div><div class='input'>
+<span class='co'># returns the shortest possible line between x and y</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_minimum_clearance_line_between</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;LINESTRING (5 10.0374, 0 90)&gt;</div><div class='input'>
+<span class='co'># binary operations: difference, symmetric difference, intersection and union</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
+  <span class='co'># 32 bit platforms may need to set snap rounding</span>
+  snap_level = <span class='fl'>30</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
+  <span class='co'># 32 bit platforms may need to set snap rounding</span>
+  snap_level = <span class='fl'>30</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;MULTIPOLYGON (((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
+  <span class='co'># 32 bit platforms may need to set snap rounding</span>
+  snap_level = <span class='fl'>30</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((5 5, 10 5.019, 10 10, 5 10.0374, 5 5...&gt;</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(
+  <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+  <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
+  <span class='co'># 32 bit platforms may need to set snap rounding</span>
+  snap_level = <span class='fl'>30</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
+<span class='co'># use s2_union_agg() to aggregate geographies in a vector</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+    <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
+    <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>
+  ),
+  <span class='co'># 32 bit platforms may need to set snap rounding</span>
+  snap_level = <span class='fl'>30</span>
+)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

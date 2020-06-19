@@ -185,6 +185,35 @@ the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radiu
 </ul>
 </div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># s2_is_collection() tests for multiple geometries in one feature</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_is_collection</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"MULTIPOINT ((-64 45), (8 72))"</span>))</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
+<span class='co'># s2_dimension() returns 0 for point, 1  for line, 2 for polygon</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_dimension</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+    <span class='st'>"GEOMETRYCOLLECTION EMPTY"</span>,
+    <span class='st'>"POINT (-64 45)"</span>,
+    <span class='st'>"LINESTRING (-64 45, 8 72)"</span>,
+    <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
+    <span class='st'>"GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 8 72))"</span>
+   )
+)</div><div class='output co'>#&gt; [1] -1  0  1  2  1</div><div class='input'>
+<span class='co'># s2_num_points() counts points</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_num_points</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"LINESTRING (-64 45, 8 72)"</span>))</div><div class='output co'>#&gt; [1] 1 2</div><div class='input'>
+<span class='co'># s2_is_empty tests for emptiness</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_is_empty</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
+<span class='co'># calculate area, length, and perimeter</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_area</a></span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>)</div><div class='output co'>#&gt; [1] 1.233205e+12</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_perimeter</a></span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>)</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_length</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>))</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'>
+<span class='co'># extract x and y coordinates from points</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_x</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] -64  NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_y</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] 45 NA</div><div class='input'>
+<span class='co'># calculate minimum and maximum distance between two geometries</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_distance</a></span>(
+  <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
+  <span class='st'>"POINT (-64 45)"</span>
+)</div><div class='output co'>#&gt; [1] 7189418</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_max_distance</a></span>(
+  <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
+  <span class='st'>"POINT (-64 45)"</span>
+)</div><div class='output co'>#&gt; [1] 8757818</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
