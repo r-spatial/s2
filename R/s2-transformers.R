@@ -59,28 +59,28 @@
 #'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 #'   # 32 bit platforms may need to set snap rounding
-#'   snap_level = 30
+#'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
 #' s2_sym_difference(
 #'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 #'   # 32 bit platforms may need to set snap rounding
-#'   snap_level = 30
+#'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
 #' s2_intersection(
 #'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 #'   # 32 bit platforms may need to set snap rounding
-#'   snap_level = 30
+#'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
 #' s2_union(
 #'   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
 #'   # 32 bit platforms may need to set snap rounding
-#'   snap_level = 30
+#'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
 #' # use s2_union_agg() to aggregate geographies in a vector
@@ -90,7 +90,7 @@
 #'     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
 #'   ),
 #'   # 32 bit platforms may need to set snap rounding
-#'   snap_level = 30
+#'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
 s2_boundary <- function(x) {

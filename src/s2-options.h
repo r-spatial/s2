@@ -9,10 +9,12 @@ class GeographyOperationOptions {
 public:
   int polygonModel;
   int polylineModel;
-  SEXP snap;
+  Rcpp::List snap;
 
   // deaults: use S2 defaults
-  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1), snap(R_NilValue) {}
+  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1) {
+    this->snap.attr("class") = "snap_identity";
+  }
 
   // create from s2_options() object
   GeographyOperationOptions(Rcpp::List s2options) {
@@ -74,32 +76,26 @@ public:
 
     // setting the snap value here instead of in a function because
     // S2Builder::SnapFunction is abstract and can't be returned
+    if (Rf_inherits(this->snap, "snap_identity")) {
+      options.set_snap_function(s2builderutil::IdentitySnapFunction());
 
-    if (this->snap == R_NilValue) {
-      // do nothing
+    } else if (Rf_inherits(this->snap, "snap_level")) {
+      int snapLevel = this->snap["level"];
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+
+    } else if (Rf_inherits(this->snap, "snap_precision")) {
+      int exponent = snap["exponent"];
+      options.set_snap_function(s2builderutil::IntLatLngSnapFunction(exponent));
+
+    } else if (Rf_inherits(this->snap, "snap_distance")) {
+      double distance = snap["distance"];
+      double snapLevel = s2builderutil::S2CellIdSnapFunction::LevelForMaxSnapRadius(
+        S1Angle::Radians(distance)
+      );
+      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+
     } else {
-      Rcpp::List snap = this->snap;
-      if (Rf_inherits(snap, "snap_identity")) {
-        options.set_snap_function(s2builderutil::IdentitySnapFunction());
-
-      } else if (Rf_inherits(this->snap, "snap_level")) {
-        int snapLevel = snap["level"];
-        options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
-
-      } else if (Rf_inherits(this->snap, "snap_precision")) {
-        int exponent = snap["exponent"];
-        options.set_snap_function(s2builderutil::IntLatLngSnapFunction(exponent));
-
-      } else if (Rf_inherits(this->snap, "snap_distance")) {
-        double distance = snap["distance"];
-        double snapLevel = s2builderutil::S2CellIdSnapFunction::LevelForMaxSnapRadius(
-          S1Angle::Radians(distance)
-        );
-        options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
-
-      } else {
-        Rcpp::stop("`snap` must be specified using s2_snap_*()");
-      }
+      Rcpp::stop("`snap` must be specified using s2_snap_*()");
     }
 
     return options;
