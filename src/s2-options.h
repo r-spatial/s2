@@ -10,14 +10,15 @@ public:
   int polygonModel;
   int polylineModel;
   Rcpp::List snap;
+  double snapRadius;
 
   // deaults: use S2 defaults
-  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1) {
+  GeographyOperationOptions(): polygonModel(-1), polylineModel(-1), snapRadius(-1) {
     this->snap.attr("class") = "snap_identity";
   }
 
   // create from s2_options() object
-  GeographyOperationOptions(Rcpp::List s2options) {
+  GeographyOperationOptions(Rcpp::List s2options): GeographyOperationOptions() {
     if (!Rf_inherits(s2options, "s2_options")) {
       Rcpp::stop("`options` must be created using s2_options()");
     }
@@ -47,6 +48,14 @@ public:
       err << "Error setting s2_options() `snap`: " << e.what();
       Rcpp::stop(err.str());
     }
+
+    try {
+      this->setSnapRadius(s2options["snap_radius"]);
+    } catch (std::exception& e) {
+      std::stringstream err;
+      err << "Error setting s2_options() `snap_radius`: " << e.what();
+      Rcpp::stop(err.str());
+    }
   }
 
   // 0 = open, 1 = semi_open, 2 = closed
@@ -63,6 +72,10 @@ public:
     this->snap = snap;
   }
 
+  void setSnapRadius(double snapRadius) {
+    this->snapRadius = snapRadius;
+  }
+
   // build options for passing this to the S2BooleanOperation
   S2BooleanOperation::Options booleanOperationOptions() {
     S2BooleanOperation::Options options;
@@ -74,25 +87,43 @@ public:
       options.set_polyline_model(getPolylineModel(this->polylineModel));
     }
 
-    // setting the snap value here instead of in a function because
+    // setting the snap function and radius here instead of in a function because
     // S2Builder::SnapFunction is abstract and can't be returned
+    // there must be a cleaner way to do this
+
     if (Rf_inherits(this->snap, "snap_identity")) {
-      options.set_snap_function(s2builderutil::IdentitySnapFunction());
+      s2builderutil::IdentitySnapFunction snapFunction;
+      if (this->snapRadius > 0) {
+        snapFunction.set_snap_radius(S1Angle::Radians(this->snapRadius));
+      }
+      options.set_snap_function(snapFunction);
 
     } else if (Rf_inherits(this->snap, "snap_level")) {
       int snapLevel = this->snap["level"];
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+      s2builderutil::S2CellIdSnapFunction snapFunction(snapLevel);
+      if (this->snapRadius > 0) {
+        snapFunction.set_snap_radius(S1Angle::Radians(this->snapRadius));
+      }
+      options.set_snap_function(snapFunction);
 
     } else if (Rf_inherits(this->snap, "snap_precision")) {
       int exponent = snap["exponent"];
-      options.set_snap_function(s2builderutil::IntLatLngSnapFunction(exponent));
+      s2builderutil::IntLatLngSnapFunction snapFunction(exponent);
+      if (this->snapRadius > 0) {
+        snapFunction.set_snap_radius(S1Angle::Radians(this->snapRadius));
+      }
+      options.set_snap_function(snapFunction);
 
     } else if (Rf_inherits(this->snap, "snap_distance")) {
       double distance = snap["distance"];
       double snapLevel = s2builderutil::S2CellIdSnapFunction::LevelForMaxSnapRadius(
         S1Angle::Radians(distance)
       );
-      options.set_snap_function(s2builderutil::S2CellIdSnapFunction(snapLevel));
+      s2builderutil::S2CellIdSnapFunction snapFunction(snapLevel);
+      if (this->snapRadius > 0) {
+        snapFunction.set_snap_radius(S1Angle::Radians(this->snapRadius));
+      }
+      options.set_snap_function(snapFunction);
 
     } else {
       Rcpp::stop("`snap` must be specified using s2_snap_*()");

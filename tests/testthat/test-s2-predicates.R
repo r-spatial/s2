@@ -136,10 +136,6 @@ test_that("s2_touches() works", {
 
   # is vertex
   expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)"))
-
-  # is very close to the edge
-  skip("s2_touches probably needs snap rounding")
-  expect_true(s2_touches("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (1e-7 0.5)"))
 })
 
 test_that("s2_dwithin() works", {

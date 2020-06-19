@@ -10,7 +10,8 @@
 \usage{
 s2_options(
   model = -1,
-  snap = snap_identity(),
+  snap = s2_snap_identity(),
+  snap_radius = -1,
   polygon_model = model,
   polyline_model = model
 )
@@ -21,7 +22,7 @@ s2_snap_level(level)
 
 s2_snap_precision(precision)
 
-s2_snap_distance(distance, radius = s2_earth_radius_meters())
+s2_snap_distance(distance)
 }
 \arguments{
 \item{model, polygon_model, polyline_model}{See section 'Model'}
@@ -30,16 +31,22 @@ s2_snap_distance(distance, radius = s2_earth_radius_meters())
 or \code{s2_snap_precision()} to specify how or if coordinate rounding should
 occur.}
 
+\item{snap_radius}{As opposed to the snap function, which specifies
+the maximum distance a vertex should move, the snap radius (in radians) sets
+the minimum distance between vertices of the output that don't cause vertices
+to move more than the distance specified by the snap function. This can be used
+to simplify the result of a boolean operation.}
+
 \item{level}{A value from 0 to 30 corresponding to the cell level
 at which snapping should occur.}
 
 \item{precision}{A number by which coordinates should be multiplied
 before being rounded. Rounded to the nearest exponent of 10.}
 
-\item{distance}{A distance (in units of \code{radius}) denoting the maximum
+\item{distance}{A distance (in radians) denoting the maximum
 distance a vertex should move in the snapping process.}
 
-\item{radius}{The radius to be used for specifying \code{distance}}
+\item{radius}{The radius to be used for specifying \code{distance}.}
 }
 \description{
 These functions specify defaults for options used to perform operations

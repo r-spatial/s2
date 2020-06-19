@@ -24,6 +24,7 @@
 #' - [ST_INTERSECTION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection)
 #' - [ST_UNION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union)
 #' - [ST_SNAPTOGRID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
+#' - [ST_SIMPLIFY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify)
 #' - [ST_UNION_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg)
 #' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
 #'
@@ -93,6 +94,17 @@
 #'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
+#' # snap to grid rounds coordinates to a specified grid size
+#' s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
+#'
+#' # simplify can remove redundant vertices according to a distance
+#' # this function is still experimental
+#' s2_simplify(
+#'   "LINESTRING (0 0, 0 1, 0 2, 0 3, 0 4, 0 5)",
+#'   distance = 200000
+#' )
+#'
+#'
 s2_boundary <- function(x) {
   new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
 }
@@ -151,8 +163,15 @@ s2_union <- function(x, y = NULL, options = s2_options()) {
 
 #' @rdname s2_boundary
 #' @export
-s2_snap_to_grid <- function(x) {
-  stop("Not implemented")
+s2_snap_to_grid <- function(x, grid_size) {
+  s2_union(x, options = s2_options(snap = s2_snap_precision(10^(-log10(grid_size)))))
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_simplify <- function(x, distance, radius = s2_earth_radius_meters(), options = s2_options()) {
+  options$snap_radius <- distance / radius
+  s2_union(x, options = options)
 }
 
 #' @rdname s2_boundary
