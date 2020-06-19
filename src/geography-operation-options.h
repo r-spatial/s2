@@ -14,6 +14,39 @@ public:
   // deaults: use S2 defaults
   GeographyOperationOptions(): polygonModel(-1), polylineModel(-1), snapLevel(-1) {}
 
+  // create from s2_options() object
+  GeographyOperationOptions(Rcpp::List s2options) {
+    if (!Rf_inherits(s2options, "s2_options")) {
+      Rcpp::stop("`options` must be created using s2_options()");
+    }
+
+    // if these items are of an incorrect type (e.g., list() instead of int)
+    // the default errors are very difficult to diagnose.
+    try {
+      this->setPolygonModel(s2options["polygon_model"]);
+    } catch (std::exception& e) {
+      std::stringstream err;
+      err << "Error setting s2_options() `polygon_model`: " << e.what();
+      Rcpp::stop(err.str());
+    }
+
+    try {
+      this->setPolylineModel(s2options["polyline_model"]);
+    } catch (std::exception& e) {
+      std::stringstream err;
+      err << "Error setting s2_options() `polyline_model`: " << e.what();
+      Rcpp::stop(err.str());
+    }
+
+    try {
+      this->setSnapLevel(s2options["snap_level"]);
+    } catch (std::exception& e) {
+      std::stringstream err;
+      err << "Error setting s2_options() `snap_level`: " << e.what();
+      Rcpp::stop(err.str());
+    }
+  }
+
   // 0 = open, 1 = semi_open, 2 = closed
   void setPolygonModel(int model) {
     this->polygonModel = model;

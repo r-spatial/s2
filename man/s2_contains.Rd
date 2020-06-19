@@ -13,19 +13,19 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y, model = 0)
+s2_contains(x, y, options = s2_options(model = 0))
 
-s2_within(x, y, model = 0)
+s2_within(x, y, options = s2_options(model = 0))
 
-s2_covered_by(x, y, model = 2)
+s2_covered_by(x, y, options = s2_options(model = 2))
 
-s2_covers(x, y, model = 2)
+s2_covers(x, y, options = s2_options(model = 2))
 
-s2_disjoint(x, y, model = s2_model_default())
+s2_disjoint(x, y, options = s2_options())
 
-s2_intersects(x, y, model = s2_model_default())
+s2_intersects(x, y, options = s2_options())
 
-s2_equals(x, y, model = s2_model_default())
+s2_equals(x, y, options = s2_options())
 
 s2_intersects_box(
   x,
@@ -34,7 +34,7 @@ s2_intersects_box(
   lng2,
   lat2,
   detail = 1000,
-  model = s2_model_default()
+  options = s2_options()
 )
 
 s2_touches(x, y)
@@ -45,8 +45,6 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 \item{x}{An object that can be interpreted as an S2 type.}
 
 \item{y}{An object that can be interpreted as an S2 type.}
-
-\item{model}{integer; specifies boundary model. See \code{\link[=s2_model_default]{s2_model_default()}}.}
 
 \item{lng1, lat1, lng2, lat2}{A latitude/longitude range}
 

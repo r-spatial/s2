@@ -96,67 +96,67 @@
 #'   1e6 # distance in meters
 #' )
 #'
-s2_contains <- function(x, y, model = 0) {
+s2_contains <- function(x, y, options = s2_options(model = 0)) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
+  cpp_s2_contains(recycled[[1]], recycled[[2]], options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_within <- function(x, y, model = 0) {
-  s2_contains(y, x, model = model)
+s2_within <- function(x, y, options = s2_options(model = 0)) {
+  s2_contains(y, x, options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_covered_by <- function(x, y, model = 2) {
-  s2_covers(y, x, model = model)
+s2_covered_by <- function(x, y, options = s2_options(model = 2)) {
+  s2_covers(y, x, options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_covers <- function(x, y, model = 2) {
+s2_covers <- function(x, y, options = s2_options(model = 2)) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_contains(recycled[[1]], recycled[[2]], model = model)
+  cpp_s2_contains(recycled[[1]], recycled[[2]], options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_disjoint <- function(x, y, model = s2_model_default()) {
-  !s2_intersects(x, y, model = model)
+s2_disjoint <- function(x, y, options = s2_options()) {
+  !s2_intersects(x, y, options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_intersects <- function(x, y, model = s2_model_default()) {
+s2_intersects <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_intersects(recycled[[1]], recycled[[2]], model)
+  cpp_s2_intersects(recycled[[1]], recycled[[2]], options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_equals <- function(x, y, model = s2_model_default()) {
+s2_equals <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  cpp_s2_equals(recycled[[1]], recycled[[2]], model)
+  cpp_s2_equals(recycled[[1]], recycled[[2]], options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, model = s2_model_default()) {
+s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), lng1, lat1, lng2, lat2, detail)
   cpp_s2_intersects_box(
     recycled[[1]],
     recycled[[2]], recycled[[3]],
     recycled[[4]], recycled[[5]],
     detail = recycled[[6]],
-	  model
+	  s2options = options
   )
 }
 
 #' @rdname s2_contains
 #' @export
 s2_touches <- function(x, y) {
-  s2_intersects(x, y, model = 2) & !s2_intersects(x, y, model = 0)
+  s2_intersects(x, y, s2_options(model = 2)) & !s2_intersects(x, y, s2_options(model = 0))
 }
 
 #' @rdname s2_contains

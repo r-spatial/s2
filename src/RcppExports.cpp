@@ -337,41 +337,41 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_intersects
-LogicalVector cpp_s2_intersects(List geog1, List geog2, int model);
-RcppExport SEXP _s2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
+LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersects(geog1, geog2, model));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersects(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_equals
-LogicalVector cpp_s2_equals(List geog1, List geog2, int model);
-RcppExport SEXP _s2_cpp_s2_equals(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
+LogicalVector cpp_s2_equals(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_equals(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_equals(geog1, geog2, model));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_equals(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_s2_contains
-LogicalVector cpp_s2_contains(List geog1, List geog2, int model);
-RcppExport SEXP _s2_cpp_s2_contains(SEXP geog1SEXP, SEXP geog2SEXP, SEXP modelSEXP) {
+LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_contains(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_contains(geog1, geog2, model));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_contains(geog1, geog2, s2options));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -389,8 +389,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_intersects_box
-LogicalVector cpp_s2_intersects_box(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2, IntegerVector detail, int model);
-RcppExport SEXP _s2_cpp_s2_intersects_box(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP, SEXP detailSEXP, SEXP modelSEXP) {
+LogicalVector cpp_s2_intersects_box(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2, IntegerVector detail, List s2options);
+RcppExport SEXP _s2_cpp_s2_intersects_box(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP, SEXP detailSEXP, SEXP s2optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -400,8 +400,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lng2(lng2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type detail(detailSEXP);
-    Rcpp::traits::input_parameter< int >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersects_box(geog, lng1, lat1, lng2, lat2, detail, model));
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_intersects_box(geog, lng1, lat1, lng2, lat2, detail, s2options));
     return rcpp_result_gen;
 END_RCPP
 }

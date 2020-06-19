@@ -3,11 +3,19 @@
 \name{s2_snap_default}
 \alias{s2_snap_default}
 \alias{s2_model_default}
+\alias{s2_options}
 \title{Geography Operation Options}
 \usage{
 s2_snap_default()
 
 s2_model_default()
+
+s2_options(
+  model = -1,
+  polygon_model = model,
+  polyline_model = model,
+  snap_level = -1
+)
 }
 \description{
 These functions specify defaults for options used to perform operations
@@ -30,9 +38,9 @@ of these operators.
 }
 
 \examples{
-# get default values for snap_level and model
-s2_snap_default()
-s2_model_default()
+# use s2_options() to specify polygon/polyline models
+# and/or snap level
+s2_options(model = 1)
 
 # model value affects boolean operations and binary predicates
 # in the open model, lines do not contain endpoints (but do contain other points)
