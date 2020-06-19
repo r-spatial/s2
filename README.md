@@ -60,7 +60,7 @@ library(dplyr)
 library(sf)
 
 nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
-  mutate(geometry = as_s2_geography(st_as_binary(geometry))) %>% 
+  mutate(geometry = s2_geog_from_wkb(st_as_binary(geometry))) %>% 
   as_tibble() %>% 
   select(NAME, geometry)
 
