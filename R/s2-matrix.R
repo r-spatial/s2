@@ -24,12 +24,22 @@
 #' # for each feature in x
 #' country_names[s2_closest_feature(cities, countries)]
 #'
+#' # farthest feature returns y indices of the farthest feature
+#' # for each feature in x
+#' country_names[s2_farthest_feature(cities, countries)]
+#'
 #' # distance matrices
 #' s2_distance_matrix(cities, cities)
 #' s2_max_distance_matrix(cities, countries[1:4])
 #'
 s2_closest_feature <- function(x, y) {
   cpp_s2_closest_feature(as_s2_geography(x), as_s2_geography(y))
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_farthest_feature <- function(x, y) {
+  cpp_s2_farthest_feature(as_s2_geography(x), as_s2_geography(y))
 }
 
 #' @rdname s2_closest_feature

@@ -2,11 +2,14 @@
 % Please edit documentation in R/s2-matrix.R
 \name{s2_closest_feature}
 \alias{s2_closest_feature}
+\alias{s2_farthest_feature}
 \alias{s2_distance_matrix}
 \alias{s2_max_distance_matrix}
 \title{Matrix functions}
 \usage{
 s2_closest_feature(x, y)
+
+s2_farthest_feature(x, y)
 
 s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
@@ -38,6 +41,10 @@ countries <- s2_data_countries()
 # closest feature returns y indices of the closest feature
 # for each feature in x
 country_names[s2_closest_feature(cities, countries)]
+
+# farthest feature returns y indices of the farthest feature
+# for each feature in x
+country_names[s2_farthest_feature(cities, countries)]
 
 # distance matrices
 s2_distance_matrix(cities, cities)

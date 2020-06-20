@@ -1,5 +1,5 @@
 
-test_that("s2_closest_feature() works", {
+test_that("s2_closest|farthest_feature() works", {
   cities <- s2_data_cities("London")
   countries <- s2_data_countries()
 
@@ -9,6 +9,9 @@ test_that("s2_closest_feature() works", {
   # should correctly identify that London is closest to United Kingdom
   country_match <- s2_closest_feature(cities, countries)
   expect_identical(s2_data_tbl_countries$name[country_match], "United Kingdom")
+
+  country_match_farthest <- s2_farthest_feature(cities, countries)
+  expect_identical(s2_data_tbl_countries$name[country_match_farthest], "New Zealand")
 })
 
 test_that("s2_(max_)?distance_matrix() works", {
