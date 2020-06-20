@@ -73,8 +73,9 @@ public:
   std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
     std::vector<int> shapeIds(1);
     std::vector<S2Point> pointsCopy(this->points);
+
     shapeIds[0] = index->Add(std::unique_ptr<S2PointVectorShape>(
-      new S2PointVectorShape(std::move(points)))
+      new S2PointVectorShape(std::move(pointsCopy)))
     );
     return shapeIds;
   }
