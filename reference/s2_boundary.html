@@ -152,6 +152,14 @@ return a geography vector.</p>
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
 
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_buffer_cells</a></span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>distance</span>,
+  max_cells = <span class='fl'>1000</span>,
+  min_level = <span class='op'>-</span><span class='fl'>1</span>,
+  radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>()
+)
+
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(<span class='kw'>x</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(), na.rm = <span class='fl'>FALSE</span>)</pre>
@@ -176,6 +184,26 @@ model to use and the snap level.</p></td>
       <th>grid_size</th>
       <td><p>The grid size to which coordinates should be snapped;
 will be rounded to the nearest power of 10.</p></td>
+    </tr>
+    <tr>
+      <th>distance</th>
+      <td><p>The distance to buffer, in units of <code>radius</code>.</p></td>
+    </tr>
+    <tr>
+      <th>max_cells</th>
+      <td><p>The maximum number of cells to approximate a buffer.</p></td>
+    </tr>
+    <tr>
+      <th>min_level</th>
+      <td><p>The minimum cell level used to approximate a buffer
+(1 - 30). Setting this value too high will result in unnecessarily
+large geographies, but may help improve buffers along long, narrow
+regions.</p></td>
+    </tr>
+    <tr>
+      <th>radius</th>
+      <td><p>Radius of the earth. Defaults to the average radius of
+the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
