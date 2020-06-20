@@ -93,14 +93,6 @@ data_frame_from_s2_latlng <- function(xptr) {
     .Call(`_s2_data_frame_from_s2_latlng`, xptr)
 }
 
-s2_latlng_from_wkb <- function(wkb) {
-    .Call(`_s2_s2_latlng_from_wkb`, wkb)
-}
-
-wkb_from_s2_latlng <- function(s2_latlng, endian) {
-    .Call(`_s2_wkb_from_s2_latlng`, s2_latlng, endian)
-}
-
 cpp_s2_closest_feature <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_closest_feature`, geog1, geog2)
 }
@@ -211,6 +203,10 @@ cpp_s2_centroid <- function(geog) {
 
 cpp_s2_boundary <- function(geog) {
     .Call(`_s2_cpp_s2_boundary`, geog)
+}
+
+cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
+    .Call(`_s2_cpp_s2_buffer_cells`, geog, distance, maxCells, minLevel)
 }
 
 s2_xptr_test <- function(size) {

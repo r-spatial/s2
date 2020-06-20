@@ -275,29 +275,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_latlng_from_wkb
-List s2_latlng_from_wkb(List wkb);
-RcppExport SEXP _s2_s2_latlng_from_wkb(SEXP wkbSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_latlng_from_wkb(wkb));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wkb_from_s2_latlng
-List wkb_from_s2_latlng(List s2_latlng, int endian);
-RcppExport SEXP _s2_wkb_from_s2_latlng(SEXP s2_latlngSEXP, SEXP endianSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_latlng(s2_latlngSEXP);
-    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkb_from_s2_latlng(s2_latlng, endian));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cpp_s2_closest_feature
 IntegerVector cpp_s2_closest_feature(List geog1, List geog2);
 RcppExport SEXP _s2_cpp_s2_closest_feature(SEXP geog1SEXP, SEXP geog2SEXP) {
@@ -651,6 +628,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_buffer_cells
+List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel);
+RcppExport SEXP _s2_cpp_s2_buffer_cells(SEXP geogSEXP, SEXP distanceSEXP, SEXP maxCellsSEXP, SEXP minLevelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
+    Rcpp::traits::input_parameter< int >::type maxCells(maxCellsSEXP);
+    Rcpp::traits::input_parameter< int >::type minLevel(minLevelSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_buffer_cells(geog, distance, maxCells, minLevel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2_xptr_test
 List s2_xptr_test(R_xlen_t size);
 RcppExport SEXP _s2_s2_xptr_test(SEXP sizeSEXP) {
@@ -697,8 +688,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2_latlng_from_numeric", (DL_FUNC) &_s2_s2_latlng_from_numeric, 2},
     {"_s2_s2_latlng_from_s2_point", (DL_FUNC) &_s2_s2_latlng_from_s2_point, 1},
     {"_s2_data_frame_from_s2_latlng", (DL_FUNC) &_s2_data_frame_from_s2_latlng, 1},
-    {"_s2_s2_latlng_from_wkb", (DL_FUNC) &_s2_s2_latlng_from_wkb, 1},
-    {"_s2_wkb_from_s2_latlng", (DL_FUNC) &_s2_wkb_from_s2_latlng, 2},
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},
     {"_s2_cpp_s2_farthest_feature", (DL_FUNC) &_s2_cpp_s2_farthest_feature, 2},
     {"_s2_cpp_s2_contains_matrix", (DL_FUNC) &_s2_cpp_s2_contains_matrix, 3},
@@ -727,6 +716,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_minimum_clearance_line_between", (DL_FUNC) &_s2_cpp_s2_minimum_clearance_line_between, 2},
     {"_s2_cpp_s2_centroid", (DL_FUNC) &_s2_cpp_s2_centroid, 1},
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},
+    {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
     {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
     {NULL, NULL, 0}

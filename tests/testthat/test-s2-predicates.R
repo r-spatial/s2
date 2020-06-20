@@ -30,15 +30,20 @@ test_that("s2_covers() and s2_covered_by() work", {
   expect_true(s2_covers("LINESTRING (0 0, 1 1)", "POINT (0 0)"))
   expect_false(s2_covers("LINESTRING (0 0, 1 1)", "POINT (-1 -1)"))
 
+  # make sure line is along a geodesic edge
+  # if the line doesn't contain the endpoints, floating
+  # point math won't always keep it strictly inside or outside
+  # the polygon (hard to predict which way it will go)
+  # (when the model is set such that the boundary of the polygon
+  # is considered 'contained' by it)
   polygon <- "POLYGON ((0 0, 1 1, 0 1, 0 0))"
-  line <- "LINESTRING (0.1 0.1, 0.9 0.9)"
+  line <- "LINESTRING (0 0, 1 1)"
   point <- "POINT (0.5 0.7)"
 
   expect_true(s2_covers(polygon, polygon))
-  warning(sprintf("Surprising result: %s covers %s with all three models", polygon, line))
   expect_false(s2_covers(polygon, line, s2_options(model = 0)))
   expect_false(s2_covers(polygon, line, s2_options(model = 1)))
-  expect_false(s2_covers(polygon, line, s2_options(model = 2)))
+  expect_true(s2_covers(polygon, line, s2_options(model = 2)))
   expect_true(s2_covers(polygon, point, s2_options(model = 0)))
   expect_true(s2_covers(polygon, point, s2_options(model = 1)))
   expect_true(s2_covers(polygon, point, s2_options(model = 2)))
@@ -101,15 +106,18 @@ test_that("s2_intersects_box() works", {
     s2_intersects_box("POINT (-1 -1)", -2, -2, 2, 2, detail = 0),
     "Can't create polygon"
   )
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0))
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 0, 1, 0))
-  expect_false(s2_intersects_box("POINT (0 0)", 0, -1, 0, 1))
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, options = s2_options(model = 0)))
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, options = s2_options(model = 1)))
-  warning(
-    "Unclear why `s2_intersects_box('POINT (0 0)', -1, 1, 0, 0, options = s2_options(model = 2))` is false"
-  )
-  expect_false(s2_intersects_box("POINT (0 0)", -1, 1, 0, 0, options = s2_options(model = 2)))
+  expect_true(s2_intersects_box("POINT (0.1 0.1)", 0, 0, 1, 1))
+  expect_true(s2_intersects_box("POINT (0.1 0.1)", 0, 0, 1, 1))
+  expect_true(s2_intersects_box("POINT (0.1 0.1)", 0, 0, 1, 1, options = s2_options(model = 0)))
+  expect_true(s2_intersects_box("POINT (0.1 0.1)", 0, 0, 1, 1, options = s2_options(model = 1)))
+  expect_true(s2_intersects_box("POINT (0.1 0.1)", 0, 0, 1, 1, options = s2_options(model = 2)))
+
+  expect_false(s2_intersects_box("POINT (1 1)", 0, 0, 1, 1))
+  expect_false(s2_intersects_box("POINT (0 0)", 0, 0, 1, 1))
+  expect_false(s2_intersects_box("POINT (0 0)", 0, 0, 1, 1))
+  expect_false(s2_intersects_box("POINT (0 0)", 0, 0, 1, 1, options = s2_options(model = 0)))
+  expect_false(s2_intersects_box("POINT (0 0)", 0, 0, 1, 1, options = s2_options(model = 1)))
+  expect_true(s2_intersects_box("POINT (0 0)", 0, 0, 1, 1, options = s2_options(model = 2)))
 
   expect_true(s2_intersects_box("POINT (-1 -1)", -2, -2, 2, 2))
   expect_false(s2_intersects_box("POINT (-1 -1)", 0, 0, 2, 2))

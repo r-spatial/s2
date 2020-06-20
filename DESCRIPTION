@@ -35,5 +35,6 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/r-spatial/s2/, https://s2geometry.io/
 BugReports: https://github.com/r-spatial/s2/issues
+Remotes: paleolimbot/wk
 Depends: 
     R (>= 3.0.0)

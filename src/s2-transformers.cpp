@@ -12,6 +12,8 @@
 #include "s2/s2builderutil_s2point_vector_layer.h"
 #include "s2/s2builderutil_closed_set_normalizer.h"
 #include "s2/s2builderutil_snap_functions.h"
+#include "s2/s2shape_index_buffered_region.h"
+#include "s2/s2region_coverer.h"
 
 #include "s2-options.h"
 #include "geography-operator.h"
@@ -321,5 +323,38 @@ List cpp_s2_boundary(List geog) {
   };
 
   Op op;
+  return op.processVector(geog);
+}
+
+
+// [[Rcpp::export]]
+List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    NumericVector distance;
+    S2RegionCoverer coverer;
+
+    Op(NumericVector distance, int maxCells, int minLevel): distance(distance) {
+      this->coverer.mutable_options()->set_max_cells(maxCells);
+      if (minLevel > 0) {
+        this->coverer.mutable_options()->set_min_level(minLevel);
+      }
+    }
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      S2ShapeIndexBufferedRegion region;
+      region.Init(feature->ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+
+      S2CellUnion cellUnion;
+      cellUnion = coverer.GetCovering(region);
+
+      std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+      polygon->InitToCellUnionBorder(cellUnion);
+
+      return XPtr<PolygonGeography>(new PolygonGeography(std::move(polygon)));
+    }
+  };
+
+  Op op(distance, maxCells, minLevel);
   return op.processVector(geog);
 }

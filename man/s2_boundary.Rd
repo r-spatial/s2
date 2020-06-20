@@ -10,6 +10,7 @@
 \alias{s2_intersection}
 \alias{s2_union}
 \alias{s2_snap_to_grid}
+\alias{s2_buffer_cells}
 \alias{s2_centroid_agg}
 \alias{s2_union_agg}
 \title{S2 Geography Transformations}
@@ -32,6 +33,14 @@ s2_union(x, y = NULL, options = s2_options())
 
 s2_snap_to_grid(x, grid_size)
 
+s2_buffer_cells(
+  x,
+  distance,
+  max_cells = 1000,
+  min_level = -1,
+  radius = s2_earth_radius_meters()
+)
+
 s2_centroid_agg(x, na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
@@ -46,6 +55,18 @@ model to use and the snap level.}
 
 \item{grid_size}{The grid size to which coordinates should be snapped;
 will be rounded to the nearest power of 10.}
+
+\item{distance}{The distance to buffer, in units of \code{radius}.}
+
+\item{max_cells}{The maximum number of cells to approximate a buffer.}
+
+\item{min_level}{The minimum cell level used to approximate a buffer
+(1 - 30). Setting this value too high will result in unnecessarily
+large geographies, but may help improve buffers along long, narrow
+regions.}
+
+\item{radius}{Radius of the earth. Defaults to the average radius of
+the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}

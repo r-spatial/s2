@@ -176,7 +176,11 @@ LogicalVector cpp_s2_intersects_box(List geog,
       polygon.InitOriented(std::move(loops));
 
       // test intersection
-      return S2BooleanOperation::Intersects(polygon.index(), *feature->ShapeIndex());
+      return S2BooleanOperation::Intersects(
+        polygon.index(),
+        *feature->ShapeIndex(),
+        this->options
+      );
     }
   };
 
