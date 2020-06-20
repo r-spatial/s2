@@ -94,6 +94,8 @@ public:
   std::vector<S2ShapeIndex*> geog2Indices;
   S2BooleanOperation::Options options;
 
+  MatrixPredicateOperator() {}
+
   MatrixPredicateOperator(List s2options) {
     GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
@@ -173,6 +175,24 @@ List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
   };
 
   Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance) {
+  class Op: public MatrixPredicateOperator {
+  public:
+    double distance;
+    Op(double distance): distance(distance) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      S2ClosestEdgeQuery query(index2);
+      S2ClosestEdgeQuery::ShapeIndexTarget target(index1);
+      return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
+    };
+  };
+
+  Op op(distance);
   op.buildIndex(geog2);
   return op.processVector(geog1);
 }

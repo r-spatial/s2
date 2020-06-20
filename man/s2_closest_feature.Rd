@@ -6,6 +6,7 @@
 \alias{s2_distance_matrix}
 \alias{s2_max_distance_matrix}
 \alias{s2_intersects_matrix}
+\alias{s2_dwithin_matrix}
 \title{Matrix functions}
 \usage{
 s2_closest_feature(x, y)
@@ -17,6 +18,8 @@ s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 s2_max_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
 s2_intersects_matrix(x, y, options = s2_options())
+
+s2_dwithin_matrix(x, y, distance, radius = s2_earth_radius_meters())
 }
 \arguments{
 \item{x, y}{Geography vectors, coerced using \code{\link[=as_s2_geography]{as_s2_geography()}}.
@@ -27,6 +30,9 @@ the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_met
 
 \item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
 model to use and the snap level.}
+
+\item{distance}{A distance on the surface of the earth in the same units
+as \code{radius}.}
 }
 \value{
 A vector of length \code{x}.

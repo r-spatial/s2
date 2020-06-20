@@ -335,6 +335,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_dwithin_matrix
+List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance);
+RcppExport SEXP _s2_cpp_s2_dwithin_matrix(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< double >::type distance(distanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_dwithin_matrix(geog1, geog2, distance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_distance_matrix
 NumericMatrix cpp_s2_distance_matrix(List geog1, List geog2);
 RcppExport SEXP _s2_cpp_s2_distance_matrix(SEXP geog1SEXP, SEXP geog2SEXP) {
@@ -637,6 +650,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},
     {"_s2_cpp_s2_farthest_feature", (DL_FUNC) &_s2_cpp_s2_farthest_feature, 2},
     {"_s2_cpp_s2_intersects_matrix", (DL_FUNC) &_s2_cpp_s2_intersects_matrix, 3},
+    {"_s2_cpp_s2_dwithin_matrix", (DL_FUNC) &_s2_cpp_s2_dwithin_matrix, 3},
     {"_s2_cpp_s2_distance_matrix", (DL_FUNC) &_s2_cpp_s2_distance_matrix, 2},
     {"_s2_cpp_s2_max_distance_matrix", (DL_FUNC) &_s2_cpp_s2_max_distance_matrix, 2},
     {"_s2_s2_point_from_numeric", (DL_FUNC) &_s2_s2_point_from_numeric, 3},

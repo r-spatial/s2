@@ -60,3 +60,9 @@ s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 s2_intersects_matrix <- function(x, y, options = s2_options()) {
   cpp_s2_intersects_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
+
+#' @rdname s2_closest_feature
+#' @export
+s2_dwithin_matrix <- function(x, y, distance, radius = s2_earth_radius_meters()) {
+  cpp_s2_dwithin_matrix(as_s2_geography(x), as_s2_geography(y), distance / radius)
+}

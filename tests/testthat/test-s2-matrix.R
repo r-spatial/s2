@@ -22,6 +22,23 @@ test_that("matrix predicates work", {
     ),
     list(integer(0), 1L, integer(0))
   )
+
+  expect_identical(
+    s2_dwithin_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+      0
+    ),
+    list(integer(0), 1L, integer(0))
+  )
+  expect_identical(
+    s2_dwithin_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+      s2_earth_radius_meters()
+    ),
+    list(1L, 1L, 1L)
+  )
 })
 
 test_that("s2_(max_)?distance_matrix() works", {
