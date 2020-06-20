@@ -101,6 +101,10 @@ wkb_from_s2_latlng <- function(s2_latlng, endian) {
     .Call(`_s2_wkb_from_s2_latlng`, s2_latlng, endian)
 }
 
+cpp_s2_closest_feature <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_closest_feature`, geog1, geog2)
+}
+
 s2_point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }
