@@ -105,6 +105,14 @@ cpp_s2_closest_feature <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_closest_feature`, geog1, geog2)
 }
 
+cpp_s2_distance_matrix <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_distance_matrix`, geog1, geog2)
+}
+
+cpp_s2_max_distance_matrix <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_max_distance_matrix`, geog1, geog2)
+}
+
 s2_point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }
