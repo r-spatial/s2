@@ -39,10 +39,15 @@ test_that("s2_geography vectors can be created from WKB and WKT", {
   expect_output(print(as_s2_geography(structure(wkb_point, class = "blob")), "<POINT \\(-64 45\\)>"))
 })
 
-test_that("s2_geography default method uses as_wkb()", {
-  skip("need to update wk on CRAN for this test to work")
-  wksxp_point <- wk::wksxp(list(structure(matrix(c(-64, 45), ncol = 2), class = "wk_point")))
-  expect_output(print(as_s2_geography(wksxp_point)), "<POINT \\(-64 45\\)>")
+test_that("s2_geography can be exported to WKB/WKT", {
+  expect_identical(
+    wk::as_wkt(wk::as_wkb(as_s2_geography("POINT (-64 45)")), precision = 10),
+    wk::as_wkt(wk::as_wkb("POINT (-64 45)"), precision = 10)
+  )
+  expect_identical(
+    wk::as_wkt(as_s2_geography("POINT (-64 45)"), precision = 10),
+    wk::as_wkt("POINT (-64 45)")
+  )
 })
 
 test_that("s2_geography vectors can be created from wkt", {

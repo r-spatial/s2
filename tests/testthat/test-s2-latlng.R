@@ -38,6 +38,14 @@ test_that("s2_latlng objects can be created from and converted back to R objects
   )
 })
 
+test_that("s2_latlng can be exported to wkb and wkt", {
+  wkb_point <- wk::as_wkb("POINT (-64 45)")
+  expect_identical(as_wkb(s2_latlng(45, -64), endian = 1), wkb_point)
+  expect_identical(as_wkb(s2_latlng(double(), double())[NA]), wk::wkb(list(NULL)))
+  expect_identical(wk::as_wkt(s2_latlng(45, -64)), wk::wkt("POINT (-64 45)"))
+  expect_identical(wk::as_wkt(s2_latlng(NA, NA)), wk::wkt("POINT EMPTY"))
+})
+
 test_that("s2_latlng vectors can't have other types of objects concatenated or asssigned", {
   latlng <- new_s2_xptr(list(NULL), class = "s2_latlng")
   expect_is(c(latlng, latlng), "s2_latlng")

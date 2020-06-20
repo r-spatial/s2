@@ -68,6 +68,20 @@ as.matrix.s2_latlng <- function(x, ...) {
   as.matrix(as.data.frame(data_frame_from_s2_latlng(x)))
 }
 
+#' @importFrom wk as_wkb
+#' @export
+as_wkb.s2_latlng <- function(x, ..., endian = wk::wk_platform_endian()) {
+  df <- data_frame_from_s2_latlng(x)
+  wk::new_wk_wkt(wk::coords_point_translate_wkb(df$lng, df$lat, endian = endian))
+}
+
+#' @importFrom wk as_wkt
+#' @export
+as_wkt.s2_latlng <- function(x, ...,  precision = 16, trim = TRUE) {
+  df <- data_frame_from_s2_latlng(x)
+  wk::new_wk_wkt(wk::coords_point_translate_wkt(df$lng, df$lat, precision = precision, trim = trim))
+}
+
 #' @export
 `[<-.s2_latlng` <- function(x, i, value) {
   x <- unclass(x)
