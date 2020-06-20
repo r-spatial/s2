@@ -52,8 +52,36 @@ as_s2_latlng.matrix <- function(x, ...) {
 }
 
 #' @export
+as_s2_latlng.character <- function(x, ...) {
+  as_s2_latlng.wk_wkt(x)
+}
+
+#' @export
+as_s2_latlng.wk_wkt <- function(x, ...) {
+  meta <- wk::wkt_meta(x)
+  if (any(meta$type_id != 1)) {
+    stop("Can't import non-points as s2_latlng")
+  }
+
+  # need matching because empty points do not have a row in
+  # wk::wk*_coords()
+  coords <- wk::wkt_coords(x)
+  coords_match <- match(seq_along(x), coords$feature_id)
+  new_s2_xptr(s2_latlng_from_numeric(coords$y[coords_match], coords$x[coords_match]), "s2_latlng")
+}
+
+#' @export
 as_s2_latlng.wk_wkb <- function(x, ...) {
-  new_s2_xptr(s2_latlng_from_wkb(x), "s2_latlng")
+  meta <- wk::wkb_meta(x)
+  if (any(meta$type_id != 1)) {
+    stop("Can't import non-points as s2_latlng")
+  }
+
+  # need matching because empty points do not have a row in
+  # wk::wk*_coords()
+  coords <- wk::wkb_coords(x)
+  coords_match <- match(seq_along(x), coords$feature_id)
+  new_s2_xptr(s2_latlng_from_numeric(coords$y[coords_match], coords$x[coords_match]), "s2_latlng")
 }
 
 #' @rdname s2_latlng
@@ -72,7 +100,7 @@ as.matrix.s2_latlng <- function(x, ...) {
 #' @export
 as_wkb.s2_latlng <- function(x, ..., endian = wk::wk_platform_endian()) {
   df <- data_frame_from_s2_latlng(x)
-  wk::new_wk_wkt(wk::coords_point_translate_wkb(df$lng, df$lat, endian = endian))
+  wk::new_wk_wkb(wk::coords_point_translate_wkb(df$lng, df$lat, endian = endian))
 }
 
 #' @importFrom wk as_wkt
