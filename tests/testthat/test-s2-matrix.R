@@ -73,6 +73,14 @@ test_that("matrix predicates work", {
   )
 
   expect_identical(
+    s2_touches_matrix(
+      c("POINT (0.5 0.5)", "POINT (0 0)", "POINT  (-0.5 -0.5)"),
+      "POLYGON ((0 0, 0 1, 1 1, 0 0))"
+    ),
+    list(integer(0), 1L, integer(0))
+  )
+
+  expect_identical(
     s2_dwithin_matrix(
       c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
       "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
