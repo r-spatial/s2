@@ -57,8 +57,63 @@ s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 
 #' @rdname s2_closest_feature
 #' @export
+s2_contains_matrix <- function(x, y, options = s2_options()) {
+  cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_within_matrix <- function(x, y, options = s2_options()) {
+  cpp_s2_contains_matrix(as_s2_geography(y), as_s2_geography(x), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_covers_matrix <- function(x, y, options = s2_options(model = 2)) {
+  cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_covered_by_matrix <- function(x, y, options = s2_options(model = 2)) {
+  cpp_s2_contains_matrix(as_s2_geography(y), as_s2_geography(x), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
 s2_intersects_matrix <- function(x, y, options = s2_options()) {
   cpp_s2_intersects_matrix(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_disjoint_matrix <- function(x, y, options = s2_options()) {
+  cpp_s2_disjoint_matrix(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_equals_matrix <- function(x, y, options = s2_options()) {
+  cpp_s2_equals_matrix(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_touches_matrix <- function(x, y, options = s2_options()) {
+  x <- as_s2_geography(x)
+  y <- as_s2_geography(y)
+
+  options_closed <- options
+  options_closed$polygon_model <- 2
+  options_closed$polyline_model <- 2
+
+  options_open <- options
+  options_open$polygon_model <- 0
+  options_open$polyline_model <- 0
+
+  intersects_closed <- cpp_s2_intersects_matrix(x, y, options_closed)
+  intersects_open <- cpp_s2_intersects_matrix(x, y, options_open)
+  Map(setdiff, intersects_closed, intersects_open)
 }
 
 #' @rdname s2_closest_feature

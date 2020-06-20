@@ -109,8 +109,20 @@ cpp_s2_farthest_feature <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_farthest_feature`, geog1, geog2)
 }
 
+cpp_s2_contains_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_contains_matrix`, geog1, geog2, s2options)
+}
+
 cpp_s2_intersects_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_intersects_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_disjoint_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_disjoint_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_equals_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_equals_matrix`, geog1, geog2, s2options)
 }
 
 cpp_s2_dwithin_matrix <- function(geog1, geog2, distance) {

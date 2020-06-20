@@ -5,7 +5,14 @@
 \alias{s2_farthest_feature}
 \alias{s2_distance_matrix}
 \alias{s2_max_distance_matrix}
+\alias{s2_contains_matrix}
+\alias{s2_within_matrix}
+\alias{s2_covers_matrix}
+\alias{s2_covered_by_matrix}
 \alias{s2_intersects_matrix}
+\alias{s2_disjoint_matrix}
+\alias{s2_equals_matrix}
+\alias{s2_touches_matrix}
 \alias{s2_dwithin_matrix}
 \title{Matrix functions}
 \usage{
@@ -17,7 +24,21 @@ s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
 s2_max_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
+s2_contains_matrix(x, y, options = s2_options())
+
+s2_within_matrix(x, y, options = s2_options())
+
+s2_covers_matrix(x, y, options = s2_options(model = 2))
+
+s2_covered_by_matrix(x, y, options = s2_options(model = 2))
+
 s2_intersects_matrix(x, y, options = s2_options())
+
+s2_disjoint_matrix(x, y, options = s2_options())
+
+s2_equals_matrix(x, y, options = s2_options())
+
+s2_touches_matrix(x, y, options = s2_options())
 
 s2_dwithin_matrix(x, y, distance, radius = s2_earth_radius_meters())
 }
