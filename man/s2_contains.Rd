@@ -37,7 +37,7 @@ s2_intersects_box(
   options = s2_options()
 )
 
-s2_touches(x, y)
+s2_touches(x, y, options = s2_options())
 
 s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 }

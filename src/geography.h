@@ -37,8 +37,9 @@ public:
 
   // every type will build the index differently based on
   // the underlying data, and this can (should?) be done
-  // lazily
-  virtual void BuildShapeIndex(MutableS2ShapeIndex* index) = 0;
+  // lazily. Returns a vector of shape IDs so the caller
+  // can keep track of which shape came from which feature.
+  virtual std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) = 0;
 
   // the factory handler is responsible for building these objects
   // but exporting can be done here

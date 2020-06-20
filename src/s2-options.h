@@ -2,6 +2,7 @@
 #include <sstream>
 #include <Rcpp.h>
 #include "s2/s2boolean_operation.h"
+#include "s2/s2builderutil_snap_functions.h"
 
 // This class wraps several concepts in the S2BooleanOperation,
 // and S2Layer, parameterized such that these can be specified from R

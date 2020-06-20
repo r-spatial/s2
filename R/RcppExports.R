@@ -101,6 +101,46 @@ wkb_from_s2_latlng <- function(s2_latlng, endian) {
     .Call(`_s2_wkb_from_s2_latlng`, s2_latlng, endian)
 }
 
+cpp_s2_closest_feature <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_closest_feature`, geog1, geog2)
+}
+
+cpp_s2_farthest_feature <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_farthest_feature`, geog1, geog2)
+}
+
+cpp_s2_contains_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_contains_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_within_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_within_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_intersects_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_intersects_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_disjoint_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_disjoint_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_equals_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_equals_matrix`, geog1, geog2, s2options)
+}
+
+cpp_s2_dwithin_matrix <- function(geog1, geog2, distance) {
+    .Call(`_s2_cpp_s2_dwithin_matrix`, geog1, geog2, distance)
+}
+
+cpp_s2_distance_matrix <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_distance_matrix`, geog1, geog2)
+}
+
+cpp_s2_max_distance_matrix <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_max_distance_matrix`, geog1, geog2)
+}
+
 s2_point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }

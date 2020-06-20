@@ -156,8 +156,19 @@ s2_intersects_box <- function(x, lng1, lat1, lng2, lat2, detail = 1000, options 
 
 #' @rdname s2_contains
 #' @export
-s2_touches <- function(x, y) {
-  s2_intersects(x, y, s2_options(model = 2)) & !s2_intersects(x, y, s2_options(model = 0))
+s2_touches <- function(x, y, options = s2_options()) {
+  x <- as_s2_geography(x)
+  y <- as_s2_geography(y)
+
+  options_closed <- options
+  options_closed$polygon_model <- 2
+  options_closed$polyline_model <- 2
+
+  options_open <- options
+  options_open$polygon_model <- 0
+  options_open$polyline_model <- 0
+
+  s2_intersects(x, y, options_closed) & !s2_intersects(x, y, options_open)
 }
 
 #' @rdname s2_contains

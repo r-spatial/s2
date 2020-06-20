@@ -70,12 +70,17 @@ public:
     return absl::make_unique<PointGeography>();
   }
 
-  virtual void BuildShapeIndex(MutableS2ShapeIndex* index) {
+  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
+    std::vector<int> shapeIds(1);
     std::vector<S2Point> pointsCopy(this->points);
-    index->Add(std::unique_ptr<S2PointVectorShape>(new S2PointVectorShape(std::move(points))));
+
+    shapeIds[0] = index->Add(std::unique_ptr<S2PointVectorShape>(
+      new S2PointVectorShape(std::move(pointsCopy)))
+    );
+    return shapeIds;
   }
 
-  virtual void Export(WKGeometryHandler* handler, uint32_t partId) {
+  void Export(WKGeometryHandler* handler, uint32_t partId) {
     S2LatLng point;
 
     if (this->points.size() > 1) {

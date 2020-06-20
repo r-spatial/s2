@@ -73,10 +73,12 @@ public:
     return builder.build();
   }
 
-  void BuildShapeIndex(MutableS2ShapeIndex* index) {
+  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
+    std::vector<int> shapeIds(1);
     std::unique_ptr<S2Polygon::Shape> shape = absl::make_unique<S2Polygon::Shape>();
     shape->Init(this->polygon.get());
-    index->Add(std::move(shape));
+    shapeIds[0] = index->Add(std::move(shape));
+    return shapeIds;
   }
 
   void Export(WKGeometryHandler* handler, uint32_t partId) {
