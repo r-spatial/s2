@@ -14,6 +14,16 @@ test_that("s2_closest|farthest_feature() works", {
   expect_identical(s2_data_tbl_countries$name[country_match_farthest], "New Zealand")
 })
 
+test_that("matrix predicates work", {
+  expect_identical(
+    s2_intersects_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
+    ),
+    list(integer(0), 1L, integer(0))
+  )
+})
+
 test_that("s2_(max_)?distance_matrix() works", {
   x <- c("POINT (0 0)", "POINT (0 90)")
   y <- c("POINT (180 0)", "POINT (0 -90)", "POINT (0 0)")

@@ -8,6 +8,7 @@
 #' the feature at `x[i]`.
 #'
 #' @inheritParams s2_is_collection
+#' @inheritParams s2_contains
 #' @param x,y Geography vectors, coerced using [as_s2_geography()].
 #'   `x` is considered the source, where as `y` is considered the target.
 #'
@@ -52,4 +53,10 @@ s2_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 #' @export
 s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
   cpp_s2_max_distance_matrix(as_s2_geography(x), as_s2_geography(y)) * radius
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_intersects_matrix <- function(x, y, options = s2_options()) {
+  cpp_s2_intersects_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }

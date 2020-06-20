@@ -10,7 +10,9 @@
 using namespace Rcpp;
 
 
-class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<IntegerVector, int> {
+
+template<class VectorType, class ScalarType>
+class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, ScalarType> {
 public:
   MutableS2ShapeIndex geog2Index;
   std::unordered_map<int, R_xlen_t> geog2IndexSource;
@@ -42,7 +44,7 @@ public:
 // [[Rcpp::export]]
 IntegerVector cpp_s2_closest_feature(List geog1, List geog2) {
 
-  class Op: public IndexedBinaryGeographyOperator {
+  class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
       S2ClosestEdgeQuery query(&(this->geog2Index));
@@ -65,7 +67,7 @@ IntegerVector cpp_s2_closest_feature(List geog1, List geog2) {
 // [[Rcpp::export]]
 IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
 
-  class Op: public IndexedBinaryGeographyOperator {
+  class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
       S2FurthestEdgeQuery query(&(this->geog2Index));
@@ -84,6 +86,98 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   op.buildIndex(geog2);
   return op.processVector(geog1);
 }
+
+// ----------- binary predicate operators ------------------
+
+class MatrixPredicateOperator {
+public:
+  std::vector<S2ShapeIndex*> geog2Indices;
+  S2BooleanOperation::Options options;
+
+  MatrixPredicateOperator(List s2options) {
+    GeographyOperationOptions options(s2options);
+    this->options = options.booleanOperationOptions();
+  }
+
+  void buildIndex(List geog2) {
+    SEXP item2;
+    this->geog2Indices = std::vector<S2ShapeIndex*>(geog2.size());
+
+    for (R_xlen_t j = 0; j < geog2.size(); j++) {
+      item2 = geog2[j];
+
+      if (item2 == R_NilValue) {
+        Rcpp::stop("Missing `y` not allowed in binary indexed operators()");
+      } else {
+        Rcpp::XPtr<Geography> feature2(item2);
+        geog2Indices[j] = feature2->ShapeIndex();
+      }
+    }
+  }
+
+  List processVector(Rcpp::List geog1) {
+    List output(geog1.size());
+    SEXP item1;
+    // using instead of IntegerVector because
+    // std::vector is much faster with repeated calls to
+    // push_back()
+    // alternatively, could allocate one logical vector and
+    // use Rcpp::which() or similar
+    std::vector<int> trueIndices;
+
+    for (R_xlen_t i = 0; i < geog1.size(); i++) {
+      trueIndices.clear();
+
+      item1 = geog1[i];
+      if (item1 ==  R_NilValue) {
+        output[i] = R_NilValue;
+      } else {
+        Rcpp::XPtr<Geography> feature1(item1);
+
+        for (size_t j = 0; j < this->geog2Indices.size(); j++) {
+          bool result = this->processFeature(
+            feature1->ShapeIndex(), 
+            this->geog2Indices[j],
+            i, j
+          );
+
+          if (result) {
+            // convert to R index here (+1)
+            trueIndices.push_back(j + 1);
+          }
+        }
+
+        IntegerVector itemOut(trueIndices.size());
+        for (size_t k = 0; k < trueIndices.size(); k++) {
+          itemOut[k] = trueIndices[k];
+        }
+        output[i] = itemOut;
+      }
+    }
+
+    return output;
+  }
+
+  virtual bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2,
+                              R_xlen_t i, R_xlen_t j) = 0;
+};
+
+// [[Rcpp::export]]
+List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
+  class Op: public MatrixPredicateOperator {
+  public:
+    Op(List s2options): MatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Intersects(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// ----------- distance matrix operators -------------------
 
 template<class MatrixType, class ScalarType>
 class MatrixGeographyOperator {
