@@ -11,6 +11,12 @@
 #'   will be rounded to the nearest power of 10.
 #' @param options An [s2_options()] object describing the polygon/polyline
 #'   model to use and the snap level.
+#' @param distance The distance to buffer, in units of `radius`.
+#' @param max_cells The maximum number of cells to approximate a buffer.
+#' @param min_level The minimum cell level used to approximate a buffer
+#'   (1 - 30). Setting this value too high will result in unnecessarily
+#'   large geographies, but may help improve buffers along long, narrow
+#'   regions.
 #'
 #' @inheritSection s2_options Model
 #'
@@ -159,6 +165,14 @@ s2_union <- function(x, y = NULL, options = s2_options()) {
 #' @export
 s2_snap_to_grid <- function(x, grid_size) {
   s2_union(x, options = s2_options(snap = s2_snap_precision(10^(-log10(grid_size)))))
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
+                            radius = s2_earth_radius_meters()) {
+  recycled <- recycle_common(as_s2_geography(x), distance / radius)
+  new_s2_xptr(cpp_s2_buffer_cells(recycled[[1]], recycled[[2]], max_cells, min_level), "s2_geography")
 }
 
 #' @rdname s2_boundary

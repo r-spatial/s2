@@ -310,6 +310,15 @@ test_that("s2_snap_to_grid() works", {
   )
 })
 
+test_that("s2_buffer() works", {
+  ply <- s2_buffer_cells("POINT (0 0)", distance = 1, radius = 180 / pi)
+  box <- wk::wkb_ranges(wk::as_wkb(ply))
+  expect_near(box$xmin, -1, epsilon = 0.002)
+  expect_near(box$ymin, -1, epsilon = 0.002)
+  expect_near(box$xmax, 1, epsilon = 0.002)
+  expect_near(box$ymax, 1, epsilon = 0.002)
+})
+
 test_that("real data survives the S2BooleanOperation", {
   for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor

@@ -213,6 +213,10 @@ cpp_s2_boundary <- function(geog) {
     .Call(`_s2_cpp_s2_boundary`, geog)
 }
 
+cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
+    .Call(`_s2_cpp_s2_buffer_cells`, geog, distance, maxCells, minLevel)
+}
+
 s2_xptr_test <- function(size) {
     .Call(`_s2_s2_xptr_test`, size)
 }
