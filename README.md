@@ -30,7 +30,7 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("r-spatial/libs2")
+remotes::install_github("r-spatial/s2")
 ```
 
 ## Example
