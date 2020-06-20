@@ -113,6 +113,10 @@ cpp_s2_contains_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_contains_matrix`, geog1, geog2, s2options)
 }
 
+cpp_s2_within_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_within_matrix`, geog1, geog2, s2options)
+}
+
 cpp_s2_intersects_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_intersects_matrix`, geog1, geog2, s2options)
 }

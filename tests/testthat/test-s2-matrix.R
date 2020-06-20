@@ -16,11 +16,60 @@ test_that("s2_closest|farthest_feature() works", {
 
 test_that("matrix predicates work", {
   expect_identical(
+    s2_contains_matrix(
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+    ),
+    list(2L)
+  )
+
+  expect_identical(
+    s2_within_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
+    ),
+    list(integer(0), 1L, integer(0))
+  )
+
+  expect_identical(
+    s2_covers_matrix(
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+    ),
+    list(2L)
+  )
+
+  expect_identical(
+    s2_covered_by_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
+    ),
+    list(integer(0), 1L, integer(0))
+  )
+
+  expect_identical(
     s2_intersects_matrix(
       c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
       "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
     ),
     list(integer(0), 1L, integer(0))
+  )
+
+  expect_identical(
+    s2_disjoint_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
+    ),
+    list(1L, integer(0), 1L)
+  )
+
+  expect_identical(
+    s2_equals_matrix(
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)",
+        "POLYGON ((1 0, 1 1, 0 1, 0 0, 1 0))"),
+      "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
+    ),
+    list(integer(0), integer(0), integer(0), 1L)
   )
 
   expect_identical(

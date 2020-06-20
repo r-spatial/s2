@@ -180,6 +180,21 @@ List cpp_s2_contains_matrix(List geog1, List geog2, List s2options) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_within_matrix(List geog1, List geog2, List s2options) {
+  class Op: public MatrixPredicateOperator {
+  public:
+    Op(List s2options): MatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Contains(*index2, *index1, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
 List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
   class Op: public MatrixPredicateOperator {
   public:
