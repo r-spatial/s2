@@ -18,6 +18,7 @@
 /* end matrix2 mess */
 /* new: */
 #include "s2/value_lexicon.h"
+#include "s2/id_set_lexicon.h"
 
 #include "geography-operator.h"
 #include "s2-options.h"
