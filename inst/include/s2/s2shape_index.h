@@ -244,7 +244,7 @@ class S2ShapeIndexCell {
 //     for (typename IndexType::Iterator it(&index, S2ShapeIndex::BEGIN);
 //          !it.done(); it.Next()) {
 //       ...
-//     }
+//num_shape_ids()     }
 //   }
 //
 // Subtypes provided by the S2 library have the same thread-safety properties
