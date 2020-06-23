@@ -128,5 +128,5 @@ s2_as_text <- function(x, precision = 16, trim = TRUE) {
 #' @rdname s2_geog_point
 #' @export
 s2_as_binary <- function(x, endian = wk::wk_platform_endian()) {
-  s2_geography_to_wkb(as_s2_geography(x), endian = endian)
+  structure(s2_geography_to_wkb(as_s2_geography(x), endian = endian), class = "blob")
 }
