@@ -550,7 +550,7 @@ List cpp_s2_intersects_matrix2(List geog1, List geog2) {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
   
       // s2builderutil::LayerVector layers(3);
-      std::vector<std::unique_ptr<S2Builder::Layer>> layers;
+      std::vector<std::unique_ptr<S2Builder::Layer>> layers(3);
 
       // fill these 3:
       std::vector<int32> points_LabelSetIds;
