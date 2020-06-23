@@ -541,9 +541,8 @@ List cpp_s2_intersects_matrix2(List geog1, List geog2) {
       // handle s2options!
       S2BooleanOperation::Options options;
       ValueLexicon<S2BooleanOperation::SourceId> *source = options.source_id_lexicon();
-      //options.set_source_id_lexicon(ValueLexicon<SourceId>* source_id_lexicon);
-      // options.set_source_id_lexicon(source);
-      Rcout << "source_id_lexicon: " << source << std::endl;
+	  if (!source)
+        Rcout << "source_id_lexicon is NULL" << std::endl;
 
       // create the data structures that will contain the output
       std::vector<S2Point> points;
