@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create and format geography vectors — s2_geog_point • s2</title>
+<title>Create and Format Geography Vectors — s2_geog_point • s2</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create and format geography vectors — s2_geog_point" />
-<meta property="og:description" content="These functions create and export s2_geography vectors.
+<meta property="og:title" content="Create and Format Geography Vectors — s2_geog_point" />
+<meta property="og:description" content="These functions create and export geography vectors.
 Unlike the BigQuery geography constructors, these functions do not sanitize
 invalid or redundant input using s2_union(). Note that when creating polygons
 using s2_make_polygon(), rings can be open or closed." />
@@ -75,7 +75,7 @@ using s2_make_polygon(), rings can be open or closed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@ using s2_make_polygon(), rings can be open or closed." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -126,13 +126,13 @@ using s2_make_polygon(), rings can be open or closed." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create and format geography vectors</h1>
+    <h1>Create and Format Geography Vectors</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-constructors-formatters.R'><code>R/s2-constructors-formatters.R</code></a></small>
     <div class="hidden name"><code>s2_geog_point.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These functions create and export <a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>s2_geography</a> vectors.
+    <p>These functions create and export <a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>.
 Unlike the BigQuery geography constructors, these functions do not sanitize
 invalid or redundant input using <code><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union()</a></code>. Note that when creating polygons
 using <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon()</a></code>, rings can be open or closed.</p>
@@ -192,7 +192,9 @@ rings are defined clockwise).</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>An object that can be interpreted as an S2 type.</p></td>
+      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+(e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>precision</th>
@@ -207,13 +209,14 @@ digits after the decimal place.</p></td>
     <tr>
       <th>endian</th>
       <td><p>The endian to use when writing well-known binary.
-Deaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
+Defaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>BigQuery's geography function reference:</p><ul>
+    <div class='dont-index'><p>See <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code> for other ways to construct geography vectors.</p>
+<p>BigQuery's geography function reference:</p><ul>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint'>ST_GEOGPOINT</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline'>ST_MAKELINE</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon'>ST_MAKEPOLYGON</a></p></li>
@@ -258,7 +261,9 @@ Deaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wk
 (<span class='kw'>geog</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb</a></span>(<span class='kw'>wk</span>::<span class='fu'><a href='https://rdrr.io/pkg/wk/man/wkb.html'>as_wkb</a></span>(<span class='st'>"POINT (-64 45)"</span>)))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (-64 45)&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_binary</a></span>(<span class='kw'>geog</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt;  [1] 01 01 00 00 00 00 00 00 00 00 00 50 c0 ff ff ff ff ff 7f 46 40
-#&gt; </div><div class='input'></div></pre>
+#&gt; 
+#&gt; attr(,"class")
+#&gt; [1] "blob"</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -73,7 +73,7 @@ a logical vector." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@ a logical vector." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -167,11 +167,15 @@ a logical vector.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object that can be interpreted as an S2 type.</p></td>
+      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+(e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>An object that can be interpreted as an S2 type.</p></td>
+      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+(e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -195,7 +199,7 @@ as <code>radius</code>.</p></td>
     <tr>
       <th>radius</th>
       <td><p>Radius of the earth. Defaults to the average radius of
-the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -203,21 +207,22 @@ the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radiu
 
     
 
-<p>The geometry model indicates whether a geometry includes its boundaries.
+<p>The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (model = 0); CLOSED
-geometries (model = 2) contain their boundary; HALF-CLOSED geometries
-contain, like, half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (<code>model = 0</code>); CLOSED
+geometries (<code>model = 2</code>) contain their boundary; HALF-CLOSED geometries
+(<code>model = 1</code>) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
-not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
 and covers/covered_by (2) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>BigQuery's geography function reference:</p><ul>
+    <div class='dont-index'><p>Matrix versions of these predicates (e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_intersects_matrix()</a></code>).</p>
+<p>BigQuery's geography function reference:</p><ul>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains'>ST_CONTAINS</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_coveredby'>ST_COVEREDBY</a></p></li>
 <li><p><a href='https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_covers'>ST_COVERS</a></p></li>

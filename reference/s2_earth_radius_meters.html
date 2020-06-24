@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Earth constants — s2_earth_radius_meters • s2</title>
+<title>Earth Constants — s2_earth_radius_meters • s2</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,12 @@
 
 
 
-<meta property="og:title" content="Earth constants — s2_earth_radius_meters" />
+<meta property="og:title" content="Earth Constants — s2_earth_radius_meters" />
 <meta property="og:description" content="According to Yoder (1995), the radius of the earth is
-6371.01 km." />
+6371.01 km. These functions are used to set the
+default radis for functions that return a distance
+or accept a distance as input
+(e.g., s2_distance() and s2_dwithin())." />
 
 
 
@@ -73,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -96,7 +99,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -124,14 +127,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Earth constants</h1>
+    <h1>Earth Constants</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-earth.R'><code>R/s2-earth.R</code></a></small>
     <div class="hidden name"><code>s2_earth_radius_meters.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>According to Yoder (1995), the radius of the earth is
-6371.01 km.</p>
+6371.01 km. These functions are used to set the
+default radis for functions that return a distance
+or accept a distance as input
+(e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_distance()</a></code> and <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin()</a></code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>()</pre>

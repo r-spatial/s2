@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Matrix functions — s2_closest_feature • s2</title>
+<title>Matrix Functions — s2_closest_feature • s2</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Matrix functions — s2_closest_feature" />
+<meta property="og:title" content="Matrix Functions — s2_closest_feature" />
 <meta property="og:description" content="These functions are similar to accessors and predicates, but instead of
 recycling x and y to a common length and returning a vector of that
 length, these functions return a vector of length x with each element
@@ -76,7 +76,7 @@ the feature at x[i]." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@ the feature at x[i]." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -127,7 +127,7 @@ the feature at x[i]." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Matrix functions</h1>
+    <h1>Matrix Functions</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-matrix.R'><code>R/s2-matrix.R</code></a></small>
     <div class="hidden name"><code>s2_closest_feature.Rd</code></div>
     </div>
@@ -177,7 +177,7 @@ the feature at <code>x[i]</code>.</p>
     <tr>
       <th>radius</th>
       <td><p>Radius of the earth. Defaults to the average radius of
-the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -194,6 +194,9 @@ as <code>radius</code>.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A vector of length <code>x</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>See pairwise predicate functions (e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects()</a></code>).</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>city_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Vatican City"</span>, <span class='st'>"San Marino"</span>, <span class='st'>"Luxembourg"</span>, <span class='st'>"Palikir"</span>)

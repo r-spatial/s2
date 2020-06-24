@@ -13,7 +13,10 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Spherical Geometry Operators Using the S2 Geometry Library">
 <meta property="og:description" content="Provides R bindings for Google's s2 library for geometric calculations on
-    the sphere.">
+    the sphere. High-performance constructors and exporters provide high compatibility
+    with existing spatial packages, transformers construct new geometries from existing
+    geometries, predicates provide a means to select geometries based on spatial 
+    relationships, and accessors extract information about geometries.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -55,7 +58,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/intro.html">Introduction to s2</a>
+      <a href="articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -140,6 +143,81 @@
 <span class="co">#&gt;  8 Gates       &lt;POLYGON ((-76.4604 36.3739, -76.5025 36.4523, -76.4983 36.5039,…</span>
 <span class="co">#&gt;  9 Warren      &lt;POLYGON ((-78.1347 36.2366, -78.1096 36.2135, -78.0583 36.2113,…</span>
 <span class="co">#&gt; 10 Stokes      &lt;POLYGON ((-80.0241 36.545, -80.0481 36.5471, -80.4353 36.551, -…</span>
+<span class="co">#&gt; # … with 90 more rows</span>
+</pre></div>
+<p>Use accessors to extract information about geometries:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="kw">nc_s2</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span>(
+    area = <span class="fu"><a href="reference/s2_is_collection.html">s2_area</a></span>(<span class="kw">geometry</span>),
+    perimeter = <span class="fu"><a href="reference/s2_is_collection.html">s2_perimeter</a></span>(<span class="kw">geometry</span>)
+  )
+<span class="co">#&gt; # A tibble: 100 x 4</span>
+<span class="co">#&gt;    NAME      geometry                                             area perimeter</span>
+<span class="co">#&gt;    &lt;chr&gt;     &lt;s2_geography&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 Ashe      &lt;POLYGON ((-81.4529 36.2396, -81.431 36.2607, -…   1.14e9   141627.</span>
+<span class="co">#&gt;  2 Alleghany &lt;POLYGON ((-81.1767 36.4154, -81.1534 36.4247, …   6.11e8   119876.</span>
+<span class="co">#&gt;  3 Surry     &lt;POLYGON ((-80.453 36.2571, -80.4353 36.551, -8…   1.42e9   160458.</span>
+<span class="co">#&gt;  4 Currituck &lt;MULTIPOLYGON (((-75.9419 36.2943, -75.9575 36.…   6.94e8   301644.</span>
+<span class="co">#&gt;  5 Northamp… &lt;POLYGON ((-77.142 36.4171, -77.1393 36.4565, -…   1.52e9   211794.</span>
+<span class="co">#&gt;  6 Hertford  &lt;POLYGON ((-76.7075 36.2661, -76.7413 36.3152, …   9.68e8   160780.</span>
+<span class="co">#&gt;  7 Camden    &lt;POLYGON ((-76.0173 36.3377, -76.0329 36.336, -…   6.16e8   150430.</span>
+<span class="co">#&gt;  8 Gates     &lt;POLYGON ((-76.4604 36.3739, -76.5025 36.4523, …   9.03e8   123170.</span>
+<span class="co">#&gt;  9 Warren    &lt;POLYGON ((-78.1347 36.2366, -78.1096 36.2135, …   1.18e9   141073.</span>
+<span class="co">#&gt; 10 Stokes    &lt;POLYGON ((-80.0241 36.545, -80.0481 36.5471, -…   1.23e9   140583.</span>
+<span class="co">#&gt; # … with 90 more rows</span>
+</pre></div>
+<p>Use predicates to subset vectors:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">nc_s2</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span>(<span class="kw">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span>))
+<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt;   NAME    geometry                                                              </span>
+<span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span>
+<span class="co">#&gt; 1 Catawba &lt;POLYGON ((-80.9313 35.6196, -81.0036 35.6971, -81.0548 35.7134, -81.…</span>
+</pre></div>
+<p>Use transformers to create new geometries:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">nc_s2</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span>(geometry = <span class="fu"><a href="reference/s2_boundary.html">s2_boundary</a></span>(<span class="kw">geometry</span>))
+<span class="co">#&gt; # A tibble: 100 x 2</span>
+<span class="co">#&gt;    NAME        geometry                                                         </span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
+<span class="co">#&gt;  1 Ashe        &lt;LINESTRING (-81.4529 36.2396, -81.431 36.2607, -81.4123 36.2673…</span>
+<span class="co">#&gt;  2 Alleghany   &lt;LINESTRING (-81.1767 36.4154, -81.1534 36.4247, -81.1384 36.417…</span>
+<span class="co">#&gt;  3 Surry       &lt;LINESTRING (-80.453 36.2571, -80.4353 36.551, -80.6111 36.5573,…</span>
+<span class="co">#&gt;  4 Currituck   &lt;MULTILINESTRING ((-75.9419 36.2943, -75.9575 36.2595, -75.9138 …</span>
+<span class="co">#&gt;  5 Northampton &lt;LINESTRING (-77.142 36.4171, -77.1393 36.4565, -77.1273 36.4707…</span>
+<span class="co">#&gt;  6 Hertford    &lt;LINESTRING (-76.7075 36.2661, -76.7413 36.3152, -76.9241 36.392…</span>
+<span class="co">#&gt;  7 Camden      &lt;LINESTRING (-76.0173 36.3377, -76.0329 36.336, -76.044 36.3536,…</span>
+<span class="co">#&gt;  8 Gates       &lt;LINESTRING (-76.4604 36.3739, -76.5025 36.4523, -76.4983 36.503…</span>
+<span class="co">#&gt;  9 Warren      &lt;LINESTRING (-78.1347 36.2366, -78.1096 36.2135, -78.0583 36.211…</span>
+<span class="co">#&gt; 10 Stokes      &lt;LINESTRING (-80.0241 36.545, -80.0481 36.5471, -80.4353 36.551,…</span>
+<span class="co">#&gt; # … with 90 more rows</span>
+</pre></div>
+<p>Finally, use the WKB or WKT exporters to export to sf or some other package:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="kw">nc_s2</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span>(geometry = <span class="fu">st_as_sfc</span>(<span class="fu"><a href="reference/s2_geog_point.html">s2_as_binary</a></span>(<span class="kw">geometry</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu">st_as_sf</span>()
+<span class="co">#&gt; Simple feature collection with 100 features and 1 field</span>
+<span class="co">#&gt; geometry type:  GEOMETRY</span>
+<span class="co">#&gt; dimension:      XY</span>
+<span class="co">#&gt; bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
+<span class="co">#&gt; CRS:            NA</span>
+<span class="co">#&gt; # A tibble: 100 x 2</span>
+<span class="co">#&gt;    NAME                                                                 geometry</span>
+<span class="co">#&gt;    &lt;chr&gt;                                                              &lt;GEOMETRY&gt;</span>
+<span class="co">#&gt;  1 Ashe       POLYGON ((-81.45289 36.23959, -81.43104 36.26072, -81.41233 36.26…</span>
+<span class="co">#&gt;  2 Alleghany  POLYGON ((-81.17667 36.41544, -81.15337 36.42474, -81.1384 36.417…</span>
+<span class="co">#&gt;  3 Surry      POLYGON ((-80.45301 36.25709, -80.43531 36.55104, -80.61105 36.55…</span>
+<span class="co">#&gt;  4 Currituck  MULTIPOLYGON (((-75.94193 36.29434, -75.95751 36.25945, -75.91376…</span>
+<span class="co">#&gt;  5 Northampt… POLYGON ((-77.14196 36.41706, -77.13932 36.45648, -77.12733 36.47…</span>
+<span class="co">#&gt;  6 Hertford   POLYGON ((-76.7075 36.26613, -76.74135 36.31517, -76.92408 36.392…</span>
+<span class="co">#&gt;  7 Camden     POLYGON ((-76.01735 36.33773, -76.03288 36.33598, -76.04395 36.35…</span>
+<span class="co">#&gt;  8 Gates      POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.503…</span>
+<span class="co">#&gt;  9 Warren     POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.21…</span>
+<span class="co">#&gt; 10 Stokes     POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.551…</span>
 <span class="co">#&gt; # … with 90 more rows</span>
 </pre></div>
 </div>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="S2 Geography Accessors — s2_is_collection" />
-<meta property="og:description" content="S2 Geography Accessors" />
+<meta property="og:description" content="Accessors extract information about geography vectors." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -129,7 +129,7 @@
     </div>
 
     <div class="ref-description">
-    <p>S2 Geography Accessors</p>
+    <p>Accessors extract information about <a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_is_collection.html'>s2_is_collection</a></span>(<span class='kw'>x</span>)
@@ -159,12 +159,14 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x, y</th>
-      <td><p>An object that can be interpreted as an S2 type.</p></td>
+      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+(e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>radius</th>
       <td><p>Radius of the earth. Defaults to the average radius of
-the earth as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
     </tr>
     </table>
 

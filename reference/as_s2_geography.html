@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Create an S2 Geography Vector — as_s2_geography" />
-<meta property="og:description" content="Create an S2 Geography Vector" />
+<meta property="og:description" content="Geography vectors are arrays of points, lines, polygons, and/or collections
+of these. Geography vectors assume coordinates are longitude and latitude
+on a perfect sphere." />
 
 
 
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -95,7 +97,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -129,7 +131,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Create an S2 Geography Vector</p>
+    <p>Geography vectors are arrays of points, lines, polygons, and/or collections
+of these. Geography vectors assume coordinates are longitude and latitude
+on a perfect sphere.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
@@ -194,7 +198,7 @@ rings are defined clockwise).</p></td>
     <tr>
       <th>endian</th>
       <td><p>The endian to use when writing well-known binary.
-Deaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
+Defaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
     </tr>
     <tr>
       <th>precision</th>
@@ -211,6 +215,20 @@ digits after the decimal place.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object with class s2_geography</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The coercion function <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code> is used to wrap the input
+of most functions in the s2 package so that you can use other objects with
+an unambiguious interpretation as a geography vector. Geography vectors
+have a minimal <a href='https://vctrs.r-lib.org/reference/vctrs-package.html'>vctrs</a> implementation, so you can
+use these objects in <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> and other packages that use the vctrs
+framework.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_wkb()</a></code>, <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_from_text()</a></code>, <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_geog_point()</a></code>,
+<code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_line()</a></code>, <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_make_polygon()</a></code> for other ways to
+create geography vectors, and <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_binary()</a></code> and <code><a href='https://rdrr.io/pkg/s2/man/s2_geog_point.html'>s2_as_text()</a></code>
+for other ways to export them.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

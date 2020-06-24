@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an S2 Point vector — s2_point • s2</title>
+<title>Create an S2 Point Vector — s2_point • s2</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Create an S2 Point vector — s2_point" />
-<meta property="og:description" content="In S2 terminology, a &quot;point&quot; is a 3-dimensional unit vector, as opposed
-to a as_s2_latlng(), which is a position on the Earth's surface." />
+<meta property="og:title" content="Create an S2 Point Vector — s2_point" />
+<meta property="og:description" content="In S2 terminology, a &quot;point&quot; is a 3-dimensional unit vector representation
+of an s2_latlng(). Internally, all s2 objects are stored as
+3-dimensional unit vectors." />
 
 
 
@@ -73,7 +74,7 @@ to a as_s2_latlng(), which is a position on the Earth's surface." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -96,7 +97,7 @@ to a as_s2_latlng(), which is a position on the Earth's surface." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/intro.html">Introduction to s2</a>
+      <a href="../articles/articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -124,14 +125,15 @@ to a as_s2_latlng(), which is a position on the Earth's surface." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an S2 Point vector</h1>
+    <h1>Create an S2 Point Vector</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-point.R'><code>R/s2-point.R</code></a></small>
     <div class="hidden name"><code>s2_point.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
-to a <code><a href='https://rdrr.io/pkg/s2/man/s2_latlng.html'>as_s2_latlng()</a></code>, which is a position on the Earth's surface.</p>
+    <p>In S2 terminology, a "point" is a 3-dimensional unit vector representation
+of an <code><a href='https://rdrr.io/pkg/s2/man/s2_latlng.html'>s2_latlng()</a></code>. Internally, all s2 objects are stored as
+3-dimensional unit vectors.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_point.html'>s2_point</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>z</span>)
