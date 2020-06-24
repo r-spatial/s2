@@ -1,9 +1,13 @@
 
 #' S2 Geography Accessors
 #'
-#' @param x,y An object that can be interpreted as an S2 type.
+#' Accessors extract information about [geography vectors][as_s2_geography].
+#'
+#' @param x,y [geography vectors][as_s2_geography]. These inputs
+#'   are passed to [as_s2_geography()], so you can pass other objects
+#'   (e.g., character vectors of well-known text) directly.
 #' @param radius Radius of the earth. Defaults to the average radius of
-#'   the earth as defined by [s2_earth_radius_meters()].
+#'   the earth in meters as defined by [s2_earth_radius_meters()].
 #'
 #' @export
 #'

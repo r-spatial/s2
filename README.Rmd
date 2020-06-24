@@ -67,6 +67,38 @@ nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>%
 nc_s2
 ```
 
+Use accessors to extract information about geometries:
+
+```{r}
+nc_s2 %>% 
+  mutate(
+    area = s2_area(geometry),
+    perimeter = s2_perimeter(geometry)
+  )
+```
+
+Use predicates to subset vectors:
+
+```{r}
+nc_s2 %>% 
+  filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
+```
+
+Use transformers to create new geometries:
+
+```{r}
+nc_s2 %>% 
+  mutate(geometry = s2_boundary(geometry))
+```
+
+Finally, use the WKB or WKT exporters to export to sf or some other package:
+
+```{r}
+nc_s2 %>% 
+  mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>% 
+  st_as_sf()
+```
+
 ## Acknowledgment
 
 This project gratefully acknowledges financial [support](https://www.r-consortium.org/projects) from the

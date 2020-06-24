@@ -7,12 +7,15 @@
 \title{s2: Spherical Geometry Operators Using the S2 Geometry Library}
 \description{
 Provides R bindings for Google's s2 library for geometric calculations on
-    the sphere.
+    the sphere. High-performance constructors and exporters provide high compatibility
+    with existing spatial packages, transformers construct new geometries from existing
+    geometries, predicates provide a means to select geometries based on spatial 
+    relationships, and accessors extract information about geometries.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/r-spatial/s2/}
+  \item \url{https://github.com/r-spatial/s2}
   \item \url{https://s2geometry.io/}
   \item Report bugs at \url{https://github.com/r-spatial/s2/issues}
 }

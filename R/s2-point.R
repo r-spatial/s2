@@ -1,8 +1,9 @@
 
-#' Create an S2 Point vector
+#' Create an S2 Point Vector
 #'
-#' In S2 terminology, a "point" is a 3-dimensional unit vector, as opposed
-#' to a [as_s2_latlng()], which is a position on the Earth's surface.
+#' In S2 terminology, a "point" is a 3-dimensional unit vector representation
+#' of an [s2_latlng()]. Internally, all s2 objects are stored as
+#' 3-dimensional unit vectors.
 #'
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
 #' @param ... Unused

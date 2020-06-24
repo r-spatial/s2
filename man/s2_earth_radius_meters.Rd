@@ -2,13 +2,16 @@
 % Please edit documentation in R/s2-earth.R
 \name{s2_earth_radius_meters}
 \alias{s2_earth_radius_meters}
-\title{Earth constants}
+\title{Earth Constants}
 \usage{
 s2_earth_radius_meters()
 }
 \description{
 According to Yoder (1995), the radius of the earth is
-6371.01 km.
+6371.01 km. These functions are used to set the
+default radis for functions that return a distance
+or accept a distance as input
+(e.g., \code{\link[=s2_distance]{s2_distance()}} and \code{\link[=s2_dwithin]{s2_dwithin()}}).
 }
 \examples{
 s2_earth_radius_meters()

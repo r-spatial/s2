@@ -1,8 +1,11 @@
 
-#' Earth constants
+#' Earth Constants
 #'
 #' According to Yoder (1995), the radius of the earth is
-#' 6371.01 km.
+#' 6371.01 km. These functions are used to set the
+#' default radis for functions that return a distance
+#' or accept a distance as input
+#' (e.g., [s2_distance()] and [s2_dwithin()]).
 #'
 #' @export
 #'

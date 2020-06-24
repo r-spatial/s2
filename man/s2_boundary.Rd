@@ -46,9 +46,13 @@ s2_centroid_agg(x, na.rm = FALSE)
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 }
 \arguments{
-\item{x}{An object that can be interpreted as an S2 type.}
+\item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
+are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
+(e.g., character vectors of well-known text) directly.}
 
-\item{y}{An object that can be interpreted as an S2 type.}
+\item{y}{\link[=as_s2_geography]{geography vectors}. These inputs
+are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
+(e.g., character vectors of well-known text) directly.}
 
 \item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
 model to use and the snap level.}
@@ -66,7 +70,7 @@ large geographies, but may help improve buffers along long, narrow
 regions.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
-the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
+the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}
@@ -77,14 +81,14 @@ return a geography vector.
 }
 \section{Model}{
 
-The geometry model indicates whether a geometry includes its boundaries.
+The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (model = 0); CLOSED
-geometries (model = 2) contain their boundary; HALF-CLOSED geometries
-contain, like, half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (\code{model = 0}); CLOSED
+geometries (\code{model = 2}) contain their boundary; HALF-CLOSED geometries
+(\code{model = 1}) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
-not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
 which that is based). A value of -1 does not set the model, leaving the
 S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
 and covers/covered_by (2) correspond to the SFA standard specification

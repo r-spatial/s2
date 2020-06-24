@@ -1,13 +1,24 @@
 
 #' Create an S2 Geography Vector
 #'
+#' Geography vectors are arrays of points, lines, polygons, and/or collections
+#' of these. Geography vectors assume coordinates are longitude and latitude
+#' on a perfect sphere.
+#'
+#' The coercion function [as_s2_geography()] is used to wrap the input
+#' of most functions in the s2 package so that you can use other objects with
+#' an unambiguious interpretation as a geography vector. Geography vectors
+#' have a minimal [vctrs][vctrs::vctrs-package] implementation, so you can
+#' use these objects in [tibble::tibble()] and other packages that use the vctrs
+#' framework.
+#'
 #' @param x An object that can be converted to an s2_geography vector
 #' @param oriented TRUE if polygon ring directions are known to be correct
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
 #' @param check Use `check = FALSE` to error on invalid geometries
 #' @param endian The endian to use when writing well-known binary.
-#'   Deaults to the platform endian. See [wk::as_wkb()].
+#'   Defaults to the platform endian. See [wk::as_wkb()].
 #' @param precision The number of significant digits to export when
 #'   writing well-known text. If `trim = FALSE`, the number of
 #'   digits after the decimal place.
@@ -16,6 +27,12 @@
 #'
 #' @return An object with class s2_geography
 #' @export
+#'
+#' @seealso
+#' [s2_geog_from_wkb()], [s2_geog_from_text()], [s2_geog_point()],
+#' [s2_make_line()], [s2_make_polygon()] for other ways to
+#' create geography vectors, and [s2_as_binary()] and [s2_as_text()]
+#' for other ways to export them.
 #'
 as_s2_geography <- function(x, ...) {
   UseMethod("as_s2_geography")

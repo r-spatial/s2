@@ -17,6 +17,8 @@
 #' @export
 #'
 #' @seealso
+#' Matrix versions of these predicates (e.g., [s2_intersects_matrix()]).
+#'
 #' BigQuery's geography function reference:
 #'
 #' - [ST_CONTAINS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains)

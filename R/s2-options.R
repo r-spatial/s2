@@ -2,7 +2,9 @@
 #' Geography Operation Options
 #'
 #' These functions specify defaults for options used to perform operations
-#' and construct geometries.
+#' and construct geometries. These are used in predicates (e.g., [s2_intersects()]),
+#' and boolean operations (e.g., [s2_intersection()]) to specify the model for
+#' containment and how new geometries should be constructed.
 #'
 #' @param model,polygon_model,polyline_model See section 'Model'
 #' @param snap Use `s2_snap_identity()`, `s2_snap_distance()`, `s2_snap_level()`,
@@ -21,14 +23,14 @@
 #'   before being rounded. Rounded to the nearest exponent of 10.
 #'
 #' @section Model:
-#' The geometry model indicates whether a geometry includes its boundaries.
+#' The geometry model indicates whether or not a geometry includes its boundaries.
 #' Boundaries of line geometries are its end points.
-#' OPEN geometries do not contain their boundary (model = 0); CLOSED
-#' geometries (model = 2) contain their boundary; HALF-CLOSED geometries
-#' contain, like, half of their boundaries, such that when two polygons
+#' OPEN geometries do not contain their boundary (`model = 0`); CLOSED
+#' geometries (`model = 2`) contain their boundary; HALF-CLOSED geometries
+#' (`model = 1`) contain half of their boundaries, such that when two polygons
 #' do not overlap or two lines do not cross, no point exist that belong to
 #' more than one of the geometries. (This latter form, half-closed, is
-#' not present n the OpenGIS "simple feature access" (SFA) standard, or DE9-IM on
+#' not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
 #' which that is based). A value of -1 does not set the model, leaving the
 #' S2 default (HALF-CLOSED). The default values for [s2_contains()] (0)
 #' and covers/covered_by (2) correspond to the SFA standard specification
@@ -50,26 +52,20 @@
 #' # in the semi-open and closed models, endpoints are contained
 #' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 1))
 #' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 1))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 1))
-#'
 #' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 2))
 #' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 2))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 2))
 #'
-#' # for polygons, the still does not include the edges between boundaries
+#' # for polygons, boundary points are either contained or not contained depending on
+#' # the model of  choice
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 0))
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 0))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 0))
 #'
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 1))
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 1))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 1))
-#'
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 2))
 #' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 2))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0.5)", s2_options(model = 2))
 #'
-#' # s2_dwithin(x, y, epsilon) is a more reliable test if boundaries are important
+#' # s2_dwithin(x, y, epsilon) is a more explicit test if boundaries are important
 #' s2_dwithin(
 #'   "LINESTRING (0 0, 0 1, 1 1)",
 #'   c("POINT (0 0)", "POINT (0 1)", "POINT (0 0.5)"),
