@@ -1,5 +1,5 @@
 
-#' Matrix functions
+#' Matrix Functions
 #'
 #' These functions are similar to accessors and predicates, but instead of
 #' recycling `x` and `y` to a common length and returning a vector of that
@@ -14,6 +14,9 @@
 #'
 #' @return A vector of length `x`.
 #' @export
+#'
+#' @seealso
+#' See pairwise predicate functions (e.g., [s2_intersects()]).
 #'
 #' @examples
 #' city_names <- c("Vatican City", "San Marino", "Luxembourg", "Palikir")

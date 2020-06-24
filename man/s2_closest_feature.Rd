@@ -14,7 +14,7 @@
 \alias{s2_equals_matrix}
 \alias{s2_touches_matrix}
 \alias{s2_dwithin_matrix}
-\title{Matrix functions}
+\title{Matrix Functions}
 \usage{
 s2_closest_feature(x, y)
 
@@ -47,7 +47,7 @@ s2_dwithin_matrix(x, y, distance, radius = s2_earth_radius_meters())
 \code{x} is considered the source, where as \code{y} is considered the target.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
-the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
+the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 
 \item{options}{An \code{\link[=s2_options]{s2_options()}} object describing the polygon/polyline
 model to use and the snap level.}
@@ -83,4 +83,7 @@ country_names[s2_farthest_feature(cities, countries)]
 s2_distance_matrix(cities, cities)
 s2_max_distance_matrix(cities, countries[1:4])
 
+}
+\seealso{
+See pairwise predicate functions (e.g., \code{\link[=s2_intersects]{s2_intersects()}}).
 }

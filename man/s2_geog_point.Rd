@@ -8,7 +8,7 @@
 \alias{s2_geog_from_wkb}
 \alias{s2_as_text}
 \alias{s2_as_binary}
-\title{Create and format geography vectors}
+\title{Create and Format Geography Vectors}
 \usage{
 s2_geog_point(longitude, latitude)
 
@@ -48,7 +48,9 @@ rings are defined clockwise).}
 
 \item{wkb_bytes}{A \code{list()} of \code{raw()}}
 
-\item{x}{An object that can be interpreted as an S2 type.}
+\item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
+are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
+(e.g., character vectors of well-known text) directly.}
 
 \item{precision}{The number of significant digits to export when
 writing well-known text. If \code{trim = FALSE}, the number of
@@ -57,10 +59,10 @@ digits after the decimal place.}
 \item{trim}{Should trailing zeroes be included after the decimal place?}
 
 \item{endian}{The endian to use when writing well-known binary.
-Deaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
+Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
 }
 \description{
-These functions create and export \link[=as_s2_geography]{s2_geography} vectors.
+These functions create and export \link[=as_s2_geography]{geography vectors}.
 Unlike the BigQuery geography constructors, these functions do not sanitize
 invalid or redundant input using \code{\link[=s2_union]{s2_union()}}. Note that when creating polygons
 using \code{\link[=s2_make_polygon]{s2_make_polygon()}}, rings can be open or closed.
@@ -101,6 +103,8 @@ s2_as_binary(geog)
 
 }
 \seealso{
+See \code{\link[=as_s2_geography]{as_s2_geography()}} for other ways to construct geography vectors.
+
 BigQuery's geography function reference:
 \itemize{
 \item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint}{ST_GEOGPOINT}

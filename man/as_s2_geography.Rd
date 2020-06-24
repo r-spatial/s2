@@ -54,7 +54,7 @@ rings are defined clockwise).}
 \item{check}{Use \code{check = FALSE} to error on invalid geometries}
 
 \item{endian}{The endian to use when writing well-known binary.
-Deaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
+Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
 
 \item{precision}{The number of significant digits to export when
 writing well-known text. If \code{trim = FALSE}, the number of
@@ -66,5 +66,21 @@ digits after the decimal place.}
 An object with class s2_geography
 }
 \description{
-Create an S2 Geography Vector
+Geography vectors are arrays of points, lines, polygons, and/or collections
+of these. Geography vectors assume coordinates are longitude and latitude
+on a perfect sphere.
+}
+\details{
+The coercion function \code{\link[=as_s2_geography]{as_s2_geography()}} is used to wrap the input
+of most functions in the s2 package so that you can use other objects with
+an unambiguious interpretation as a geography vector. Geography vectors
+have a minimal \link[vctrs:vctrs-package]{vctrs} implementation, so you can
+use these objects in \code{\link[=tibble]{tibble()}} and other packages that use the vctrs
+framework.
+}
+\seealso{
+\code{\link[=s2_geog_from_wkb]{s2_geog_from_wkb()}}, \code{\link[=s2_geog_from_text]{s2_geog_from_text()}}, \code{\link[=s2_geog_point]{s2_geog_point()}},
+\code{\link[=s2_make_line]{s2_make_line()}}, \code{\link[=s2_make_polygon]{s2_make_polygon()}} for other ways to
+create geography vectors, and \code{\link[=s2_as_binary]{s2_as_binary()}} and \code{\link[=s2_as_text]{s2_as_text()}}
+for other ways to export them.
 }

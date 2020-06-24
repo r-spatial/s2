@@ -1,7 +1,7 @@
 
-#' Create and format geography vectors
+#' Create and Format Geography Vectors
 #'
-#' These functions create and export [s2_geography][as_s2_geography] vectors.
+#' These functions create and export [geography vectors][as_s2_geography].
 #' Unlike the BigQuery geography constructors, these functions do not sanitize
 #' invalid or redundant input using [s2_union()]. Note that when creating polygons
 #' using [s2_make_polygon()], rings can be open or closed.
@@ -18,6 +18,8 @@
 #' @export
 #'
 #' @seealso
+#' See [as_s2_geography()] for other ways to construct geography vectors.
+#'
 #' BigQuery's geography function reference:
 #'
 #' - [ST_GEOGPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)

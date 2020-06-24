@@ -37,13 +37,15 @@ s2_distance(x, y, radius = s2_earth_radius_meters())
 s2_max_distance(x, y, radius = s2_earth_radius_meters())
 }
 \arguments{
-\item{x, y}{An object that can be interpreted as an S2 type.}
+\item{x, y}{\link[=as_s2_geography]{geography vectors}. These inputs
+are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
+(e.g., character vectors of well-known text) directly.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
-the earth as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
+the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 }
 \description{
-S2 Geography Accessors
+Accessors extract information about \link[=as_s2_geography]{geography vectors}.
 }
 \examples{
 # s2_is_collection() tests for multiple geometries in one feature
