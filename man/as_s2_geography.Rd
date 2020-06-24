@@ -54,7 +54,7 @@ rings are defined clockwise).}
 \item{check}{Use \code{check = FALSE} to error on invalid geometries}
 
 \item{endian}{The endian to use when writing well-known binary.
-Deaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}
+Deaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
 
 \item{precision}{The number of significant digits to export when
 writing well-known text. If \code{trim = FALSE}, the number of
