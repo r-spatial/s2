@@ -17,7 +17,10 @@ Authors@R: c(
     person(family = "Google, Inc.", role = "cph", comment = "Original s2geometry.io source code")
   )
 Description: Provides R bindings for Google's s2 library for geometric calculations on
-    the sphere.
+    the sphere. High-performance constructors and exporters provide high compatibility
+    with existing spatial packages, transformers construct new geometries from existing
+    geometries, predicates provide a means to select geometries based on spatial 
+    relationships, and accessors extract information about geometries.
 License: Apache License (== 2.0)
 Encoding: UTF-8
 LazyData: true
@@ -34,7 +37,7 @@ Suggests:
     knitr,
     vctrs
 VignetteBuilder: knitr
-URL: https://github.com/r-spatial/s2/, https://s2geometry.io/
+URL: https://github.com/r-spatial/s2, https://s2geometry.io/
 BugReports: https://github.com/r-spatial/s2/issues
 Remotes: paleolimbot/wk
 Depends: 
