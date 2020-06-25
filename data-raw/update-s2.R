@@ -80,6 +80,7 @@ print_next <- function() {
     "(see https://github.com/abseil/abseil-cpp/issues/157 for why Google doesn't support -Wpedantic)"
   )
   cli::cat_bullet("Remove extra semi-colon at s2boolean_operation.h#376")
+  cli::cat_bullet("Remove extra semi-colons because of FROMHOST_TYPE_MAP macro (utils/endian/endian.h#565)")
   cli::cat_bullet("Replace `abort()` with `cpp_compat_abort()`")
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
   cli::cat_bullet("Replace `srandom()` with `cpp_compat_srandom()`")

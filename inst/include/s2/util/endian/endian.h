@@ -569,18 +569,20 @@ typedef BigEndian NetworkByteOrder;
     typedef ITYPE int_type;                    \
   };
 
-FROMHOST_TYPE_MAP(uint8, uint8);
-FROMHOST_TYPE_MAP(uint8, int8);
-FROMHOST_TYPE_MAP(uint16, uint16);
-FROMHOST_TYPE_MAP(uint16, int16);
-FROMHOST_TYPE_MAP(uint32, uint32);
-FROMHOST_TYPE_MAP(uint32, int32);
-FROMHOST_TYPE_MAP(uint64, uint64);
-FROMHOST_TYPE_MAP(uint64, int64);
-FROMHOST_TYPE_MAP(uint32, float);
-FROMHOST_TYPE_MAP(uint64, double);
-FROMHOST_TYPE_MAP(uint8, bool);
-FROMHOST_TYPE_MAP(absl::uint128, absl::uint128);
+// dd: the extra semi-colons here made it harder to track down other errors with
+// -Wpedantic (because the semi-colon is already defined in the marcro)
+FROMHOST_TYPE_MAP(uint8, uint8)
+FROMHOST_TYPE_MAP(uint8, int8)
+FROMHOST_TYPE_MAP(uint16, uint16)
+FROMHOST_TYPE_MAP(uint16, int16)
+FROMHOST_TYPE_MAP(uint32, uint32)
+FROMHOST_TYPE_MAP(uint32, int32)
+FROMHOST_TYPE_MAP(uint64, uint64)
+FROMHOST_TYPE_MAP(uint64, int64)
+FROMHOST_TYPE_MAP(uint32, float)
+FROMHOST_TYPE_MAP(uint64, double)
+FROMHOST_TYPE_MAP(uint8, bool)
+FROMHOST_TYPE_MAP(absl::uint128, absl::uint128)
 #undef FROMHOST_TYPE_MAP
 
 // Default implementation for the unified FromHost(ValueType) API, which
