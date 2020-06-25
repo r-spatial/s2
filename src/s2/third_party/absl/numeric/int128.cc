@@ -131,7 +131,7 @@ uint128::uint128(long double v) : uint128(MakeUint128FromFloat(v)) {}
 
 uint128 operator/(uint128 lhs, uint128 rhs) {
 #if defined(ABSL_HAVE_INTRINSIC_INT128)
-  return static_cast<unsigned __int128>(lhs) /
+  return __extension__ static_cast<unsigned __int128>(lhs) /
          static_cast<unsigned __int128>(rhs);
 #else  // ABSL_HAVE_INTRINSIC_INT128
   uint128 quotient = 0;
@@ -142,7 +142,7 @@ uint128 operator/(uint128 lhs, uint128 rhs) {
 }
 uint128 operator%(uint128 lhs, uint128 rhs) {
 #if defined(ABSL_HAVE_INTRINSIC_INT128)
-  return static_cast<unsigned __int128>(lhs) %
+ return __extension__ static_cast<unsigned __int128>(lhs) %
          static_cast<unsigned __int128>(rhs);
 #else  // ABSL_HAVE_INTRINSIC_INT128
   uint128 quotient = 0;

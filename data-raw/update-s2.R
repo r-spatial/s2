@@ -74,6 +74,11 @@ print_next <- function() {
     "Replace call to memset() with loop over pointers ->reset() method"
   )
   cli::cat_bullet("Replace the ABSL_DEPRECATED macro with a blank macro")
+  cli::cat_bullet(
+    "Fix __int128 warnings under -Wpedantic by inserting __extension__ at the beginning ",
+    "of expressions containing the __int128 type ",
+    "(see https://github.com/abseil/abseil-cpp/issues/157 for why Google doesn't support -Wpedantic)"
+  )
   cli::cat_bullet("Replace `abort()` with `cpp_compat_abort()`")
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
   cli::cat_bullet("Replace `srandom()` with `cpp_compat_srandom()`")

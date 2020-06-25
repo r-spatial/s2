@@ -95,8 +95,8 @@ class alignas(16) uint128 {
   constexpr uint128(long long v);           // NOLINT(runtime/int)
   constexpr uint128(unsigned long long v);  // NOLINT(runtime/int)
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-  constexpr uint128(__int128 v);           // NOLINT(runtime/explicit)
-  constexpr uint128(unsigned __int128 v);  // NOLINT(runtime/explicit)
+__extension__  constexpr uint128(__int128 v);           // NOLINT(runtime/explicit)
+__extension__  constexpr uint128(unsigned __int128 v);  // NOLINT(runtime/explicit)
 #endif  // ABSL_HAVE_INTRINSIC_INT128
   explicit uint128(float v);
   explicit uint128(double v);
@@ -110,8 +110,8 @@ class alignas(16) uint128 {
   uint128& operator=(long long v);           // NOLINT(runtime/int)
   uint128& operator=(unsigned long long v);  // NOLINT(runtime/int)
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-  uint128& operator=(__int128 v);
-  uint128& operator=(unsigned __int128 v);
+__extension__  uint128& operator=(__int128 v);
+__extension__  uint128& operator=(unsigned __int128 v);
 #endif  // ABSL_HAVE_INTRINSIC_INT128
 
   // Conversion operators to other arithmetic types
@@ -135,8 +135,8 @@ class alignas(16) uint128 {
   // NOLINTNEXTLINE(runtime/int)
   constexpr explicit operator unsigned long long() const;
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-  constexpr explicit operator __int128() const;
-  constexpr explicit operator unsigned __int128() const;
+__extension__  constexpr explicit operator __int128() const;
+__extension__  constexpr explicit operator unsigned __int128() const;
 #endif  // ABSL_HAVE_INTRINSIC_INT128
   explicit operator float() const;
   explicit operator double() const;
@@ -253,7 +253,7 @@ inline uint128& uint128::operator=(unsigned long long v) {
 }
 
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-inline uint128& uint128::operator=(__int128 v) {
+__extension__ inline uint128& uint128::operator=(__int128 v) {
   return *this = uint128(v);
 }
 
@@ -336,10 +336,10 @@ constexpr uint128::uint128(unsigned long v) : lo_{v}, hi_{0} {}
 constexpr uint128::uint128(unsigned long long v) : lo_{v}, hi_{0} {}
 
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-constexpr uint128::uint128(__int128 v)
+__extension__ constexpr uint128::uint128(__int128 v)
     : lo_{static_cast<uint64_t>(v & ~uint64_t{0})},
       hi_{static_cast<uint64_t>(static_cast<unsigned __int128>(v) >> 64)} {}
-constexpr uint128::uint128(unsigned __int128 v)
+__extension__ constexpr uint128::uint128(unsigned __int128 v)
     : lo_{static_cast<uint64_t>(v & ~uint64_t{0})},
       hi_{static_cast<uint64_t>(v >> 64)} {}
 #endif  // ABSL_HAVE_INTRINSIC_INT128
@@ -367,10 +367,10 @@ constexpr uint128::uint128(unsigned long v) : hi_{0}, lo_{v} {}
 constexpr uint128::uint128(unsigned long long v) : hi_{0}, lo_{v} {}
 
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-constexpr uint128::uint128(__int128 v)
+__extension__ constexpr uint128::uint128(__int128 v)
     : hi_{static_cast<uint64_t>(static_cast<unsigned __int128>(v) >> 64)},
       lo_{static_cast<uint64_t>(v & ~uint64_t{0})} {}
-constexpr uint128::uint128(unsigned __int128 v)
+__extension__ constexpr uint128::uint128(unsigned __int128 v)
     : hi_{static_cast<uint64_t>(v >> 64)},
       lo_{static_cast<uint64_t>(v & ~uint64_t{0})} {}
 #endif  // ABSL_HAVE_INTRINSIC_INT128
@@ -435,11 +435,11 @@ constexpr uint128::operator unsigned long long() const {  // NOLINT(runtime/int)
 }
 
 #ifdef ABSL_HAVE_INTRINSIC_INT128
-constexpr uint128::operator __int128() const {
+__extension__ constexpr uint128::operator __int128() const {
   return (static_cast<__int128>(hi_) << 64) + lo_;
 }
 
-constexpr uint128::operator unsigned __int128() const {
+__extension__ constexpr uint128::operator unsigned __int128() const {
   return (static_cast<unsigned __int128>(hi_) << 64) + lo_;
 }
 #endif  // ABSL_HAVE_INTRINSIC_INT128
