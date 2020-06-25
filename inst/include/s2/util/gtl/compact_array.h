@@ -121,7 +121,7 @@ class compact_array_base {
   char unused_padding_[kUnusedPaddingBytes];
 
   // inlined_elements_ stores the first N elements, potentially as few as zero.
-  char inlined_elements_[3 - kUnusedPaddingBytes];
+  __extension__ char inlined_elements_[3 - kUnusedPaddingBytes];
 
   // compact_array_base itself is at least as aligned as a T* because of the
   // T* member inside this union. The only reason to split inlined_elements_
