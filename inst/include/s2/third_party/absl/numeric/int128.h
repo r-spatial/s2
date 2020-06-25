@@ -599,7 +599,7 @@ inline uint128 operator*(uint128 lhs, uint128 rhs) {
   // TODO(user) Remove once alignment issues are resolved and unsigned __int128
   // can be used for uint128 storage.
   return __extension__ static_cast<unsigned __int128>(lhs) *
-         static_cast<unsigned __int128>(rhs);
+         __extension__ static_cast<unsigned __int128>(rhs);
 #else   // ABSL_HAVE_INTRINSIC128
   uint64_t a32 = Uint128Low64(lhs) >> 32;
   uint64_t a00 = Uint128Low64(lhs) & 0xffffffff;
