@@ -257,7 +257,7 @@ __extension__ inline uint128& uint128::operator=(__int128 v) {
   return *this = uint128(v);
 }
 
-inline uint128& uint128::operator=(unsigned __int128 v) {
+__extension__ inline uint128& uint128::operator=(unsigned __int128 v) {
   return *this = uint128(v);
 }
 #endif  // ABSL_HAVE_INTRINSIC_INT128
@@ -598,7 +598,7 @@ inline uint128 operator*(uint128 lhs, uint128 rhs) {
 #if defined(ABSL_HAVE_INTRINSIC_INT128)
   // TODO(user) Remove once alignment issues are resolved and unsigned __int128
   // can be used for uint128 storage.
-  return static_cast<unsigned __int128>(lhs) *
+  return __extension__ static_cast<unsigned __int128>(lhs) *
          static_cast<unsigned __int128>(rhs);
 #else   // ABSL_HAVE_INTRINSIC128
   uint64_t a32 = Uint128Low64(lhs) >> 32;

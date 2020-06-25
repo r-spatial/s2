@@ -81,8 +81,7 @@ print_next <- function() {
   )
   cli::cat_bullet(
     "Fix zero-length array warnings under -Wpedantic by inserting __extension__ at the beginning ",
-    "of expressions declaring them (s2region_coverer.h#251, util/gtl/compact_array.h#124) ",
-    "(see https://github.com/abseil/abseil-cpp/issues/157 for why Google doesn't support -Wpedantic)"
+    "of expressions declaring them (s2region_coverer.h#251, util/gtl/compact_array.h#124)"
   )
   cli::cat_bullet("Remove extra semi-colon at s2boolean_operation.h#376")
   cli::cat_bullet("Remove extra semi-colons because of FROMHOST_TYPE_MAP macro (utils/endian/endian.h#565)")
