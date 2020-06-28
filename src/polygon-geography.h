@@ -178,7 +178,7 @@ public:
         polygon->FindValidationError(&error);
         Rcpp::stop(error.text());
       }
-      
+
       return absl::make_unique<PolygonGeography>(std::move(polygon));
     }
 
@@ -233,7 +233,7 @@ private:
                    const std::vector<int>& loopIndices, int loopIdOffset = 0) {
     S2LatLng point;
 
-    for (int i = 0; i < loopIndices.size(); i++) {
+    for (size_t i = 0; i < loopIndices.size(); i++) {
       int loopId = loopIndices[i];
       S2Loop* loop = this->polygon->loop(loopId);
       if (loop->num_vertices() == 0) {
