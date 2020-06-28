@@ -35,7 +35,7 @@ Imports:
 Suggests: 
     testthat,
     vctrs
-URL: https://github.com/r-spatial/s2, https://s2geometry.io/
+URL: https://r-spatial.github.io/s2/, https://github.com/r-spatial/s2, https://s2geometry.io/
 BugReports: https://github.com/r-spatial/s2/issues
 Depends: 
     R (>= 3.0.0)
