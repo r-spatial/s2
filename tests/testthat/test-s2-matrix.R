@@ -131,3 +131,80 @@ test_that("s2_(max_)?distance_matrix() works", {
   expect_true(all(is.na(s2_distance_matrix(x, y)[2, ])))
   expect_true(all(is.na(s2_max_distance_matrix(x, y)[2, ])))
 })
+
+test_that("indexed matrix predicates return the same thing as brute-force comparisons", {
+  warning("indexed and non-indexed predicate ops treat containment of EMPTY differently")
+  countries <- s2_data_countries()
+  timezones <- s2_data_timezones()
+  timezones <- timezones[!s2_is_empty(timezones)]
+
+  # contains
+  expect_identical(
+    s2_contains_matrix(countries, countries),
+    s2_contains_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_contains_matrix(timezones, countries),
+    s2_contains_matrix_brute_force(timezones, countries)
+  )
+
+  # within
+  expect_identical(
+    s2_within_matrix(countries, countries),
+    s2_within_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_within_matrix(timezones, countries),
+    s2_within_matrix_brute_force(timezones, countries)
+  )
+
+  # covers
+  expect_identical(
+    s2_covers_matrix(countries, countries),
+    s2_covers_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_covers_matrix(timezones, countries),
+    s2_covers_matrix_brute_force(timezones, countries)
+  )
+
+  # covered by
+  expect_identical(
+    s2_covered_by_matrix(countries, countries),
+    s2_covered_by_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_covered_by_matrix(timezones, countries),
+    s2_covered_by_matrix_brute_force(timezones, countries)
+  )
+
+  # intersects
+  expect_identical(
+    s2_intersects_matrix(countries, countries),
+    s2_intersects_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_intersects_matrix(timezones, countries),
+    s2_intersects_matrix_brute_force(timezones, countries)
+  )
+
+  # disjoint
+  expect_identical(
+    s2_disjoint_matrix(countries, countries),
+    s2_disjoint_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_disjoint_matrix(timezones, countries),
+    s2_disjoint_matrix_brute_force(timezones, countries)
+  )
+
+  # equals
+  expect_identical(
+    s2_equals_matrix(countries, countries),
+    s2_equals_matrix_brute_force(countries, countries)
+  )
+  expect_identical(
+    s2_equals_matrix(timezones, countries),
+    s2_equals_matrix_brute_force(timezones, countries)
+  )
+})
