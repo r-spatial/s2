@@ -101,10 +101,6 @@ cpp_s2_farthest_feature <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_farthest_feature`, geog1, geog2)
 }
 
-cpp_s2_intersects_matrix_indexed <- function(geog1, geog2, s2options) {
-    .Call(`_s2_cpp_s2_intersects_matrix_indexed`, geog1, geog2, s2options)
-}
-
 cpp_s2_contains_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_contains_matrix`, geog1, geog2, s2options)
 }
@@ -115,10 +111,6 @@ cpp_s2_within_matrix <- function(geog1, geog2, s2options) {
 
 cpp_s2_intersects_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_intersects_matrix`, geog1, geog2, s2options)
-}
-
-cpp_s2_disjoint_matrix <- function(geog1, geog2, s2options) {
-    .Call(`_s2_cpp_s2_disjoint_matrix`, geog1, geog2, s2options)
 }
 
 cpp_s2_equals_matrix <- function(geog1, geog2, s2options) {
@@ -135,6 +127,26 @@ cpp_s2_distance_matrix <- function(geog1, geog2) {
 
 cpp_s2_max_distance_matrix <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_max_distance_matrix`, geog1, geog2)
+}
+
+cpp_s2_contains_matrix_brute_force <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_contains_matrix_brute_force`, geog1, geog2, s2options)
+}
+
+cpp_s2_within_matrix_brute_force <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_within_matrix_brute_force`, geog1, geog2, s2options)
+}
+
+cpp_s2_intersects_matrix_brute_force <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_intersects_matrix_brute_force`, geog1, geog2, s2options)
+}
+
+cpp_s2_disjoint_matrix_brute_force <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_disjoint_matrix_brute_force`, geog1, geog2, s2options)
+}
+
+cpp_s2_equals_matrix_brute_force <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_equals_matrix_brute_force`, geog1, geog2, s2options)
 }
 
 s2_point_from_numeric <- function(x, y, z) {

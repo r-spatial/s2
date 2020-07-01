@@ -61,49 +61,43 @@ s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 #' @rdname s2_closest_feature
 #' @export
 s2_contains_matrix <- function(x, y, options = s2_options()) {
-  cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_contains_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_within_matrix <- function(x, y, options = s2_options()) {
-  cpp_s2_within_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_within_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_covers_matrix <- function(x, y, options = s2_options(model = 2)) {
-  cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_contains_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_covered_by_matrix <- function(x, y, options = s2_options(model = 2)) {
-  cpp_s2_within_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_within_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_intersects_matrix <- function(x, y, options = s2_options()) {
-  cpp_s2_intersects_matrix(as_s2_geography(x), as_s2_geography(y), options)
-}
-
-#' @rdname s2_closest_feature
-#' @export
-s2_intersects_matrix_indexed <- function(x, y, options = s2_options()) {
-  cpp_s2_intersects_matrix_indexed(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_intersects_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_disjoint_matrix <- function(x, y, options = s2_options()) {
-  cpp_s2_disjoint_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_disjoint_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
 s2_equals_matrix <- function(x, y, options = s2_options()) {
-  cpp_s2_equals_matrix(as_s2_geography(x), as_s2_geography(y), options)
+  cpp_s2_equals_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
@@ -120,8 +114,8 @@ s2_touches_matrix <- function(x, y, options = s2_options()) {
   options_open$polygon_model <- 0
   options_open$polyline_model <- 0
 
-  intersects_closed <- cpp_s2_intersects_matrix(x, y, options_closed)
-  intersects_open <- cpp_s2_intersects_matrix(x, y, options_open)
+  intersects_closed <- cpp_s2_intersects_matrix_brute_force(x, y, options_closed)
+  intersects_open <- cpp_s2_intersects_matrix_brute_force(x, y, options_open)
   Map(setdiff, intersects_closed, intersects_open)
 }
 

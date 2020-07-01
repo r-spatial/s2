@@ -124,7 +124,7 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   return op.processVector(geog1);
 }
 
-// ----------- experimental binary predicate operators -----------
+// ----------- indexed binary predicate operators -----------
 
 class IndexedMatrixPredicateOperator: public IndexedBinaryGeographyOperator<List, IntegerVector> {
 public:
@@ -169,8 +169,7 @@ public:
     return Rcpp::IntegerVector(actuallyIntersectIndices.begin(), actuallyIntersectIndices.end());
   };
 
-  virtual bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2,
-                                  R_xlen_t i, R_xlen_t j) = 0;
+  virtual bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) = 0;
 
   protected:
     List geog2;
@@ -178,13 +177,59 @@ public:
 };
 
 // [[Rcpp::export]]
-List cpp_s2_intersects_matrix_indexed(List geog1, List geog2, List s2options) {
+List cpp_s2_contains_matrix(List geog1, List geog2, List s2options) {
+  class Op: public IndexedMatrixPredicateOperator {
+  public:
+    Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
+    bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Contains(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_within_matrix(List geog1, List geog2, List s2options) {
+  class Op: public IndexedMatrixPredicateOperator {
+  public:
+    Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
+    bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      // note reversed index2, index1
+      return S2BooleanOperation::Contains(*index2, *index1, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
     Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
     bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
       return S2BooleanOperation::Intersects(*index1, *index2, this->options);
-    }
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_equals_matrix(List geog1, List geog2, List s2options) {
+  class Op: public IndexedMatrixPredicateOperator {
+  public:
+    Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
+    bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Equals(*index1, *index2, this->options);
+    };
   };
 
   Op op(s2options);
@@ -193,16 +238,16 @@ List cpp_s2_intersects_matrix_indexed(List geog1, List geog2, List s2options) {
 }
 
 
-// ----------- binary predicate operators ------------------
+// ----------- brute force binary predicate operators ------------------
 
-class MatrixPredicateOperator {
+class BruteForceMatrixPredicateOperator {
 public:
   std::vector<S2ShapeIndex*> geog2Indices;
   S2BooleanOperation::Options options;
 
-  MatrixPredicateOperator() {}
+  BruteForceMatrixPredicateOperator() {}
 
-  MatrixPredicateOperator(Rcpp::List s2options) {
+  BruteForceMatrixPredicateOperator(Rcpp::List s2options) {
     GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
   }
@@ -227,10 +272,7 @@ public:
     List output(geog1.size());
     SEXP item1;
     // using instead of IntegerVector because
-    // std::vector is much faster with repeated calls to
-    // push_back()
-    // alternatively, could allocate one logical vector and
-    // use Rcpp::which() or similar
+    // std::vector is much faster with repeated calls to .push_back()
     std::vector<int> trueIndices;
 
     for (R_xlen_t i = 0; i < geog1.size(); i++) {
@@ -266,88 +308,12 @@ public:
     return output;
   }
 
-  virtual bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2,
-                              R_xlen_t i, R_xlen_t j) = 0;
+  virtual bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) = 0;
 };
 
 // [[Rcpp::export]]
-List cpp_s2_contains_matrix(List geog1, List geog2, List s2options) {
-  class Op: public MatrixPredicateOperator {
-  public:
-    Op(List s2options): MatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Contains(*index1, *index2, this->options);
-    };
-  };
-
-  Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
-}
-
-// [[Rcpp::export]]
-List cpp_s2_within_matrix(List geog1, List geog2, List s2options) {
-  class Op: public MatrixPredicateOperator {
-  public:
-    Op(List s2options): MatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Contains(*index2, *index1, this->options);
-    };
-  };
-
-  Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
-}
-
-// [[Rcpp::export]]
-List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
-  class Op: public MatrixPredicateOperator {
-  public:
-    Op(List s2options): MatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Intersects(*index1, *index2, this->options);
-    };
-  };
-
-  Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
-}
-
-// [[Rcpp::export]]
-List cpp_s2_disjoint_matrix(List geog1, List geog2, List s2options) {
-  class Op: public MatrixPredicateOperator {
-  public:
-    Op(List s2options): MatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return !S2BooleanOperation::Intersects(*index1, *index2, this->options);
-    };
-  };
-
-  Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
-}
-
-// [[Rcpp::export]]
-List cpp_s2_equals_matrix(List geog1, List geog2, List s2options) {
-  class Op: public MatrixPredicateOperator {
-  public:
-    Op(List s2options): MatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Equals(*index1, *index2, this->options);
-    };
-  };
-
-  Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
-}
-
-// [[Rcpp::export]]
 List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance) {
-  class Op: public MatrixPredicateOperator {
+  class Op: public BruteForceMatrixPredicateOperator {
   public:
     double distance;
     Op(double distance): distance(distance) {}
@@ -458,4 +424,83 @@ NumericMatrix cpp_s2_max_distance_matrix(List geog1, List geog2) {
 
   Op op;
   return op.processVector(geog1, geog2);
+}
+
+
+// ----------- brute force binary predicate operators (for testing) ------------------
+
+// [[Rcpp::export]]
+List cpp_s2_contains_matrix_brute_force(List geog1, List geog2, List s2options) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Contains(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      // note reversed index2, index1
+      return S2BooleanOperation::Contains(*index2, *index1, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_intersects_matrix_brute_force(List geog1, List geog2, List s2options) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Intersects(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_disjoint_matrix_brute_force(List geog1, List geog2, List s2options) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return !S2BooleanOperation::Intersects(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
+    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Equals(*index1, *index2, this->options);
+    };
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
 }
