@@ -237,6 +237,36 @@ List cpp_s2_equals_matrix(List geog1, List geog2, List s2options) {
   return op.processVector(geog1);
 }
 
+// [[Rcpp::export]]
+List cpp_s2_touches_matrix(List geog1, List geog2, List s2options) {
+  class Op: public IndexedMatrixPredicateOperator {
+  public:
+    Op(List s2options): IndexedMatrixPredicateOperator(s2options) {
+      this->closedOptions = this->options;
+      this->closedOptions.set_polygon_model(S2BooleanOperation::PolygonModel::CLOSED);
+      this->closedOptions.set_polyline_model(S2BooleanOperation::PolylineModel::CLOSED);
+
+      this->openOptions = this->options;
+      this->openOptions.set_polygon_model(S2BooleanOperation::PolygonModel::OPEN);
+      this->openOptions.set_polyline_model(S2BooleanOperation::PolylineModel::OPEN);
+    }
+
+    bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      // efficiently re-uses the index on geog2 and takes advantage of short-circuiting &&
+      return S2BooleanOperation::Intersects(*index1, *index2, this->closedOptions) &&
+        !S2BooleanOperation::Intersects(*index1, *index2, this->openOptions);
+    };
+
+  private:
+    S2BooleanOperation::Options closedOptions;
+    S2BooleanOperation::Options openOptions;
+  };
+
+  Op op(s2options);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
 
 // ----------- brute force binary predicate operators ------------------
 

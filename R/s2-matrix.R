@@ -107,20 +107,7 @@ s2_equals_matrix <- function(x, y, options = s2_options()) {
 #' @rdname s2_closest_feature
 #' @export
 s2_touches_matrix <- function(x, y, options = s2_options()) {
-  x <- as_s2_geography(x)
-  y <- as_s2_geography(y)
-
-  options_closed <- options
-  options_closed$polygon_model <- 2
-  options_closed$polyline_model <- 2
-
-  options_open <- options
-  options_open$polygon_model <- 0
-  options_open$polyline_model <- 0
-
-  intersects_closed <- cpp_s2_intersects_matrix(x, y, options_closed)
-  intersects_open <- cpp_s2_intersects_matrix(x, y, options_open)
-  Map(setdiff, intersects_closed, intersects_open)
+  cpp_s2_touches_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature

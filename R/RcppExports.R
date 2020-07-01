@@ -117,6 +117,10 @@ cpp_s2_equals_matrix <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_equals_matrix`, geog1, geog2, s2options)
 }
 
+cpp_s2_touches_matrix <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_touches_matrix`, geog1, geog2, s2options)
+}
+
 cpp_s2_dwithin_matrix <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin_matrix`, geog1, geog2, distance)
 }
