@@ -10,6 +10,7 @@
 \alias{s2_covers_matrix}
 \alias{s2_covered_by_matrix}
 \alias{s2_intersects_matrix}
+\alias{s2_intersects_matrix_indexed}
 \alias{s2_disjoint_matrix}
 \alias{s2_equals_matrix}
 \alias{s2_touches_matrix}
@@ -33,6 +34,8 @@ s2_covers_matrix(x, y, options = s2_options(model = 2))
 s2_covered_by_matrix(x, y, options = s2_options(model = 2))
 
 s2_intersects_matrix(x, y, options = s2_options())
+
+s2_intersects_matrix_indexed(x, y, options = s2_options())
 
 s2_disjoint_matrix(x, y, options = s2_options())
 

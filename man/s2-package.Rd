@@ -15,6 +15,7 @@ Provides R bindings for Google's s2 library for geometric calculations on
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://r-spatial.github.io/s2/}
   \item \url{https://github.com/r-spatial/s2}
   \item \url{https://s2geometry.io/}
   \item Report bugs at \url{https://github.com/r-spatial/s2/issues}

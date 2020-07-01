@@ -90,6 +90,12 @@ s2_intersects_matrix <- function(x, y, options = s2_options()) {
 
 #' @rdname s2_closest_feature
 #' @export
+s2_intersects_matrix_indexed <- function(x, y, options = s2_options()) {
+  cpp_s2_intersects_matrix_indexed(as_s2_geography(x), as_s2_geography(y), options)
+}
+
+#' @rdname s2_closest_feature
+#' @export
 s2_disjoint_matrix <- function(x, y, options = s2_options()) {
   cpp_s2_disjoint_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }

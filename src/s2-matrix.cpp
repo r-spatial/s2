@@ -1,7 +1,11 @@
 
+#include <unordered_set>
+#include <algorithm> 
+
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2furthest_edge_query.h"
+#include "s2/s2shape_index_region.h"
 
 #include "geography-operator.h"
 #include "s2-options.h"
@@ -9,7 +13,29 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeIndex* index) {
+  SEXP item2;
+  std::unordered_map<int, R_xlen_t> geogIndexSource;
+  std::vector<int> shapeIds;
 
+  for (R_xlen_t j = 0; j < geog.size(); j++) {
+    item2 = geog[j];
+
+    // build index and store index IDs so that shapeIds can be
+    // mapped back to the geog index
+    if (item2 == R_NilValue) {
+      Rcpp::stop("Missing `y` not allowed in binary indexed operators()");
+    } else {
+      Rcpp::XPtr<Geography> feature2(item2);
+      shapeIds = feature2->BuildShapeIndex(index);
+      for (size_t k = 0; k < shapeIds.size(); k ++) {
+        geogIndexSource[shapeIds[k]] = j;
+      }
+    }
+  }
+
+  return std::move(geogIndexSource);
+}
 
 template<class VectorType, class ScalarType>
 class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, ScalarType> {
@@ -18,6 +44,7 @@ public:
   std::unordered_map<int, R_xlen_t> geog2IndexSource;
 
   void buildIndex(List geog2) {
+    this->geog2IndexSource = buildSourcedIndex(geog2, &(this->geog2Index));
     SEXP item2;
     std::vector<int> shapeIds;
 
@@ -86,6 +113,74 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   op.buildIndex(geog2);
   return op.processVector(geog1);
 }
+
+// ----------- experimental binary predicate operators -----------
+
+// [[Rcpp::export]]
+List cpp_s2_intersects_matrix_indexed(List geog1, List geog2, List s2options) {
+  class Op: public IndexedBinaryGeographyOperator<List, IntegerVector> {
+  public:
+    Op(List s2options, List geog2): geog2(geog2) {
+      GeographyOperationOptions options(s2options);
+      this->options = options.booleanOperationOptions();
+      this->buildIndex(geog2);
+    }
+
+    IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
+      S2ShapeIndex* index1 = feature->ShapeIndex();
+      S2ShapeIndexRegion<S2ShapeIndex> region = MakeS2ShapeIndexRegion(index1);
+
+      // loop through cells in the index that might intersect index1
+      // building a list of candidate feature indices
+      std::unordered_set<R_xlen_t> mightIntersectIndices;
+      for (MutableS2ShapeIndex::Iterator it2(&(this->geog2Index), S2ShapeIndex::BEGIN); 
+             !it2.done(); it2.Next()) {
+        // Rcout << "Iterating cell " << it2.id() << "\n";
+        
+        // if the feature intersects the cell, add all the indices in the cell
+        // as candidates that might intersect feature
+        if (region.MayIntersect(S2Cell(it2.id()))) {
+          // Rcout << "Cell might intersect feature!\n";
+
+          const S2ShapeIndexCell& cell = it2.cell();
+          for (int k = 0; k < cell.num_clipped(); k++) {
+            int shapeId = cell.clipped(k).shape_id();
+            // Rcout << "Might intersect index " << this->geog2IndexSource[shapeId] << "\n";
+            mightIntersectIndices.insert(this->geog2IndexSource[shapeId]);
+          }
+        }
+      }
+
+      // loop through features from geog2 that might intersect feature
+      // and build a list of indices that actually intersect
+      std::vector<int> trueIndices;
+      for (R_xlen_t j: mightIntersectIndices) {
+        SEXP item = this->geog2[j];
+        XPtr<Geography> feature2(item);
+        if (this->actuallyIntersects(index1, feature2->ShapeIndex(), i, j)) {
+          // convert to R index here + 1
+          trueIndices.push_back(j + 1);
+        }
+      }
+
+      std::sort(trueIndices.begin(), trueIndices.end());
+			return Rcpp::IntegerVector(trueIndices.begin(), trueIndices.end());
+    };
+
+    virtual bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2,
+                                    R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Intersects(*index1, *index2, this->options);
+    }
+
+    private:
+      List geog2;
+      S2BooleanOperation::Options options;
+  };
+
+  Op op(s2options, geog2);
+  return op.processVector(geog1);
+}
+
 
 // ----------- binary predicate operators ------------------
 
