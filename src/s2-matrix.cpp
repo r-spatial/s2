@@ -38,20 +38,55 @@ std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeInd
   return indexSource;
 }
 
-std::unordered_set<R_xlen_t> findPossibleIntersections(S2Region& region, const S2ShapeIndex* index,
-                                                       std::unordered_map<int, R_xlen_t>& source) {
+std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region, 
+                                                       const MutableS2ShapeIndex* index,
+                                                       std::unordered_map<int, R_xlen_t>& source,
+                                                       int maxRegionCells = 8) {
+  
   std::unordered_set<R_xlen_t> mightIntersectIndices;
-  for (S2ShapeIndex::Iterator it2(index, S2ShapeIndex::BEGIN); !it2.done(); it2.Next()) {
-    checkUserInterrupt();
-    // if the feature intersects the cell, add all the indices in the cell
-    // as candidates that might intersect feature
-    if (region.MayIntersect(S2Cell(it2.id()))) {
-      const S2ShapeIndexCell& cell = it2.cell();
+  MutableS2ShapeIndex::Iterator indexIterator(index);
+
+  // generate a small covering of the region
+  // a value of 8 was suggested in the S2RegionCoverer docs as a
+  // reasonable number
+  S2RegionCoverer coverer;
+  coverer.mutable_options()->set_max_cells(maxRegionCells);
+  S2CellUnion covering = coverer.GetCovering(region);
+
+  // iterate over cells in the featureIndex
+  for (S2CellId featureCellId: covering) {
+    S2ShapeIndex::CellRelation relation = indexIterator.Locate(featureCellId);
+
+    if (relation == S2ShapeIndex::CellRelation::INDEXED) {
+      // we're in luck! these indexes have this cell in common
+      // add all the features it contains as possible intersectors for featureIndex
+      const S2ShapeIndexCell& cell = indexIterator.cell();
       for (int k = 0; k < cell.num_clipped(); k++) {
         int shapeId = cell.clipped(k).shape_id();
         mightIntersectIndices.insert(source[shapeId]);
       }
+    
+    } else if(relation  == S2ShapeIndex::CellRelation::SUBDIVIDED) {
+      // promising! the geog2 index has a child cell of it.id()
+      // (at which indexIterator is now positioned)
+      // keep iterating until the iterator is done OR we're no longer at a child cell of
+      // it.id(). The ordering of the iterator isn't guaranteed anywhere in the documentation;
+      // however, this ordering would be consistent with that of a Normalized
+      // S2CellUnion.
+      while (!indexIterator.done() && featureCellId.contains(indexIterator.id())) {
+        // add all the features the child cell contains as possible intersectors for featureIndex
+        const S2ShapeIndexCell& cell = indexIterator.cell();
+        for (int k = 0; k < cell.num_clipped(); k++) {
+          int shapeId = cell.clipped(k).shape_id();
+          mightIntersectIndices.insert(source[shapeId]);
+        }
+
+        // go to the next cell in the index
+        indexIterator.Next();
+      }
     }
+
+    // else: relation == S2ShapeIndex::CellRelation::DISJOINT (do nothing)
   }
 
   return mightIntersectIndices;
