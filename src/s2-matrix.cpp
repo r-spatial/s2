@@ -15,12 +15,12 @@
 using namespace Rcpp;
 
 std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeIndex* index) {
-  SEXP item2;
   std::unordered_map<int, R_xlen_t> indexSource;
   std::vector<int> shapeIds;
 
   for (R_xlen_t j = 0; j < geog.size(); j++) {
-    item2 = geog[j];
+    checkUserInterrupt();
+    SEXP item2 = geog[j];
 
     // build index and store index IDs so that shapeIds can be
     // mapped back to the geog index
@@ -41,8 +41,8 @@ std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeInd
 std::unordered_set<R_xlen_t> findPossibleIntersections(S2Region& region, const S2ShapeIndex* index,
                                                        std::unordered_map<int, R_xlen_t>& source) {
   std::unordered_set<R_xlen_t> mightIntersectIndices;
-  for (S2ShapeIndex::Iterator it2(index, S2ShapeIndex::BEGIN);
-          !it2.done(); it2.Next()) {
+  for (S2ShapeIndex::Iterator it2(index, S2ShapeIndex::BEGIN); !it2.done(); it2.Next()) {
+    checkUserInterrupt();
     // if the feature intersects the cell, add all the indices in the cell
     // as candidates that might intersect feature
     if (region.MayIntersect(S2Cell(it2.id()))) {
