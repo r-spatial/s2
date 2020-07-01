@@ -60,11 +60,19 @@ std::unordered_set<R_xlen_t> findPossibleIntersections(S2Region& region, const S
 template<class VectorType, class ScalarType>
 class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, ScalarType> {
 public:
-  MutableS2ShapeIndex geog2Index;
+  std::unique_ptr<MutableS2ShapeIndex> geog2Index;
   std::unordered_map<int, R_xlen_t> geog2IndexSource;
 
+  // maxEdgesPerCell should be between 10 and 50, with lower numbers
+  // leading to more memory usage (but faster query times)
+  IndexedBinaryGeographyOperator(int maxEdgesPerCell = 10) {
+    MutableS2ShapeIndex::Options indexOptions;
+    indexOptions.set_max_edges_per_cell(maxEdgesPerCell);
+    this->geog2Index = absl::make_unique<MutableS2ShapeIndex>(indexOptions);
+  }
+
   virtual void buildIndex(List geog2) {
-    this->geog2IndexSource = buildSourcedIndex(geog2, &(this->geog2Index));
+    this->geog2IndexSource = buildSourcedIndex(geog2, this->geog2Index.get());
   }
 };
 
@@ -76,7 +84,7 @@ IntegerVector cpp_s2_closest_feature(List geog1, List geog2) {
   class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-      S2ClosestEdgeQuery query(&(this->geog2Index));
+      S2ClosestEdgeQuery query(this->geog2Index.get());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature->ShapeIndex());
       const auto& result = query.FindClosestEdge(&target);
       if (result.is_empty()) {
@@ -99,7 +107,7 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-      S2FurthestEdgeQuery query(&(this->geog2Index));
+      S2FurthestEdgeQuery query(this->geog2Index.get());
       S2FurthestEdgeQuery::ShapeIndexTarget target(feature->ShapeIndex());
       const auto& result = query.FindFurthestEdge(&target);
       if (result.is_empty()) {
@@ -120,10 +128,10 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
 
 class IndexedMatrixPredicateOperator: public IndexedBinaryGeographyOperator<List, IntegerVector> {
 public:
-  IndexedMatrixPredicateOperator(List s2options) {
+  IndexedMatrixPredicateOperator(List s2options, int maxEdgesPerCell = 10):
+    IndexedBinaryGeographyOperator<List, IntegerVector>(maxEdgesPerCell) {
     GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
-    this->buildIndex(geog2);
   }
 
   void buildIndex(List geog2) {
@@ -138,7 +146,7 @@ public:
     // build a list of candidate feature indices
     std::unordered_set<R_xlen_t> mightIntersectIndices = findPossibleIntersections(
       region,
-      &(this->geog2Index),
+      this->geog2Index.get(),
       this->geog2IndexSource
     );
 
