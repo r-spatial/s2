@@ -29,7 +29,7 @@
 #' See pairwise predicate functions (e.g., [s2_intersects()]).
 #'
 #' @examples
-#' city_names <- c("Vatican City", "San Marino", "Luxembourg", "Palikir")
+#' city_names <- c("Vatican City", "San Marino", "Luxembourg")
 #' cities <- s2_data_cities(city_names)
 #' country_names <- s2_data_tbl_countries$name
 #' countries <- s2_data_countries()
@@ -42,9 +42,13 @@
 #' # for each feature in x
 #' country_names[s2_farthest_feature(cities, countries)]
 #'
+#' # predicate matrices
+#' country_names[s2_intersects_matrix(cities, countries)[[1]]]
+#'
 #' # distance matrices
 #' s2_distance_matrix(cities, cities)
 #' s2_max_distance_matrix(cities, countries[1:4])
+#'
 #'
 s2_closest_feature <- function(x, y) {
   cpp_s2_closest_feature(as_s2_geography(x), as_s2_geography(y))
