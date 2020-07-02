@@ -25,9 +25,9 @@ s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
 s2_max_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
-s2_contains_matrix(x, y, options = s2_options())
+s2_contains_matrix(x, y, options = s2_options(model = 0))
 
-s2_within_matrix(x, y, options = s2_options())
+s2_within_matrix(x, y, options = s2_options(model = 0))
 
 s2_covers_matrix(x, y, options = s2_options(model = 2))
 
@@ -100,7 +100,6 @@ country_names[s2_intersects_matrix(cities, countries)[[1]]]
 # distance matrices
 s2_distance_matrix(cities, cities)
 s2_max_distance_matrix(cities, countries[1:4])
-
 
 }
 \seealso{
