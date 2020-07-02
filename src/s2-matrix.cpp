@@ -74,6 +74,10 @@ std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region,
       // however, this ordering would be consistent with that of a Normalized
       // S2CellUnion.
       while (!indexIterator.done() && featureCellId.contains(indexIterator.id())) {
+        // potentially many cells in the indexIterator, so let the user cancel if this is
+        // running too long
+        checkUserInterrupt();
+
         // add all the features the child cell contains as possible intersectors for featureIndex
         const S2ShapeIndexCell& cell = indexIterator.cell();
         for (int k = 0; k < cell.num_clipped(); k++) {
@@ -322,6 +326,8 @@ public:
     this->geog2Indices = std::vector<S2ShapeIndex*>(geog2.size());
 
     for (R_xlen_t j = 0; j < geog2.size(); j++) {
+      checkUserInterrupt();
+      
       item2 = geog2[j];
 
       if (item2 == R_NilValue) {
@@ -350,6 +356,8 @@ public:
         Rcpp::XPtr<Geography> feature1(item1);
 
         for (size_t j = 0; j < this->geog2Indices.size(); j++) {
+          checkUserInterrupt();
+
           bool result = this->processFeature(
             feature1->ShapeIndex(),
             this->geog2Indices[j],
@@ -416,6 +424,7 @@ public:
         Rcpp::XPtr<Geography> feature1(item1);
 
         for (R_xlen_t j = 0; j < geog2.size(); j++) {
+          checkUserInterrupt();
           item2 = geog2[j];
 
           if (item2 == R_NilValue) {
