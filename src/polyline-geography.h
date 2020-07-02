@@ -29,6 +29,16 @@ public:
     return numPoints;
   }
 
+  bool IsEmpty() {
+    for (size_t i = 0; i < this->polylines.size(); i++) {
+      if (this->polylines[i]->num_vertices() > 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   double Area() {
     return 0;
   }
@@ -71,7 +81,7 @@ public:
         endpoints.push_back(this->polylines[i]->vertex(1));
       }
     }
-    
+
     return absl::make_unique<PointGeography>(endpoints);
   }
 

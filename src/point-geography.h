@@ -27,6 +27,10 @@ public:
     return this->points.size();
   }
 
+  bool IsEmpty() {
+    return this->points.size() == 0;
+  }
+
   double Area() {
     return 0;
   }

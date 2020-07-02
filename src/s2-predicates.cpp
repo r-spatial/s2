@@ -65,12 +65,54 @@ LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Contains(
+      // by default Contains() will return true for Contains(x, EMPTY), which is
+      // not true in BigQuery or GEOS
+      if (feature2->IsEmpty()) {
+        return false;
+      } else {
+        return S2BooleanOperation::Contains(
+          *feature1->ShapeIndex(),
+          *feature2->ShapeIndex(),
+          this->options
+        );
+      }
+    }
+  };
+
+  Op op(s2options);
+  return op.processVector(geog1, geog2);
+}
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options) {
+  class Op: public BinaryPredicateOperator {
+  public:
+    Op(List s2options): BinaryPredicateOperator(s2options) {
+      this->closedOptions = this->options;
+      this->closedOptions.set_polygon_model(S2BooleanOperation::PolygonModel::CLOSED);
+      this->closedOptions.set_polyline_model(S2BooleanOperation::PolylineModel::CLOSED);
+
+      this->openOptions = this->options;
+      this->openOptions.set_polygon_model(S2BooleanOperation::PolygonModel::OPEN);
+      this->openOptions.set_polyline_model(S2BooleanOperation::PolylineModel::OPEN);
+    }
+
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+      return S2BooleanOperation::Intersects(
         *feature1->ShapeIndex(),
         *feature2->ShapeIndex(),
-        this->options
-      );
+        this->closedOptions
+      ) &&
+        !S2BooleanOperation::Intersects(
+          *feature1->ShapeIndex(),
+          *feature2->ShapeIndex(),
+          this->openOptions
+        );
     }
+
+  private:
+    S2BooleanOperation::Options closedOptions;
+    S2BooleanOperation::Options openOptions;
   };
 
   Op op(s2options);

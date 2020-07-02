@@ -13,6 +13,8 @@ public:
 
     SEXP item;
     for (R_xlen_t i = 0; i < geog.size(); i++) {
+      Rcpp::checkUserInterrupt();
+
       item = geog[i];
       if (item == R_NilValue) {
         output[i] = VectorType::get_na();
@@ -43,6 +45,8 @@ public:
     SEXP item2;
 
     for (R_xlen_t i = 0; i < geog1.size(); i++) {
+      Rcpp::checkUserInterrupt();
+      
       item1 = geog1[i];
       item2 = geog2[i];
       if (item1 ==  R_NilValue || item2 == R_NilValue) {

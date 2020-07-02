@@ -4,7 +4,7 @@ test_that("s2_contains() works", {
 
   expect_true(s2_contains("POINT (0 0)", "POINT (0 0)"))
   expect_false(s2_contains("POINT (0 0)", "POINT (1 1)"))
-  expect_true(s2_contains("POINT (0 0)", "POINT EMPTY")) # surprising and not true in sf
+  expect_false(s2_contains("POINT (0 0)", "POINT EMPTY"))
 
   # make sure model is passed on to at least one binary predicate
   # in the open model, lines do not contain endpoints (but do contain other points)
@@ -25,8 +25,7 @@ test_that("s2_contains() works", {
 test_that("s2_covers() and s2_covered_by() work", {
   expect_true(s2_covers("POINT (0 0)", "POINT (0 0)"))
   expect_false(s2_covers("POINT (0 0)", "POINT (1 1)"))
-  warning("Surprising result: POINT (0 0) covers POINT EMPTY")
-  expect_true(s2_covers("POINT (0 0)", "POINT EMPTY"))
+  expect_false(s2_covers("POINT (0 0)", "POINT EMPTY"))
   expect_true(s2_covers("LINESTRING (0 0, 1 1)", "POINT (0 0)"))
   expect_false(s2_covers("LINESTRING (0 0, 1 1)", "POINT (-1 -1)"))
 
@@ -130,6 +129,7 @@ test_that("s2_within() works", {
   expect_true(s2_within("POINT (0 0)", "POINT (0 0)"))
   expect_false(s2_within("POINT (0 0)", "POINT (1 1)"))
   expect_false(s2_within("POINT (0 0)", "POINT EMPTY"))
+  expect_false(s2_within("POINT EMPTY", "POINT (0 0)"))
 
   expect_true(s2_within("POINT (0 0)", "LINESTRING (0 0, 1 1)", s2_options(model = 1)))
   expect_false(s2_within("POINT (0 0)", "LINESTRING (0 0, 1 1)", s2_options(model = 0)))

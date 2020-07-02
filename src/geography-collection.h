@@ -34,6 +34,12 @@ public:
     return numPoints;
   }
 
+  bool IsEmpty() {
+    // could also loop and test all(!IsEmpty()), but
+    // that is inconsistent with what gets printed
+    return this->features.size() == 0;
+  }
+
   double Area() {
     double area = 0;
     for (size_t i = 0; i < this->features.size(); i++) {

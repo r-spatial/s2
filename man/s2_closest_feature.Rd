@@ -14,6 +14,7 @@
 \alias{s2_equals_matrix}
 \alias{s2_touches_matrix}
 \alias{s2_dwithin_matrix}
+\alias{s2_may_intersect_matrix}
 \title{Matrix Functions}
 \usage{
 s2_closest_feature(x, y)
@@ -24,9 +25,9 @@ s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
 s2_max_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
-s2_contains_matrix(x, y, options = s2_options())
+s2_contains_matrix(x, y, options = s2_options(model = 0))
 
-s2_within_matrix(x, y, options = s2_options())
+s2_within_matrix(x, y, options = s2_options(model = 0))
 
 s2_covers_matrix(x, y, options = s2_options(model = 2))
 
@@ -41,6 +42,8 @@ s2_equals_matrix(x, y, options = s2_options())
 s2_touches_matrix(x, y, options = s2_options())
 
 s2_dwithin_matrix(x, y, distance, radius = s2_earth_radius_meters())
+
+s2_may_intersect_matrix(x, y, max_edges_per_cell = 50, max_feature_cells = 4)
 }
 \arguments{
 \item{x, y}{Geography vectors, coerced using \code{\link[=as_s2_geography]{as_s2_geography()}}.
@@ -54,6 +57,18 @@ model to use and the snap level.}
 
 \item{distance}{A distance on the surface of the earth in the same units
 as \code{radius}.}
+
+\item{max_edges_per_cell}{For \code{\link[=s2_may_intersect_matrix]{s2_may_intersect_matrix()}},
+this values controls the nature of the index on \code{y}, with higher values
+leading to coarser index. Values should be between 10 and 50; the default
+of 50 is adequate for most use cases, but for specialized operations users
+may wish to use a lower value to increase performance.}
+
+\item{max_feature_cells}{For \code{\link[=s2_may_intersect_matrix]{s2_may_intersect_matrix()}}, this value
+controls the approximation of \code{x} used to identify potential intersections
+on \code{y}. The default value of 4 gives the best performance for most operations,
+but for specialized operations users may wish to use a higher value to increase
+performance.}
 }
 \value{
 A vector of length \code{x}.
@@ -66,7 +81,7 @@ length, these functions return a vector of length \code{x} with each element
 the feature at \code{x[i]}.
 }
 \examples{
-city_names <- c("Vatican City", "San Marino", "Luxembourg", "Palikir")
+city_names <- c("Vatican City", "San Marino", "Luxembourg")
 cities <- s2_data_cities(city_names)
 country_names <- s2_data_tbl_countries$name
 countries <- s2_data_countries()
@@ -78,6 +93,9 @@ country_names[s2_closest_feature(cities, countries)]
 # farthest feature returns y indices of the farthest feature
 # for each feature in x
 country_names[s2_farthest_feature(cities, countries)]
+
+# predicate matrices
+country_names[s2_intersects_matrix(cities, countries)[[1]]]
 
 # distance matrices
 s2_distance_matrix(cities, cities)
