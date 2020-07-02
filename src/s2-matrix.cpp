@@ -41,14 +41,12 @@ std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeInd
 std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region, 
                                                        const MutableS2ShapeIndex* index,
                                                        std::unordered_map<int, R_xlen_t>& source,
-                                                       int maxRegionCells = 8) {
+                                                       int maxRegionCells) {
   
   std::unordered_set<R_xlen_t> mightIntersectIndices;
   MutableS2ShapeIndex::Iterator indexIterator(index);
 
   // generate a small covering of the region
-  // a value of 8 was suggested in the S2RegionCoverer docs as a
-  // reasonable number
   S2RegionCoverer coverer;
   coverer.mutable_options()->set_max_cells(maxRegionCells);
   S2CellUnion covering = coverer.GetCovering(region);
@@ -102,15 +100,19 @@ public:
   std::unique_ptr<MutableS2ShapeIndex> geog2Index;
   std::unordered_map<int, R_xlen_t> geog2IndexSource;
 
+  IndexedBinaryGeographyOperator() {
+    this->geog2Index = absl::make_unique<MutableS2ShapeIndex>();
+  }
+
   // maxEdgesPerCell should be between 10 and 50, with lower numbers
-  // leading to more memory usage (but faster query times)
-  IndexedBinaryGeographyOperator(int maxEdgesPerCell = 10) {
+  // leading to more memory usage (but potentially faster query times). Benchmarking
+  // with binary prediates seems to indicate that values on the high end
+  // of the spectrum do a reasonable job of efficient preselection, and that
+  // decreasing this value does little to increase performance.
+  virtual void buildIndex(List geog2, int maxEdgesPerCell = 50) {
     MutableS2ShapeIndex::Options indexOptions;
     indexOptions.set_max_edges_per_cell(maxEdgesPerCell);
     this->geog2Index = absl::make_unique<MutableS2ShapeIndex>(indexOptions);
-  }
-
-  virtual void buildIndex(List geog2) {
     this->geog2IndexSource = buildSourcedIndex(geog2, this->geog2Index.get());
   }
 };
@@ -167,15 +169,21 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
 
 class IndexedMatrixPredicateOperator: public IndexedBinaryGeographyOperator<List, IntegerVector> {
 public:
-  IndexedMatrixPredicateOperator(List s2options, int maxEdgesPerCell = 10):
-    IndexedBinaryGeographyOperator<List, IntegerVector>(maxEdgesPerCell) {
+  // a max_cells value of 8 was suggested in the S2RegionCoverer docs as a
+  // reasonable approximation of a geometry, although benchmarking seems to indicate that
+  // increasing this number above 4 actually decreasses performance (using a value
+  // of 1 dramatically decreases performance)
+  IndexedMatrixPredicateOperator(List s2options, int maxFeatureCells = 4):
+    maxFeatureCells(maxFeatureCells) {
     GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
   }
 
-  void buildIndex(List geog2) {
+  // See IndexedBinaryGeographyOperator::buildIndex() for why 50 is the default value
+  // for maxEdgesPerCell
+  void buildIndex(List geog2, int maxEdgesPerCell = 50) {
     this->geog2  = geog2;
-    IndexedBinaryGeographyOperator<List, IntegerVector>::buildIndex(geog2);
+    IndexedBinaryGeographyOperator<List, IntegerVector>::buildIndex(geog2, maxEdgesPerCell);
   }
 
   IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
@@ -186,7 +194,8 @@ public:
     std::unordered_set<R_xlen_t> mightIntersectIndices = findPossibleIntersections(
       region,
       this->geog2Index.get(),
-      this->geog2IndexSource
+      this->geog2IndexSource,
+      this->maxFeatureCells
     );
 
     // loop through features from geog2 that might intersect feature
@@ -213,7 +222,26 @@ public:
   protected:
     List geog2;
     S2BooleanOperation::Options options;
+    int maxFeatureCells;
 };
+
+// [[Rcpp::export]]
+List cpp_s2_may_intersect_matrix(List geog1, List geog2, 
+                                 int maxEdgesPerCell, int maxFeatureCells, List s2options) {
+  class Op: public IndexedMatrixPredicateOperator {
+  public:
+    Op(List s2options, int maxFeatureCells): 
+      IndexedMatrixPredicateOperator(s2options, maxFeatureCells) {}
+    
+    bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+      return true;
+    };
+  };
+
+  Op op(s2options, maxFeatureCells);
+  op.buildIndex(geog2, maxEdgesPerCell);
+  return op.processVector(geog1);
+}
 
 // [[Rcpp::export]]
 List cpp_s2_contains_matrix(List geog1, List geog2, List s2options) {

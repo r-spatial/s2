@@ -132,6 +132,17 @@ test_that("s2_(max_)?distance_matrix() works", {
   expect_true(all(is.na(s2_max_distance_matrix(x, y)[2, ])))
 })
 
+test_that("s2_may_intersect_matrix() works", {
+  countries <- s2_data_countries()
+  timezones <- s2_data_timezones()
+
+  maybe_intersects <- s2_may_intersect_matrix(countries, timezones)
+  intersects <- s2_intersects_matrix_brute_force(countries, timezones)
+  for (i in seq_along(countries)) {
+    expect_identical(setdiff(intersects[[!!i]], maybe_intersects[[!!i]]), integer(0))
+  }
+})
+
 test_that("indexed matrix predicates return the same thing as brute-force comparisons", {
   warning("indexed and non-indexed predicate ops treat containment of EMPTY differently")
   countries <- s2_data_countries()

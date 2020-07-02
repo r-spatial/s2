@@ -11,6 +11,16 @@
 #' @inheritParams s2_contains
 #' @param x,y Geography vectors, coerced using [as_s2_geography()].
 #'   `x` is considered the source, where as `y` is considered the target.
+#' @param max_edges_per_cell For [s2_may_intersect_matrix()],
+#'   this values controls the nature of the index on `y`, with higher values
+#'   leading to coarser index. Values should be between 10 and 50; the default
+#'   of 50 is adequate for most use cases, but for specialized operations users
+#'   may wish to use a lower value to increase performance.
+#' @param max_feature_cells For [s2_may_intersect_matrix()], this value
+#'   controls the approximation of `x` used to identify potential intersections
+#'   on `y`. The default value of 4 gives the best performance for most operations,
+#'   but for specialized operations users may wish to use a higher value to increase
+#'   performance.
 #'
 #' @return A vector of length `x`.
 #' @export
@@ -114,6 +124,16 @@ s2_touches_matrix <- function(x, y, options = s2_options()) {
 #' @export
 s2_dwithin_matrix <- function(x, y, distance, radius = s2_earth_radius_meters()) {
   cpp_s2_dwithin_matrix(as_s2_geography(x), as_s2_geography(y), distance / radius)
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_may_intersect_matrix <- function(x, y, max_edges_per_cell = 50, max_feature_cells = 4) {
+  cpp_s2_may_intersect_matrix(
+    as_s2_geography(x), as_s2_geography(y),
+    max_edges_per_cell, max_feature_cells,
+    s2_options()
+  )
 }
 
 # ------- for testing, non-indexed versions of matrix operators -------

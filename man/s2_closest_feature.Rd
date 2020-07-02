@@ -14,6 +14,7 @@
 \alias{s2_equals_matrix}
 \alias{s2_touches_matrix}
 \alias{s2_dwithin_matrix}
+\alias{s2_may_intersect_matrix}
 \title{Matrix Functions}
 \usage{
 s2_closest_feature(x, y)
@@ -41,6 +42,8 @@ s2_equals_matrix(x, y, options = s2_options())
 s2_touches_matrix(x, y, options = s2_options())
 
 s2_dwithin_matrix(x, y, distance, radius = s2_earth_radius_meters())
+
+s2_may_intersect_matrix(x, y, max_edges_per_cell = 50, max_feature_cells = 4)
 }
 \arguments{
 \item{x, y}{Geography vectors, coerced using \code{\link[=as_s2_geography]{as_s2_geography()}}.
@@ -54,6 +57,18 @@ model to use and the snap level.}
 
 \item{distance}{A distance on the surface of the earth in the same units
 as \code{radius}.}
+
+\item{max_edges_per_cell}{For \code{\link[=s2_may_intersect_matrix]{s2_may_intersect_matrix()}},
+this values controls the nature of the index on \code{y}, with higher values
+leading to coarser index. Values should be between 10 and 50; the default
+of 50 is adequate for most use cases, but for specialized operations users
+may wish to use a lower value to increase performance.}
+
+\item{max_feature_cells}{For \code{\link[=s2_may_intersect_matrix]{s2_may_intersect_matrix()}}, this value
+controls the approximation of \code{x} used to identify potential intersections
+on \code{y}. The default value of 4 gives the best performance for most operations,
+but for specialized operations users may wish to use a higher value to increase
+performance.}
 }
 \value{
 A vector of length \code{x}.
