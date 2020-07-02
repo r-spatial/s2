@@ -148,9 +148,9 @@ the feature at <code>x[i]</code>.</p>
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_max_distance_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_contains_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_contains_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_within_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_within_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_covers_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))
 
@@ -164,7 +164,9 @@ the feature at <code>x[i]</code>.</p>
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_touches_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_dwithin_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>distance</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())</pre>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_dwithin_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, <span class='kw'>distance</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_may_intersect_matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, max_edges_per_cell = <span class='fl'>50</span>, max_feature_cells = <span class='fl'>4</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,6 +191,22 @@ model to use and the snap level.</p></td>
       <td><p>A distance on the surface of the earth in the same units
 as <code>radius</code>.</p></td>
     </tr>
+    <tr>
+      <th>max_edges_per_cell</th>
+      <td><p>For <code><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_may_intersect_matrix()</a></code>,
+this values controls the nature of the index on <code>y</code>, with higher values
+leading to coarser index. Values should be between 10 and 50; the default
+of 50 is adequate for most use cases, but for specialized operations users
+may wish to use a lower value to increase performance.</p></td>
+    </tr>
+    <tr>
+      <th>max_feature_cells</th>
+      <td><p>For <code><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_may_intersect_matrix()</a></code>, this value
+controls the approximation of <code>x</code> used to identify potential intersections
+on <code>y</code>. The default value of 4 gives the best performance for most operations,
+but for specialized operations users may wish to use a higher value to increase
+performance.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -199,27 +217,27 @@ as <code>radius</code>.</p></td>
     <div class='dont-index'><p>See pairwise predicate functions (e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects()</a></code>).</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>city_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Vatican City"</span>, <span class='st'>"San Marino"</span>, <span class='st'>"Luxembourg"</span>, <span class='st'>"Palikir"</span>)
+    <pre class="examples"><div class='input'><span class='kw'>city_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Vatican City"</span>, <span class='st'>"San Marino"</span>, <span class='st'>"Luxembourg"</span>)
 <span class='kw'>cities</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_cities</a></span>(<span class='kw'>city_names</span>)
 <span class='kw'>country_names</span> <span class='op'>&lt;-</span> <span class='kw'>s2_data_tbl_countries</span><span class='op'>$</span><span class='kw'>name</span>
 <span class='kw'>countries</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_countries</a></span>()
 
 <span class='co'># closest feature returns y indices of the closest feature</span>
 <span class='co'># for each feature in x</span>
-<span class='kw'>country_names</span>[<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_closest_feature</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>)]</div><div class='output co'>#&gt; [1] "Italy"            "Italy"            "Luxembourg"       "Papua New Guinea"</div><div class='input'>
+<span class='kw'>country_names</span>[<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_closest_feature</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>)]</div><div class='output co'>#&gt; [1] "Italy"      "Italy"      "Luxembourg"</div><div class='input'>
 <span class='co'># farthest feature returns y indices of the farthest feature</span>
 <span class='co'># for each feature in x</span>
-<span class='kw'>country_names</span>[<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_farthest_feature</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>)]</div><div class='output co'>#&gt; [1] "New Zealand" "New Zealand" "New Zealand" "Brazil"     </div><div class='input'>
+<span class='kw'>country_names</span>[<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_farthest_feature</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>)]</div><div class='output co'>#&gt; [1] "New Zealand" "New Zealand" "New Zealand"</div><div class='input'>
+<span class='co'># predicate matrices</span>
+<span class='kw'>country_names</span>[<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_intersects_matrix</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>)[[<span class='fl'>1</span>]]]</div><div class='output co'>#&gt; [1] "Italy"</div><div class='input'>
 <span class='co'># distance matrices</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_distance_matrix</a></span>(<span class='kw'>cities</span>, <span class='kw'>cities</span>)</div><div class='output co'>#&gt;            [,1]       [,2]       [,3]     [,4]
-#&gt; [1,]        0.0   226040.9   986762.6 13565767
-#&gt; [2,]   226040.9        0.0   792700.1 13395441
-#&gt; [3,]   986762.6   792700.1        0.0 13170659
-#&gt; [4,] 13565766.6 13395441.3 13170658.8        0</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_max_distance_matrix</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>])</div><div class='output co'>#&gt;          [,1]     [,2]       [,3]     [,4]
-#&gt; [1,]  5284474  6716222   729253.1  4488169
-#&gt; [2,]  5225941  6939199   798367.2  4551290
-#&gt; [3,]  5543951  7659266  1564998.8  5198533
-#&gt; [4,] 10320912 16275970 13286569.5 11349154</div><div class='input'></div></pre>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_distance_matrix</a></span>(<span class='kw'>cities</span>, <span class='kw'>cities</span>)</div><div class='output co'>#&gt;          [,1]     [,2]     [,3]
+#&gt; [1,]      0.0 226040.9 986762.6
+#&gt; [2,] 226040.9      0.0 792700.1
+#&gt; [3,] 986762.6 792700.1      0.0</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_closest_feature.html'>s2_max_distance_matrix</a></span>(<span class='kw'>cities</span>, <span class='kw'>countries</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>])</div><div class='output co'>#&gt;         [,1]    [,2]      [,3]    [,4]
+#&gt; [1,] 5284474 6716222  729253.1 4488169
+#&gt; [2,] 5225941 6939199  798367.2 4551290
+#&gt; [3,] 5543951 7659266 1564998.8 5198533</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
