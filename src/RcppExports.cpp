@@ -47,6 +47,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_is_empty
+LogicalVector cpp_s2_is_empty(List geog);
+RcppExport SEXP _s2_cpp_s2_is_empty(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_is_empty(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_area
 NumericVector cpp_s2_area(List geog);
 RcppExport SEXP _s2_cpp_s2_area(SEXP geogSEXP) {
@@ -555,6 +566,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_touches
+LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options);
+RcppExport SEXP _s2_cpp_s2_touches(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_touches(geog1, geog2, s2options));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_dwithin
 LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance);
 RcppExport SEXP _s2_cpp_s2_dwithin(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
@@ -749,6 +773,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
     {"_s2_cpp_s2_dimension", (DL_FUNC) &_s2_cpp_s2_dimension, 1},
     {"_s2_cpp_s2_num_points", (DL_FUNC) &_s2_cpp_s2_num_points, 1},
+    {"_s2_cpp_s2_is_empty", (DL_FUNC) &_s2_cpp_s2_is_empty, 1},
     {"_s2_cpp_s2_area", (DL_FUNC) &_s2_cpp_s2_area, 1},
     {"_s2_cpp_s2_length", (DL_FUNC) &_s2_cpp_s2_length, 1},
     {"_s2_cpp_s2_perimeter", (DL_FUNC) &_s2_cpp_s2_perimeter, 1},
@@ -790,6 +815,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_intersects", (DL_FUNC) &_s2_cpp_s2_intersects, 3},
     {"_s2_cpp_s2_equals", (DL_FUNC) &_s2_cpp_s2_equals, 3},
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
+    {"_s2_cpp_s2_touches", (DL_FUNC) &_s2_cpp_s2_touches, 3},
     {"_s2_cpp_s2_dwithin", (DL_FUNC) &_s2_cpp_s2_dwithin, 3},
     {"_s2_cpp_s2_intersects_box", (DL_FUNC) &_s2_cpp_s2_intersects_box, 7},
     {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 3},

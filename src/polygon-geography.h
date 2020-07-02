@@ -28,6 +28,10 @@ public:
     return this->polygon->num_vertices();
   }
 
+  bool IsEmpty() {
+    return this->polygon->is_empty();
+  }
+
   double Area() {
     return this->polygon->GetArea();
   }

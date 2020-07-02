@@ -17,6 +17,10 @@ cpp_s2_num_points <- function(geog) {
     .Call(`_s2_cpp_s2_num_points`, geog)
 }
 
+cpp_s2_is_empty <- function(geog) {
+    .Call(`_s2_cpp_s2_is_empty`, geog)
+}
+
 cpp_s2_area <- function(geog) {
     .Call(`_s2_cpp_s2_area`, geog)
 }
@@ -179,6 +183,10 @@ cpp_s2_equals <- function(geog1, geog2, s2options) {
 
 cpp_s2_contains <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_contains`, geog1, geog2, s2options)
+}
+
+cpp_s2_touches <- function(geog1, geog2, s2options) {
+    .Call(`_s2_cpp_s2_touches`, geog1, geog2, s2options)
 }
 
 cpp_s2_dwithin <- function(geog1, geog2, distance) {

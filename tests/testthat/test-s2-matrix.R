@@ -144,10 +144,8 @@ test_that("s2_may_intersect_matrix() works", {
 })
 
 test_that("indexed matrix predicates return the same thing as brute-force comparisons", {
-  warning("indexed and non-indexed predicate ops treat containment of EMPTY differently")
   countries <- s2_data_countries()
   timezones <- s2_data_timezones()
-  timezones <- timezones[!s2_is_empty(timezones)]
 
   # contains
   expect_identical(

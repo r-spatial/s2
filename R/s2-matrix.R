@@ -49,7 +49,6 @@
 #' s2_distance_matrix(cities, cities)
 #' s2_max_distance_matrix(cities, countries[1:4])
 #'
-#'
 s2_closest_feature <- function(x, y) {
   cpp_s2_closest_feature(as_s2_geography(x), as_s2_geography(y))
 }
@@ -74,13 +73,13 @@ s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 
 #' @rdname s2_closest_feature
 #' @export
-s2_contains_matrix <- function(x, y, options = s2_options()) {
+s2_contains_matrix <- function(x, y, options = s2_options(model = 0)) {
   cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
-s2_within_matrix <- function(x, y, options = s2_options()) {
+s2_within_matrix <- function(x, y, options = s2_options(model = 0)) {
   cpp_s2_within_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 

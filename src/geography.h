@@ -25,8 +25,9 @@ public:
   virtual bool IsCollection() = 0;
   // Returns 0 for point, 1 for line, 2 for polygon
   virtual int Dimension() = 0;
-  // Returns the number of unique points in the input
+  // Returns the number of points in the input
   virtual int NumPoints() = 0;
+  virtual bool IsEmpty() = 0;
   virtual double Area() = 0;
   virtual double Length() = 0;
   virtual double Perimeter() = 0;

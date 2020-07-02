@@ -85,7 +85,7 @@ s2_num_points <- function(x) {
 #' @rdname s2_is_collection
 #' @export
 s2_is_empty <- function(x) {
-  s2_num_points(x) == 0
+  cpp_s2_is_empty(as_s2_geography(x))
 }
 
 #' @rdname s2_is_collection

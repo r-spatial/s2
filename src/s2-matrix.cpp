@@ -349,27 +349,9 @@ public:
     this->options = options.booleanOperationOptions();
   }
 
-  void buildIndex(List geog2) {
-    SEXP item2;
-    this->geog2Indices = std::vector<S2ShapeIndex*>(geog2.size());
-
-    for (R_xlen_t j = 0; j < geog2.size(); j++) {
-      checkUserInterrupt();
-      
-      item2 = geog2[j];
-
-      if (item2 == R_NilValue) {
-        Rcpp::stop("Missing `y` not allowed in binary indexed operators()");
-      } else {
-        Rcpp::XPtr<Geography> feature2(item2);
-        geog2Indices[j] = feature2->ShapeIndex();
-      }
-    }
-  }
-
-  List processVector(Rcpp::List geog1) {
+  List processVector(Rcpp::List geog1, Rcpp::List geog2) {
     List output(geog1.size());
-    SEXP item1;
+
     // using instead of IntegerVector because
     // std::vector is much faster with repeated calls to .push_back()
     std::vector<int> trueIndices;
@@ -377,21 +359,22 @@ public:
     for (R_xlen_t i = 0; i < geog1.size(); i++) {
       trueIndices.clear();
 
-      item1 = geog1[i];
+      SEXP item1 = geog1[i];
       if (item1 ==  R_NilValue) {
         output[i] = R_NilValue;
       } else {
         Rcpp::XPtr<Geography> feature1(item1);
 
-        for (size_t j = 0; j < this->geog2Indices.size(); j++) {
+        for (size_t j = 0; j < geog2.size(); j++) {
           checkUserInterrupt();
+          SEXP item2 = geog2[j];
+          if (item2 == R_NilValue) {
+            stop("Missing `y` not allowed in binary index operations");
+          }
 
-          bool result = this->processFeature(
-            feature1->ShapeIndex(),
-            this->geog2Indices[j],
-            i, j
-          );
+          XPtr<Geography> feature2(item2);
 
+          bool result = this->processFeature(feature1, feature2, i, j);
           if (result) {
             // convert to R index here (+1)
             trueIndices.push_back(j + 1);
@@ -409,7 +392,8 @@ public:
     return output;
   }
 
-  virtual bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) = 0;
+  virtual bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                              R_xlen_t i, R_xlen_t j) = 0;
 };
 
 // [[Rcpp::export]]
@@ -418,16 +402,16 @@ List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance) {
   public:
     double distance;
     Op(double distance): distance(distance) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      S2ClosestEdgeQuery query(index2);
-      S2ClosestEdgeQuery::ShapeIndexTarget target(index1);
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      S2ClosestEdgeQuery query(feature2->ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(feature1->ShapeIndex());
       return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
     };
   };
 
   Op op(distance);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }
 
 // ----------- distance matrix operators -------------------
@@ -477,8 +461,7 @@ public:
 NumericMatrix cpp_s2_distance_matrix(List geog1, List geog2) {
   class Op: public MatrixGeographyOperator<NumericMatrix, double> {
 
-    double processFeature(XPtr<Geography> feature1,
-                          XPtr<Geography> feature2,
+    double processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                           R_xlen_t i, R_xlen_t j) {
       S2ClosestEdgeQuery query(feature1->ShapeIndex());
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
@@ -503,8 +486,7 @@ NumericMatrix cpp_s2_distance_matrix(List geog1, List geog2) {
 NumericMatrix cpp_s2_max_distance_matrix(List geog1, List geog2) {
   class Op: public MatrixGeographyOperator<NumericMatrix, double> {
 
-    double processFeature(XPtr<Geography> feature1,
-                          XPtr<Geography> feature2,
+    double processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                           R_xlen_t i, R_xlen_t j) {
       S2FurthestEdgeQuery query(feature1->ShapeIndex());
       S2FurthestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
@@ -536,14 +518,24 @@ List cpp_s2_contains_matrix_brute_force(List geog1, List geog2, List s2options) 
   class Op: public BruteForceMatrixPredicateOperator {
   public:
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Contains(*index1, *index2, this->options);
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      // by default Contains() will return true for Contains(x, EMPTY), which is
+      // not true in BigQuery or GEOS
+      if (feature2->IsEmpty()) {
+        return false;
+      } else {
+        return S2BooleanOperation::Contains(
+          *feature1->ShapeIndex(), 
+          *feature2->ShapeIndex(), 
+          this->options
+        );
+      }
     };
   };
 
   Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
@@ -551,15 +543,26 @@ List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
   class Op: public BruteForceMatrixPredicateOperator {
   public:
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
       // note reversed index2, index1
-      return S2BooleanOperation::Contains(*index2, *index1, this->options);
+      
+      // by default Contains() will return true for Contains(x, EMPTY), which is
+      // not true in BigQuery or GEOS
+      if (feature1->IsEmpty()) {
+        return false;
+      } else {
+        return S2BooleanOperation::Contains(
+          *feature2->ShapeIndex(),
+          *feature1->ShapeIndex(),
+          this->options
+        );
+      }      
     };
   };
 
   Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
@@ -567,14 +570,18 @@ List cpp_s2_intersects_matrix_brute_force(List geog1, List geog2, List s2options
   class Op: public BruteForceMatrixPredicateOperator {
   public:
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Intersects(*index1, *index2, this->options);
-    };
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Intersects(
+        *feature1->ShapeIndex(),
+        *feature2->ShapeIndex(),
+        this->options
+      );
+    }
   };
 
   Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
@@ -582,14 +589,18 @@ List cpp_s2_disjoint_matrix_brute_force(List geog1, List geog2, List s2options) 
   class Op: public BruteForceMatrixPredicateOperator {
   public:
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return !S2BooleanOperation::Intersects(*index1, *index2, this->options);
-    };
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      return !S2BooleanOperation::Intersects(
+        *feature1->ShapeIndex(),
+        *feature2->ShapeIndex(),
+        this->options
+      );
+    }
   };
 
   Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }
 
 // [[Rcpp::export]]
@@ -597,12 +608,16 @@ List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
   class Op: public BruteForceMatrixPredicateOperator {
   public:
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
-    bool processFeature(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Equals(*index1, *index2, this->options);
-    };
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      return S2BooleanOperation::Equals(
+        *feature1->ShapeIndex(),
+        *feature2->ShapeIndex(),
+        this->options
+      );
+    }
   };
 
   Op op(s2options);
-  op.buildIndex(geog2);
-  return op.processVector(geog1);
+  return op.processVector(geog1, geog2);
 }

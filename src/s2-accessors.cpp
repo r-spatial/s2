@@ -42,6 +42,18 @@ IntegerVector cpp_s2_num_points(List geog) {
 }
 
 // [[Rcpp::export]]
+LogicalVector cpp_s2_is_empty(List geog) {
+  class Op: public UnaryGeographyOperator<LogicalVector, int> {
+    int processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      return feature->IsEmpty();
+    }
+  };
+
+  Op op;
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
 NumericVector cpp_s2_area(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
