@@ -40,8 +40,8 @@ test_that("s2_latlng objects can be created from and converted back to R objects
 
 test_that("s2_latlng can be imported/exported to/from wkb and wkt", {
   wkb_point <- wk::as_wkb("POINT (-64 45)")
-  expect_identical(wk::as_wkb(s2_latlng(45, -64), endian = 1), wkb_point)
-  expect_identical(wk::as_wkt(s2_latlng(45, -64)), wk::wkt("POINT (-64 45)"))
+  expect_wkt_equal(wk::as_wkb(s2_latlng(45, -64), endian = 1), wkb_point)
+  expect_wkt_equal(wk::as_wkt(s2_latlng(45, -64)), wk::wkt("POINT (-64 45)"))
   expect_identical(wk::as_wkt(s2_latlng(NA, NA)), wk::wkt("POINT EMPTY"))
 
   expect_equal(
@@ -49,18 +49,18 @@ test_that("s2_latlng can be imported/exported to/from wkb and wkt", {
     data.frame(lat = c(NA, 45), lng = c(NA, -64))
   )
 
-  expect_identical(
+  expect_equal(
     as.data.frame(as_s2_latlng(c("POINT EMPTY", "POINT (-64 45)"))),
     data.frame(lat = c(NA, 45), lng = c(NA, -64))
   )
 
-  expect_identical(
+  expect_equal(
     as.data.frame(as_s2_latlng(wk::wkt(c("POINT EMPTY", "POINT (-64 45)")))),
     data.frame(lat = c(NA, 45), lng = c(NA, -64))
   )
 
-  expect_error(as_s2_latlng(wk::wkt("LINESTRING EMPTY")), "Can't import non-points")
-  expect_error(as_s2_latlng(wk::as_wkb("LINESTRING EMPTY")), "Can't import non-points")
+  expect_error(as_s2_latlng(wk::wkt("LINESTRING EMPTY")), "non-point")
+  expect_error(as_s2_latlng(wk::as_wkb("LINESTRING EMPTY")), "non-point")
 })
 
 test_that("s2_latlng vectors can't have other types of objects concatenated or asssigned", {
@@ -81,7 +81,7 @@ test_that("s2_latlng can be imported from s2_geography", {
 test_that("s2_latlng can be imported from wkb", {
   wkb_point <- wk::as_wkb("POINT (-64 45)")
 
-  expect_identical(
+  expect_equal(
     as.data.frame(as_s2_latlng(wkb_point)),
     data.frame(lat = 45, lng = -64)
   )

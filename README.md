@@ -9,13 +9,17 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 ![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/s2)
+[![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
 <!-- badges: end -->
 
 The goal of s2 is to provide R bindings to Google’s
 [S2Geometry](https://s2geometry.io) library. The package exposes an API
 similar to Google’s [BigQuery Geography
 API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions),
-whose functions also operate on spherical geometries.
+whose functions also operate on spherical geometries. This package is a
+complete rewrite of an earlier CRAN package s2 with versions up to
+0.4-2, for which the sources are found
+[here](https://github.com/spatstat/s2/).
 
 ## Installation
 
