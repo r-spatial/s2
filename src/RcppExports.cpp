@@ -137,6 +137,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cap
+DataFrame cpp_s2_cap(List geog);
+RcppExport SEXP _s2_cpp_s2_cap(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cap(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_lat_lng_rect
+DataFrame cpp_s2_lat_lng_rect(List geog);
+RcppExport SEXP _s2_cpp_s2_lat_lng_rect(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_lat_lng_rect(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_geog_point
 List cpp_s2_geog_point(NumericVector x, NumericVector y);
 RcppExport SEXP _s2_cpp_s2_geog_point(SEXP xSEXP, SEXP ySEXP) {
@@ -781,6 +803,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_y", (DL_FUNC) &_s2_cpp_s2_y, 1},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
+    {"_s2_cpp_s2_cap", (DL_FUNC) &_s2_cpp_s2_cap, 1},
+    {"_s2_cpp_s2_lat_lng_rect", (DL_FUNC) &_s2_cpp_s2_lat_lng_rect, 1},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},

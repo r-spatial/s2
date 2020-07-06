@@ -70,6 +70,10 @@ public:
     return output;
   }
 
+  S2Cap GetCapBound() {
+	return this->ShapeIndexRegion().GetCapBound();
+  }
+
   std::unique_ptr<Geography> Boundary() {
     return absl::make_unique<PointGeography>();
   }
