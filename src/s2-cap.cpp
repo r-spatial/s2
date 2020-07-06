@@ -39,10 +39,10 @@ DataFrame cpp_s2_cap(List geog) {
       Rcpp::XPtr<Geography> feature(item);
       // output[i] = this->processFeature(feature, i);
       S2Cap cap = feature->GetCapBound();
-	  S2LatLng center(cap.center());
-	  lat[i] = center.lat().degrees();
-	  lng[i] = center.lng().degrees();
-	  angle[i] = cap.GetRadius().degrees();
+      S2LatLng center(cap.center());
+      lat[i] = center.lat().degrees();
+      lng[i] = center.lng().degrees();
+      angle[i] = cap.GetRadius().degrees();
     }
   }
   DataFrame df = DataFrame::create( _["lat"] = lat , _["lng"] = lng, _["angle"] = angle );
@@ -61,14 +61,13 @@ DataFrame cpp_s2_lat_lng_rect(List geog) {
     } else {
       Rcpp::XPtr<Geography> feature(item);
       S2LatLngRect rect = feature->GetRectBound();
-	  lat_lo[i] = rect.lat_lo().degrees();
-	  lat_hi[i] = rect.lat_hi().degrees();
-	  lng_lo[i] = rect.lng_lo().degrees();
-	  lng_hi[i] = rect.lng_hi().degrees();
-	  // Rcout << lat_lo[i] << " " << lat_hi[i] << " " << lng_lo[i] << " " << lng_hi[i] << std::endl;
+      lat_lo[i] = rect.lat_lo().degrees();
+      lat_hi[i] = rect.lat_hi().degrees();
+      lng_lo[i] = rect.lng_lo().degrees();
+      lng_hi[i] = rect.lng_hi().degrees();
     }
   }
   DataFrame df = DataFrame::create( _["lat_lo"] = lat_lo , _["lat_hi"] = lat_hi,
-  	_["lng_lo"] = lng_lo, _["lng_hi"] = lng_hi );
+      _["lng_lo"] = lng_lo, _["lng_hi"] = lng_hi );
   return df;
 }
