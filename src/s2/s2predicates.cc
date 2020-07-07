@@ -341,8 +341,8 @@ inline double GetSin2Distance(const S2Point& x, const S2Point& y,
   // distances as small as DBL_ERR.
   S2Point n = (x - y).CrossProd(x + y);
   double d2 = 0.25 * n.Norm2();
-  *error = ((21 + 4 * sqrt(3)) * DBL_ERR * d2 +
-            32 * sqrt(3) * DBL_ERR * DBL_ERR * sqrt(d2) +
+  *error = ((21 + 4 * sqrt(3.0)) * DBL_ERR * d2 +
+            32 * sqrt(3.0) * DBL_ERR * DBL_ERR * sqrt(d2) +
             768 * DBL_ERR * DBL_ERR * DBL_ERR * DBL_ERR);
   return d2;
 }
@@ -359,8 +359,8 @@ inline long double GetSin2Distance(const Vector3_ld& x, const Vector3_ld& y,
   // the additional effort.)
   Vector3_ld n = (x - y).CrossProd(x + y);
   long double d2 = 0.25 * n.Norm2() / (x.Norm2() * y.Norm2());
-  *error = ((13 + 4 * sqrt(3)) * LD_ERR * d2 +
-            32 * sqrt(3) * DBL_ERR * LD_ERR * sqrt(d2) +
+  *error = ((13 + 4 * sqrt(3.0)) * LD_ERR * d2 +
+            32 * sqrt(3.0) * DBL_ERR * LD_ERR * sqrt(d2) +
             768 * DBL_ERR * DBL_ERR * LD_ERR * LD_ERR);
   return d2;
 }
@@ -593,7 +593,7 @@ int TriageCompareLineSin2Distance(const Vector3<T>& x, const Vector3<T>& a0,
   T n2sin2_r_error = 6 * T_ERR * n2sin2_r;
   T ax2, xDn = (x - GetClosestVertex(x, a0, a1, &ax2)).DotProd(n);
   T xDn2 = xDn * xDn;
-  const T c1 = (((3.5 + 2 * sqrt(3)) * n1 + 32 * sqrt(3) * DBL_ERR) *
+  const T c1 = (((3.5 + 2 * sqrt(3.0)) * n1 + 32 * sqrt(3.0) * DBL_ERR) *
                 T_ERR * sqrt(ax2));
   T xDn2_error = 4 * T_ERR * xDn2 + (2 * fabs(xDn) + c1) * c1;
 
@@ -633,7 +633,7 @@ int TriageCompareLineCos2Distance(const Vector3<T>& x, const Vector3<T>& a0,
   // The length of M = X.CrossProd(N) is the cosine of the distance.
   T m2 = x.CrossProd(n).Norm2();
   T m1 = sqrt(m2);
-  T m1_error = ((1 + 8 / sqrt(3)) * n1 + 32 * sqrt(3) * DBL_ERR) * T_ERR;
+  T m1_error = ((1 + 8 / sqrt(3.0)) * n1 + 32 * sqrt(3.0) * DBL_ERR) * T_ERR;
   T m2_error = 3 * T_ERR * m2 + (2 * m1 + m1_error) * m1_error;
 
   // If we are using extended precision, then it is worthwhile to recompute
@@ -684,7 +684,7 @@ int TriageCompareEdgeDistance(const Vector3<T>& x, const Vector3<T>& a0,
   T a1_sign = a1_dir.DotProd(m);
   T n2 = n.Norm2();
   T n1 = sqrt(n2);
-  T n1_error = ((3.5 + 8 / sqrt(3)) * n1 + 32 * sqrt(3) * DBL_ERR) * T_ERR;
+  T n1_error = ((3.5 + 8 / sqrt(3.0)) * n1 + 32 * sqrt(3.0) * DBL_ERR) * T_ERR;
   T a0_sign_error = n1_error * a0_dir.Norm();
   T a1_sign_error = n1_error * a1_dir.Norm();
   if (fabs(a0_sign) < a0_sign_error || fabs(a1_sign) < a1_sign_error) {
@@ -771,8 +771,8 @@ int TriageCompareEdgeDirections(
   Vector3<T> nb = (b0 - b1).CrossProd(b0 + b1);
   T na_len = na.Norm(), nb_len = nb.Norm();
   T cos_ab = na.DotProd(nb);
-  T cos_ab_error = ((5 + 4 * sqrt(3)) * na_len * nb_len +
-                    32 * sqrt(3) * DBL_ERR * (na_len + nb_len)) * T_ERR;
+  T cos_ab_error = ((5 + 4 * sqrt(3.0)) * na_len * nb_len +
+                    32 * sqrt(3.0) * DBL_ERR * (na_len + nb_len)) * T_ERR;
   return (cos_ab > cos_ab_error) ? 1 : (cos_ab < -cos_ab_error) ? -1 : 0;
 }
 
@@ -836,9 +836,9 @@ Vector3<T> GetCircumcenter(const Vector3<T>& a, const Vector3<T>& b,
   T bc_len = bc_diff.Norm();
   Vector3<T> mab = nab.CrossProd(ab_sum);
   Vector3<T> mbc = nbc.CrossProd(bc_sum);
-  *error = (((16 + 24 * sqrt(3)) * T_ERR +
+  *error = (((16 + 24 * sqrt(3.0)) * T_ERR +
                 8 * DBL_ERR * (ab_len + bc_len)) * nab_len * nbc_len +
-               128 * sqrt(3) * DBL_ERR * T_ERR * (nab_len + nbc_len) +
+               128 * sqrt(3.0) * DBL_ERR * T_ERR * (nab_len + nbc_len) +
                3 * 4096 * DBL_ERR * DBL_ERR * T_ERR * T_ERR);
   return mab.CrossProd(mbc);
 }
@@ -860,7 +860,7 @@ int TriageEdgeCircumcenterSign(const Vector3<T>& x0, const Vector3<T>& x1,
 
   T z_len = z.Norm();
   T nx_len = nx.Norm();
-  T nx_error = ((1 + 2 * sqrt(3)) * nx_len + 32 * sqrt(3) * DBL_ERR) * T_ERR;
+  T nx_error = ((1 + 2 * sqrt(3.0)) * nx_len + 32 * sqrt(3.0) * DBL_ERR) * T_ERR;
   T result_error = ((3 * T_ERR * nx_len + nx_error) * z_len + z_error * nx_len);
   return (result > result_error) ? 1 : (result < -result_error) ? -1 : 0;
 }
@@ -1174,7 +1174,7 @@ Excluded TriageVoronoiSiteExclusion(const Vector3<T>& a, const Vector3<T>& b,
   T n2 = n.Norm2();
   T n1 = sqrt(n2);
   // This factor is used in the error terms of dot products with "n" below.
-  T Dn_error = ((3.5 + 2 * sqrt(3)) * n1 + 32 * sqrt(3) * DBL_ERR) * T_ERR;
+  T Dn_error = ((3.5 + 2 * sqrt(3.0)) * n1 + 32 * sqrt(3.0) * DBL_ERR) * T_ERR;
 
   T cos_r = 1 - 0.5 * r2;
   T sin2_r = r2 * (1 - 0.25 * r2);
@@ -1216,8 +1216,8 @@ Excluded TriageVoronoiSiteExclusion(const Vector3<T>& a, const Vector3<T>& b,
   Vector3<T> aXb = (a - b).CrossProd(a + b);  // 2 * a.CrossProd(b)
   T aXb1 = aXb.Norm();
   T sin_d = 0.5 * aXb.DotProd(n);
-  T sin_d_error = (4 * DBL_ERR + (2.5 + 2 * sqrt(3)) * T_ERR) * aXb1 * n1 +
-      16 * sqrt(3) * DBL_ERR * T_ERR * (aXb1 + n1);
+  T sin_d_error = (4 * DBL_ERR + (2.5 + 2 * sqrt(3.0)) * T_ERR) * aXb1 * n1 +
+      16 * sqrt(3.0) * DBL_ERR * T_ERR * (aXb1 + n1);
 
   // If LHS(3) is definitely less than RHS(3), neither site excludes the other.
   T result = abs_lhs3 - sin_d;

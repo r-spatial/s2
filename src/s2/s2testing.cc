@@ -109,7 +109,7 @@ uint32 S2Testing::Random::Rand32() {
 
 double S2Testing::Random::RandDouble() {
   const int NUM_BITS = 53;
-  return ldexp(GetBits(NUM_BITS), -NUM_BITS);
+  return ldexp((double) GetBits(NUM_BITS), -NUM_BITS);
 }
 
 int32 S2Testing::Random::Uniform(int32 n) {
@@ -340,7 +340,7 @@ void S2Testing::CheckCovering(const S2Region& region,
 
 S2Testing::Fractal::Fractal()
     : max_level_(-1), min_level_arg_(-1), min_level_(-1),
-      dimension_(log(4)/log(3)), /* standard Koch curve */
+      dimension_(log(4.0)/log(3.0)), /* standard Koch curve */
       edge_fraction_(0), offset_fraction_(0) {
   ComputeOffsets();
 }
@@ -412,15 +412,15 @@ double S2Testing::Fractal::min_radius_factor() const {
 double S2Testing::Fractal::max_radius_factor() const {
   // The maximum radius is always attained at either an original triangle
   // vertex or at a middle vertex from the first subdivision step.
-  return max(1.0, offset_fraction_ * sqrt(3) + 0.5);
+  return max(1.0, offset_fraction_ * sqrt(3.0) + 0.5);
 }
 
 void S2Testing::Fractal::GetR2Vertices(vector<R2Point>* vertices) const {
   // The Koch "snowflake" consists of three Koch curves whose initial edges
   // form an equilateral triangle.
   R2Point v0(1.0, 0.0);
-  R2Point v1(-0.5, sqrt(3)/2);
-  R2Point v2(-0.5, -sqrt(3)/2);
+  R2Point v1(-0.5, sqrt(3.0)/2);
+  R2Point v2(-0.5, -sqrt(3.0)/2);
   GetR2VerticesHelper(v0, v1, 0, vertices);
   GetR2VerticesHelper(v1, v2, 0, vertices);
   GetR2VerticesHelper(v2, v0, 0, vertices);

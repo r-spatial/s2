@@ -1073,7 +1073,7 @@ void S2Polygon::InitToSimplifiedInCell(
   // want the bound in terms of (u = 2 * s - 1) rather than "s" itself.
   // Consulting s2metrics.cc, this value is sqrt(2/3)/2 = sqrt(1/6).
   // Going back to the original problem, this gives:
-  double boundary_tolerance_uv = sqrt(6) * boundary_tolerance.radians();
+  double boundary_tolerance_uv = sqrt(6.0) * boundary_tolerance.radians();
 
   // The first pass yields a collection of simplified polylines that preserve
   // the original cyclic vertex order.

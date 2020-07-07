@@ -52,7 +52,7 @@ inline int S2EdgeCrosser::CrossingSignInternal2(const S2Point& d) {
   // DotProd() below is DBL_EPSILON.  (There is also a small relative error
   // term that is insignificant because we are comparing the result against a
   // constant that is very close to zero.)
-  static const double kError = (1.5 + 1/sqrt(3)) * DBL_EPSILON;
+  static const double kError = (1.5 + 1/sqrt(3.0)) * DBL_EPSILON;
   if ((c_->DotProd(a_tangent_) > kError && d.DotProd(a_tangent_) > kError) ||
       (c_->DotProd(b_tangent_) > kError && d.DotProd(b_tangent_) > kError)) {
     return -1;

@@ -164,9 +164,9 @@ static bool GetIntersectionSimple(const Vector3<T>& a0, const Vector3<T>& a1,
   // long as "result_len" is at least kMinResultLen defined below.
 
   constexpr T T_ERR = s2pred::rounding_epsilon<T>();
-  static const T kMinNormalLength = (16 * sqrt(3) + 24) * DBL_ERR;
+  static const T kMinNormalLength = (16 * sqrt(3.0) + 24) * DBL_ERR;
   static const T kMinResultLen =
-      12 / (kIntersectionError.radians() / T_ERR - (2 + 2 * sqrt(3)));
+      12 / (kIntersectionError.radians() / T_ERR - (2 + 2 * sqrt(3.0)));
 
   // On some platforms "long double" is the same as "double", and on these
   // platforms this method always returns false (e.g. ARM, Win32).  Rather
@@ -240,7 +240,7 @@ static T GetProjection(const Vector3<T>& x,
   // |(A.B)'-(A.B)| <= (1.5 * (A.B) + 1.5 * ||A|| * ||B||) * T_ERR
   // ||(X-Y)'-(X-Y)|| <= ||X-Y|| * T_ERR
   constexpr T T_ERR = s2pred::rounding_epsilon<T>();
-  *error = (((3.5 + 2 * sqrt(3)) * a_norm_len + 32 * sqrt(3) * DBL_ERR)
+  *error = (((3.5 + 2 * sqrt(3.0)) * a_norm_len + 32 * sqrt(3.0) * DBL_ERR)
             * dist + 1.5 * fabs(result)) * T_ERR;
   return result;
 }
