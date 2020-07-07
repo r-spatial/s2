@@ -49,6 +49,14 @@ cpp_s2_max_distance <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_max_distance`, geog1, geog2)
 }
 
+cpp_s2_cap <- function(geog) {
+    .Call(`_s2_cpp_s2_cap`, geog)
+}
+
+cpp_s2_lat_lng_rect <- function(geog) {
+    .Call(`_s2_cpp_s2_lat_lng_rect`, geog)
+}
+
 cpp_s2_geog_point <- function(x, y) {
     .Call(`_s2_cpp_s2_geog_point`, x, y)
 }
