@@ -87,7 +87,11 @@ print_next <- function() {
   cli::cat_bullet("Remove extra semi-colons because of FROMHOST_TYPE_MAP macro (utils/endian/endian.h#565)")
   cli::cat_bullet(
     "Check for definition of IS_LITTLE_ENDIAN and IS_BIG_ENDIAN to allow configure script ",
-    "override (s2/base/port.h:273) without macro redefinition warnings"
+    "override (s2/base/port.h:273) without macro redefinition warnings (for CRAN Solaris)"
+  )
+  cli::cat_bullet(
+    "Replace calls to log(<int literal>), sqrt(<int literal>), and ldexp(<int literal>, ...) ",
+    "with an explicit doouble (e.g., sqrt(3) -> sqrt(3.0) to fix build errors on CRAN Solaris"
   )
   cli::cat_bullet("Replace `abort()` with `cpp_compat_abort()`")
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
