@@ -52,7 +52,8 @@ DataFrame cpp_s2_cap(List geog) {
 // [[Rcpp::export]]
 DataFrame cpp_s2_lat_lng_rect(List geog) {
   SEXP item;
-  NumericVector lat_lo(geog.size()), lat_hi(geog.size()), lng_lo(geog.size()), lng_hi(geog.size());
+  NumericVector lat_lo(geog.size()), lat_hi(geog.size()), lng_lo(geog.size()),
+    lng_hi(geog.size()), lat_cnt(geog.size()), lng_cnt(geog.size());
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     Rcpp::checkUserInterrupt();
     item = geog[i];
@@ -65,9 +66,12 @@ DataFrame cpp_s2_lat_lng_rect(List geog) {
       lat_hi[i] = rect.lat_hi().degrees();
       lng_lo[i] = rect.lng_lo().degrees();
       lng_hi[i] = rect.lng_hi().degrees();
+      S2LatLng center = rect.GetCenter();
+	  lat_cnt[i] = center.lat().degrees();
+	  lng_cnt[i] = center.lng().degrees();
     }
   }
   DataFrame df = DataFrame::create( _["lat_lo"] = lat_lo , _["lat_hi"] = lat_hi,
-      _["lng_lo"] = lng_lo, _["lng_hi"] = lng_hi );
+      _["lng_lo"] = lng_lo, _["lng_hi"] = lng_hi, _["lat_cnt"] = lat_cnt, _["lng_cnt"] = lng_cnt );
   return df;
 }
