@@ -7,8 +7,10 @@
 #include "s2/s2polyline.h"
 #include "s2/s2polygon.h"
 #include "s2/s2shape_index.h"
+#include "s2/s2shape_index_region.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2point_vector_shape.h"
+#include "s2/s2cap.h"
 #include "wk/geometry-handler.hpp"
 #include <Rcpp.h>
 
@@ -56,6 +58,19 @@ public:
     }
 
     return &this->shape_index_;
+  }
+
+  virtual S2ShapeIndexRegion<S2ShapeIndex> ShapeIndexRegion() {
+	S2ShapeIndex *ix = this->ShapeIndex();
+	return MakeS2ShapeIndexRegion(ix);
+  }
+
+  virtual S2Cap GetCapBound() {
+	return this->ShapeIndexRegion().GetCapBound();
+  }
+
+  virtual S2LatLngRect GetRectBound() {
+	return this->ShapeIndexRegion().GetRectBound();
   }
 
 protected:

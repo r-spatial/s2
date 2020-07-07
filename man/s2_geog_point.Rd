@@ -59,7 +59,7 @@ digits after the decimal place.}
 \item{trim}{Should trailing zeroes be included after the decimal place?}
 
 \item{endian}{The endian to use when writing well-known binary.
-Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
+Defaults to the platform endian. See \code{\link[wk:as_wkb]{wk::as_wkb()}}.}
 }
 \description{
 These functions create and export \link[=as_s2_geography]{geography vectors}.

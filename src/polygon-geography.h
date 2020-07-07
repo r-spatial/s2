@@ -57,6 +57,14 @@ public:
     return this->polygon->GetCentroid();
   }
 
+  S2Cap GetCapBound() {
+	return this->polygon->GetCapBound();
+  }
+
+  S2LatLngRect GetRectBound() {
+	return this->polygon->GetRectBound();
+  }
+
   std::unique_ptr<Geography> Boundary() {
     PolylineGeography::Builder builder;
     std::vector<std::vector<int>> flatIndices = this->flatLoopIndices();
