@@ -340,7 +340,7 @@ void S2Testing::CheckCovering(const S2Region& region,
 
 S2Testing::Fractal::Fractal()
     : max_level_(-1), min_level_arg_(-1), min_level_(-1),
-      dimension_(log(4)/log(3)), /* standard Koch curve */
+      dimension_(log(4.0)/log(3.0)), /* standard Koch curve */
       edge_fraction_(0), offset_fraction_(0) {
   ComputeOffsets();
 }
