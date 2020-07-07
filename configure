@@ -52,7 +52,7 @@ CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
 CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
 # For debugging
-echo "Using PKG_CFLAGS=$PKG_CFLAGS"
+echo "Testing compiler using PKG_CFLAGS=$PKG_CFLAGS"
 
 # Test configuration
 ${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>configure.log
@@ -100,7 +100,22 @@ fi
 fi #SONAME
 fi #AUTOBREW
 
+# Define system endianness (compile-time endianness using system/compiler
+# defines isn't detected on Solaris)
+# based on endian detection from the feather package by @hadley
+R_ENDIAN=`${R_HOME}/bin/Rscript -e 'cat(.Platform$endian)'`
+# Trim off any warning messages that Rscript appends in front of the platform endianness
+R_ENDIAN=`expr "$R_ENDIAN" : '.*\(little\)$'`
+SYS_ENDIAN=""
+if [ "$R_ENDIAN" = "little" ]; then
+    PKG_CFLAGS="$PKG_CFLAGS -DIS_LITTLE_ENDIAN"
+else
+    PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
+fi
+
 echo "Using PKG_LIBS=$PKG_LIBS"
+echo "Using PKG_CFLAGS=$PKG_CFLAGS"
+
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars

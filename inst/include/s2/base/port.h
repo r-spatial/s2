@@ -274,6 +274,15 @@ inline void sized_delete_array(void *ptr, size_t size) {
 // -----------------------------------------------------------------------------
 
 // IS_LITTLE_ENDIAN, IS_BIG_ENDIAN
+
+// Allow compiler -D defines to override detection here
+// which occasionally fails (e.g., on CRAN Solaris)
+#if defined(IS_LITTLE_ENDIAN)
+#undef IS_BIG_ENDIAN
+#elif defined(IS_BIG_ENDIAN)
+#undef IS_LITTLE_ENDIAN
+#else
+
 #if defined __linux__ || defined OS_ANDROID || defined(__ANDROID__)
 // TODO(user): http://b/21460321; use one of OS_ANDROID or __ANDROID__.
 // _BIG_ENDIAN
@@ -318,6 +327,7 @@ inline void sized_delete_array(void *ptr, size_t size) {
 
 #endif  // __BYTE_ORDER
 #endif  // _MSC_VER
+#endif // #if defined(IS_LITTLE_ENDIAN) ... #else
 
 // byte swap functions (bswap_16, bswap_32, bswap_64).
 
