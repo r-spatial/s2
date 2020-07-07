@@ -356,8 +356,8 @@ bool ClipToPaddedFace(const S2Point& a_xyz, const S2Point& b_xyz, int face,
   // TODO(ericv): This is a temporary hack until I rewrite S2::RobustCrossProd;
   // it avoids loss of precision in Normalize() when the vector is so small
   // that it underflows.
-  if (max(fabs(n[0]), max(fabs(n[1]), fabs(n[2]))) < ldexp(1, -511)) {
-    n *= ldexp(1, 563);
+  if (max(fabs(n[0]), max(fabs(n[1]), fabs(n[2]))) < ldexp(1.0, -511)) {
+    n *= ldexp(1.0, 563);
   }  // END OF HACK
   n = n.Normalize();
   S2PointUVW a_tangent = n.CrossProd(a);
