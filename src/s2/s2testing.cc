@@ -109,7 +109,7 @@ uint32 S2Testing::Random::Rand32() {
 
 double S2Testing::Random::RandDouble() {
   const int NUM_BITS = 53;
-  return ldexp(GetBits(NUM_BITS), -NUM_BITS);
+  return ldexp((double) GetBits(NUM_BITS), -NUM_BITS);
 }
 
 int32 S2Testing::Random::Uniform(int32 n) {
