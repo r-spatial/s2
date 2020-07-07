@@ -2,6 +2,8 @@
 #ifndef POINT_GEOGRAPHY_H
 #define POINT_GEOGRAPHY_H
 
+#include "s2/s2latlng_rect.h"
+
 #include "geography.h"
 
 // This class handles both points and multipoints, as this is how
@@ -70,8 +72,12 @@ public:
     return output;
   }
 
-  S2Cap GetCapBound() {
-	return this->ShapeIndexRegion().GetCapBound();
+  S2LatLngRect GetRectBound() {
+	S2LatLngRect rect; 
+    for (size_t i = 0; i < this->points.size(); i++) {
+        rect.AddPoint(this->points[i]); // depends on order
+    }
+	return rect;
   }
 
   std::unique_ptr<Geography> Boundary() {
