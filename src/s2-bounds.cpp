@@ -1,3 +1,4 @@
+
 #include "s2/s2boolean_operation.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2polygon.h"
@@ -27,7 +28,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-DataFrame cpp_s2_cap(List geog) {
+DataFrame cpp_s2_bounds_cap(List geog) {
   SEXP item;
   NumericVector lat(geog.size()), lng(geog.size()), angle(geog.size());
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -50,7 +51,7 @@ DataFrame cpp_s2_cap(List geog) {
 }
 
 // [[Rcpp::export]]
-DataFrame cpp_s2_lat_lng_rect(List geog) {
+DataFrame cpp_s2_bounds_rect(List geog) {
   SEXP item;
   NumericVector lat_lo(geog.size()), lat_hi(geog.size()), lng_lo(geog.size()),
     lng_hi(geog.size()), lat_cnt(geog.size()), lng_cnt(geog.size());
