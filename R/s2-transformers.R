@@ -172,10 +172,17 @@ s2_snap_to_grid <- function(x, grid_size) {
 s2_simplify <- function(x) {
   new_s2_xptr(
     cpp_s2_rebuild(
-      as_s2_geography(x)
+      as_s2_geography(x),
+      s2_options()
     ),
     "s2_geography"
   )
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_rebuild <- function(x, options = s2_options()) {
+  new_s2_xptr(cpp_s2_rebuild(as_s2_geography(x), options), "s2_geography")
 }
 
 #' @rdname s2_boundary

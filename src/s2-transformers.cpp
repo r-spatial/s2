@@ -105,31 +105,9 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   );
 }
 
-std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index, int dimension) {
-  // set up the options
-  S2Builder::Options options;
-  options.set_snap_function(s2builderutil::IdentitySnapFunction(S1Angle::Zero()));
-  // technically this default is true; however this is not the case for
-  // the S2BooleanOperation, so to keep defaults consistent, it is here as well
-  options.set_idempotent(false);
-  options.set_simplify_edge_chains(false);
-  options.set_split_crossing_edges(false);
-
-  s2builderutil::S2PointVectorLayer::Options pointLayerOptions;
-  pointLayerOptions.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
-
-  s2builderutil::S2PolylineVectorLayer::Options polylineLayerOptions;
-  polylineLayerOptions.set_duplicate_edges(S2Builder::GraphOptions::DuplicateEdges::MERGE);
-  polylineLayerOptions.set_edge_type(S2Builder::GraphOptions::EdgeType::DIRECTED);
-  polylineLayerOptions.set_polyline_type(S2Builder::Graph::PolylineType::PATH);
-  polylineLayerOptions.set_sibling_pairs(S2Builder::GraphOptions::SiblingPairs::KEEP);
-  polylineLayerOptions.set_validate(false);
-  polylineLayerOptions.set_s2debug_override(S2Debug::DISABLE);
-
-  s2builderutil::S2PolygonLayer::Options polygonLayerOptions;
-  polygonLayerOptions.set_edge_type(S2Builder::EdgeType::DIRECTED);
-  polygonLayerOptions.set_validate(false);
-
+std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
+                                            S2Builder::Options options,
+                                            GeographyOperationOptions::LayerOptions layerOptions) {
   // create the builder
   S2Builder builder(options);
 
@@ -140,7 +118,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index, int dimension) 
 
   // add shapes to the layer with the appropriate dimension
   builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, pointLayerOptions)
+    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
   );
   for (S2Shape* shape : *index) { 
     if (shape->dimension() == 0) {
@@ -149,7 +127,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index, int dimension) 
   }
 
   builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, polylineLayerOptions)
+    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
   );
   for (S2Shape* shape : *index) { 
     if (shape->dimension() == 1) {
@@ -158,7 +136,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index, int dimension) 
   }
 
   builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), polygonLayerOptions)
+    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
   );
   for (S2Shape* shape : *index) { 
     if (shape->dimension() == 2) {
@@ -402,18 +380,30 @@ List cpp_s2_boundary(List geog) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_rebuild(List geog) {
+List cpp_s2_rebuild(List geog, List s2options) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    Op(List s2options) {
+      GeographyOperationOptions options(s2options);
+      this->options = options.builderOptions();
+      this->layerOptions = options.layerOptions();
+    }
+
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       std::unique_ptr<Geography> ptr = rebuildGeography(
         feature->ShapeIndex(), 
-        feature->Dimension()
+        this->options,
+        this->layerOptions
       );
       return XPtr<Geography>(ptr.release());
     }
+
+  private:
+    S2Builder::Options options;
+    GeographyOperationOptions::LayerOptions layerOptions;
   };
 
-  Op op;
+  Op op(s2options);
   return op.processVector(geog);
 }
 

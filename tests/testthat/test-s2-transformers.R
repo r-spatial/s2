@@ -316,13 +316,97 @@ test_that("s2_buffer() works", {
   expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.1)
 })
 
-test_that("s2_simplify() works", {
-  s2_simplify("POINT (-64 45)")
-  s2_simplify("LINESTRING (-64 45, 0 0)")
-  s2_simplify("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
-  s2_simplify("GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 0 0))")
+test_that("s2_rebuild() works", {
+  s2_rebuild("POINT (-64 45)")
 
-  s2_simplify("MULTIPOINT (-64 45, -64 45)")
+  s2_rebuild("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+  s2_rebuild("GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 0 0))")
+
+  # duplicated edges
+  expect_wkt_equal(
+    s2_rebuild("MULTIPOINT (-64 45, -64 45)", options = s2_options(duplicate_edges = FALSE)),
+    "POINT (-64 45)"
+  )
+  expect_wkt_equal(
+    s2_rebuild("MULTIPOINT (-64 45, -64 45)", options = s2_options(duplicate_edges = TRUE)),
+    "MULTIPOINT (-64 45, -64 45)"
+  )
+
+  # crossing edges
+  expect_true(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 -5, 0 5, -5 0, 5 0)",
+        options = s2_options(split_crossing_edges = TRUE)
+      )
+    )
+  )
+
+  # snap
+  expect_wkt_equal(
+    s2_rebuild(
+      "MULTIPOINT (0.01 0.01, -0.01 -0.01))",
+      options = s2_options(
+        snap = s2_snap_precision(1e1),
+        duplicate_edges = TRUE
+      )
+    ),
+    "MULTIPOINT ((0 0), (0 0))"
+  )
+
+  # snap radius
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 3)",
+      options = s2_options(
+        snap_radius = 1.5 * pi / 180
+      )
+    ),
+    "LINESTRING (0 0, 0 2)"
+  )
+
+  # simplify edge chains
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 3)",
+      options = s2_options(
+        snap_radius = 0.01,
+        simplify_edge_chains = TRUE
+      )
+    ),
+    "LINESTRING (0 0, 0 3)"
+  )
+
+  # validate
+  bad_poly <- s2_geog_from_text(
+    "POLYGON ((0 0, 1.0 0, 1.0 1.0, -0.1 1.0, 1.1 0, 0 0))",
+    check = FALSE
+  )
+  expect_wkt_equal(
+    s2_rebuild(bad_poly, options = s2_options(validate = FALSE)),
+    bad_poly
+  )
+  expect_error(
+    s2_rebuild(bad_poly, options = s2_options(validate = TRUE)),
+    "Edge 1 crosses edge 3"
+  )
+
+  # polyline type
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      s2_options(polyline_type = 1)
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(polyline_type = 0)
+      )
+    )
+  )
 })
 
 test_that("real data survives the S2BooleanOperation", {
