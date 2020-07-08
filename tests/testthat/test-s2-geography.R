@@ -22,9 +22,9 @@ test_that("s2_geography vectors can't have other types of objects concatenated o
   expect_error(geog[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
 })
 
-test_that("s2_geography vectors can be created from s2_latlng  and s2_point", {
-  expect_wkt_equal(as_s2_geography(s2_latlng(45, -64)), "POINT (-64 45)")
-  expect_wkt_equal(as_s2_geography(as_s2_point(s2_latlng(45, -64))), "POINT (-64 45)")
+test_that("s2_geography vectors can be created from s2_lnglat  and s2_point", {
+  expect_wkt_equal(as_s2_geography(s2_lnglat(-64, 45)), "POINT (-64 45)")
+  expect_wkt_equal(as_s2_geography(as_s2_point(s2_lnglat(-64, 45))), "POINT (-64 45)")
 })
 
 test_that("s2_geography vectors can be created from WKB and WKT", {

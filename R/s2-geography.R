@@ -52,15 +52,15 @@ as_s2_geography.s2_geography <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.s2_latlng <- function(x, ...) {
-  df <- data_frame_from_s2_latlng(x)
-  new_s2_xptr(cpp_s2_geog_point(df[[2]], df[[1]]), "s2_geography")
+as_s2_geography.s2_lnglat <- function(x, ...) {
+  df <- data_frame_from_s2_lnglat(x)
+  new_s2_xptr(cpp_s2_geog_point(df[[1]], df[[2]]), "s2_geography")
 }
 
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.s2_point <- function(x, ...) {
-  as_s2_geography(as_s2_latlng(x))
+  as_s2_geography(as_s2_lnglat(x))
 }
 
 #' @rdname as_s2_geography

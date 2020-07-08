@@ -7,7 +7,7 @@ test_that("s2_point objects can be created from and converted back to R objects"
   point <- s2_point(1, 2, 3)
   expect_identical(as_s2_point(point), point)
   expect_identical(
-    as.data.frame(as_s2_point(s2_latlng(0, 0))),
+    as.data.frame(as_s2_point(s2_lnglat(0, 0))),
     as.data.frame(s2_point(1, 0, 0))
   )
 
@@ -48,7 +48,7 @@ test_that("s2_point vectors can't have other types of objects concatenated or as
 test_that("s2_point can be imported from s2_geography", {
   expect_equal(
     as.data.frame(as_s2_point(as_s2_geography("POINT (-64 45)"))),
-    as.data.frame(as_s2_point(as_s2_latlng(as_s2_geography("POINT (-64 45)")))),
+    as.data.frame(as_s2_point(as_s2_lnglat(as_s2_geography("POINT (-64 45)")))),
   )
 })
 

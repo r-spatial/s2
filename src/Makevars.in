@@ -12,7 +12,7 @@ OBJECTS = cpp-compat.o \
      init.o \
      RcppExports.o \
      s2-geography.o \
-     s2-latlng.o \
+     s2-lnglat.o \
      s2-matrix.o \
      s2-point.o \
      s2-xptr.o \

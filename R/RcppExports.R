@@ -93,16 +93,16 @@ s2_geography_format <- function(s2_geography, maxCoords) {
     .Call(`_s2_s2_geography_format`, s2_geography, maxCoords)
 }
 
-s2_latlng_from_numeric <- function(lat, lng) {
-    .Call(`_s2_s2_latlng_from_numeric`, lat, lng)
+s2_lnglat_from_numeric <- function(lng, lat) {
+    .Call(`_s2_s2_lnglat_from_numeric`, lng, lat)
 }
 
-s2_latlng_from_s2_point <- function(s2_point) {
-    .Call(`_s2_s2_latlng_from_s2_point`, s2_point)
+s2_lnglat_from_s2_point <- function(s2_point) {
+    .Call(`_s2_s2_lnglat_from_s2_point`, s2_point)
 }
 
-data_frame_from_s2_latlng <- function(xptr) {
-    .Call(`_s2_data_frame_from_s2_latlng`, xptr)
+data_frame_from_s2_lnglat <- function(xptr) {
+    .Call(`_s2_data_frame_from_s2_lnglat`, xptr)
 }
 
 cpp_s2_closest_feature <- function(geog1, geog2) {
@@ -173,8 +173,8 @@ s2_point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }
 
-s2_point_from_s2_latlng <- function(s2_latlng) {
-    .Call(`_s2_s2_point_from_s2_latlng`, s2_latlng)
+s2_point_from_s2_lnglat <- function(s2_lnglat) {
+    .Call(`_s2_s2_point_from_s2_lnglat`, s2_lnglat)
 }
 
 data_frame_from_s2_point <- function(s2_point) {

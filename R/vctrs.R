@@ -23,14 +23,14 @@ vec_ptype_abbr.s2_point <- function(x, ...) {
   "s2_point"
 }
 
-vec_proxy.s2_latlng <- function(x, ...) {
+vec_proxy.s2_lnglat <- function(x, ...) {
   unclass(x)
 }
 
-vec_restore.s2_latlng <- function(x, ...) {
-  new_s2_xptr(x, "s2_latlng")
+vec_restore.s2_lnglat <- function(x, ...) {
+  new_s2_xptr(x, "s2_lnglat")
 }
 
-vec_ptype_abbr.s2_latlng <- function(x, ...) {
-  "s2_latlng"
+vec_ptype_abbr.s2_lnglat <- function(x, ...) {
+  "s2_lnglat"
 }
