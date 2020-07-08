@@ -271,6 +271,40 @@ test_that("s2_union() works for polygons", {
   )
 })
 
+test_that("binary operations use layer creation options", {
+  expect_wkt_equal(
+    s2_union(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      options = s2_options(polyline_type = 1)
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 2, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_union(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        options = s2_options(polyline_type = 0)
+      )
+    )
+  )
+
+  expect_wkt_equal(
+    s2_union_agg(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      options = s2_options(polyline_type = 1)
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 2, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_union_agg(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        options = s2_options(polyline_type = 0)
+      )
+    )
+  )
+})
+
 test_that("s2_union_agg() works", {
   expect_wkt_equal(s2_union_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
   expect_wkt_equal(s2_union_agg(c("POINT EMPTY", "POINT EMPTY")), "GEOMETRYCOLLECTION EMPTY")
