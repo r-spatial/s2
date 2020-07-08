@@ -12,8 +12,14 @@ s2_options(
   model = -1,
   snap = s2_snap_identity(),
   snap_radius = -1,
-  polygon_model = model,
-  polyline_model = model
+  duplicate_edges = -1,
+  edge_type = -1,
+  validate = -1,
+  polyline_type = -1,
+  polyline_sibling_pairs = -1,
+  simplify_edge_chains = -1,
+  split_crossing_edges = -1,
+  idempotent = -1
 )
 
 s2_snap_identity()
@@ -25,7 +31,7 @@ s2_snap_precision(precision)
 s2_snap_distance(distance)
 }
 \arguments{
-\item{model, polygon_model, polyline_model}{See section 'Model'}
+\item{model}{See section 'Model'}
 
 \item{snap}{Use \code{s2_snap_identity()}, \code{s2_snap_distance()}, \code{s2_snap_level()},
 or \code{s2_snap_precision()} to specify how or if coordinate rounding should
@@ -36,6 +42,20 @@ the maximum distance a vertex should move, the snap radius (in radians) sets
 the minimum distance between vertices of the output that don't cause vertices
 to move more than the distance specified by the snap function. This can be used
 to simplify the result of a boolean operation.}
+
+\item{duplicate_edges}{Experimental}
+
+\item{edge_type}{Experimental}
+
+\item{polyline_type}{Experimental}
+
+\item{polyline_sibling_pairs}{Experimental}
+
+\item{simplify_edge_chains}{Experimental}
+
+\item{split_crossing_edges}{Experimental}
+
+\item{idempotent}{Experimental}
 
 \item{level}{A value from 0 to 30 corresponding to the cell level
 at which snapping should occur.}

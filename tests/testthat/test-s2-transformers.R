@@ -320,6 +320,9 @@ test_that("s2_simplify() works", {
   s2_simplify("POINT (-64 45)")
   s2_simplify("LINESTRING (-64 45, 0 0)")
   s2_simplify("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+  s2_simplify("GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 0 0))")
+
+  s2_simplify("MULTIPOINT (-64 45, -64 45)")
 })
 
 test_that("real data survives the S2BooleanOperation", {

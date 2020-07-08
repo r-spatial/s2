@@ -6,7 +6,7 @@
 #' and boolean operations (e.g., [s2_intersection()]) to specify the model for
 #' containment and how new geometries should be constructed.
 #'
-#' @param model,polygon_model,polyline_model See section 'Model'
+#' @param model See section 'Model'
 #' @param snap Use `s2_snap_identity()`, `s2_snap_distance()`, `s2_snap_level()`,
 #'   or `s2_snap_precision()` to specify how or if coordinate rounding should
 #'   occur.
@@ -15,6 +15,13 @@
 #'   the minimum distance between vertices of the output that don't cause vertices
 #'   to move more than the distance specified by the snap function. This can be used
 #'   to simplify the result of a boolean operation.
+#' @param duplicate_edges Experimental
+#' @param edge_type Experimental
+#' @param polyline_type Experimental
+#' @param polyline_sibling_pairs Experimental
+#' @param simplify_edge_chains Experimental
+#' @param split_crossing_edges Experimental
+#' @param idempotent Experimental
 #' @param level A value from 0 to 30 corresponding to the cell level
 #'   at which snapping should occur.
 #' @param distance A distance (in radians) denoting the maximum
@@ -72,14 +79,30 @@
 #'   1e-7
 #' )
 #'
-s2_options <- function(model = -1, snap = s2_snap_identity(), snap_radius = -1,
-                       polygon_model = model, polyline_model = model) {
+s2_options <- function(model = -1,
+                       snap = s2_snap_identity(),
+                       snap_radius = -1,
+                       duplicate_edges = -1,
+                       edge_type = -1,
+                       validate = -1,
+                       polyline_type = -1,
+                       polyline_sibling_pairs = -1,
+                       simplify_edge_chains = -1,
+                       split_crossing_edges = -1,
+                       idempotent = -1) {
   structure(
     list(
-      polygon_model = polygon_model,
-      polyline_model = polyline_model,
+      model = model,
       snap = snap,
-      snap_radius = snap_radius
+      snap_radius = snap_radius,
+      duplicate_edges = duplicate_edges,
+      edge_type = edge_type,
+      validate = validate,
+      polyline_type = polyline_type,
+      polyline_sibling_pairs = polyline_sibling_pairs,
+      simplify_edge_chains = simplify_edge_chains,
+      split_crossing_edges = split_crossing_edges,
+      idempotent = idempotent
     ),
     class = "s2_options"
   )
