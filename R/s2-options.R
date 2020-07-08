@@ -22,6 +22,7 @@
 #' @param simplify_edge_chains Experimental
 #' @param split_crossing_edges Experimental
 #' @param idempotent Experimental
+#' @param validate Experimental
 #' @param level A value from 0 to 30 corresponding to the cell level
 #'   at which snapping should occur.
 #' @param distance A distance (in radians) denoting the maximum

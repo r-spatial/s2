@@ -47,6 +47,8 @@ to simplify the result of a boolean operation.}
 
 \item{edge_type}{Experimental}
 
+\item{validate}{Experimental}
+
 \item{polyline_type}{Experimental}
 
 \item{polyline_sibling_pairs}{Experimental}
