@@ -10,6 +10,7 @@
 \alias{s2_intersection}
 \alias{s2_union}
 \alias{s2_snap_to_grid}
+\alias{s2_simplify}
 \alias{s2_buffer_cells}
 \alias{s2_centroid_agg}
 \alias{s2_union_agg}
@@ -32,6 +33,8 @@ s2_intersection(x, y, options = s2_options())
 s2_union(x, y = NULL, options = s2_options())
 
 s2_snap_to_grid(x, grid_size)
+
+s2_simplify(x)
 
 s2_buffer_cells(
   x,

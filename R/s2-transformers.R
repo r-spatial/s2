@@ -169,6 +169,12 @@ s2_snap_to_grid <- function(x, grid_size) {
 
 #' @rdname s2_boundary
 #' @export
+s2_simplify <- function(x) {
+  new_s2_xptr(cpp_s2_rebuild(as_s2_geography(x)), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
 s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
                             radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(as_s2_geography(x), distance / radius)

@@ -105,6 +105,43 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   );
 }
 
+void rebuildDo(S2Builder& builder, S2ShapeIndex* index) {
+  for (S2Shape* shape : *index) { 
+    builder.AddShape(*shape);
+  }
+
+  S2Error error;
+  if (!builder.Build(&error)) {
+    stop(error.text());
+  }
+}
+
+std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index, int dimension) {
+  S2Builder::Options options;
+  S2Builder builder(options);
+ 
+  if (dimension == 0) {
+    std::vector<S2Point> points;
+    builder.StartLayer(absl::make_unique<s2builderutil::S2PointVectorLayer>(&points));
+    rebuildDo(builder, index);
+    return absl::make_unique<PointGeography>(std::move(points));
+  } else if (dimension == 1) {
+    std::vector<std::unique_ptr<S2Polyline>> polylines;
+    builder.StartLayer(absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines));
+    rebuildDo(builder, index);
+    return absl::make_unique<PolylineGeography>(std::move(polylines));
+  } else if (dimension == 2) {
+    std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+    builder.StartLayer(absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get()));
+    rebuildDo(builder, index);
+    return absl::make_unique<PolygonGeography>(std::move(polygon));
+  } else {
+    std::stringstream err;
+    err << "Can't rebuild geography with dimension " << dimension;
+    stop(err.str());
+  }
+}
+
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, List s2options):
@@ -326,6 +363,18 @@ List cpp_s2_boundary(List geog) {
   return op.processVector(geog);
 }
 
+// [[Rcpp::export]]
+List cpp_s2_rebuild(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      std::unique_ptr<Geography> ptr = rebuildGeography(feature->ShapeIndex(), feature->Dimension());
+      return XPtr<Geography>(ptr.release());
+    }
+  };
+
+  Op op;
+  return op.processVector(geog);
+}
 
 // [[Rcpp::export]]
 List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {

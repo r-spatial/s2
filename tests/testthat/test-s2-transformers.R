@@ -316,6 +316,12 @@ test_that("s2_buffer() works", {
   expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.1)
 })
 
+test_that("s2_simplify() works", {
+  s2_simplify("POINT (-64 45)")
+  s2_simplify("LINESTRING (-64 45, 0 0)")
+  s2_simplify("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+})
+
 test_that("real data survives the S2BooleanOperation", {
   # the 32-bit Solaris build results in some of the roundtripped
   # edges becoming degenerate. Rather than pass check = FALSE to
