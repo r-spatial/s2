@@ -316,6 +316,17 @@ test_that("s2_buffer() works", {
   expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.1)
 })
 
+test_that("s2_simplify() works", {
+  expect_wkt_equal(
+    s2_simplify("LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)", tolerance = 100),
+    "LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)"
+  )
+  expect_wkt_equal(
+    s2_simplify("LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)", tolerance = 1000),
+    "LINESTRING (0 0, 0 3)"
+  )
+})
+
 test_that("s2_rebuild() works", {
   s2_rebuild("POINT (-64 45)")
 
@@ -406,6 +417,12 @@ test_that("s2_rebuild() works", {
         s2_options(polyline_type = 0)
       )
     )
+  )
+
+  # S2Builder error
+  expect_error(
+    s2_rebuild("POINT (0.01 0.01)", options = s2_options(snap = s2_snap_level(32))),
+    "Snap function moved vertex"
   )
 })
 
