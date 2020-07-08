@@ -15,7 +15,7 @@ test_that("s2_bounds_cap works", {
 test_that("s2_bounds_rect works", {
   rect_ant <- s2_bounds_rect(s2_data_countries("Antarctica"))
   expect_is(rect_ant, "data.frame")
-  expect_named(rect_ant, c("lat_lo", "lat_hi", "lng_lo", "lng_hi", "lat_cnt", "lng_cnt"))
+  expect_named(rect_ant, c("lng_lo", "lat_lo", "lng_hi", "lat_hi"))
   expect_identical(nrow(s2_bounds_rect(s2_data_countries(c("Antarctica", "Netherlands")))), 2L)
   expect_equal(rect_ant$lng_lo, -180)
   expect_equal(rect_ant$lng_hi, 180)
