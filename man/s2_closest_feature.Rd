@@ -25,13 +25,13 @@ s2_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
 s2_max_distance_matrix(x, y, radius = s2_earth_radius_meters())
 
-s2_contains_matrix(x, y, options = s2_options(model = 0))
+s2_contains_matrix(x, y, options = s2_options(model = "open"))
 
-s2_within_matrix(x, y, options = s2_options(model = 0))
+s2_within_matrix(x, y, options = s2_options(model = "open"))
 
-s2_covers_matrix(x, y, options = s2_options(model = 2))
+s2_covers_matrix(x, y, options = s2_options(model = "closed"))
 
-s2_covered_by_matrix(x, y, options = s2_options(model = 2))
+s2_covered_by_matrix(x, y, options = s2_options(model = "closed"))
 
 s2_intersects_matrix(x, y, options = s2_options())
 

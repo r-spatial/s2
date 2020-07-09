@@ -99,26 +99,26 @@
 #'   1e6 # distance in meters
 #' )
 #'
-s2_contains <- function(x, y, options = s2_options(model = 0)) {
+s2_contains <- function(x, y, options = s2_options(model = "open")) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
   cpp_s2_contains(recycled[[1]], recycled[[2]], options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_within <- function(x, y, options = s2_options(model = 0)) {
+s2_within <- function(x, y, options = s2_options(model = "open")) {
   s2_contains(y, x, options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_covered_by <- function(x, y, options = s2_options(model = 2)) {
+s2_covered_by <- function(x, y, options = s2_options(model = "closed")) {
   s2_covers(y, x, options)
 }
 
 #' @rdname s2_contains
 #' @export
-s2_covers <- function(x, y, options = s2_options(model = 2)) {
+s2_covers <- function(x, y, options = s2_options(model = "closed")) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
   cpp_s2_contains(recycled[[1]], recycled[[2]], options)
 }

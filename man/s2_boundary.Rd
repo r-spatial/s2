@@ -10,6 +10,8 @@
 \alias{s2_intersection}
 \alias{s2_union}
 \alias{s2_snap_to_grid}
+\alias{s2_simplify}
+\alias{s2_rebuild}
 \alias{s2_buffer_cells}
 \alias{s2_centroid_agg}
 \alias{s2_union_agg}
@@ -32,6 +34,10 @@ s2_intersection(x, y, options = s2_options())
 s2_union(x, y = NULL, options = s2_options())
 
 s2_snap_to_grid(x, grid_size)
+
+s2_simplify(x, tolerance, radius = s2_earth_radius_meters())
+
+s2_rebuild(x, options = s2_options())
 
 s2_buffer_cells(
   x,
@@ -60,6 +66,12 @@ model to use and the snap level.}
 \item{grid_size}{The grid size to which coordinates should be snapped;
 will be rounded to the nearest power of 10.}
 
+\item{tolerance}{The minimum distance between vertexes to use when
+simplifying a geography.}
+
+\item{radius}{Radius of the earth. Defaults to the average radius of
+the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
+
 \item{distance}{The distance to buffer, in units of \code{radius}.}
 
 \item{max_cells}{The maximum number of cells to approximate a buffer.}
@@ -68,9 +80,6 @@ will be rounded to the nearest power of 10.}
 (1 - 30). Setting this value too high will result in unnecessarily
 large geographies, but may help improve buffers along long, narrow
 regions.}
-
-\item{radius}{Radius of the earth. Defaults to the average radius of
-the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 
 \item{na.rm}{For aggregate calculations use \code{na.rm = TRUE}
 to drop missing values.}
@@ -83,15 +92,14 @@ return a geography vector.
 
 The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (\code{model = 0}); CLOSED
-geometries (\code{model = 2}) contain their boundary; HALF-CLOSED geometries
-(\code{model = 1}) contain half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (\code{model = "open"}); CLOSED
+geometries (\code{model = "closed"}) contain their boundary; SEMI-OPEN geometries
+(\code{model = "semi-open"}) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
-and covers/covered_by (2) correspond to the SFA standard specification
+which that is based). The default values for \code{\link[=s2_contains]{s2_contains()}} (open)
+and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.
 }
 

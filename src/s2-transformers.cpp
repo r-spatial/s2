@@ -67,7 +67,8 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
 
 std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
                                               S2BooleanOperation::OpType opType,
-                                              S2BooleanOperation::Options options) {
+                                              S2BooleanOperation::Options options,
+                                              GeographyOperationOptions::LayerOptions layerOptions) {
 
   // create the data structures that will contain the output
   std::vector<S2Point> points;
@@ -75,12 +76,9 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
 
   s2builderutil::LayerVector layers(3);
-  // currently using the default S2PointVectorLayer::Options
-  layers[0] = absl::make_unique<s2builderutil::S2PointVectorLayer>(&points);
-  // currently using the default S2PolylineVectorLayer::Options
-  layers[1] = absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines);
-  // currently using the default S2PolygonLayer::Options
-  layers[2] = absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get());
+  layers[0] = absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions);
+  layers[1] = absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions);
+  layers[2] = absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions);
 
   // do the boolean operation
   S2BooleanOperation booleanOp(
@@ -105,12 +103,66 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   );
 }
 
+std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
+                                            S2Builder::Options options,
+                                            GeographyOperationOptions::LayerOptions layerOptions) {
+  // create the builder
+  S2Builder builder(options);
+
+  // create the data structures that will contain the output
+  std::vector<S2Point> points;
+  std::vector<std::unique_ptr<S2Polyline>> polylines;
+  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+
+  // add shapes to the layer with the appropriate dimension
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
+  );
+  for (S2Shape* shape : *index) { 
+    if (shape->dimension() == 0) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
+  );
+  for (S2Shape* shape : *index) { 
+    if (shape->dimension() == 1) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
+  );
+  for (S2Shape* shape : *index) { 
+    if (shape->dimension() == 2) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  // build the output
+  S2Error error;
+  if (!builder.Build(&error)) {
+    stop(error.text());
+  }
+
+  // construct output
+  return geographyFromLayers(
+    std::move(points),
+    std::move(polylines),
+    std::move(polygon)
+  );
+}
+
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, List s2options):
     opType(opType) {
       GeographyOperationOptions options(s2options);
       this->options = options.booleanOperationOptions();
+      this->layerOptions = options.layerOptions();
     }
 
   SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
@@ -118,7 +170,8 @@ public:
       feature1->ShapeIndex(),
       feature2->ShapeIndex(),
       this->opType,
-      this->options
+      this->options,
+      this->layerOptions
     );
 
     return Rcpp::XPtr<Geography>(geography.release());
@@ -127,6 +180,7 @@ public:
 private:
   S2BooleanOperation::OpType opType;
   S2BooleanOperation::Options options;
+  GeographyOperationOptions::LayerOptions layerOptions;
 };
 
 // [[Rcpp::export]]
@@ -176,7 +230,8 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
     &index,
     &emptyIndex,
     S2BooleanOperation::OpType::UNION,
-    options.booleanOperationOptions()
+    options.booleanOperationOptions(),
+    options.layerOptions()
   );
 
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
@@ -326,6 +381,33 @@ List cpp_s2_boundary(List geog) {
   return op.processVector(geog);
 }
 
+// [[Rcpp::export]]
+List cpp_s2_rebuild(List geog, List s2options) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    Op(List s2options) {
+      GeographyOperationOptions options(s2options);
+      this->options = options.builderOptions();
+      this->layerOptions = options.layerOptions();
+    }
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      std::unique_ptr<Geography> ptr = rebuildGeography(
+        feature->ShapeIndex(), 
+        this->options,
+        this->layerOptions
+      );
+      return XPtr<Geography>(ptr.release());
+    }
+
+  private:
+    S2Builder::Options options;
+    GeographyOperationOptions::LayerOptions layerOptions;
+  };
+
+  Op op(s2options);
+  return op.processVector(geog);
+}
 
 // [[Rcpp::export]]
 List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {
