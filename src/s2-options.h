@@ -164,15 +164,9 @@ public:
   // build options for S2Builder
   S2Builder::Options builderOptions() {
     S2Builder::Options options;
-    if (this->simplifyEdgeChains >= 0) {
-      options.set_simplify_edge_chains(this->simplifyEdgeChains);
-    }
-    if (this->splitCrossingEdges >= 0) {
-      options.set_split_crossing_edges(this->splitCrossingEdges);
-    }
-    if (this->idempotent >= 0) {
-      options.set_idempotent(this->idempotent);
-    }
+    options.set_simplify_edge_chains(this->simplifyEdgeChains);
+    options.set_split_crossing_edges(this->splitCrossingEdges);
+    options.set_idempotent(this->idempotent);
     this->setSnapFunction<S2Builder::Options>(options);
     return options;
   }
@@ -182,36 +176,21 @@ public:
     LayerOptions out;
 
     // point layer
-    if (this->duplicatePointEdges >= 0) {
-      out.pointLayerOptions.set_duplicate_edges(getDuplicateEdges(this->duplicatePointEdges));
-    } 
+    out.pointLayerOptions.set_duplicate_edges(getDuplicateEdges(this->duplicatePointEdges));
 
     // polyline layer
-    if (this->duplicatePolylineEdges >= 0) {
-      out.polylineLayerOptions.set_duplicate_edges(getDuplicateEdges(this->duplicatePolylineEdges));
-    } 
-    if (this->polylineEdgeType >= 0) {
-      out.polylineLayerOptions.set_edge_type(getEdgeType(this->polylineEdgeType));
-    }
-    if (this->polylineType >= 0) {
-      out.polylineLayerOptions.set_polyline_type(getPolylineType(this->polylineType));
-    }
-    if (this->polylineSiblingPairs >= 0) {
-      out.polylineLayerOptions.set_sibling_pairs(getSiblingPairs(this->polylineSiblingPairs));
-    }
-    if (this->validatePolyline >= 0) {
-      out.polylineLayerOptions.set_validate(this->validatePolyline);
-    }
+    out.polylineLayerOptions.set_duplicate_edges(getDuplicateEdges(this->duplicatePolylineEdges));
+    out.polylineLayerOptions.set_edge_type(getEdgeType(this->polylineEdgeType));
+    out.polylineLayerOptions.set_polyline_type(getPolylineType(this->polylineType));
+    out.polylineLayerOptions.set_sibling_pairs(getSiblingPairs(this->polylineSiblingPairs));
+    out.polylineLayerOptions.set_validate(this->validatePolyline);
+
     // always disable debugging where possible
     out.polylineLayerOptions.set_s2debug_override(S2Debug::DISABLE);
 
     // polygon layer
-    if (this->polygonEdgeType >= 0) {
-      out.polygonLayerOptions.set_edge_type(getEdgeType(this->polygonEdgeType));
-    }
-    if (this->validatePolygon >= 0) {
-      out.polygonLayerOptions.set_validate(this->validatePolygon);
-    }
+    out.polygonLayerOptions.set_edge_type(getEdgeType(this->polygonEdgeType));
+    out.polygonLayerOptions.set_validate(this->validatePolygon);
     
     return out;
   }
