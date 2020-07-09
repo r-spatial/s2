@@ -134,13 +134,13 @@ a logical vector." />
 a logical vector.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"open"</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_within</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"open"</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covered_by</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"closed"</span>))
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_covers</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"closed"</span>))
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_disjoint</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
 
@@ -209,15 +209,14 @@ the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_e
 
 <p>The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (<code>model = 0</code>); CLOSED
-geometries (<code>model = 2</code>) contain their boundary; HALF-CLOSED geometries
-(<code>model = 1</code>) contain half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (<code>model = "open"</code>); CLOSED
+geometries (<code>model = "closed"</code>) contain their boundary; SEMI-OPEN geometries
+(<code>model = "semi-open"</code>) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
-and covers/covered_by (2) correspond to the SFA standard specification
+which that is based). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (open)
+and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
