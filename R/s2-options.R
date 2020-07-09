@@ -55,7 +55,7 @@
 #' @examples
 #' # use s2_options() to specify containment models, snap level
 #' # layer creation options, and builder options
-#' s2_options(model = 1, snap = s2_snap_level(30))
+#' s2_options(model = "closed", snap = s2_snap_level(30))
 #'
 s2_options <- function(model = NULL,
                        snap = s2_snap_identity(),

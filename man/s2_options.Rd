@@ -9,14 +9,14 @@
 \title{Geography Operation Options}
 \usage{
 s2_options(
-  model = "semi-open",
+  model = NULL,
   snap = s2_snap_identity(),
   snap_radius = -1,
   duplicate_edges = FALSE,
   edge_type = "directed",
   validate = FALSE,
   polyline_type = "path",
-  polyline_sibling_pairs = "discard",
+  polyline_sibling_pairs = "keep",
   simplify_edge_chains = FALSE,
   split_crossing_edges = FALSE,
   idempotent = FALSE
@@ -31,7 +31,8 @@ s2_snap_precision(precision)
 s2_snap_distance(distance)
 }
 \arguments{
-\item{model}{One of 'open', 'semi-open' (default), or 'closed'. See section 'Model'}
+\item{model}{One of 'open', 'semi-open' (default for polygons),
+or 'closed' (default for polylines). See section 'Model'}
 
 \item{snap}{Use \code{s2_snap_identity()}, \code{s2_snap_distance()}, \code{s2_snap_level()},
 or \code{s2_snap_precision()} to specify how or if coordinate rounding should
@@ -98,6 +99,6 @@ of these operators.
 \examples{
 # use s2_options() to specify containment models, snap level
 # layer creation options, and builder options
-s2_options(model = 1, snap = s2_snap_level(30))
+s2_options(model = "closed", snap = s2_snap_level(30))
 
 }

@@ -13,9 +13,9 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y, options = s2_options(model = 0))
+s2_contains(x, y, options = s2_options(model = "open"))
 
-s2_within(x, y, options = s2_options(model = 0))
+s2_within(x, y, options = s2_options(model = "open"))
 
 s2_covered_by(x, y, options = s2_options(model = "closed"))
 
