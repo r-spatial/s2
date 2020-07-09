@@ -13,13 +13,13 @@
 \alias{s2_dwithin}
 \title{S2 Geography Predicates}
 \usage{
-s2_contains(x, y, options = s2_options(model = 0))
+s2_contains(x, y, options = s2_options(model = "open"))
 
-s2_within(x, y, options = s2_options(model = 0))
+s2_within(x, y, options = s2_options(model = "open"))
 
-s2_covered_by(x, y, options = s2_options(model = 2))
+s2_covered_by(x, y, options = s2_options(model = "closed"))
 
-s2_covers(x, y, options = s2_options(model = 2))
+s2_covers(x, y, options = s2_options(model = "closed"))
 
 s2_disjoint(x, y, options = s2_options())
 
@@ -72,15 +72,14 @@ a logical vector.
 
 The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (\code{model = 0}); CLOSED
-geometries (\code{model = 2}) contain their boundary; HALF-CLOSED geometries
-(\code{model = 1}) contain half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (\code{model = "open"}); CLOSED
+geometries (\code{model = "closed"}) contain their boundary; SEMI-OPEN geometries
+(\code{model = "semi-open"}) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for \code{\link[=s2_contains]{s2_contains()}} (0)
-and covers/covered_by (2) correspond to the SFA standard specification
+which that is based). The default values for \code{\link[=s2_contains]{s2_contains()}} (open)
+and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.
 }
 

@@ -17,6 +17,8 @@
 #'   (1 - 30). Setting this value too high will result in unnecessarily
 #'   large geographies, but may help improve buffers along long, narrow
 #'   regions.
+#' @param tolerance The minimum distance between vertexes to use when
+#'   simplifying a geography.
 #'
 #' @inheritSection s2_options Model
 #'
@@ -164,7 +166,25 @@ s2_union <- function(x, y = NULL, options = s2_options()) {
 #' @rdname s2_boundary
 #' @export
 s2_snap_to_grid <- function(x, grid_size) {
-  s2_union(x, options = s2_options(snap = s2_snap_precision(10^(-log10(grid_size)))))
+  s2_rebuild(
+    x,
+    options = s2_options(
+      snap = s2_snap_precision(10^(-log10(grid_size))),
+      duplicate_edges = TRUE
+    )
+  )
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_simplify <- function(x, tolerance, radius = s2_earth_radius_meters()) {
+  s2_rebuild(x, options = s2_options(snap_radius = tolerance / radius, simplify_edge_chains = TRUE))
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_rebuild <- function(x, options = s2_options()) {
+  new_s2_xptr(cpp_s2_rebuild(as_s2_geography(x), options), "s2_geography")
 }
 
 #' @rdname s2_boundary

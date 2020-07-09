@@ -81,17 +81,17 @@ test_that("s2_difference() works for polygons", {
   df0 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap = s2_snap_level(30))
+    s2_options(model = "open", snap = s2_snap_level(30))
   )
   df1 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap = s2_snap_level(30))
+    s2_options(model = "semi-open", snap = s2_snap_level(30))
   )
   df2 <- s2_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 2, snap = s2_snap_level(30))
+    s2_options(model = "closed", snap = s2_snap_level(30))
   )
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
   expect_equal(s2_area(df0) - s2_area(df1), 0.0)
@@ -123,19 +123,19 @@ test_that("s2_sym_difference() works for polygons", {
   df0 <- s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap = s2_snap_level(30))
+    s2_options(model = "open", snap = s2_snap_level(30))
   )
 
   df1 <- s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap = s2_snap_level(30))
+    s2_options(model = "semi-open", snap = s2_snap_level(30))
   )
 
   df2 = s2_sym_difference(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
-    s2_options(model = 2, snap = s2_snap_level(30))
+    s2_options(model = "closed", snap = s2_snap_level(30))
   )
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
   expect_equal(s2_area(df0) - s2_area(df1), 0.0)
@@ -176,34 +176,34 @@ test_that("s2_intersction() works for polygons", {
   expect_true(
     s2_is_empty(
       s2_intersection(
-        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = 0)
+        "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = "open")
       )
     )
   )
   expect_true(
     s2_is_empty(
-      s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = 1))
+      s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = "semi-open"))
     )
   )
   expect_wkt_equal(
-    s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = 2)),
+    s2_intersection("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", "POINT(0 0)", s2_options(model = "closed")),
     "POINT(0 0)"
   )
 
   df0 <- s2_intersection(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0)
+    s2_options(model = "open")
   )
   df1 <- s2_intersection(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1)
+    s2_options(model = "semi-open")
   )
   df2 <- s2_intersection(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 2)
+    s2_options(model = "closed")
   )
 
   expect_equal(s2_area(df0) - s2_area(df2), 0.0)
@@ -246,17 +246,17 @@ test_that("s2_union() works for polygons", {
   u0 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 0, snap = s2_snap_level(30))
+    s2_options(model = "open", snap = s2_snap_level(30))
   )
   u1 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 1, snap = s2_snap_level(30))
+    s2_options(model = "semi-open", snap = s2_snap_level(30))
   )
   u2 <- s2_union(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))" ,
-    s2_options(model = 2, snap = s2_snap_level(30))
+    s2_options(model = "closed", snap = s2_snap_level(30))
   )
   expect_equal(s2_area(u0) - s2_area(u2), 0.0)
   expect_equal(s2_area(u0) - s2_area(u1), 0.0)
@@ -268,6 +268,40 @@ test_that("s2_union() works for polygons", {
       s2_area("POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))", radius = 1) -
       s2_area("POLYGON ((5 5, 10 5, 10 15, 5 10, 5 5))", radius = 1),
     epsilon = 0.004
+  )
+})
+
+test_that("binary operations use layer creation options", {
+  expect_wkt_equal(
+    s2_union(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      options = s2_options(polyline_type = "path", polyline_sibling_pairs = "discard")
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_union(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        options = s2_options(polyline_type = "walk")
+      )
+    )
+  )
+
+  expect_wkt_equal(
+    s2_union_agg(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      options = s2_options(polyline_type = "path", polyline_sibling_pairs = "discard")
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_union_agg(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        options = s2_options(polyline_type = "walk")
+      )
+    )
   )
 })
 
@@ -314,6 +348,128 @@ test_that("s2_buffer() works", {
   # create a hemisphere!
   ply <- s2_buffer_cells("POINT (0 0)", distance = pi / 2, radius = 1)
   expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.1)
+})
+
+test_that("s2_simplify() works", {
+  expect_wkt_equal(
+    s2_simplify("LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)", tolerance = 100),
+    "LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)"
+  )
+  expect_wkt_equal(
+    s2_simplify("LINESTRING (0 0, 0.001 1, -0.001 2, 0 3)", tolerance = 1000),
+    "LINESTRING (0 0, 0 3)"
+  )
+})
+
+test_that("s2_rebuild() works", {
+  s2_rebuild("POINT (-64 45)")
+
+  s2_rebuild("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+  s2_rebuild("GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 0 0))")
+
+  # duplicated edges
+  expect_wkt_equal(
+    s2_rebuild("MULTIPOINT (-64 45, -64 45)", options = s2_options(duplicate_edges = FALSE)),
+    "POINT (-64 45)"
+  )
+  expect_wkt_equal(
+    s2_rebuild("MULTIPOINT (-64 45, -64 45)", options = s2_options(duplicate_edges = TRUE)),
+    "MULTIPOINT (-64 45, -64 45)"
+  )
+
+  # crossing edges
+  expect_true(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 -5, 0 5, -5 0, 5 0)",
+        options = s2_options(split_crossing_edges = TRUE)
+      )
+    )
+  )
+
+  # snap
+  expect_wkt_equal(
+    s2_rebuild(
+      "MULTIPOINT (0.01 0.01, -0.01 -0.01))",
+      options = s2_options(
+        snap = s2_snap_precision(1e1),
+        duplicate_edges = TRUE
+      )
+    ),
+    "MULTIPOINT ((0 0), (0 0))"
+  )
+
+  # snap radius
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 3)",
+      options = s2_options(
+        snap_radius = 1.5 * pi / 180
+      )
+    ),
+    "LINESTRING (0 0, 0 2)"
+  )
+
+  # simplify edge chains
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 3)",
+      options = s2_options(
+        snap_radius = 0.01,
+        simplify_edge_chains = TRUE
+      )
+    ),
+    "LINESTRING (0 0, 0 3)"
+  )
+
+  # validate
+  bad_poly <- s2_geog_from_text(
+    "POLYGON ((0 0, 1.0 0, 1.0 1.0, -0.1 1.0, 1.1 0, 0 0))",
+    check = FALSE
+  )
+  expect_wkt_equal(
+    s2_rebuild(bad_poly, options = s2_options(validate = FALSE)),
+    bad_poly
+  )
+  expect_error(
+    s2_rebuild(bad_poly, options = s2_options(validate = TRUE)),
+    "Edge 1 crosses edge 3"
+  )
+
+  # polyline type
+  expect_wkt_equal(
+    s2_rebuild(
+      "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+      s2_options(polyline_type = "walk")
+    ),
+    "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)"
+  )
+  expect_true(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(polyline_type = "path")
+      )
+    )
+  )
+
+  # sibling edge pairs
+  expect_true(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(polyline_type = "path", polyline_sibling_pairs = "keep")
+      )
+    )
+  )
+  expect_false(
+    s2_is_collection(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(polyline_type = "path", polyline_sibling_pairs = "discard")
+      )
+    )
+  )
 })
 
 test_that("real data survives the S2BooleanOperation", {

@@ -73,25 +73,25 @@ s2_max_distance_matrix <- function(x, y, radius = s2_earth_radius_meters()) {
 
 #' @rdname s2_closest_feature
 #' @export
-s2_contains_matrix <- function(x, y, options = s2_options(model = 0)) {
+s2_contains_matrix <- function(x, y, options = s2_options(model = "open")) {
   cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
-s2_within_matrix <- function(x, y, options = s2_options(model = 0)) {
+s2_within_matrix <- function(x, y, options = s2_options(model = "open")) {
   cpp_s2_within_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
-s2_covers_matrix <- function(x, y, options = s2_options(model = 2)) {
+s2_covers_matrix <- function(x, y, options = s2_options(model = "closed")) {
   cpp_s2_contains_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
 #' @rdname s2_closest_feature
 #' @export
-s2_covered_by_matrix <- function(x, y, options = s2_options(model = 2)) {
+s2_covered_by_matrix <- function(x, y, options = s2_options(model = "closed")) {
   cpp_s2_within_matrix(as_s2_geography(x), as_s2_geography(y), options)
 }
 
@@ -149,11 +149,11 @@ s2_within_matrix_brute_force <- function(x, y, options = s2_options()) {
   cpp_s2_within_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
-s2_covers_matrix_brute_force <- function(x, y, options = s2_options(model = 2)) {
+s2_covers_matrix_brute_force <- function(x, y, options = s2_options(model = "closed")) {
   cpp_s2_contains_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 
-s2_covered_by_matrix_brute_force <- function(x, y, options = s2_options(model = 2)) {
+s2_covered_by_matrix_brute_force <- function(x, y, options = s2_options(model = "closed")) {
   cpp_s2_within_matrix_brute_force(as_s2_geography(x), as_s2_geography(y), options)
 }
 

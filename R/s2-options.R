@@ -6,7 +6,8 @@
 #' and boolean operations (e.g., [s2_intersection()]) to specify the model for
 #' containment and how new geometries should be constructed.
 #'
-#' @param model,polygon_model,polyline_model See section 'Model'
+#' @param model One of 'open', 'semi-open' (default for polygons),
+#'   or 'closed' (default for polylines). See section 'Model'
 #' @param snap Use `s2_snap_identity()`, `s2_snap_distance()`, `s2_snap_level()`,
 #'   or `s2_snap_precision()` to specify how or if coordinate rounding should
 #'   occur.
@@ -14,7 +15,21 @@
 #'   the maximum distance a vertex should move, the snap radius (in radians) sets
 #'   the minimum distance between vertices of the output that don't cause vertices
 #'   to move more than the distance specified by the snap function. This can be used
-#'   to simplify the result of a boolean operation.
+#'   to simplify the result of a boolean operation. Use -1 to specify that any
+#'   minimum distance is acceptable.
+#' @param duplicate_edges Use `TRUE` to keep duplicate edges (e.g., duplicate
+#'   points).
+#' @param edge_type One of 'directed' (default) or 'undirected'.
+#' @param polyline_type One of 'path' (default) or 'walk'. If 'walk',
+#'   polylines that backtrack are preserved.
+#' @param polyline_sibling_pairs One of 'discard' (default) or 'keep'.
+#' @param simplify_edge_chains Use `TRUE` to remove vertices that are within
+#'   `snap_radius` of the original vertex.
+#' @param split_crossing_edges Use `TRUE` to split crossing polyline edges
+#'   when creating geometries.
+#' @param idempotent Use `FALSE` to apply snap even if snapping is not necessary
+#'   to satisfy vertex constraints.
+#' @param validate Use `TRUE` to validate the result from the builder.
 #' @param level A value from 0 to 30 corresponding to the cell level
 #'   at which snapping should occur.
 #' @param distance A distance (in radians) denoting the maximum
@@ -25,61 +40,61 @@
 #' @section Model:
 #' The geometry model indicates whether or not a geometry includes its boundaries.
 #' Boundaries of line geometries are its end points.
-#' OPEN geometries do not contain their boundary (`model = 0`); CLOSED
-#' geometries (`model = 2`) contain their boundary; HALF-CLOSED geometries
-#' (`model = 1`) contain half of their boundaries, such that when two polygons
+#' OPEN geometries do not contain their boundary (`model = "open"`); CLOSED
+#' geometries (`model = "closed"`) contain their boundary; SEMI-OPEN geometries
+#' (`model = "semi-open"`) contain half of their boundaries, such that when two polygons
 #' do not overlap or two lines do not cross, no point exist that belong to
 #' more than one of the geometries. (This latter form, half-closed, is
 #' not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-#' which that is based). A value of -1 does not set the model, leaving the
-#' S2 default (HALF-CLOSED). The default values for [s2_contains()] (0)
-#' and covers/covered_by (2) correspond to the SFA standard specification
+#' which that is based). The default values for [s2_contains()] (open)
+#' and covers/covered_by (closed) correspond to the SFA standard specification
 #' of these operators.
 #'
 #' @export
 #'
 #' @examples
-#' # use s2_options() to specify polygon/polyline models
-#' # and/or snap level
-#' s2_options(model = 1, snap = s2_snap_level(30))
+#' # use s2_options() to specify containment models, snap level
+#' # layer creation options, and builder options
+#' s2_options(model = "closed", snap = s2_snap_level(30))
 #'
-#' # model value affects boolean operations and binary predicates
-#' # in the open model, lines do not contain endpoints (but do contain other points)
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 0))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 0))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0.5)", s2_options(model = 0))
-#'
-#' # in the semi-open and closed models, endpoints are contained
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 1))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 1))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 0)", s2_options(model = 2))
-#' s2_contains("LINESTRING (0 0, 0 1, 1 1)", "POINT (0 1)", s2_options(model = 2))
-#'
-#' # for polygons, boundary points are either contained or not contained depending on
-#' # the model of  choice
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 0))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 0))
-#'
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 1))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 1))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0 0)", s2_options(model = 2))
-#' s2_contains("POLYGON ((0 0, 0 1, 1 1, 0 0))", "POINT (0.5 0.75)", s2_options(model = 2))
-#'
-#' # s2_dwithin(x, y, epsilon) is a more explicit test if boundaries are important
-#' s2_dwithin(
-#'   "LINESTRING (0 0, 0 1, 1 1)",
-#'   c("POINT (0 0)", "POINT (0 1)", "POINT (0 0.5)"),
-#'   1e-7
-#' )
-#'
-s2_options <- function(model = -1, snap = s2_snap_identity(), snap_radius = -1,
-                       polygon_model = model, polyline_model = model) {
+s2_options <- function(model = NULL,
+                       snap = s2_snap_identity(),
+                       snap_radius = -1,
+                       duplicate_edges = FALSE,
+                       edge_type = "directed",
+                       validate = FALSE,
+                       polyline_type = "path",
+                       polyline_sibling_pairs = "keep",
+                       simplify_edge_chains = FALSE,
+                       split_crossing_edges = FALSE,
+                       idempotent = FALSE) {
+  # check snap radius (passing in a huge snap radius can cause problems)
+  if (snap_radius > 3) {
+    stop(
+      "Snap radius is too large. Did you pass in a snap radius in meters instead of radians?",
+      call. = FALSE
+    )
+  }
+
   structure(
     list(
-      polygon_model = polygon_model,
-      polyline_model = polyline_model,
+      # model needs to be "unset" by default because there are differences in polygon
+      # and polyline handling by default that are good defaults to preserve
+      model = if (is.null(model)) -1 else match_option(model, c("open", "semi-open", "closed"), "model"),
       snap = snap,
-      snap_radius = snap_radius
+      snap_radius = snap_radius,
+      duplicate_edges = duplicate_edges,
+      edge_type = match_option(edge_type, c("directed", "undirected"), "edge_type"),
+      validate = validate,
+      polyline_type = match_option(polyline_type, c("path", "walk"), "polyline_type"),
+      polyline_sibling_pairs = match_option(
+        polyline_sibling_pairs,
+        c("discard", "keep"),
+        "polyline_sibling_pairs"
+      ),
+      simplify_edge_chains = simplify_edge_chains,
+      split_crossing_edges = split_crossing_edges,
+      idempotent = idempotent
     ),
     class = "s2_options"
   )
@@ -94,6 +109,10 @@ s2_snap_identity <- function() {
 #' @rdname s2_options
 #' @export
 s2_snap_level <- function(level) {
+  if (level > 30) {
+    stop("`level` must be an intger between 1 and 30", call. = FALSE)
+  }
+
   structure(list(level = level), class = "snap_level")
 }
 
@@ -107,4 +126,17 @@ s2_snap_precision <- function(precision)  {
 #' @export
 s2_snap_distance <- function(distance)  {
   structure(list(distance = distance), class = "snap_distance")
+}
+
+
+match_option <- function(x, options, arg) {
+  result <- match(x, options)
+  if (identical(result, NA_integer_)) {
+    stop(
+      sprintf("`%s` must be one of %s", arg, paste0('"', options, '"', collapse = ", ")),
+      call. = FALSE
+    )
+  }
+
+  result
 }
