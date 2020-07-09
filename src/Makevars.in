@@ -5,14 +5,14 @@ CXX_STD = CXX11
 
 OBJECTS = cpp-compat.o \
      s2-accessors.o \
+     s2-bounds.o \
      s2-constructors-formatters.o \
-     s2-cap.o \
      s2-predicates.o \
      s2-transformers.o \
      init.o \
      RcppExports.o \
      s2-geography.o \
-     s2-latlng.o \
+     s2-lnglat.o \
      s2-matrix.o \
      s2-point.o \
      s2-xptr.o \

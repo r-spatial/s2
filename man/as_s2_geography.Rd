@@ -4,7 +4,7 @@
 \alias{as_s2_geography}
 \alias{as_s2_geography.default}
 \alias{as_s2_geography.s2_geography}
-\alias{as_s2_geography.s2_latlng}
+\alias{as_s2_geography.s2_lnglat}
 \alias{as_s2_geography.s2_point}
 \alias{as_s2_geography.wk_wkb}
 \alias{as_s2_geography.WKB}
@@ -22,7 +22,7 @@ as_s2_geography(x, ...)
 
 \method{as_s2_geography}{s2_geography}(x, ...)
 
-\method{as_s2_geography}{s2_latlng}(x, ...)
+\method{as_s2_geography}{s2_lnglat}(x, ...)
 
 \method{as_s2_geography}{s2_point}(x, ...)
 

@@ -9,7 +9,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List s2_latlng_from_numeric(NumericVector lat, NumericVector lng) {
+List s2_lnglat_from_numeric(NumericVector lng, NumericVector lat) {
   List output(lat.size());
 
   S2LatLng item;
@@ -22,7 +22,7 @@ List s2_latlng_from_numeric(NumericVector lat, NumericVector lng) {
 }
 
 // [[Rcpp::export]]
-List s2_latlng_from_s2_point(List s2_point) {
+List s2_lnglat_from_s2_point(List s2_point) {
   List output(s2_point.size());
 
   SEXP item;
@@ -41,22 +41,22 @@ List s2_latlng_from_s2_point(List s2_point) {
 }
 
 // [[Rcpp::export]]
-List data_frame_from_s2_latlng(List xptr) {
-  NumericVector lat(xptr.size());
+List data_frame_from_s2_lnglat(List xptr) {
   NumericVector lng(xptr.size());
+  NumericVector lat(xptr.size());
 
   SEXP item;
   for (R_xlen_t i = 0; i < xptr.size(); i++) {
     item = xptr[i];
     if (item == R_NilValue) {
-      lat[i] = NA_REAL;
       lng[i] = NA_REAL;
+      lat[i] = NA_REAL;
     } else {
       XPtr<S2LatLng> ptr(item);
-      lat[i] = ptr->lat().degrees();
       lng[i] = ptr->lng().degrees();
+      lat[i] = ptr->lat().degrees();
     }
   }
 
-  return List::create(_["lat"] = lat, _["lng"] = lng);
+  return List::create(_["lng"] = lng, _["lat"] = lat);
 }

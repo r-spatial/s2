@@ -5,7 +5,7 @@ reference:
 - title: Geography Constructors and Exporters
   desc: Convert objects to and from geography vectors
   contents:
-  - s2_latlng
+  - s2_lnglat
   - s2_point
   - as_s2_geography
   - s2_geog_point
@@ -59,6 +59,7 @@ reference:
   - s2_y
   - s2_distance
   - s2_max_distance
+  - s2_bounds_cap
 
 - title: Matrix Functions
   desc: These functions return various relationships between two geography vectors

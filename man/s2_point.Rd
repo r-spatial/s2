@@ -4,7 +4,7 @@
 \alias{s2_point}
 \alias{as_s2_point}
 \alias{as_s2_point.s2_point}
-\alias{as_s2_point.s2_latlng}
+\alias{as_s2_point.s2_lnglat}
 \alias{as_s2_point.s2_geography}
 \alias{as_s2_point.matrix}
 \alias{as.data.frame.s2_point}
@@ -17,7 +17,7 @@ as_s2_point(x, ...)
 
 \method{as_s2_point}{s2_point}(x, ...)
 
-\method{as_s2_point}{s2_latlng}(x, ...)
+\method{as_s2_point}{s2_lnglat}(x, ...)
 
 \method{as_s2_point}{s2_geography}(x, ...)
 
@@ -37,12 +37,12 @@ An object with class s2_point
 }
 \description{
 In S2 terminology, a "point" is a 3-dimensional unit vector representation
-of an \code{\link[=s2_latlng]{s2_latlng()}}. Internally, all s2 objects are stored as
+of an \code{\link[=s2_lnglat]{s2_lnglat()}}. Internally, all s2 objects are stored as
 3-dimensional unit vectors.
 }
 \examples{
-latlng <- s2_latlng(45, -64) # Halifax, Nova Scotia!
-as_s2_point(latlng)
-as.data.frame(as_s2_point(latlng))
+lnglat <- s2_lnglat(-64, 45) # Halifax, Nova Scotia!
+as_s2_point(lnglat)
+as.data.frame(as_s2_point(lnglat))
 
 }
