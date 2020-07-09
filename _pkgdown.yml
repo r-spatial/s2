@@ -59,6 +59,7 @@ reference:
   - s2_y
   - s2_distance
   - s2_max_distance
+  - s2_bounds_cap
 
 - title: Matrix Functions
   desc: These functions return various relationships between two geography vectors
