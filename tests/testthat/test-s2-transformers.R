@@ -470,12 +470,6 @@ test_that("s2_rebuild() works", {
       )
     )
   )
-
-  # S2Builder error
-  expect_error(
-    s2_rebuild("POINT (0.01 0.01)", options = s2_options(snap = s2_snap_level(32))),
-    "Snap function moved vertex"
-  )
 })
 
 test_that("real data survives the S2BooleanOperation", {

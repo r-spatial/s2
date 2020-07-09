@@ -109,6 +109,10 @@ s2_snap_identity <- function() {
 #' @rdname s2_options
 #' @export
 s2_snap_level <- function(level) {
+  if (level > 30) {
+    stop("`level` must be an intger between 1 and 30", call. = FALSE)
+  }
+
   structure(list(level = level), class = "snap_level")
 }
 
