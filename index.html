@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 <a href="#s2" class="anchor"></a>s2</h1></div>
 <!-- badges: start -->
 
-<p>The goal of s2 is to provide R bindings to Google’s <a href="https://s2geometry.io">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions">BigQuery Geography API</a>, whose functions also operate on spherical geometries.</p>
+<p>The goal of s2 is to provide R bindings to Google’s <a href="https://s2geometry.io">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions">BigQuery Geography API</a>, whose functions also operate on spherical geometries. This package is a complete rewrite of an earlier CRAN package s2 with versions up to 0.4-2, for which the sources are found <a href="https://github.com/spatstat/s2/">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -109,7 +109,7 @@
 <a href="#example" class="anchor"></a>Example</h2>
 <p>The s2 package provides geometry transformers and predicates similar to those found in <a href="https://trac.osgeo.org/geos/">GEOS</a>, except instead of assuming a planar geometry, s2’s functions work in latitude and longitude and assume a spherical geometry:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/r-spatial/s2">s2</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://r-spatial.github.io/s2">s2</a></span>)
 
 <span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span>(
   <span class="co"># polygon containing much  of the northern hemisphere</span>
@@ -263,6 +263,7 @@
 <ul class="list-unstyled">
 <li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://codecov.io/gh/r-spatial/s2"><img src="https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://cran.r-project.org/package=s2"><img src="http://www.r-pkg.org/badges/version/s2" alt="CRAN"></a></li>
 </ul>
 </div>
 </div>

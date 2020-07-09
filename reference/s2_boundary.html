@@ -73,7 +73,7 @@ return a geography vector." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -152,6 +152,10 @@ return a geography vector.</p>
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
 
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_simplify</a></span>(<span class='kw'>x</span>, <span class='kw'>tolerance</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_rebuild</a></span>(<span class='kw'>x</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_buffer_cells</a></span>(
   <span class='kw'>x</span>,
   <span class='kw'>distance</span>,
@@ -190,6 +194,16 @@ model to use and the snap level.</p></td>
 will be rounded to the nearest power of 10.</p></td>
     </tr>
     <tr>
+      <th>tolerance</th>
+      <td><p>The minimum distance between vertexes to use when
+simplifying a geography.</p></td>
+    </tr>
+    <tr>
+      <th>radius</th>
+      <td><p>Radius of the earth. Defaults to the average radius of
+the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>distance</th>
       <td><p>The distance to buffer, in units of <code>radius</code>.</p></td>
     </tr>
@@ -205,11 +219,6 @@ large geographies, but may help improve buffers along long, narrow
 regions.</p></td>
     </tr>
     <tr>
-      <th>radius</th>
-      <td><p>Radius of the earth. Defaults to the average radius of
-the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
-    </tr>
-    <tr>
       <th>na.rm</th>
       <td><p>For aggregate calculations use <code>na.rm = TRUE</code>
 to drop missing values.</p></td>
@@ -222,15 +231,14 @@ to drop missing values.</p></td>
 
 <p>The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (<code>model = 0</code>); CLOSED
-geometries (<code>model = 2</code>) contain their boundary; HALF-CLOSED geometries
-(<code>model = 1</code>) contain half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (<code>model = "open"</code>); CLOSED
+geometries (<code>model = "closed"</code>) contain their boundary; SEMI-OPEN geometries
+(<code>model = "semi-open"</code>) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
-and covers/covered_by (2) correspond to the SFA standard specification
+which that is based). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (open)
+and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

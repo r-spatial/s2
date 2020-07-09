@@ -75,7 +75,7 @@ containment and how new geometries should be constructed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -139,11 +139,17 @@ containment and how new geometries should be constructed.</p>
     </div>
 
     <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(
-  model = <span class='op'>-</span><span class='fl'>1</span>,
+  model = <span class='kw'>NULL</span>,
   snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_identity</a></span>(),
   snap_radius = <span class='op'>-</span><span class='fl'>1</span>,
-  polygon_model = <span class='kw'>model</span>,
-  polyline_model = <span class='kw'>model</span>
+  duplicate_edges = <span class='fl'>FALSE</span>,
+  edge_type = <span class='st'>"directed"</span>,
+  validate = <span class='fl'>FALSE</span>,
+  polyline_type = <span class='st'>"path"</span>,
+  polyline_sibling_pairs = <span class='st'>"keep"</span>,
+  simplify_edge_chains = <span class='fl'>FALSE</span>,
+  split_crossing_edges = <span class='fl'>FALSE</span>,
+  idempotent = <span class='fl'>FALSE</span>
 )
 
 <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_identity</a></span>()
@@ -158,8 +164,9 @@ containment and how new geometries should be constructed.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>model, polygon_model, polyline_model</th>
-      <td><p>See section 'Model'</p></td>
+      <th>model</th>
+      <td><p>One of 'open', 'semi-open' (default for polygons),
+or 'closed' (default for polylines). See section 'Model'</p></td>
     </tr>
     <tr>
       <th>snap</th>
@@ -173,7 +180,45 @@ occur.</p></td>
 the maximum distance a vertex should move, the snap radius (in radians) sets
 the minimum distance between vertices of the output that don't cause vertices
 to move more than the distance specified by the snap function. This can be used
-to simplify the result of a boolean operation.</p></td>
+to simplify the result of a boolean operation. Use -1 to specify that any
+minimum distance is acceptable.</p></td>
+    </tr>
+    <tr>
+      <th>duplicate_edges</th>
+      <td><p>Use <code>TRUE</code> to keep duplicate edges (e.g., duplicate
+points).</p></td>
+    </tr>
+    <tr>
+      <th>edge_type</th>
+      <td><p>One of 'directed' (default) or 'undirected'.</p></td>
+    </tr>
+    <tr>
+      <th>validate</th>
+      <td><p>Use <code>TRUE</code> to validate the result from the builder.</p></td>
+    </tr>
+    <tr>
+      <th>polyline_type</th>
+      <td><p>One of 'path' (default) or 'walk'. If 'walk',
+polylines that backtrack are preserved.</p></td>
+    </tr>
+    <tr>
+      <th>polyline_sibling_pairs</th>
+      <td><p>One of 'discard' (default) or 'keep'.</p></td>
+    </tr>
+    <tr>
+      <th>simplify_edge_chains</th>
+      <td><p>Use <code>TRUE</code> to remove vertices that are within
+<code>snap_radius</code> of the original vertex.</p></td>
+    </tr>
+    <tr>
+      <th>split_crossing_edges</th>
+      <td><p>Use <code>TRUE</code> to split crossing polyline edges
+when creating geometries.</p></td>
+    </tr>
+    <tr>
+      <th>idempotent</th>
+      <td><p>Use <code>FALSE</code> to apply snap even if snapping is not necessary
+to satisfy vertex constraints.</p></td>
     </tr>
     <tr>
       <th>level</th>
@@ -198,25 +243,21 @@ distance a vertex should move in the snapping process.</p></td>
 
 <p>The geometry model indicates whether or not a geometry includes its boundaries.
 Boundaries of line geometries are its end points.
-OPEN geometries do not contain their boundary (<code>model = 0</code>); CLOSED
-geometries (<code>model = 2</code>) contain their boundary; HALF-CLOSED geometries
-(<code>model = 1</code>) contain half of their boundaries, such that when two polygons
+OPEN geometries do not contain their boundary (<code>model = "open"</code>); CLOSED
+geometries (<code>model = "closed"</code>) contain their boundary; SEMI-OPEN geometries
+(<code>model = "semi-open"</code>) contain half of their boundaries, such that when two polygons
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). A value of -1 does not set the model, leaving the
-S2 default (HALF-CLOSED). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (0)
-and covers/covered_by (2) correspond to the SFA standard specification
+which that is based). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (open)
+and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># use s2_options() to specify polygon/polyline models</span>
-<span class='co'># and/or snap level</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>1</span>, snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))</div><div class='output co'>#&gt; $polygon_model
-#&gt; [1] 1
-#&gt; 
-#&gt; $polyline_model
-#&gt; [1] 1
+    <pre class="examples"><div class='input'><span class='co'># use s2_options() to specify containment models, snap level</span>
+<span class='co'># layer creation options, and builder options</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"closed"</span>, snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))</div><div class='output co'>#&gt; $model
+#&gt; [1] 3
 #&gt; 
 #&gt; $snap
 #&gt; $level
@@ -228,23 +269,32 @@ of these operators.</p>
 #&gt; $snap_radius
 #&gt; [1] -1
 #&gt; 
+#&gt; $duplicate_edges
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $edge_type
+#&gt; [1] 1
+#&gt; 
+#&gt; $validate
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $polyline_type
+#&gt; [1] 1
+#&gt; 
+#&gt; $polyline_sibling_pairs
+#&gt; [1] 2
+#&gt; 
+#&gt; $simplify_edge_chains
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $split_crossing_edges
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $idempotent
+#&gt; [1] FALSE
+#&gt; 
 #&gt; attr(,"class")
-#&gt; [1] "s2_options"</div><div class='input'>
-<span class='co'># model value affects boolean operations and binary predicates</span>
-<span class='co'># in the open model, lines do not contain endpoints (but do contain other points)</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
-<span class='co'># in the semi-open and closed models, endpoints are contained</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>, <span class='st'>"POINT (0 1)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='co'># for polygons, boundary points are either contained or not contained depending on</span>
-<span class='co'># the model of  choice</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0 0)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains</a></span>(<span class='st'>"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>, <span class='st'>"POINT (0.5 0.75)"</span>, <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='co'># s2_dwithin(x, y, epsilon) is a more explicit test if boundaries are important</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_dwithin</a></span>(
-  <span class='st'>"LINESTRING (0 0, 0 1, 1 1)"</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (0 1)"</span>, <span class='st'>"POINT (0 0.5)"</span>),
-  <span class='fl'>1e-7</span>
-)</div><div class='output co'>#&gt; [1] TRUE TRUE TRUE</div><div class='input'></div></pre>
+#&gt; [1] "s2_options"</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
