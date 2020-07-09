@@ -29,9 +29,9 @@ s2_contains_matrix(x, y, options = s2_options(model = 0))
 
 s2_within_matrix(x, y, options = s2_options(model = 0))
 
-s2_covers_matrix(x, y, options = s2_options(model = 2))
+s2_covers_matrix(x, y, options = s2_options(model = "closed"))
 
-s2_covered_by_matrix(x, y, options = s2_options(model = 2))
+s2_covered_by_matrix(x, y, options = s2_options(model = "closed"))
 
 s2_intersects_matrix(x, y, options = s2_options())
 

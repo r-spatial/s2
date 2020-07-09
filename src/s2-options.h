@@ -262,9 +262,9 @@ public:
 
   static S2BooleanOperation::PolygonModel getPolygonModel(int model) {
     switch (model) {
-      case 0: return S2BooleanOperation::PolygonModel::OPEN;
-      case 1: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
-      case 2: return S2BooleanOperation::PolygonModel::CLOSED;
+      case 1: return S2BooleanOperation::PolygonModel::OPEN;
+      case 2: return S2BooleanOperation::PolygonModel::SEMI_OPEN;
+      case 3: return S2BooleanOperation::PolygonModel::CLOSED;
       default:
         std::stringstream err;
         err << "Invalid value for polygon model: " << model;
@@ -274,9 +274,9 @@ public:
 
   static S2BooleanOperation::PolylineModel getPolylineModel(int model) {
     switch (model) {
-      case 0: return S2BooleanOperation::PolylineModel::OPEN;
-      case 1: return S2BooleanOperation::PolylineModel::SEMI_OPEN;
-      case 2: return S2BooleanOperation::PolylineModel::CLOSED;
+      case 1: return S2BooleanOperation::PolylineModel::OPEN;
+      case 2: return S2BooleanOperation::PolylineModel::SEMI_OPEN;
+      case 3: return S2BooleanOperation::PolylineModel::CLOSED;
       default:
         std::stringstream err;
         err << "Invalid value for polyline model: " << model;
@@ -297,8 +297,8 @@ public:
 
   static S2Builder::GraphOptions::EdgeType getEdgeType(int value) {
     switch (value) {
-      case 0: return S2Builder::GraphOptions::EdgeType::DIRECTED;
-      case 1: return S2Builder::GraphOptions::EdgeType::UNDIRECTED;
+      case 1: return S2Builder::GraphOptions::EdgeType::DIRECTED;
+      case 2: return S2Builder::GraphOptions::EdgeType::UNDIRECTED;
       default:
         std::stringstream err;
         err << "Invalid value for edge type: " << value;
@@ -308,8 +308,8 @@ public:
 
   static S2Builder::GraphOptions::SiblingPairs getSiblingPairs(int value) {
     switch (value) {
-      case 0: return S2Builder::GraphOptions::SiblingPairs::DISCARD;
-      case 1: return S2Builder::GraphOptions::SiblingPairs::KEEP;
+      case 1: return S2Builder::GraphOptions::SiblingPairs::DISCARD;
+      case 2: return S2Builder::GraphOptions::SiblingPairs::KEEP;
       default:
         std::stringstream err;
         err << "Invalid value for sibling pairs: " << value;
@@ -319,8 +319,8 @@ public:
 
   static S2Builder::Graph::PolylineType getPolylineType(int value) {
     switch (value) {
-      case 0: return S2Builder::Graph::PolylineType::PATH;
-      case 1: return S2Builder::Graph::PolylineType::WALK;
+      case 1: return S2Builder::Graph::PolylineType::PATH;
+      case 2: return S2Builder::Graph::PolylineType::WALK;
       default:
         std::stringstream err;
         err << "Invalid value for polylie type: " << value;
