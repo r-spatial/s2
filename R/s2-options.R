@@ -68,6 +68,14 @@ s2_options <- function(model = NULL,
                        simplify_edge_chains = FALSE,
                        split_crossing_edges = FALSE,
                        idempotent = FALSE) {
+  # check snap radius (passing in a huge snap radius can cause problems)
+  if (snap_radius > 3) {
+    stop(
+      "Snap radius is too large. Did you pass in a snap radius in meters instead of radians?",
+      call. = FALSE
+    )
+  }
+
   structure(
     list(
       # model needs to be "unset" by default because there are differences in polygon
