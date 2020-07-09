@@ -17,6 +17,8 @@
 #'   (1 - 30). Setting this value too high will result in unnecessarily
 #'   large geographies, but may help improve buffers along long, narrow
 #'   regions.
+#' @param tolerance The minimum distance between vertexes to use when
+#'   simplifying a geography.
 #'
 #' @inheritSection s2_options Model
 #'

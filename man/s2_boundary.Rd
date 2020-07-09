@@ -66,6 +66,9 @@ model to use and the snap level.}
 \item{grid_size}{The grid size to which coordinates should be snapped;
 will be rounded to the nearest power of 10.}
 
+\item{tolerance}{The minimum distance between vertexes to use when
+simplifying a geography.}
+
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
 
