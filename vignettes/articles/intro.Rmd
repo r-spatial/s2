@@ -10,11 +10,4 @@ knitr::opts_chunk$set(collapse = TRUE)
 library(s2)
 ```
 
-* S2LatLng points are always latitude-longitude
-* internally represented as S2Points, 3-D unit vectors (geocentric)
-* S2polyline; when is a polyline invalid
-* S2Loop: rings get reordered (different starting point)
-* rings are not closed
-* polygons are properly nested rings (unlike e.g. MULTIPOLYGON)
-* in addition to empty polygon: full polygon
-* default polygon building: not oriented, assuming their area is less than `2*pi`
+See vignette 7, "Spherical geometry in sf using s2geometry" of package sf.
