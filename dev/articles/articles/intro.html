@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">s2</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.1.9000</span>
       </span>
     </div>
 
@@ -96,18 +96,8 @@
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://r-spatial.github.io/s2">s2</a></span>)
 </pre></div>
-<ul>
-<li>S2LatLng points are always latitude-longitude</li>
-<li>internally represented as S2Points, 3-D unit vectors (geocentric)</li>
-<li>S2polyline; when is a polyline invalid</li>
-<li>S2Loop: rings get reordered (different starting point)</li>
-<li>rings are not closed</li>
-<li>polygons are properly nested rings (unlike e.g. MULTIPOLYGON)</li>
-<li>in addition to empty polygon: full polygon</li>
-<li>default polygon building: not oriented, assuming their area is less than <code>2*pi</code>
-</li>
-</ul>
-</div>
+<p>See vignette 7, “Spherical geometry in sf using s2geometry” of package sf.</p>
+  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 

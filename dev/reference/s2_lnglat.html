@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • s2</title>
+<title>Create an S2 LngLat Vector — s2_lnglat • s2</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,10 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Create an S2 LngLat Vector — s2_lnglat" />
+<meta property="og:description" content="This class represents a latitude and longitude on the Earth's surface.
+Most calculations in S2 convert this to a as_s2_point(), which is a
+unit vector representation of this value." />
 
 
 <meta name="robots" content="noindex">
@@ -58,7 +61,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -122,43 +125,70 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/r-spatial/s2/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Create an S2 LngLat Vector</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-lnglat.R'><code>R/s2-lnglat.R</code></a></small>
+    <div class="hidden name"><code>s2_lnglat.Rd</code></div>
     </div>
 
-    <div id="s2-development-version" class="section level1">
-<h1 class="page-header" data-toc-text="development version">
-<a href="#s2-development-version" class="anchor"></a>s2 (development version)<small> Unreleased </small>
-</h1>
-</div>
-    <div id="s2-101" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.1">
-<a href="#s2-101" class="anchor"></a>s2 1.0.1<small> Unreleased </small>
-</h1>
-<ul>
-<li>Added layer creation options to <code><a href="https://rdrr.io/pkg/s2/man/s2_options.html">s2_options()</a></code>, which now uses strings rather than numeric codes to specify boolean operation options, geography construction options, and builder options (<a href='https://github.com/r-spatial/s2/issues/70'>#70</a>).</li>
-<li>Added <code><a href="https://rdrr.io/pkg/s2/man/s2_boundary.html">s2_rebuild()</a></code> and <code><a href="https://rdrr.io/pkg/s2/man/s2_boundary.html">s2_simplify()</a></code>, which wrap the S2 C++ <code>S2Builder</code> class to provide simplification and fixing of invalid geographies (<a href='https://github.com/r-spatial/s2/issues/70'>#70</a>).</li>
-<li>The s2 package now builds and passes the CMD check on Solaris (<a href='https://github.com/r-spatial/s2/issues/66'>#66</a>, <a href='https://github.com/r-spatial/s2/issues/67'>#67</a>).</li>
-<li>Renamed <code>s2_latlng()</code> to <code><a href="https://rdrr.io/pkg/s2/man/s2_lnglat.html">s2_lnglat()</a></code> to keep axis order consistent throughout the package (<a href='https://github.com/r-spatial/s2/issues/69'>#69</a>).</li>
-<li>Added <code><a href="https://rdrr.io/pkg/s2/man/s2_bounds_cap.html">s2_bounds_cap()</a></code> and <code><a href="https://rdrr.io/pkg/s2/man/s2_bounds_cap.html">s2_bounds_rect()</a></code> to compute bounding areas using geographic coordinates (<a href='https://github.com/edzer'>@edzer</a>, <a href='https://github.com/r-spatial/s2/issues/63'>#63</a>).</li>
-<li>
-<code>s2_*_matrix()</code> predicates now efficiently use indexing to compute the results of many predicate comparisons (<a href='https://github.com/r-spatial/s2/issues/61'>#61</a>).</li>
-</ul>
-</div>
-    <div id="s2-100" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.0">
-<a href="#s2-100" class="anchor"></a>s2 1.0.0<small> 2020-06-27 </small>
-</h1>
-<p>This version is a complete rewrite of the former s2 CRAN package, entirely backwards incompatible with previous versions.</p>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>This class represents a latitude and longitude on the Earth's surface.
+Most calculations in S2 convert this to a <code><a href='https://rdrr.io/pkg/s2/man/s2_point.html'>as_s2_point()</a></code>, which is a
+unit vector representation of this value.</p>
+    </div>
 
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='kw'>lng</span>, <span class='kw'>lat</span>)
+
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_lnglat</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_point</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_geography</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for matrix</span>
+<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_lnglat</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for s2_lnglat</span>
+<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>lat, lng</th>
+      <td><p>Vectors of latitude and longitude values in degrees.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>A <code><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat()</a></code> vector or an object that can be coerced to one.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Unused</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An object with class s2_lnglat</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>) <span class='co'># Halifax, Nova Scotia!</span></div><div class='output co'>#&gt; &lt;s2_lnglat[1]&gt;
+#&gt; [1] (45, -64)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>))</div><div class='output co'>#&gt;   lng lat
+#&gt; 1  45 -64</div><div class='input'></div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 
