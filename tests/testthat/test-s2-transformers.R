@@ -390,7 +390,7 @@ test_that("s2_rebuild() works", {
   # snap
   expect_wkt_equal(
     s2_rebuild(
-      "MULTIPOINT (0.01 0.01, -0.01 -0.01))",
+      "MULTIPOINT (0.01 0.01, -0.01 -0.01)",
       options = s2_options(
         snap = s2_snap_precision(1e1),
         duplicate_edges = TRUE
