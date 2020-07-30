@@ -86,7 +86,7 @@ class compact_array_base {
 #endif
 
   // Opportunistically consider allowing inlined elements.
-#if defined(_LP64) && defined(__GNUC__)
+#if defined(_LP64) && defined(__GNUC__) && false
   // With 64-bit pointers, our approach is to form a 16-byte struct:
   //   [5 bytes for size, capacity, is_exponent and is_inlined]
   //   [3 bytes of padding or inlined elements]
