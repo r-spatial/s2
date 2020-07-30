@@ -75,7 +75,7 @@ The coercion function \code{\link[=as_s2_geography]{as_s2_geography()}} is used 
 of most functions in the s2 package so that you can use other objects with
 an unambiguious interpretation as a geography vector. Geography vectors
 have a minimal \link[vctrs:vctrs-package]{vctrs} implementation, so you can
-use these objects in \code{\link[tibble:tibble]{tibble::tibble()}} and other packages that use the vctrs
+use these objects in tibble, dplyr, and other packages that use the vctrs
 framework.
 }
 \seealso{

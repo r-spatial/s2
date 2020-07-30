@@ -9,7 +9,7 @@
 #' of most functions in the s2 package so that you can use other objects with
 #' an unambiguious interpretation as a geography vector. Geography vectors
 #' have a minimal [vctrs][vctrs::vctrs-package] implementation, so you can
-#' use these objects in [tibble::tibble()] and other packages that use the vctrs
+#' use these objects in tibble, dplyr, and other packages that use the vctrs
 #' framework.
 #'
 #' @param x An object that can be converted to an s2_geography vector
