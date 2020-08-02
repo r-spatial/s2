@@ -75,7 +75,7 @@ containment and how new geometries should be constructed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -133,14 +133,14 @@ containment and how new geometries should be constructed." />
 
     <div class="ref-description">
     <p>These functions specify defaults for options used to perform operations
-and construct geometries. These are used in predicates (e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_intersects()</a></code>),
-and boolean operations (e.g., <code><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection()</a></code>) to specify the model for
+and construct geometries. These are used in predicates (e.g., <code><a href='s2_contains.html'>s2_intersects()</a></code>),
+and boolean operations (e.g., <code><a href='s2_boundary.html'>s2_intersection()</a></code>) to specify the model for
 containment and how new geometries should be constructed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(
+    <pre class="usage"><span class='fu'>s2_options</span>(
   model = <span class='kw'>NULL</span>,
-  snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_identity</a></span>(),
+  snap = <span class='fu'>s2_snap_identity</span>(),
   snap_radius = <span class='op'>-</span><span class='fl'>1</span>,
   duplicate_edges = <span class='fl'>FALSE</span>,
   edge_type = <span class='st'>"directed"</span>,
@@ -152,13 +152,13 @@ containment and how new geometries should be constructed.</p>
   idempotent = <span class='fl'>FALSE</span>
 )
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_identity</a></span>()
+<span class='fu'>s2_snap_identity</span>()
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='kw'>level</span>)
+<span class='fu'>s2_snap_level</span>(<span class='kw'>level</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_precision</a></span>(<span class='kw'>precision</span>)
+<span class='fu'>s2_snap_precision</span>(<span class='kw'>precision</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_distance</a></span>(<span class='kw'>distance</span>)</pre>
+<span class='fu'>s2_snap_distance</span>(<span class='kw'>distance</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,8 +170,8 @@ or 'closed' (default for polylines). See section 'Model'</p></td>
     </tr>
     <tr>
       <th>snap</th>
-      <td><p>Use <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_identity()</a></code>, <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_distance()</a></code>, <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level()</a></code>,
-or <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_precision()</a></code> to specify how or if coordinate rounding should
+      <td><p>Use <code>s2_snap_identity()</code>, <code>s2_snap_distance()</code>, <code>s2_snap_level()</code>,
+or <code>s2_snap_precision()</code> to specify how or if coordinate rounding should
 occur.</p></td>
     </tr>
     <tr>
@@ -249,14 +249,14 @@ geometries (<code>model = "closed"</code>) contain their boundary; SEMI-OPEN geo
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (open)
+which that is based). The default values for <code><a href='s2_contains.html'>s2_contains()</a></code> (open)
 and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># use s2_options() to specify containment models, snap level</span>
 <span class='co'># layer creation options, and builder options</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(model = <span class='st'>"closed"</span>, snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))</div><div class='output co'>#&gt; $model
+<span class='fu'>s2_options</span>(model = <span class='st'>"closed"</span>, snap = <span class='fu'>s2_snap_level</span>(<span class='fl'>30</span>))</div><div class='output co'>#&gt; $model
 #&gt; [1] 3
 #&gt; 
 #&gt; $snap

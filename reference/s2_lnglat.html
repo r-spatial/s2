@@ -74,7 +74,7 @@ unit vector representation of this value." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -132,25 +132,25 @@ unit vector representation of this value." />
 
     <div class="ref-description">
     <p>This class represents a latitude and longitude on the Earth's surface.
-Most calculations in S2 convert this to a <code><a href='https://rdrr.io/pkg/s2/man/s2_point.html'>as_s2_point()</a></code>, which is a
+Most calculations in S2 convert this to a <code><a href='s2_point.html'>as_s2_point()</a></code>, which is a
 unit vector representation of this value.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='kw'>lng</span>, <span class='kw'>lat</span>)
+    <pre class="usage"><span class='fu'>s2_lnglat</span>(<span class='kw'>lng</span>, <span class='kw'>lat</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for s2_point</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>as_s2_lnglat</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for s2_lnglat</span>
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
@@ -167,7 +167,7 @@ unit vector representation of this value.</p>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>A <code><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat()</a></code> vector or an object that can be coerced to one.</p></td>
+      <td><p>A <code>s2_lnglat()</code> vector or an object that can be coerced to one.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -180,8 +180,8 @@ unit vector representation of this value.</p>
     <p>An object with class s2_lnglat</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>) <span class='co'># Halifax, Nova Scotia!</span></div><div class='output co'>#&gt; &lt;s2_lnglat[1]&gt;
-#&gt; [1] (45, -64)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_lnglat.html'>s2_lnglat</a></span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>))</div><div class='output co'>#&gt;   lng lat
+    <pre class="examples"><div class='input'><span class='fu'>s2_lnglat</span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>) <span class='co'># Halifax, Nova Scotia!</span></div><div class='output co'>#&gt; &lt;s2_lnglat[1]&gt;
+#&gt; [1] (45, -64)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'>s2_lnglat</span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>))</div><div class='output co'>#&gt;   lng lat
 #&gt; 1  45 -64</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
