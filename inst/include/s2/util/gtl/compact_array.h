@@ -86,7 +86,10 @@ class compact_array_base {
 #endif
 
   // Opportunistically consider allowing inlined elements.
-#if defined(_LP64) && defined(__GNUC__)
+  // dd: this has to be disabled to pass CRAN checks, since there is a
+  // (potentially) zero-length array that is not the last element of the class (so
+  // this can't be silenced using __extension__)
+#if defined(_LP64) && defined(__GNUC__) && false
   // With 64-bit pointers, our approach is to form a 16-byte struct:
   //   [5 bytes for size, capacity, is_exponent and is_inlined]
   //   [3 bytes of padding or inlined elements]
@@ -393,8 +396,13 @@ class compact_array_base {
     value_allocator_type allocator;
 
     T* new_ptr = allocator.allocate(capacity());
-    memcpy(new_ptr, Array(), old_capacity * sizeof(T));
-    allocator.deallocate(Array(), old_capacity);
+    // dd: this modification fixes a ASAN/UBSAN error, because
+    // when old_capacity is 0, Array() is nullptr, which is UB
+    // for memcpy.
+    if (old_capacity > 0) {
+      memcpy(new_ptr, Array(), old_capacity * sizeof(T));
+      allocator.deallocate(Array(), old_capacity);
+    }
 
     SetArray(new_ptr);
   }

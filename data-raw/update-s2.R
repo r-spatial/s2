@@ -81,8 +81,17 @@ print_next <- function() {
   )
   cli::cat_bullet(
     "Fix zero-length array warnings under -Wpedantic by inserting __extension__ at the beginning ",
-    "of expressions declaring them (s2region_coverer.h#251, util/gtl/compact_array.h#124)"
+    "of expressions declaring them (s2region_coverer.h#271)"
   )
+  cli::cat_bullet(
+    "Fix compact_array zero-length array warning by disabling inline elements on gcc ",
+    "(util/gtl/compact_array.h#89)"
+  )
+  cli::cat_bullet(
+    "Fix sanitizer error for compact_array when increasing the size of a zero-length array ",
+    "by wrapping util/gtl/compact_array.h#396-397 with if (old_capacity > 0) {...}"
+  )
+
   cli::cat_bullet("Remove extra semi-colon at s2boolean_operation.h#376")
   cli::cat_bullet("Remove extra semi-colons because of FROMHOST_TYPE_MAP macro (utils/endian/endian.h#565)")
   cli::cat_bullet(
