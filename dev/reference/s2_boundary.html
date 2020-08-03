@@ -73,7 +73,7 @@ return a geography vector." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.2.9000</span>
       </span>
     </div>
 
@@ -134,58 +134,58 @@ return a geography vector." />
 return a geography vector.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='kw'>x</span>)
+    <pre class="usage"><span class='fu'>s2_boundary</span>(<span class='kw'>x</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid</a></span>(<span class='kw'>x</span>)
+<span class='fu'>s2_centroid</span>(<span class='kw'>x</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_closest_point</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+<span class='fu'>s2_closest_point</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_minimum_clearance_line_between</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+<span class='fu'>s2_minimum_clearance_line_between</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_difference</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_sym_difference</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_intersection</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(<span class='kw'>x</span>, y = <span class='kw'>NULL</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_union</span>(<span class='kw'>x</span>, y = <span class='kw'>NULL</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
+<span class='fu'>s2_snap_to_grid</span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_simplify</a></span>(<span class='kw'>x</span>, <span class='kw'>tolerance</span>, radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_simplify</span>(<span class='kw'>x</span>, <span class='kw'>tolerance</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_rebuild</a></span>(<span class='kw'>x</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_rebuild</span>(<span class='kw'>x</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_buffer_cells</a></span>(
+<span class='fu'>s2_buffer_cells</span>(
   <span class='kw'>x</span>,
   <span class='kw'>distance</span>,
   max_cells = <span class='fl'>1000</span>,
   min_level = <span class='op'>-</span><span class='fl'>1</span>,
-  radius = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>()
+  radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>()
 )
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
+<span class='fu'>s2_centroid_agg</span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(<span class='kw'>x</span>, options = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(), na.rm = <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>s2_union_agg</span>(<span class='kw'>x</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>(), na.rm = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
-are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+      <td><p><a href='as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
 (e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>geography vectors</a>. These inputs
-are passed to <code><a href='https://rdrr.io/pkg/s2/man/as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
+      <td><p><a href='as_s2_geography.html'>geography vectors</a>. These inputs
+are passed to <code><a href='as_s2_geography.html'>as_s2_geography()</a></code>, so you can pass other objects
 (e.g., character vectors of well-known text) directly.</p></td>
     </tr>
     <tr>
       <th>options</th>
-      <td><p>An <code><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options()</a></code> object describing the polygon/polyline
+      <td><p>An <code><a href='s2_options.html'>s2_options()</a></code> object describing the polygon/polyline
 model to use and the snap level.</p></td>
     </tr>
     <tr>
@@ -201,7 +201,7 @@ simplifying a geography.</p></td>
     <tr>
       <th>radius</th>
       <td><p>Radius of the earth. Defaults to the average radius of
-the earth in meters as defined by <code><a href='https://rdrr.io/pkg/s2/man/s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+the earth in meters as defined by <code><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
     </tr>
     <tr>
       <th>distance</th>
@@ -237,7 +237,7 @@ geometries (<code>model = "closed"</code>) contain their boundary; SEMI-OPEN geo
 do not overlap or two lines do not cross, no point exist that belong to
 more than one of the geometries. (This latter form, half-closed, is
 not present in the OpenGIS "simple feature access" (SFA) standard nor DE9-IM on
-which that is based). The default values for <code><a href='https://rdrr.io/pkg/s2/man/s2_contains.html'>s2_contains()</a></code> (open)
+which that is based). The default values for <code><a href='s2_contains.html'>s2_contains()</a></code> (open)
 and covers/covered_by (closed) correspond to the SFA standard specification
 of these operators.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -260,70 +260,70 @@ of these operators.</p>
     <pre class="examples"><div class='input'><span class='co'># returns the boundary:</span>
 <span class='co'># empty for point, endpoints of a linestring,</span>
 <span class='co'># perimeter of a polygon</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POINT (-64 45)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POINT EMPTY&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;MULTIPOINT ((0 0), (10 0))&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_boundary</span>(<span class='st'>"POINT (-64 45)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT EMPTY&gt;</div><div class='input'><span class='fu'>s2_boundary</span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;MULTIPOINT ((0 0), (10 0))&gt;</div><div class='input'><span class='fu'>s2_boundary</span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;LINESTRING (0 0, 10 0, 10 10, 0 10, 0 0...&gt;</div><div class='input'>
 <span class='co'># returns the area-weighted centroid, element-wise</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid</a></span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POINT (5 5.00596)&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid</a></span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_centroid</span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 5.00596)&gt;</div><div class='input'><span class='fu'>s2_centroid</span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
 <span class='co'># returns the unweighted centroid of the entire input</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_centroid_agg</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (10 0)"</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_centroid_agg</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (10 0)"</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
 <span class='co'># returns the closest point on x to y</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_closest_point</a></span>(
+<span class='fu'>s2_closest_point</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 10.0374)&gt;</div><div class='input'>
 <span class='co'># returns the shortest possible line between x and y</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_minimum_clearance_line_between</a></span>(
+<span class='fu'>s2_minimum_clearance_line_between</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;LINESTRING (5 10.0374, 0 90)&gt;</div><div class='input'>
 <span class='co'># binary operations: difference, symmetric difference, intersection and union</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_difference</a></span>(
+<span class='fu'>s2_difference</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_sym_difference</a></span>(
+<span class='fu'>s2_sym_difference</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;MULTIPOLYGON (((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_intersection</a></span>(
+<span class='fu'>s2_intersection</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 5, 10 5.019, 10 10, 5 10.0374, 5 5...&gt;</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union</a></span>(
+<span class='fu'>s2_union</span>(
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='co'># use s2_union_agg() to aggregate geographies in a vector</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_union_agg</a></span>(
+<span class='fu'>s2_union_agg</span>(
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
     <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
     <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>
   ),
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
 )</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='co'># snap to grid rounds coordinates to a specified grid size</span>
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_boundary.html'>s2_snap_to_grid</a></span>(<span class='st'>"POINT (0.333333333333 0.666666666666)"</span>, <span class='fl'>1e-2</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_snap_to_grid</span>(<span class='st'>"POINT (0.333333333333 0.666666666666)"</span>, <span class='fl'>1e-2</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (0.33 0.67)&gt;</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

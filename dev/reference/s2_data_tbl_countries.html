@@ -73,7 +73,7 @@ low-resolution world boundaries and timezone boundaries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.2.9000</span>
       </span>
     </div>
 
@@ -140,11 +140,11 @@ low-resolution world boundaries and timezone boundaries.</p>
 
 <span class='kw'>s2_data_tbl_cities</span>
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_countries</a></span>(name = <span class='kw'>NULL</span>)
+<span class='fu'>s2_data_countries</span>(name = <span class='kw'>NULL</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_timezones</a></span>(utc_offset_min = <span class='kw'>NULL</span>, utc_offset_max = <span class='kw'>utc_offset_min</span>)
+<span class='fu'>s2_data_timezones</span>(utc_offset_min = <span class='kw'>NULL</span>, utc_offset_max = <span class='kw'>utc_offset_min</span>)
 
-<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_cities</a></span>(name = <span class='kw'>NULL</span>)</pre>
+<span class='fu'>s2_data_cities</span>(name = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,14 +172,14 @@ offsets.</p></td>
     <p><a href='https://www.naturalearthdata.com/'>Natural Earth Data</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_countries</a></span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>s2_data_countries</span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
 #&gt; [1] &lt;POLYGON ((61.2108 35.6501, 60.8032 34.4041, 60.5284 33.6764, 60.9637 33.5288, 60.5361 32.9813...&gt;           
 #&gt; [2] &lt;MULTIPOLYGON (((16.3265 -5.87747, 13.3756 -5.86424, 13.0249 -5.98439, 12.7352 -5.96568, 12.3224 -6.10009...&gt;
 #&gt; [3] &lt;POLYGON ((20.5902 41.8554, 20.523 42.2179, 20.2838 42.3203, 20.0707 42.5886, 19.8016 42.5001...&gt;            
 #&gt; [4] &lt;POLYGON ((51.5795 24.2455, 51.6177 24.0142, 52.0007 23.0012, 55.0068 22.4969, 55.2083 22.7083...&gt;           
 #&gt; [5] &lt;MULTIPOLYGON (((-65.5 -55.2, -65.05 -54.7, -66.45 -54.45, -67.75 -53.85, -68.25 -53.1...&gt;                   
-#&gt; [6] &lt;POLYGON ((43.5827 41.0921, 43.7527 40.7402, 43.6564 40.2536, 44.4 40.005, 44.794 39.713...&gt;                 </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Germany"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POLYGON ((9.92191 54.9831, 9.28205 54.8309, 8.52623 54.9627, 8.57212 54.3956, 8.80073 54.0208...&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Europe"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[39]&gt;
+#&gt; [6] &lt;POLYGON ((43.5827 41.0921, 43.7527 40.7402, 43.6564 40.2536, 44.4 40.005, 44.794 39.713...&gt;                 </div><div class='input'><span class='fu'>s2_data_countries</span>(<span class='st'>"Germany"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POLYGON ((9.92191 54.9831, 9.28205 54.8309, 8.52623 54.9627, 8.57212 54.3956, 8.80073 54.0208...&gt;</div><div class='input'><span class='fu'>s2_data_countries</span>(<span class='st'>"Europe"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[39]&gt;
 #&gt;  [1] &lt;POLYGON ((20.5902 41.8554, 20.523 42.2179, 20.2838 42.3203, 20.0707 42.5886, 19.8016 42.5001...&gt;            
 #&gt;  [2] &lt;POLYGON ((16.9797 48.1235, 16.88 48.47, 16.9603 48.597, 16.4993 48.7858, 16.0296 48.7339...&gt;                
 #&gt;  [3] &lt;POLYGON ((3.31497 51.3458, 2.51357 51.1485, 2.65842 50.7968, 3.12325 50.7804, 3.58818 50.379...&gt;            
@@ -219,20 +219,20 @@ offsets.</p></td>
 #&gt; [37] &lt;POLYGON ((13.8065 46.5093, 13.6981 46.0168, 13.9376 45.591, 13.7151 45.5003, 14.412 45.4662...&gt;             
 #&gt; [38] &lt;POLYGON ((22.1832 65.7237, 23.9034 66.0069, 23.5659 66.3961, 23.5395 67.936, 21.9785 68.6168...&gt;            
 #&gt; [39] &lt;POLYGON ((31.786 52.1017, 30.9275 52.0424, 30.6195 51.8228, 30.5551 51.3195, 30.1574 51.4161...&gt;            </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_timezones</a></span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>s2_data_timezones</span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
 #&gt; [1] &lt;POLYGON ((-142.53 90, -157.526 90, -157.526 71.3309, -157.208 71.4723, -156.858 71.5747...&gt;              
 #&gt; [2] &lt;POLYGON ((177.269 57.8253, 174.929 56.33, 172.433 54.6759, 170 52.9999, 172.521 51.7762...&gt;              
 #&gt; [3] &lt;POLYGON ((-157.775 71.1849, -157.527 71.3299, -157.526 90, -172.509 90, -172.508 70.4921...&gt;             
 #&gt; [4] &lt;POLYGON ((-172.5 14.9991, -172.502 -2.50932, -158.487 -2.50943, -158.487 -0.228073, -160.64 1.49816...&gt;  
 #&gt; [5] &lt;POLYGON ((-172.5 34.9988, -180 34.9988, -180 29.9989, -178.047 30.0025, -178.047 27.5915...&gt;             
-#&gt; [6] &lt;POLYGON ((-167.998 -5.8423, -169.396 -5.8423, -170.993 -9.42836, -171.294 -11.0573, -171.003 -13.9679...&gt;</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_timezones</a></span>(<span class='op'>-</span><span class='fl'>4</span>)</div><div class='output co'>#&gt; &lt;s2_geography[3]&gt;
+#&gt; [6] &lt;POLYGON ((-167.998 -5.8423, -169.396 -5.8423, -170.993 -9.42836, -171.294 -11.0573, -171.003 -13.9679...&gt;</div><div class='input'><span class='fu'>s2_data_timezones</span>(<span class='op'>-</span><span class='fl'>4</span>)</div><div class='output co'>#&gt; &lt;s2_geography[3]&gt;
 #&gt; [1] &lt;POLYGON ((-67.503 90, -67.503 83.1871, -66.2483 83.1526, -65.3279 83.1046, -64.1364 83.1028...&gt;           
 #&gt; [2] &lt;POLYGON ((-55.954 46.6168, -56.1509 46.5544, -56.1516 46.3059, -56.4049 46.3064, -56.4051 46.3676...&gt;     
 #&gt; [3] &lt;POLYGON ((-58.2773 -61.7282, -58.574 -61.7378, -58.9725 -61.8468, -59.1346 -61.9549, -59.2765 -62.0177...&gt;</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_cities</a></span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>s2_data_cities</span>())</div><div class='output co'>#&gt; &lt;s2_geography[6]&gt;
 #&gt; [1] &lt;POINT (12.4534 41.9033)&gt; &lt;POINT (12.4418 43.9361)&gt;
 #&gt; [3] &lt;POINT (9.51667 47.1337)&gt; &lt;POINT (31.2 -26.4667)&gt;  
-#&gt; [5] &lt;POINT (6.13 49.6117)&gt;    &lt;POINT (158.15 6.91664)&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/s2/man/s2_data_tbl_countries.html'>s2_data_cities</a></span>(<span class='st'>"Cairo"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [5] &lt;POINT (6.13 49.6117)&gt;    &lt;POINT (158.15 6.91664)&gt; </div><div class='input'><span class='fu'>s2_data_cities</span>(<span class='st'>"Cairo"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (31.248 30.0519)&gt;</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
