@@ -11,7 +11,7 @@ PKG_DEB_NAME="libssl-dev"
 PKG_RPM_NAME="openssl-devel"
 PKG_CSW_NAME="libssl_dev"
 PKG_BREW_NAME="openssl@1.1"
-PKG_TEST_FILE="tools/version.c"
+PKG_TEST_FILE="tools/test-openssl.c"
 PKG_LIBS="-lssl -lcrypto"
 PKG_CFLAGS=""
 
