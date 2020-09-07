@@ -1,4 +1,4 @@
-#include <openssl/opensslv.h>
-#if OPENSSL_VERSION_NUMBER < 0x10000000L
-#error OpenSSL version too old
-#endif
+
+// this approximates the usage of OpenSSL in S2 (bn.h + crypto.h)
+#include <openssl/bn.h>
+#include <openssl/crypto.h>
