@@ -109,3 +109,19 @@ format.s2_lnglat <- function(x, ...) {
   df <- as.data.frame(x)
   sprintf("(%s, %s)", format(df$lng, trim = TRUE), format(df$lat, trim = TRUE))
 }
+
+#' @export
+Ops.s2_lnglat = function(e1, e2) {
+	if (missing(e2))
+		stop("e2 missing")
+	if (inherits(e2, "s2_lnglat"))
+		e2 = as_s2_point(e2)
+	e1 = as_s2_point(e1)
+	# why does NextMethod() not work here?
+	ret = switch(.Generic,
+	   "+" = e1 + e2,
+	   "-" = e1 - e2,
+	   "*" = e1 * e2,
+	   "/" = e1 / e2)
+	as_s2_lnglat(ret)
+}

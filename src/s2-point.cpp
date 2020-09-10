@@ -103,4 +103,3 @@ List s2_point_op2(List e1, NumericVector e2, CharacterVector op) {
   }
   return output;
 }
-
