@@ -87,3 +87,30 @@ format.s2_point <- function(x, ...) {
     format(df$z, trim = TRUE)
   )
 }
+
+#' @method rep_len s2_point
+#' @export
+rep_len.s2_point <- function(x, length.out) {
+  rep(x, length.out = length.out)
+}
+
+#' @export
+diff.s2_point = function(x, ...) {
+	n = length(x)
+	if (n <= 1)
+		stop("more than 2 elements needed")
+	x[2:n] - x[1:(n-1)]
+}
+
+#' @export
+Ops.s2_point = function(e1, e2) {
+	if (missing(e2))
+		stop("e2 missing")
+	recycled <- recycle_common(e1, e2)
+	if (.Generic %in% c("+", "-"))
+    	new_s2_xptr(s2_point_op1(recycled[[1]], recycled[[2]], .Generic), "s2_point")
+	else if (.Generic %in% c("*", "/"))
+    	new_s2_xptr(s2_point_op2(recycled[[1]], recycled[[2]], .Generic), "s2_point")
+	else
+		stop(paste("operation", .Generic, "not implemented"))
+}

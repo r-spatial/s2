@@ -58,3 +58,49 @@ List data_frame_from_s2_point(List s2_point) {
 
   return List::create(_["x"] = x, _["y"] = y, _["z"] = z);
 }
+
+// [[Rcpp::export]]
+List s2_point_op1(List e1, List e2, CharacterVector op) {
+  List output(e1.size());
+
+  bool add = (op[0] == "+");
+  SEXP item1, item2;
+  for (R_xlen_t i = 0; i < e1.size(); i++) {
+    item1 = e1[i];
+    item2 = e2[i];
+    if (item1 == R_NilValue || item2 == R_NilValue)
+      stop("NULL pointer found");
+    XPtr<S2Point> p1(item1);
+    XPtr<S2Point> p2(item2);
+    S2Point pp1 = *(p1.get());
+    S2Point pp2 = *(p2.get());
+    if (add)
+      pp1 += pp2;
+	else
+      pp1 -= pp2;
+    output[i] = XPtr<S2Point>(new S2Point(pp1));
+  }
+  return output;
+}
+
+// [[Rcpp::export]]
+List s2_point_op2(List e1, NumericVector e2, CharacterVector op) {
+  List output(e1.size());
+
+  bool mult = (op[0] == "*");
+  SEXP item;
+  for (R_xlen_t i = 0; i < e1.size(); i++) {
+    item = e1[i];
+    if (item == R_NilValue)
+      stop("NULL pointer found");
+    XPtr<S2Point> p(item);
+    S2Point pp = *(p.get());
+	if (mult)
+      pp *= e2[i];
+	else
+      pp /= e2[i];
+    output[i] = XPtr<S2Point>(new S2Point(pp));
+  }
+  return output;
+}
+

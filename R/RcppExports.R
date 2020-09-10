@@ -181,6 +181,14 @@ data_frame_from_s2_point <- function(s2_point) {
     .Call(`_s2_data_frame_from_s2_point`, s2_point)
 }
 
+s2_point_op1 <- function(e1, e2, op) {
+    .Call(`_s2_s2_point_op1`, e1, e2, op)
+}
+
+s2_point_op2 <- function(e1, e2, op) {
+    .Call(`_s2_s2_point_op2`, e1, e2, op)
+}
+
 cpp_s2_intersects <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_intersects`, geog1, geog2, s2options)
 }

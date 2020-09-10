@@ -549,6 +549,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// s2_point_op1
+List s2_point_op1(List e1, List e2, CharacterVector op);
+RcppExport SEXP _s2_s2_point_op1(SEXP e1SEXP, SEXP e2SEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type e1(e1SEXP);
+    Rcpp::traits::input_parameter< List >::type e2(e2SEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_point_op1(e1, e2, op));
+    return rcpp_result_gen;
+END_RCPP
+}
+// s2_point_op2
+List s2_point_op2(List e1, NumericVector e2, CharacterVector op);
+RcppExport SEXP _s2_s2_point_op2(SEXP e1SEXP, SEXP e2SEXP, SEXP opSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type e1(e1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type e2(e2SEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type op(opSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_point_op2(e1, e2, op));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_intersects
 LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options);
 RcppExport SEXP _s2_cpp_s2_intersects(SEXP geog1SEXP, SEXP geog2SEXP, SEXP s2optionsSEXP) {
@@ -848,6 +874,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2_point_from_numeric", (DL_FUNC) &_s2_s2_point_from_numeric, 3},
     {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
     {"_s2_data_frame_from_s2_point", (DL_FUNC) &_s2_data_frame_from_s2_point, 1},
+    {"_s2_s2_point_op1", (DL_FUNC) &_s2_s2_point_op1, 3},
+    {"_s2_s2_point_op2", (DL_FUNC) &_s2_s2_point_op2, 3},
     {"_s2_cpp_s2_intersects", (DL_FUNC) &_s2_cpp_s2_intersects, 3},
     {"_s2_cpp_s2_equals", (DL_FUNC) &_s2_cpp_s2_equals, 3},
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
