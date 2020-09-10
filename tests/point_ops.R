@@ -10,3 +10,10 @@ p / 2
 d = c(s2_point(1,2,3), s2_point(2,2,2), s2_point(1,1,1))
 diff(d)
 try(p ^ 2)
+
+l1 = s2_lnglat(45,45)
+l2 = s2_lnglat(-45,45)
+l1 + l2
+l1 - l2
+l1 * 3
+l1 / 2
