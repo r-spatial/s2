@@ -116,7 +116,8 @@ Ops.s2_lnglat = function(e1, e2) {
 		stop("e2 missing")
 	if (inherits(e2, "s2_lnglat"))
 		e2 = as_s2_point(e2)
-	e1 = as_s2_point(e1)
+	if (inherits(e1, "s2_lnglat"))
+		e1 = as_s2_point(e1)
 	# why does NextMethod() not work here?
 	ret = switch(.Generic,
 	   "+" = e1 + e2,

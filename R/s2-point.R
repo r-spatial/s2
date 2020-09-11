@@ -106,7 +106,10 @@ diff.s2_point = function(x, ...) {
 Ops.s2_point = function(e1, e2) {
 	if (missing(e2))
 		stop("e2 missing")
-	recycled <- recycle_common(e1, e2)
+	recycled <- if (is.numeric(e1))
+			recycle_common(e2, e1)
+		else
+			recycle_common(e1, e2)
 	if (.Generic %in% c("+", "-"))
     	new_s2_xptr(s2_point_op1(recycled[[1]], recycled[[2]], .Generic), "s2_point")
 	else if (.Generic %in% c("*", "/"))
