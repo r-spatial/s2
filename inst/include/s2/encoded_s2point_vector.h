@@ -49,6 +49,22 @@ void EncodeS2PointVector(absl::Span<const S2Point> points, CodingHint hint,
 // be initialized from an encoded format in constant time and then decoded on
 // demand.  This can be a big performance advantage when only a small part of
 // the data structure is actually used.
+
+struct CellIDStruct {
+  EncodedStringVector blocks;
+  uint64 base;
+  uint8 level;
+  bool have_exceptions;
+
+  // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
+  // a thread-safe way.  This reduces benchmark times for actual polygon
+  // operations (e.g. S2ClosestEdgeQuery) by about 15%.
+};
+
+struct UncompressedStruct {
+  const S2Point* points;
+};
+
 class EncodedS2PointVector {
  public:
   // Constructs an uninitialized object; requires Init() to be called.
@@ -97,19 +113,8 @@ class EncodedS2PointVector {
   Format format_;
   uint32 size_;
   union {
-    struct {
-      const S2Point* points;
-    } uncompressed_;
-    struct {
-      EncodedStringVector blocks;
-      uint64 base;
-      uint8 level;
-      bool have_exceptions;
-
-      // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
-      // a thread-safe way.  This reduces benchmark times for actual polygon
-      // operations (e.g. S2ClosestEdgeQuery) by about 15%.
-    } cell_ids_;
+    struct UncompressedStruct uncompressed_;
+    struct CellIDStruct cell_ids_;
   };
 };
 
