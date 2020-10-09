@@ -102,6 +102,12 @@ print_next <- function() {
     "Replace calls to log(<int literal>), sqrt(<int literal>), and ldexp(<int literal>, ...) ",
     "with an explicit doouble (e.g., sqrt(3) -> sqrt(3.0) to fix build errors on CRAN Solaris"
   )
+  cli::cat_bullet(
+    "Ensure the code compiles on clang with -Wnested-anon-types. ",
+    "These errors can be fixed by declaring the anonymous types just above the union. ",
+    "(e.g., encoded_s2point_vector.h:91)"
+  )
+
   cli::cat_bullet("Replace `abort()` with `cpp_compat_abort()`")
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
   cli::cat_bullet("Replace `srandom()` with `cpp_compat_srandom()`")
