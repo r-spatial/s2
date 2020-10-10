@@ -54,7 +54,11 @@ validate_s2_xptr <- function(x) {
 
 #' @export
 rep.s2_xptr <- function(x, ...) {
-  new_s2_xptr(NextMethod(), class(x))
+  if (length(x) == 0) {
+    new_s2_xptr(list(), class(x))
+  } else {
+    new_s2_xptr(NextMethod(), class(x))
+  }
 }
 
 #' @method rep_len s2_xptr

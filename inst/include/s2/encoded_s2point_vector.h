@@ -90,6 +90,26 @@ class EncodedS2PointVector {
   // TODO(ericv): Once additional formats have been implemented, consider
   // using std::variant<> instead.  It's unclear whether this would have
   // better or worse performance than the current approach.
+
+  // dd: These structs are anonymous in the upstream S2 code; however,
+  // this generates CMD-check failure due to the [-Wnested-anon-types]
+  // (anonymous types declared in an anonymous union are an extension)
+  // The approach here just names the types.
+  struct CellIDStruct {
+    EncodedStringVector blocks;
+    uint64 base;
+    uint8 level;
+    bool have_exceptions;
+
+    // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
+    // a thread-safe way.  This reduces benchmark times for actual polygon
+    // operations (e.g. S2ClosestEdgeQuery) by about 15%.
+  };
+
+  struct UncompressedStruct {
+    const S2Point* points;
+  };
+
   enum Format : uint8 {
     UNCOMPRESSED = 0,
     CELL_IDS = 1,
@@ -97,19 +117,8 @@ class EncodedS2PointVector {
   Format format_;
   uint32 size_;
   union {
-    struct {
-      const S2Point* points;
-    } uncompressed_;
-    struct {
-      EncodedStringVector blocks;
-      uint64 base;
-      uint8 level;
-      bool have_exceptions;
-
-      // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
-      // a thread-safe way.  This reduces benchmark times for actual polygon
-      // operations (e.g. S2ClosestEdgeQuery) by about 15%.
-    } cell_ids_;
+    struct UncompressedStruct uncompressed_;
+    struct CellIDStruct cell_ids_;
   };
 };
 

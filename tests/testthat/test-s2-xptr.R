@@ -20,6 +20,8 @@ test_that("s2_xptr validation works", {
 })
 
 test_that("s2_xptr subsetting and concatenation work", {
+  expect_length(rep(new_s2_xptr(list()), 10), 0)
+
   xptr <- new_s2_xptr(list(NULL, NULL))
   expect_identical(xptr[1], new_s2_xptr(list(NULL)))
   expect_identical(xptr[[1]], xptr[1])
