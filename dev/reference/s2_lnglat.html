@@ -136,27 +136,27 @@ Most calculations in S2 convert this to a <code><a href='s2_point.html'>as_s2_po
 unit vector representation of this value.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_lnglat</span>(<span class='kw'>lng</span>, <span class='kw'>lat</span>)
+    <pre class="usage"><span class='fu'>s2_lnglat</span><span class='op'>(</span><span class='va'>lng</span>, <span class='va'>lat</span><span class='op'>)</span>
 
-<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_point</span>
-<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>as_s2_lnglat</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_lnglat</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,9 +180,12 @@ unit vector representation of this value.</p>
     <p>An object with class s2_lnglat</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>s2_lnglat</span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>) <span class='co'># Halifax, Nova Scotia!</span></div><div class='output co'>#&gt; &lt;s2_lnglat[1]&gt;
-#&gt; [1] (45, -64)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='fu'>s2_lnglat</span>(<span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span>))</div><div class='output co'>#&gt;   lng lat
-#&gt; 1  45 -64</div><div class='input'></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>s2_lnglat</span><span class='op'>(</span><span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span><span class='op'>)</span> <span class='co'># Halifax, Nova Scotia!</span>
+</div><div class='output co'>#&gt; &lt;s2_lnglat[1]&gt;
+#&gt; [1] (45, -64)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'>s2_lnglat</span><span class='op'>(</span><span class='fl'>45</span>, <span class='op'>-</span><span class='fl'>64</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   lng lat
+#&gt; 1  45 -64</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -198,7 +201,7 @@ unit vector representation of this value.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

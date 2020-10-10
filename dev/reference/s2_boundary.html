@@ -134,39 +134,39 @@ return a geography vector." />
 return a geography vector.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_boundary</span>(<span class='kw'>x</span>)
+    <pre class="usage"><span class='fu'>s2_boundary</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_centroid</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_centroid</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_closest_point</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+<span class='fu'>s2_closest_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 
-<span class='fu'>s2_minimum_clearance_line_between</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)
+<span class='fu'>s2_minimum_clearance_line_between</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 
-<span class='fu'>s2_difference</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_difference</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_sym_difference</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_sym_difference</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_intersection</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_intersection</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_union</span>(<span class='kw'>x</span>, y = <span class='kw'>NULL</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_union</span><span class='op'>(</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='cn'>NULL</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_snap_to_grid</span>(<span class='kw'>x</span>, <span class='kw'>grid_size</span>)
+<span class='fu'>s2_snap_to_grid</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid_size</span><span class='op'>)</span>
 
-<span class='fu'>s2_simplify</span>(<span class='kw'>x</span>, <span class='kw'>tolerance</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_simplify</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>tolerance</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_rebuild</span>(<span class='kw'>x</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>())
+<span class='fu'>s2_rebuild</span><span class='op'>(</span><span class='va'>x</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_buffer_cells</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>distance</span>,
-  max_cells = <span class='fl'>1000</span>,
-  min_level = <span class='op'>-</span><span class='fl'>1</span>,
-  radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>()
-)
+<span class='fu'>s2_buffer_cells</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>distance</span>,
+  max_cells <span class='op'>=</span> <span class='fl'>1000</span>,
+  min_level <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
+  radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>s2_centroid_agg</span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>)
+<span class='fu'>s2_centroid_agg</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>s2_union_agg</span>(<span class='kw'>x</span>, options = <span class='fu'><a href='s2_options.html'>s2_options</a></span>(), na.rm = <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>s2_union_agg</span><span class='op'>(</span><span class='va'>x</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -260,71 +260,86 @@ of these operators.</p>
     <pre class="examples"><div class='input'><span class='co'># returns the boundary:</span>
 <span class='co'># empty for point, endpoints of a linestring,</span>
 <span class='co'># perimeter of a polygon</span>
-<span class='fu'>s2_boundary</span>(<span class='st'>"POINT (-64 45)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POINT EMPTY&gt;</div><div class='input'><span class='fu'>s2_boundary</span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;MULTIPOINT ((0 0), (10 0))&gt;</div><div class='input'><span class='fu'>s2_boundary</span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_boundary</span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT EMPTY&gt;</div><div class='input'><span class='fu'>s2_boundary</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 10 0)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;MULTIPOINT ((0 0), (10 0))&gt;</div><div class='input'><span class='fu'>s2_boundary</span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;LINESTRING (0 0, 10 0, 10 10, 0 10, 0 0...&gt;</div><div class='input'>
 <span class='co'># returns the area-weighted centroid, element-wise</span>
-<span class='fu'>s2_centroid</span>(<span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POINT (5 5.00596)&gt;</div><div class='input'><span class='fu'>s2_centroid</span>(<span class='st'>"LINESTRING (0 0, 10 0)"</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_centroid</span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (5 5.00596)&gt;</div><div class='input'><span class='fu'>s2_centroid</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 10 0)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
 <span class='co'># returns the unweighted centroid of the entire input</span>
-<span class='fu'>s2_centroid_agg</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (10 0)"</span>))</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='fu'>s2_centroid_agg</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (0 0)"</span>, <span class='st'>"POINT (10 0)"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 0)&gt;</div><div class='input'>
 <span class='co'># returns the closest point on x to y</span>
-<span class='fu'>s2_closest_point</span>(
+<span class='fu'>s2_closest_point</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POINT (5 10.0374)&gt;</div><div class='input'>
 <span class='co'># returns the shortest possible line between x and y</span>
-<span class='fu'>s2_minimum_clearance_line_between</span>(
+<span class='fu'>s2_minimum_clearance_line_between</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POINT (0 90)"</span> <span class='co'># north pole!</span>
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;LINESTRING (5 10.0374, 0 90)&gt;</div><div class='input'>
 <span class='co'># binary operations: difference, symmetric difference, intersection and union</span>
-<span class='fu'>s2_difference</span>(
+<span class='fu'>s2_difference</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span>snap <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
-<span class='fu'>s2_sym_difference</span>(
+<span class='fu'>s2_sym_difference</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span>snap <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;MULTIPOLYGON (((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
-<span class='fu'>s2_intersection</span>(
+<span class='fu'>s2_intersection</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span>snap <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 5, 10 5.019, 10 10, 5 10.0374, 5 5...&gt;</div><div class='input'>
-<span class='fu'>s2_union</span>(
+<span class='fu'>s2_union</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
   <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span>snap <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='co'># use s2_union_agg() to aggregate geographies in a vector</span>
-<span class='fu'>s2_union_agg</span>(
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+<span class='fu'>s2_union_agg</span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
     <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
     <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>
-  ),
+  <span class='op'>)</span>,
   <span class='co'># 32 bit platforms may need to set snap rounding</span>
-  <span class='fu'><a href='s2_options.html'>s2_options</a></span>(snap = <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span>(<span class='fl'>30</span>))
-)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+  <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span>snap <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_snap_level</a></span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5 10.0374, 3.55739e-08 10, 3.55739e-08 3.55739e-08, 10 3.50335e-08, 10 5.019...&gt;</div><div class='input'>
 <span class='co'># snap to grid rounds coordinates to a specified grid size</span>
-<span class='fu'>s2_snap_to_grid</span>(<span class='st'>"POINT (0.333333333333 0.666666666666)"</span>, <span class='fl'>1e-2</span>)</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
-#&gt; [1] &lt;POINT (0.33 0.67)&gt;</div><div class='input'></div></pre>
+<span class='fu'>s2_snap_to_grid</span><span class='op'>(</span><span class='st'>"POINT (0.333333333333 0.666666666666)"</span>, <span class='fl'>1e-2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (0.33 0.67)&gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -340,7 +355,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
