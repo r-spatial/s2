@@ -56,7 +56,7 @@ s2_contains(
 #> [1] TRUE
 ```
 
-The [sf package](https://r-spatial.github.io/sf) will soon support s2
+The [sf package](https://r-spatial.github.io/sf/) will soon support s2
 natively, but s2 can also read well-known text and well-known binary:
 
 ``` r
