@@ -1,4 +1,6 @@
-# s2 (development version)
+# s2 1.0.3
+
+* Fixed CRAN check errors (#80).
 
 # s2 1.0.2
 
