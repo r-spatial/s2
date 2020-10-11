@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -132,27 +132,27 @@
     <p>Accessors extract information about <a href='as_s2_geography.html'>geography vectors</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_is_collection</span>(<span class='kw'>x</span>)
+    <pre class="usage"><span class='fu'>s2_is_collection</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_dimension</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_dimension</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_num_points</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_num_points</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_is_empty</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_is_empty</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_area</span>(<span class='kw'>x</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_area</span><span class='op'>(</span><span class='va'>x</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_length</span>(<span class='kw'>x</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_length</span><span class='op'>(</span><span class='va'>x</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_perimeter</span>(<span class='kw'>x</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_perimeter</span><span class='op'>(</span><span class='va'>x</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_x</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_x</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_y</span>(<span class='kw'>x</span>)
+<span class='fu'>s2_y</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_distance</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())
+<span class='fu'>s2_distance</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_max_distance</span>(<span class='kw'>x</span>, <span class='kw'>y</span>, radius = <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span>())</pre>
+<span class='fu'>s2_max_distance</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,33 +189,45 @@ the earth in meters as defined by <code><a href='s2_earth_radius_meters.html'>s2
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># s2_is_collection() tests for multiple geometries in one feature</span>
-<span class='fu'>s2_is_collection</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"MULTIPOINT ((-64 45), (8 72))"</span>))</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
+<span class='fu'>s2_is_collection</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span>, <span class='st'>"MULTIPOINT ((-64 45), (8 72))"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
 <span class='co'># s2_dimension() returns 0 for point, 1  for line, 2 for polygon</span>
-<span class='fu'>s2_dimension</span>(
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+<span class='fu'>s2_dimension</span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
     <span class='st'>"GEOMETRYCOLLECTION EMPTY"</span>,
     <span class='st'>"POINT (-64 45)"</span>,
     <span class='st'>"LINESTRING (-64 45, 8 72)"</span>,
     <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
     <span class='st'>"GEOMETRYCOLLECTION (POINT (-64 45), LINESTRING (-64 45, 8 72))"</span>
-   )
-)</div><div class='output co'>#&gt; [1] -1  0  1  2  1</div><div class='input'>
+   <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -1  0  1  2  1</div><div class='input'>
 <span class='co'># s2_num_points() counts points</span>
-<span class='fu'>s2_num_points</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"LINESTRING (-64 45, 8 72)"</span>))</div><div class='output co'>#&gt; [1] 1 2</div><div class='input'>
+<span class='fu'>s2_num_points</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span>, <span class='st'>"LINESTRING (-64 45, 8 72)"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1 2</div><div class='input'>
 <span class='co'># s2_is_empty tests for emptiness</span>
-<span class='fu'>s2_is_empty</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
+<span class='fu'>s2_is_empty</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE  TRUE</div><div class='input'>
 <span class='co'># calculate area, length, and perimeter</span>
-<span class='fu'>s2_area</span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>)</div><div class='output co'>#&gt; [1] 1.233205e+12</div><div class='input'><span class='fu'>s2_perimeter</span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>)</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'><span class='fu'>s2_length</span>(<span class='fu'><a href='s2_boundary.html'>s2_boundary</a></span>(<span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>))</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'>
+<span class='fu'>s2_area</span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.233205e+12</div><div class='input'><span class='fu'>s2_perimeter</span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'><span class='fu'>s2_length</span><span class='op'>(</span><span class='fu'><a href='s2_boundary.html'>s2_boundary</a></span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 4430869</div><div class='input'>
 <span class='co'># extract x and y coordinates from points</span>
-<span class='fu'>s2_x</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] -64  NA</div><div class='input'><span class='fu'>s2_y</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; [1] 45 NA</div><div class='input'>
+<span class='fu'>s2_x</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -64  NA</div><div class='input'><span class='fu'>s2_y</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"POINT (-64 45)"</span>, <span class='st'>"POINT EMPTY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 45 NA</div><div class='input'>
 <span class='co'># calculate minimum and maximum distance between two geometries</span>
-<span class='fu'>s2_distance</span>(
+<span class='fu'>s2_distance</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
   <span class='st'>"POINT (-64 45)"</span>
-)</div><div class='output co'>#&gt; [1] 7189418</div><div class='input'><span class='fu'>s2_max_distance</span>(
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 7189418</div><div class='input'><span class='fu'>s2_max_distance</span><span class='op'>(</span>
   <span class='st'>"POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))"</span>,
   <span class='st'>"POINT (-64 45)"</span>
-)</div><div class='output co'>#&gt; [1] 8757818</div><div class='input'></div></pre>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 8757818</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -231,7 +243,7 @@ the earth in meters as defined by <code><a href='s2_earth_radius_meters.html'>s2
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

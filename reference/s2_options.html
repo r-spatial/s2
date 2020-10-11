@@ -75,7 +75,7 @@ containment and how new geometries should be constructed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -138,27 +138,27 @@ and boolean operations (e.g., <code><a href='s2_boundary.html'>s2_intersection()
 containment and how new geometries should be constructed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_options</span>(
-  model = <span class='kw'>NULL</span>,
-  snap = <span class='fu'>s2_snap_identity</span>(),
-  snap_radius = <span class='op'>-</span><span class='fl'>1</span>,
-  duplicate_edges = <span class='fl'>FALSE</span>,
-  edge_type = <span class='st'>"directed"</span>,
-  validate = <span class='fl'>FALSE</span>,
-  polyline_type = <span class='st'>"path"</span>,
-  polyline_sibling_pairs = <span class='st'>"keep"</span>,
-  simplify_edge_chains = <span class='fl'>FALSE</span>,
-  split_crossing_edges = <span class='fl'>FALSE</span>,
-  idempotent = <span class='fl'>FALSE</span>
-)
+    <pre class="usage"><span class='fu'>s2_options</span><span class='op'>(</span>
+  model <span class='op'>=</span> <span class='cn'>NULL</span>,
+  snap <span class='op'>=</span> <span class='fu'>s2_snap_identity</span><span class='op'>(</span><span class='op'>)</span>,
+  snap_radius <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
+  duplicate_edges <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  edge_type <span class='op'>=</span> <span class='st'>"directed"</span>,
+  validate <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  polyline_type <span class='op'>=</span> <span class='st'>"path"</span>,
+  polyline_sibling_pairs <span class='op'>=</span> <span class='st'>"keep"</span>,
+  simplify_edge_chains <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  split_crossing_edges <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  idempotent <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>s2_snap_identity</span>()
+<span class='fu'>s2_snap_identity</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='fu'>s2_snap_level</span>(<span class='kw'>level</span>)
+<span class='fu'>s2_snap_level</span><span class='op'>(</span><span class='va'>level</span><span class='op'>)</span>
 
-<span class='fu'>s2_snap_precision</span>(<span class='kw'>precision</span>)
+<span class='fu'>s2_snap_precision</span><span class='op'>(</span><span class='va'>precision</span><span class='op'>)</span>
 
-<span class='fu'>s2_snap_distance</span>(<span class='kw'>distance</span>)</pre>
+<span class='fu'>s2_snap_distance</span><span class='op'>(</span><span class='va'>distance</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -256,7 +256,8 @@ of these operators.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># use s2_options() to specify containment models, snap level</span>
 <span class='co'># layer creation options, and builder options</span>
-<span class='fu'>s2_options</span>(model = <span class='st'>"closed"</span>, snap = <span class='fu'>s2_snap_level</span>(<span class='fl'>30</span>))</div><div class='output co'>#&gt; $model
+<span class='fu'>s2_options</span><span class='op'>(</span>model <span class='op'>=</span> <span class='st'>"closed"</span>, snap <span class='op'>=</span> <span class='fu'>s2_snap_level</span><span class='op'>(</span><span class='fl'>30</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $model
 #&gt; [1] 3
 #&gt; 
 #&gt; $snap
@@ -294,7 +295,8 @@ of these operators.</p>
 #&gt; [1] FALSE
 #&gt; 
 #&gt; attr(,"class")
-#&gt; [1] "s2_options"</div><div class='input'></div></pre>
+#&gt; [1] "s2_options"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -310,7 +312,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

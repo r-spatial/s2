@@ -74,7 +74,7 @@ on a perfect sphere." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -136,43 +136,43 @@ of these. Geography vectors assume coordinates are longitude and latitude
 on a perfect sphere.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_point</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for wk_wkb</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for WKB</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for blob</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for wk_wkt</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, oriented = <span class='fl'>FALSE</span>, check = <span class='fl'>TRUE</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for logical</span>
-<span class='fu'>as_s2_geography</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkb</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, endian = <span class='kw'>wk</span>::<span class='fu'><a href='https://rdrr.io/pkg/wk/man/wkb_translate_wkt.html'>wk_platform_endian</a></span>())
+<span class='fu'>as_wkb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, endian <span class='op'>=</span> <span class='fu'>wk</span><span class='fu'>::</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkb_translate_wkt.html'>wk_platform_endian</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkt</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, precision = <span class='fl'>16</span>, trim = <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>as_wkt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, precision <span class='op'>=</span> <span class='fl'>16</span>, trim <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,7 +198,7 @@ rings are defined clockwise).</p></td>
     <tr>
       <th>endian</th>
       <td><p>The endian to use when writing well-known binary.
-Defaults to the platform endian. See <code><a href='https://rdrr.io/pkg/wk/man/wkb.html'>wk::as_wkb()</a></code>.</p></td>
+Defaults to the platform endian. See <code><a href='https://paleolimbot.github.io/wk/reference/wkb.html'>wk::as_wkb()</a></code>.</p></td>
     </tr>
     <tr>
       <th>precision</th>
@@ -245,7 +245,7 @@ for other ways to export them.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

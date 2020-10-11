@@ -77,7 +77,7 @@ regions that span the antimeridian, see the Fiji example." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -142,9 +142,9 @@ the order of points or polylines. <code>lng_lo</code> values larger than <code>l
 regions that span the antimeridian, see the Fiji example.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_bounds_cap</span>(<span class='kw'>x</span>)
+    <pre class="usage"><span class='fu'>s2_bounds_cap</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>s2_bounds_rect</span>(<span class='kw'>x</span>)</pre>
+<span class='fu'>s2_bounds_rect</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,14 +166,21 @@ are passed to <code><a href='as_s2_geography.html'>as_s2_geography()</a></code>,
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>s2_bounds_cap</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Antarctica"</span>))</div><div class='output co'>#&gt;   lng lat    angle
-#&gt; 1   0 -90 26.72934</div><div class='input'><span class='fu'>s2_bounds_cap</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Netherlands"</span>))</div><div class='output co'>#&gt;        lng      lat    angle
-#&gt; 1 5.203512 52.15706 1.792879</div><div class='input'><span class='fu'>s2_bounds_cap</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Fiji"</span>))</div><div class='output co'>#&gt;        lng       lat    angle
+    <pre class="examples"><div class='input'><span class='fu'>s2_bounds_cap</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Antarctica"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   lng lat    angle
+#&gt; 1   0 -90 26.72934</div><div class='input'><span class='fu'>s2_bounds_cap</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Netherlands"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;        lng      lat    angle
+#&gt; 1 5.203512 52.15706 1.792879</div><div class='input'><span class='fu'>s2_bounds_cap</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Fiji"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;        lng       lat    angle
 #&gt; 1 178.7459 -17.15444 1.801369</div><div class='input'>
-<span class='fu'>s2_bounds_rect</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Antarctica"</span>))</div><div class='output co'>#&gt;   lng_lo lat_lo lng_hi    lat_hi
-#&gt; 1   -180    -90    180 -63.27066</div><div class='input'><span class='fu'>s2_bounds_rect</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Netherlands"</span>))</div><div class='output co'>#&gt;     lng_lo   lat_lo   lng_hi  lat_hi
-#&gt; 1 3.314971 50.80372 7.092053 53.5104</div><div class='input'><span class='fu'>s2_bounds_rect</span>(<span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span>(<span class='st'>"Fiji"</span>))</div><div class='output co'>#&gt;    lng_lo    lat_lo    lng_hi    lat_hi
-#&gt; 1 177.285 -18.28799 -179.7933 -16.02088</div><div class='input'></div></pre>
+<span class='fu'>s2_bounds_rect</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Antarctica"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   lng_lo lat_lo lng_hi    lat_hi
+#&gt; 1   -180    -90    180 -63.27066</div><div class='input'><span class='fu'>s2_bounds_rect</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Netherlands"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     lng_lo   lat_lo   lng_hi  lat_hi
+#&gt; 1 3.314971 50.80372 7.092053 53.5104</div><div class='input'><span class='fu'>s2_bounds_rect</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_countries</a></span><span class='op'>(</span><span class='st'>"Fiji"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    lng_lo    lat_lo    lng_hi    lat_hi
+#&gt; 1 177.285 -18.28799 -179.7933 -16.02088</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -189,7 +196,7 @@ are passed to <code><a href='as_s2_geography.html'>as_s2_geography()</a></code>,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
