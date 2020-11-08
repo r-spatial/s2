@@ -33,6 +33,8 @@ as_s2_lnglat(x, ...)
 \item{x}{A \code{\link[=s2_lnglat]{s2_lnglat()}} vector or an object that can be coerced to one.}
 
 \item{...}{Unused}
+
+\item{endian}{No longer used.}
 }
 \value{
 An object with class s2_lnglat
