@@ -7,7 +7,6 @@
 #'
 #' @param lat,lng Vectors of latitude and longitude values in degrees.
 #' @param x A [s2_lnglat()] vector or an object that can be coerced to one.
-#' @param endian No longer used.
 #' @param ... Unused
 #'
 #' @return An object with class s2_lnglat
@@ -82,7 +81,7 @@ as.matrix.s2_lnglat <- function(x, ...) {
 #' @rdname s2_lnglat
 #' @importFrom wk as_wkb
 #' @export
-as_wkb.s2_lnglat <- function(x, ..., endian = "DEPRECATED") {
+as_wkb.s2_lnglat <- function(x, ...) {
   as_wkb(as_s2_geography(x), ...)
 }
 

@@ -29,7 +29,7 @@ s2_geog_from_wkb(wkb_bytes, oriented = FALSE, check = TRUE)
 
 s2_as_text(x, precision = 16, trim = TRUE)
 
-s2_as_binary(x)
+s2_as_binary(x, endian = wk::wk_platform_endian())
 }
 \arguments{
 \item{longitude, latitude}{Vectors of latitude and longitude}
@@ -57,6 +57,8 @@ writing well-known text. If \code{trim = FALSE}, the number of
 digits after the decimal place.}
 
 \item{trim}{Should trailing zeroes be included after the decimal place?}
+
+\item{endian}{The endian-ness of the well-known binary. See \code{\link[wk:wkb_translate_wkt]{wk::wkb_translate_wkb()}}.}
 }
 \description{
 These functions create and export \link[=as_s2_geography]{geography vectors}.

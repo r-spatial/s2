@@ -38,7 +38,7 @@ as_s2_geography(x, ...)
 
 \method{as_s2_geography}{logical}(x, ...)
 
-\method{as_wkb}{s2_geography}(x, ..., endian = "DEPRECATED")
+\method{as_wkb}{s2_geography}(x, ...)
 
 \method{as_wkt}{s2_geography}(x, ...)
 }
@@ -52,8 +52,6 @@ as_s2_geography(x, ...)
 rings are defined clockwise).}
 
 \item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
-
-\item{endian}{No longer used.}
 }
 \value{
 An object with class s2_geography

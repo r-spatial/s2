@@ -17,7 +17,6 @@
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
 #' @param check Use `check = FALSE` to skip error on invalid geometries
-#' @param endian No longer used.
 #' @param ... Unused
 #'
 #' @return An object with class s2_geography
@@ -113,7 +112,7 @@ as_s2_geography.logical <- function(x, ...) {
 #' @importFrom wk as_wkb
 #' @rdname as_s2_geography
 #' @export
-as_wkb.s2_geography <- function(x, ..., endian = "DEPRECATED") {
+as_wkb.s2_geography <- function(x, ...) {
   wk::new_wk_wkb(s2_geography_to_wkb(x, wk::wk_platform_endian()))
 }
 
