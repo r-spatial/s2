@@ -79,12 +79,14 @@ as.matrix.s2_lnglat <- function(x, ...) {
   as.matrix(as.data.frame(data_frame_from_s2_lnglat(x)))
 }
 
+#' @rdname s2_lnglat
 #' @importFrom wk as_wkb
 #' @export
 as_wkb.s2_lnglat <- function(x, ..., endian = "DEPRECATED") {
   as_wkb(as_s2_geography(x), ...)
 }
 
+#' @rdname s2_lnglat
 #' @importFrom wk as_wkt
 #' @export
 as_wkt.s2_lnglat <- function(x, ...) {
