@@ -17,6 +17,7 @@
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
 #' @param check Use `check = FALSE` to skip error on invalid geometries
+#' @inheritParams s2_geog_point
 #' @param ... Unused
 #'
 #' @return An object with class s2_geography
@@ -139,13 +140,13 @@ as_wkt.s2_geography <- function(x, ...) {
 }
 
 #' @export
-format.s2_geography <- function(x, ..., max_coords = 5) {
-  paste0("<", s2_geography_format(x, max_coords), ">")
+format.s2_geography <- function(x, ..., max_coords = 5, precision = 9, trim = TRUE) {
+  paste0("<", s2_geography_format(x, max_coords, precision, trim), ">")
 }
 
 # this is what gets called by the RStudio viewer, for which
 # format() is best suited (s2_as_text() is more explicit for WKT output)
 #' @export
-as.character.s2_geography <- function(x, ..., max_coords = 5) {
-  format(x, ..., max_coords = max_coords)
+as.character.s2_geography <- function(x, ..., max_coords = 5, precision = 9, trim = TRUE) {
+  format(x, ..., max_coords = max_coords, precision = precision, trim = trim)
 }

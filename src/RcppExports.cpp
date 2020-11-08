@@ -263,14 +263,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // s2_geography_format
-CharacterVector s2_geography_format(List s2_geography, int maxCoords);
-RcppExport SEXP _s2_s2_geography_format(SEXP s2_geographySEXP, SEXP maxCoordsSEXP) {
+CharacterVector s2_geography_format(List s2_geography, int maxCoords, int precision, bool trim);
+RcppExport SEXP _s2_s2_geography_format(SEXP s2_geographySEXP, SEXP maxCoordsSEXP, SEXP precisionSEXP, SEXP trimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
     Rcpp::traits::input_parameter< int >::type maxCoords(maxCoordsSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_format(s2_geography, maxCoords));
+    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< bool >::type trim(trimSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_geography_format(s2_geography, maxCoords, precision, trim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -825,7 +827,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
     {"_s2_s2_geography_to_wkt", (DL_FUNC) &_s2_s2_geography_to_wkt, 3},
     {"_s2_s2_geography_to_wkb", (DL_FUNC) &_s2_s2_geography_to_wkb, 2},
-    {"_s2_s2_geography_format", (DL_FUNC) &_s2_s2_geography_format, 2},
+    {"_s2_s2_geography_format", (DL_FUNC) &_s2_s2_geography_format, 4},
     {"_s2_s2_lnglat_from_numeric", (DL_FUNC) &_s2_s2_lnglat_from_numeric, 2},
     {"_s2_s2_lnglat_from_s2_point", (DL_FUNC) &_s2_s2_lnglat_from_s2_point, 1},
     {"_s2_data_frame_from_s2_lnglat", (DL_FUNC) &_s2_data_frame_from_s2_lnglat, 1},
