@@ -61,10 +61,8 @@ test_that("s2_as_text() works", {
 })
 
 test_that("s2_as_binary() works", {
-  skip_if_not(wk::wk_platform_endian() == 1)
-
   expect_identical(
-    s2_as_binary("POINT (0 0)"),
+    s2_as_binary("POINT (0 0)", endian = 1),
     structure(
       list(
         as.raw(
