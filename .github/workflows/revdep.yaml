@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: revdeps
+
+jobs:
+  revdeps:
+    runs-on: macOS-latest
+    name: ${{ matrix.config.repository }}@${{ matrix.config.ref }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {repository: cran/sf, ref: master}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: 's2'
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.config.repository }}
+          ref: ${{ matrix.config.ref }}
+          path: 'pkg'
+      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Install system dependencies
+        run: |
+          # conflicts with gfortran from r-lib/actions when linking gcc
+          rm '/usr/local/bin/gfortran'
+          brew install pkg-config gdal proj geos openssl@1.1
+
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "rcmdcheck", "pkgbuild"))
+          remotes::install_deps("s2")
+          remotes::install_deps("pkg", dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Build and install wk
+        run: |
+          Rscript -e 'pkgbuild::build("wk", dest_path = "wk_built")'
+          R CMD install wk_built
+      - name: Check
+        run: rcmdcheck::rcmdcheck("pkg", args = "--no-manual", error_on = "warning", check_dir = "check")
+        shell: Rscript {0}
