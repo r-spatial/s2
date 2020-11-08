@@ -40,7 +40,7 @@ test_that("s2_lnglat objects can be created from and converted back to R objects
 
 test_that("s2_lnglat can be imported/exported to/from wkb and wkt", {
   wkb_point <- wk::as_wkb("POINT (-64 45)")
-  expect_wkt_equal(wk::as_wkb(s2_lnglat(-64, 45), endian = 1), wkb_point)
+  expect_wkt_equal(wk::as_wkb(s2_lnglat(-64, 45)), wkb_point)
   expect_wkt_equal(wk::as_wkt(s2_lnglat(-64, 45)), wk::wkt("POINT (-64 45)"))
   expect_identical(wk::as_wkt(s2_lnglat(NA, NA)), wk::wkt("POINT EMPTY"))
 

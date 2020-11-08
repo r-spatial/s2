@@ -8,6 +8,10 @@
 #'
 #' @inheritParams s2_is_collection
 #' @inheritParams as_s2_geography
+#' @param precision The number of significant digits to export when
+#'   writing well-known text. If `trim = FALSE`, the number of
+#'   digits after the decimal place.
+#' @param trim Should trailing zeroes be included after the decimal place?
 #' @param longitude,latitude Vectors of latitude and longitude
 #' @param wkt_string Well-known text
 #' @param wkb_bytes A `list()` of `raw()`
@@ -129,6 +133,6 @@ s2_as_text <- function(x, precision = 16, trim = TRUE) {
 
 #' @rdname s2_geog_point
 #' @export
-s2_as_binary <- function(x, endian = wk::wk_platform_endian()) {
-  structure(s2_geography_to_wkb(as_s2_geography(x), endian = endian), class = "blob")
+s2_as_binary <- function(x) {
+  structure(s2_geography_to_wkb(as_s2_geography(x), endian = wk::wk_platform_endian()), class = "blob")
 }

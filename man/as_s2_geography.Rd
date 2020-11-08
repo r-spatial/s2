@@ -38,9 +38,9 @@ as_s2_geography(x, ...)
 
 \method{as_s2_geography}{logical}(x, ...)
 
-\method{as_wkb}{s2_geography}(x, ..., endian = wk::wk_platform_endian())
+\method{as_wkb}{s2_geography}(x, ...)
 
-\method{as_wkt}{s2_geography}(x, ..., precision = 16, trim = TRUE)
+\method{as_wkt}{s2_geography}(x, ...)
 }
 \arguments{
 \item{x}{An object that can be converted to an s2_geography vector}
@@ -51,16 +51,7 @@ as_s2_geography(x, ...)
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
-\item{check}{Use \code{check = FALSE} to error on invalid geometries}
-
-\item{endian}{The endian to use when writing well-known binary.
-Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
-
-\item{precision}{The number of significant digits to export when
-writing well-known text. If \code{trim = FALSE}, the number of
-digits after the decimal place.}
-
-\item{trim}{Should trailing zeroes be included after the decimal place?}
+\item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
 }
 \value{
 An object with class s2_geography

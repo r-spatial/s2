@@ -29,7 +29,7 @@ s2_geog_from_wkb(wkb_bytes, oriented = FALSE, check = TRUE)
 
 s2_as_text(x, precision = 16, trim = TRUE)
 
-s2_as_binary(x, endian = wk::wk_platform_endian())
+s2_as_binary(x)
 }
 \arguments{
 \item{longitude, latitude}{Vectors of latitude and longitude}
@@ -42,7 +42,7 @@ to convert from a character vector.}
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
-\item{check}{Use \code{check = FALSE} to error on invalid geometries}
+\item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
 
 \item{wkt_string}{Well-known text}
 
@@ -57,9 +57,6 @@ writing well-known text. If \code{trim = FALSE}, the number of
 digits after the decimal place.}
 
 \item{trim}{Should trailing zeroes be included after the decimal place?}
-
-\item{endian}{The endian to use when writing well-known binary.
-Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
 }
 \description{
 These functions create and export \link[=as_s2_geography]{geography vectors}.
