@@ -40,13 +40,15 @@ test_that("s2_geography vectors can be created from WKB and WKT", {
 })
 
 test_that("s2_geography can be exported to WKB/WKT", {
-  expect_identical(
-    wk::as_wkt(wk::as_wkb(as_s2_geography("POINT (-64 45)")), precision = 10),
-    wk::as_wkt(wk::as_wkb("POINT (-64 45)"), precision = 10)
+  expect_wkt_equal(
+    wk::as_wkb(as_s2_geography("POINT (-64 45)")),
+    wk::as_wkb("POINT (-64 45)"),
+    precision = 10
   )
-  expect_identical(
-    wk::as_wkt(as_s2_geography("POINT (-64 45)"), precision = 10),
-    wk::as_wkt("POINT (-64 45)")
+  expect_wkt_equal(
+    wk::as_wkt(as_s2_geography("POINT (-64 45)")),
+    wk::as_wkt("POINT (-64 45)"),
+    precision = 10
   )
 })
 

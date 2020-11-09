@@ -16,13 +16,7 @@
 #' @param oriented TRUE if polygon ring directions are known to be correct
 #'   (i.e., exterior rings are defined counter clockwise and interior
 #'   rings are defined clockwise).
-#' @param check Use `check = FALSE` to error on invalid geometries
-#' @param endian The endian to use when writing well-known binary.
-#'   Defaults to the platform endian. See [wk::as_wkb()].
-#' @param precision The number of significant digits to export when
-#'   writing well-known text. If `trim = FALSE`, the number of
-#'   digits after the decimal place.
-#' @param trim Should trailing zeroes be included after the decimal place?
+#' @param check Use `check = FALSE` to skip error on invalid geometries
 #' @param ... Unused
 #'
 #' @return An object with class s2_geography
@@ -118,15 +112,15 @@ as_s2_geography.logical <- function(x, ...) {
 #' @importFrom wk as_wkb
 #' @rdname as_s2_geography
 #' @export
-as_wkb.s2_geography <- function(x, ..., endian = wk::wk_platform_endian()) {
-  wk::new_wk_wkb(s2_geography_to_wkb(x, endian))
+as_wkb.s2_geography <- function(x, ...) {
+  wk::new_wk_wkb(s2_geography_to_wkb(x, wk::wk_platform_endian()))
 }
 
 #' @importFrom wk as_wkt
 #' @rdname as_s2_geography
 #' @export
-as_wkt.s2_geography <- function(x, ..., precision = 16, trim = TRUE) {
-  wk::new_wk_wkt(s2_geography_to_wkt(x, precision = precision, trim = trim))
+as_wkt.s2_geography <- function(x, ...) {
+  wk::new_wk_wkt(s2_geography_to_wkt(x, precision = 16, trim = TRUE))
 }
 
 
@@ -145,13 +139,13 @@ as_wkt.s2_geography <- function(x, ..., precision = 16, trim = TRUE) {
 }
 
 #' @export
-format.s2_geography <- function(x, ..., max_coords = 5) {
-  paste0("<", s2_geography_format(x, max_coords), ">")
+format.s2_geography <- function(x, ..., max_coords = 5, precision = 9, trim = TRUE) {
+  paste0("<", s2_geography_format(x, max_coords, precision, trim), ">")
 }
 
 # this is what gets called by the RStudio viewer, for which
 # format() is best suited (s2_as_text() is more explicit for WKT output)
 #' @export
-as.character.s2_geography <- function(x, ..., max_coords = 5) {
-  format(x, ..., max_coords = max_coords)
+as.character.s2_geography <- function(x, ..., max_coords = 5, precision = 9, trim = TRUE) {
+  format(x, ..., max_coords = max_coords, precision = precision, trim = trim)
 }

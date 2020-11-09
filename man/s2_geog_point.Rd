@@ -42,7 +42,7 @@ to convert from a character vector.}
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).}
 
-\item{check}{Use \code{check = FALSE} to error on invalid geometries}
+\item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
 
 \item{wkt_string}{Well-known text}
 
@@ -58,8 +58,7 @@ digits after the decimal place.}
 
 \item{trim}{Should trailing zeroes be included after the decimal place?}
 
-\item{endian}{The endian to use when writing well-known binary.
-Defaults to the platform endian. See \code{\link[wk:wkb]{wk::as_wkb()}}.}
+\item{endian}{The endian-ness of the well-known binary. See \code{\link[wk:wkb_translate_wkt]{wk::wkb_translate_wkb()}}.}
 }
 \description{
 These functions create and export \link[=as_s2_geography]{geography vectors}.

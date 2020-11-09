@@ -78,16 +78,18 @@ as.matrix.s2_lnglat <- function(x, ...) {
   as.matrix(as.data.frame(data_frame_from_s2_lnglat(x)))
 }
 
+#' @rdname s2_lnglat
 #' @importFrom wk as_wkb
 #' @export
-as_wkb.s2_lnglat <- function(x, ..., endian = wk::wk_platform_endian()) {
-  as_wkb(as_s2_geography(x), ..., endian = endian)
+as_wkb.s2_lnglat <- function(x, ...) {
+  as_wkb(as_s2_geography(x), ...)
 }
 
+#' @rdname s2_lnglat
 #' @importFrom wk as_wkt
 #' @export
-as_wkt.s2_lnglat <- function(x, ...,  precision = 16, trim = TRUE) {
-  as_wkt(as_s2_geography(x), ..., precision = precision, trim = trim)
+as_wkt.s2_lnglat <- function(x, ...) {
+  as_wkt(as_s2_geography(x), ...)
 }
 
 #' @export

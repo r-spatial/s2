@@ -104,11 +104,13 @@ List s2_geography_to_wkb(List s2_geography, int endian) {
 }
 
 // [[Rcpp::export]]
-CharacterVector s2_geography_format(List s2_geography, int maxCoords) {
+CharacterVector s2_geography_format(List s2_geography, int maxCoords, int precision, bool trim) {
   WKRcppSEXPProvider provider(s2_geography);
   WKGeographyReader reader(provider);
 
   WKCharacterVectorExporter exporter(s2_geography.size());
+  exporter.setRoundingPrecision(precision);
+  exporter.setTrim(trim);
   WKGeometryFormatter formatter(exporter, maxCoords);
 
   reader.setHandler(&formatter);

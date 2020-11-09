@@ -8,6 +8,11 @@
 #'
 #' @inheritParams s2_is_collection
 #' @inheritParams as_s2_geography
+#' @param precision The number of significant digits to export when
+#'   writing well-known text. If `trim = FALSE`, the number of
+#'   digits after the decimal place.
+#' @param trim Should trailing zeroes be included after the decimal place?
+#' @param endian The endian-ness of the well-known binary. See [wk::wkb_translate_wkb()].
 #' @param longitude,latitude Vectors of latitude and longitude
 #' @param wkt_string Well-known text
 #' @param wkb_bytes A `list()` of `raw()`

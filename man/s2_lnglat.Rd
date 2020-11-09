@@ -9,6 +9,8 @@
 \alias{as_s2_lnglat.matrix}
 \alias{as.data.frame.s2_lnglat}
 \alias{as.matrix.s2_lnglat}
+\alias{as_wkb.s2_lnglat}
+\alias{as_wkt.s2_lnglat}
 \title{Create an S2 LngLat Vector}
 \usage{
 s2_lnglat(lng, lat)
@@ -26,6 +28,10 @@ as_s2_lnglat(x, ...)
 \method{as.data.frame}{s2_lnglat}(x, ...)
 
 \method{as.matrix}{s2_lnglat}(x, ...)
+
+\method{as_wkb}{s2_lnglat}(x, ...)
+
+\method{as_wkt}{s2_lnglat}(x, ...)
 }
 \arguments{
 \item{lat, lng}{Vectors of latitude and longitude values in degrees.}
