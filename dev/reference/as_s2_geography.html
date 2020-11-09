@@ -169,10 +169,10 @@ on a perfect sphere.</p>
 <span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, endian <span class='op'>=</span> <span class='fu'>wk</span><span class='fu'>::</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkb_translate_wkt.html'>wk_platform_endian</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>as_wkb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, precision <span class='op'>=</span> <span class='fl'>16</span>, trim <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+<span class='fu'>as_wkt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -193,22 +193,7 @@ rings are defined clockwise).</p></td>
     </tr>
     <tr>
       <th>check</th>
-      <td><p>Use <code>check = FALSE</code> to error on invalid geometries</p></td>
-    </tr>
-    <tr>
-      <th>endian</th>
-      <td><p>The endian to use when writing well-known binary.
-Defaults to the platform endian. See <code><a href='https://paleolimbot.github.io/wk/reference/wkb.html'>wk::as_wkb()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>precision</th>
-      <td><p>The number of significant digits to export when
-writing well-known text. If <code>trim = FALSE</code>, the number of
-digits after the decimal place.</p></td>
-    </tr>
-    <tr>
-      <th>trim</th>
-      <td><p>Should trailing zeroes be included after the decimal place?</p></td>
+      <td><p>Use <code>check = FALSE</code> to skip error on invalid geometries</p></td>
     </tr>
     </table>
 
