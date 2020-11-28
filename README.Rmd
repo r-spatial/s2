@@ -22,8 +22,7 @@ knitr::opts_chunk$set(
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
 <!-- badges: end -->
 
-The goal of s2 is to provide R bindings to Google's [S2Geometry](https://s2geometry.io) library. The package exposes an API similar to Google's [BigQuery Geography API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions), whose functions also operate on spherical geometries.
-This package is a complete rewrite of an earlier CRAN package s2 with versions up 
+The goal of s2 is to provide R bindings to Google's [S2Geometry](https://s2geometry.io) library. The package exposes an API similar to Google's [BigQuery Geography API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions), whose functions also operate on spherical geometries. This package is a complete rewrite of an earlier CRAN package s2 with versions up 
 to 0.4-2, for which the sources are found [here](https://github.com/spatstat/s2/).
 
 ## Installation
@@ -56,14 +55,14 @@ s2_contains(
 )
 ```
 
-The [sf package](https://r-spatial.github.io/sf/) will soon support s2 natively, but s2 can also read well-known text and well-known binary:
+The [sf package](https://r-spatial.github.io/sf/) uses s2 for geographic coordinates with `sf::sf_use_s2(TRUE)`, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using `as_s2_geography()`:
 
 ```{r, warning=FALSE, message = FALSE}
 library(dplyr)
 library(sf)
 
 nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
-  mutate(geometry = s2_geog_from_wkb(st_as_binary(geometry))) %>% 
+  mutate(geometry = as_s2_geography(geometry)) %>% 
   as_tibble() %>% 
   select(NAME, geometry)
 
@@ -107,5 +106,5 @@ nc_s2 %>%
 This project gratefully acknowledges financial [support](https://www.r-consortium.org/projects) from the
 
 <a href="https://www.r-consortium.org/projects/awarded-projects">
-<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300">
+<img src="man/figures/rc300.png" width="300" />
 </a>
