@@ -108,6 +108,11 @@ print_next <- function() {
     "(e.g., encoded_s2point_vector.h:91)"
   )
 
+  cli::cat_bullet(
+    "Ensure that the uint64 type in include/s2/third_part/absl/base/internal/unaligned_access.h ",
+    "is actually defined (e.g., by redeclaring as uint64_t). Caused failures on clang 12.2 on Mac OS M1"
+  )
+
   cli::cat_bullet("Replace `abort()` with `cpp_compat_abort()`")
   cli::cat_bullet("Replace `cerr`/`cout` with `cpp_compat_cerr`/`cpp_compat_cout`")
   cli::cat_bullet("Replace `srandom()` with `cpp_compat_srandom()`")
