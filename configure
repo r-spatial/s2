@@ -75,7 +75,7 @@ fi
 if [ -z "$AUTOBREW" ]; then
 SONAME=`${CC} -E ${PKG_CFLAGS} src/tests/soname.h | sh | xargs`
 if [ "$SONAME" ]; then
-if [`uname` = "Darwin" ]; then
+if [ `uname` = "Darwin" ]; then
   PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-lssl.${SONAME}/" | sed "s/-lcrypto/-lcrypto.${SONAME}/"`
 else
   PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-l:libssl.so.${SONAME}/" | sed "s/-lcrypto/-l:libcrypto.so.${SONAME}/"`
