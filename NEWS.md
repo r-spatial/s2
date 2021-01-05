@@ -1,3 +1,5 @@
+# s2 (development version)
+
 # s2 1.0.4
 
 * Fixed errors that resulted from compilation on clang 12.2 (#88, #89).
