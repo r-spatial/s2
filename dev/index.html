@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">s2</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.3.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.4.9000</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -70,7 +70,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/r-spatial/s2/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -117,13 +117,13 @@
   <span class="st">"POINT (0 90)"</span>
 <span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
-<p>The <a href="https://r-spatial.github.io/sf/">sf package</a> will soon support s2 natively, but s2 can also read well-known text and well-known binary:</p>
+<p>The <a href="https://r-spatial.github.io/sf/">sf package</a> uses s2 for geographic coordinates with <code>sf::sf_use_s2(TRUE)</code>, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using <code><a href="reference/as_s2_geography.html">as_s2_geography()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">dplyr</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">sf</span><span class="op">)</span>
 
 <span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/s2_geog_point.html">s2_geog_from_wkb</a></span><span class="op">(</span><span class="fu">st_as_binary</span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span>
 
@@ -131,16 +131,16 @@
 <span class="co">#&gt; # A tibble: 100 x 2</span>
 <span class="co">#&gt;    NAME        geometry                                                         </span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
-<span class="co">#&gt;  1 Ashe        &lt;POLYGON ((-81.4529 36.2396, -81.431 36.2607, -81.4123 36.2673, …</span>
-<span class="co">#&gt;  2 Alleghany   &lt;POLYGON ((-81.1767 36.4154, -81.1534 36.4247, -81.1384 36.4176,…</span>
-<span class="co">#&gt;  3 Surry       &lt;POLYGON ((-80.453 36.2571, -80.4353 36.551, -80.6111 36.5573, -…</span>
-<span class="co">#&gt;  4 Currituck   &lt;MULTIPOLYGON (((-75.9419 36.2943, -75.9575 36.2595, -75.9138 36…</span>
-<span class="co">#&gt;  5 Northampton &lt;POLYGON ((-77.142 36.4171, -77.1393 36.4565, -77.1273 36.4707, …</span>
-<span class="co">#&gt;  6 Hertford    &lt;POLYGON ((-76.7075 36.2661, -76.7413 36.3152, -76.9241 36.3924,…</span>
-<span class="co">#&gt;  7 Camden      &lt;POLYGON ((-76.0173 36.3377, -76.0329 36.336, -76.044 36.3536, -…</span>
-<span class="co">#&gt;  8 Gates       &lt;POLYGON ((-76.4604 36.3739, -76.5025 36.4523, -76.4983 36.5039,…</span>
-<span class="co">#&gt;  9 Warren      &lt;POLYGON ((-78.1347 36.2366, -78.1096 36.2135, -78.0583 36.2113,…</span>
-<span class="co">#&gt; 10 Stokes      &lt;POLYGON ((-80.0241 36.545, -80.0481 36.5471, -80.4353 36.551, -…</span>
+<span class="co">#&gt;  1 Ashe        &lt;POLYGON ((-81.4528885 36.2395859, -81.4310379 36.2607193, -81.4…</span>
+<span class="co">#&gt;  2 Alleghany   &lt;POLYGON ((-81.1766739 36.4154434, -81.1533661 36.4247398, -81.1…</span>
+<span class="co">#&gt;  3 Surry       &lt;POLYGON ((-80.4530106 36.2570877, -80.4353104 36.5510445, -80.6…</span>
+<span class="co">#&gt;  4 Currituck   &lt;MULTIPOLYGON (((-75.9419327 36.2943382, -75.9575119 36.2594528,…</span>
+<span class="co">#&gt;  5 Northampton &lt;POLYGON ((-77.1419601 36.4170647, -77.1393204 36.4564781, -77.1…</span>
+<span class="co">#&gt;  6 Hertford    &lt;POLYGON ((-76.7074966 36.2661324, -76.7413483 36.3151665, -76.9…</span>
+<span class="co">#&gt;  7 Camden      &lt;POLYGON ((-76.0173492 36.3377304, -76.0328751 36.3359756, -76.0…</span>
+<span class="co">#&gt;  8 Gates       &lt;POLYGON ((-76.46035 36.3738976, -76.5024643 36.4522858, -76.498…</span>
+<span class="co">#&gt;  9 Warren      &lt;POLYGON ((-78.1347198 36.2365837, -78.1096268 36.2135086, -78.0…</span>
+<span class="co">#&gt; 10 Stokes      &lt;POLYGON ((-80.0240555 36.5450249, -80.0480957 36.5471344, -80.4…</span>
 <span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
 <p>Use accessors to extract information about geometries:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -152,16 +152,16 @@
 <span class="co">#&gt; # A tibble: 100 x 4</span>
 <span class="co">#&gt;    NAME      geometry                                             area perimeter</span>
 <span class="co">#&gt;    &lt;chr&gt;     &lt;s2_geography&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 Ashe      &lt;POLYGON ((-81.4529 36.2396, -81.431 36.2607, -…   1.14e9   141627.</span>
-<span class="co">#&gt;  2 Alleghany &lt;POLYGON ((-81.1767 36.4154, -81.1534 36.4247, …   6.11e8   119876.</span>
-<span class="co">#&gt;  3 Surry     &lt;POLYGON ((-80.453 36.2571, -80.4353 36.551, -8…   1.42e9   160458.</span>
-<span class="co">#&gt;  4 Currituck &lt;MULTIPOLYGON (((-75.9419 36.2943, -75.9575 36.…   6.94e8   301644.</span>
-<span class="co">#&gt;  5 Northamp… &lt;POLYGON ((-77.142 36.4171, -77.1393 36.4565, -…   1.52e9   211794.</span>
-<span class="co">#&gt;  6 Hertford  &lt;POLYGON ((-76.7075 36.2661, -76.7413 36.3152, …   9.68e8   160780.</span>
-<span class="co">#&gt;  7 Camden    &lt;POLYGON ((-76.0173 36.3377, -76.0329 36.336, -…   6.16e8   150430.</span>
-<span class="co">#&gt;  8 Gates     &lt;POLYGON ((-76.4604 36.3739, -76.5025 36.4523, …   9.03e8   123170.</span>
-<span class="co">#&gt;  9 Warren    &lt;POLYGON ((-78.1347 36.2366, -78.1096 36.2135, …   1.18e9   141073.</span>
-<span class="co">#&gt; 10 Stokes    &lt;POLYGON ((-80.0241 36.545, -80.0481 36.5471, -…   1.23e9   140583.</span>
+<span class="co">#&gt;  1 Ashe      &lt;POLYGON ((-81.4528885 36.2395859, -81.4310379 …   1.14e9   141627.</span>
+<span class="co">#&gt;  2 Alleghany &lt;POLYGON ((-81.1766739 36.4154434, -81.1533661 …   6.11e8   119876.</span>
+<span class="co">#&gt;  3 Surry     &lt;POLYGON ((-80.4530106 36.2570877, -80.4353104 …   1.42e9   160458.</span>
+<span class="co">#&gt;  4 Currituck &lt;MULTIPOLYGON (((-75.9419327 36.2943382, -75.95…   6.94e8   301644.</span>
+<span class="co">#&gt;  5 Northamp… &lt;POLYGON ((-77.1419601 36.4170647, -77.1393204 …   1.52e9   211794.</span>
+<span class="co">#&gt;  6 Hertford  &lt;POLYGON ((-76.7074966 36.2661324, -76.7413483 …   9.68e8   160780.</span>
+<span class="co">#&gt;  7 Camden    &lt;POLYGON ((-76.0173492 36.3377304, -76.0328751 …   6.16e8   150430.</span>
+<span class="co">#&gt;  8 Gates     &lt;POLYGON ((-76.46035 36.3738976, -76.5024643 36…   9.03e8   123170.</span>
+<span class="co">#&gt;  9 Warren    &lt;POLYGON ((-78.1347198 36.2365837, -78.1096268 …   1.18e9   141073.</span>
+<span class="co">#&gt; 10 Stokes    &lt;POLYGON ((-80.0240555 36.5450249, -80.0480957 …   1.23e9   140583.</span>
 <span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
 <p>Use predicates to subset vectors:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -170,7 +170,7 @@
 <span class="co">#&gt; # A tibble: 1 x 2</span>
 <span class="co">#&gt;   NAME    geometry                                                              </span>
 <span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span>
-<span class="co">#&gt; 1 Catawba &lt;POLYGON ((-80.9313 35.6196, -81.0036 35.6971, -81.0548 35.7134, -81.…</span></code></pre></div>
+<span class="co">#&gt; 1 Catawba &lt;POLYGON ((-80.9312744 35.6195908, -81.0035782 35.6970558, -81.054779…</span></code></pre></div>
 <p>Use transformers to create new geometries:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
@@ -178,16 +178,16 @@
 <span class="co">#&gt; # A tibble: 100 x 2</span>
 <span class="co">#&gt;    NAME        geometry                                                         </span>
 <span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
-<span class="co">#&gt;  1 Ashe        &lt;LINESTRING (-81.4529 36.2396, -81.431 36.2607, -81.4123 36.2673…</span>
-<span class="co">#&gt;  2 Alleghany   &lt;LINESTRING (-81.1767 36.4154, -81.1534 36.4247, -81.1384 36.417…</span>
-<span class="co">#&gt;  3 Surry       &lt;LINESTRING (-80.453 36.2571, -80.4353 36.551, -80.6111 36.5573,…</span>
-<span class="co">#&gt;  4 Currituck   &lt;MULTILINESTRING ((-75.9419 36.2943, -75.9575 36.2595, -75.9138 …</span>
-<span class="co">#&gt;  5 Northampton &lt;LINESTRING (-77.142 36.4171, -77.1393 36.4565, -77.1273 36.4707…</span>
-<span class="co">#&gt;  6 Hertford    &lt;LINESTRING (-76.7075 36.2661, -76.7413 36.3152, -76.9241 36.392…</span>
-<span class="co">#&gt;  7 Camden      &lt;LINESTRING (-76.0173 36.3377, -76.0329 36.336, -76.044 36.3536,…</span>
-<span class="co">#&gt;  8 Gates       &lt;LINESTRING (-76.4604 36.3739, -76.5025 36.4523, -76.4983 36.503…</span>
-<span class="co">#&gt;  9 Warren      &lt;LINESTRING (-78.1347 36.2366, -78.1096 36.2135, -78.0583 36.211…</span>
-<span class="co">#&gt; 10 Stokes      &lt;LINESTRING (-80.0241 36.545, -80.0481 36.5471, -80.4353 36.551,…</span>
+<span class="co">#&gt;  1 Ashe        &lt;LINESTRING (-81.4528885 36.2395859, -81.4310379 36.2607193, -81…</span>
+<span class="co">#&gt;  2 Alleghany   &lt;LINESTRING (-81.1766739 36.4154434, -81.1533661 36.4247398, -81…</span>
+<span class="co">#&gt;  3 Surry       &lt;LINESTRING (-80.4530106 36.2570877, -80.4353104 36.5510445, -80…</span>
+<span class="co">#&gt;  4 Currituck   &lt;MULTILINESTRING ((-75.9419327 36.2943382, -75.9575119 36.259452…</span>
+<span class="co">#&gt;  5 Northampton &lt;LINESTRING (-77.1419601 36.4170647, -77.1393204 36.4564781, -77…</span>
+<span class="co">#&gt;  6 Hertford    &lt;LINESTRING (-76.7074966 36.2661324, -76.7413483 36.3151665, -76…</span>
+<span class="co">#&gt;  7 Camden      &lt;LINESTRING (-76.0173492 36.3377304, -76.0328751 36.3359756, -76…</span>
+<span class="co">#&gt;  8 Gates       &lt;LINESTRING (-76.46035 36.3738976, -76.5024643 36.4522858, -76.4…</span>
+<span class="co">#&gt;  9 Warren      &lt;LINESTRING (-78.1347198 36.2365837, -78.1096268 36.2135086, -78…</span>
+<span class="co">#&gt; 10 Stokes      &lt;LINESTRING (-80.0240555 36.5450249, -80.0480957 36.5471344, -80…</span>
 <span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
 <p>Finally, use the WKB or WKT exporters to export to sf or some other package:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -218,7 +218,7 @@
 <h2 class="hasAnchor">
 <a href="#acknowledgment" class="anchor"></a>Acknowledgment</h2>
 <p>This project gratefully acknowledges financial <a href="https://www.r-consortium.org/projects">support</a> from the</p>
-<p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300"></a></p>
+<p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="reference/figures/rc300.png" width="300"></a></p>
 </div>
 </div>
   </div>
