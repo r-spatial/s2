@@ -145,7 +145,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   // build the output
   S2Error error;
   if (!builder.Build(&error)) {
-    stop(error.text());
+    throw GeographyOperatorException(error.text());
   }
 
   // construct output

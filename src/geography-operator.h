@@ -2,14 +2,24 @@
 #ifndef GEOGRAPHY_OPERATOR_H
 #define GEOGRAPHY_OPERATOR_H
 
+#include <stdexcept>
+
 #include "geography.h"
 #include <Rcpp.h>
+
+class GeographyOperatorException: public std::runtime_error {
+public:
+  GeographyOperatorException(std::string msg): std::runtime_error(msg.c_str()) {}
+};
 
 template<class VectorType, class ScalarType>
 class UnaryGeographyOperator {
 public:
   VectorType processVector(Rcpp::List geog) {
     VectorType output(geog.size());
+
+    Rcpp::IntegerVector problemId;
+    Rcpp::CharacterVector problems;
 
     SEXP item;
     for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -20,8 +30,21 @@ public:
         output[i] = VectorType::get_na();
       } else {
         Rcpp::XPtr<Geography> feature(item);
-        output[i] = this->processFeature(feature, i);
+
+        try {
+          output[i] = this->processFeature(feature, i);
+        } catch (GeographyOperatorException& e) {
+          output[i] = VectorType::get_na();
+          problemId.push_back(i);
+          problems.push_back(e.what());
+        }
       }
+    }
+
+    if (problemId.size() > 0) {
+      Rcpp::Environment s2NS = Rcpp::Environment::namespace_env("s2");
+      Rcpp::Function stopProblems = s2NS["stop_problems_process"];
+      stopProblems(problemId, problems);
     }
 
     return output;
@@ -41,6 +64,9 @@ public:
 
     VectorType output(geog1.size());
 
+    Rcpp::IntegerVector problemId;
+    Rcpp::CharacterVector problems;
+
     SEXP item1;
     SEXP item2;
 
@@ -54,8 +80,21 @@ public:
       } else {
         Rcpp::XPtr<Geography> feature1(item1);
         Rcpp::XPtr<Geography> feature2(item2);
-        output[i] = processFeature(feature1, feature2, i);
+
+        try {
+          output[i] = processFeature(feature1, feature2, i);
+        } catch (GeographyOperatorException& e) {
+          output[i] = VectorType::get_na();
+          problemId.push_back(i);
+          problems.push_back(e.what());
+        }
       }
+    }
+
+    if (problemId.size() > 0) {
+      Rcpp::Environment s2NS = Rcpp::Environment::namespace_env("s2");
+      Rcpp::Function stopProblems = s2NS["stop_problems_process"];
+      stopProblems(problemId, problems);
     }
 
     return output;

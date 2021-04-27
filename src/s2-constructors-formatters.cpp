@@ -74,7 +74,7 @@ List cpp_s2_make_polygon(NumericVector x, NumericVector y,
 
   if (writer.problemId.size() > 0) {
     Environment s2NS = Environment::namespace_env("s2");
-    Function stopProblems = s2NS["stop_problems"];
+    Function stopProblems = s2NS["stop_problems_create"];
     stopProblems(writer.problemId, writer.problems);
   }
 
