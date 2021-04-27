@@ -13,6 +13,10 @@ public:
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_COLLECTION;
+  }
+
   bool IsCollection() {
     return this->features.size() > 0;
   }

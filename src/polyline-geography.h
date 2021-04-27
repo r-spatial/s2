@@ -14,6 +14,14 @@ public:
   PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_POLYLINE;
+  }
+
+  const std::vector<std::unique_ptr<S2Polyline>>* Polyline() {
+    return &(this->polylines);
+  }
+
   bool IsCollection() {
     return this->polylines.size() > 1;
   }

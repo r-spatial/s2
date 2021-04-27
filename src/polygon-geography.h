@@ -16,6 +16,14 @@ public:
   PolygonGeography(std::unique_ptr<S2Polygon> polygon):
     polygon(std::move(polygon)) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_POLYGON;
+  }
+
+  const S2Polygon* Polygon() {
+    return this->polygon.get();
+  }
+
   bool IsCollection() {
     return this->outerLoopIndices().size() > 1;
   }
@@ -58,11 +66,11 @@ public:
   }
 
   S2Cap GetCapBound() {
-	return this->polygon->GetCapBound();
+	  return this->polygon->GetCapBound();
   }
 
   S2LatLngRect GetRectBound() {
-	return this->polygon->GetRectBound();
+	  return this->polygon->GetRectBound();
   }
 
   std::unique_ptr<Geography> Boundary() {
