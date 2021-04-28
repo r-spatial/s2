@@ -88,7 +88,7 @@ public:
 
     builder.nextGeometryStart(meta, WKReader::PART_ID_NONE);
     int loopId = 0;
-    for (int i = 0; i < flatIndices.size(); i++) {
+    for (size_t i = 0; i < flatIndices.size(); i++) {
       this->exportLoops(&builder, meta, flatIndices[i], loopId);
       loopId += flatIndices[i].size();
     }
@@ -118,7 +118,7 @@ public:
       childMeta.hasSize = true;
 
       handler->nextGeometryStart(meta, partId);
-      for (int i = 0; i < flatIndices.size(); i++) {
+      for (size_t i = 0; i < flatIndices.size(); i++) {
         childMeta.size = flatIndices[i].size();
         handler->nextGeometryStart(childMeta, i);
         this->exportLoops(handler, childMeta, flatIndices[i]);
@@ -234,7 +234,7 @@ private:
     std::vector<int> outerLoops = this->outerLoopIndices();
 
     std::vector<std::vector<int>> flatIndices(outerLoops.size());
-    for (int i = 0; i < outerLoops.size(); i++) {
+    for (size_t i = 0; i < outerLoops.size(); i++) {
       int k = outerLoops[i];
       flatIndices[i] = std::vector<int>();
 

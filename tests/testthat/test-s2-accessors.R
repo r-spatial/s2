@@ -62,7 +62,8 @@ test_that("s2_is_valid_detail() works", {
         "Loop 0: Edge 3 is degenerate (duplicate vertex)",
         "Loop 0: Edge 3 is degenerate (duplicate vertex)",
         NA
-      )
+      ),
+      stringsAsFactors = FALSE
     )
   )
 })
