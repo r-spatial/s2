@@ -584,7 +584,9 @@ List cpp_s2_unary_union(List geog, List s2options) {
 
         return XPtr<Geography>(new PolygonGeography(std::move(accumulatedPolygon)));
       } else {
-        stop("Not implemented (collection)");
+        // This is a less common case (mixed dimension output that includes a polygon).
+        // In the absence of a clean solution, saving this battle for another day.
+        throw GeographyOperatorException("Unary union for collections is not implemented");
       }
     }
 

@@ -242,6 +242,15 @@ test_that("s2_union(x) works with polygons that have overlapping input regions",
   expect_equal(s2_area(unioned, radius = 1), 0.0005329892)
 })
 
+test_that("s2_union(x) errors for the case of mixed dimension collections", {
+  expect_error(
+    s2_union(
+      c("GEOMETRYCOLLECTION(POLYGON ((-10 -10, -10 10, 10 10, 10 -10, -10 -10)), LINESTRING (0 -20, 0 20))")
+    ),
+    "Unary union for collections is not implemented"
+  )
+})
+
 test_that("s2_union(x, y) works", {
   expect_wkt_equal(s2_union("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
   expect_wkt_equal(s2_union("POINT EMPTY", "POINT EMPTY"), "GEOMETRYCOLLECTION EMPTY")
