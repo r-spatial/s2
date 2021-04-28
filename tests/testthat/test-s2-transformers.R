@@ -289,7 +289,7 @@ test_that("binary operations use layer creation options", {
   )
 
   expect_wkt_equal(
-    s2_union_agg(
+    s2_coverage_union_agg(
       "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
       options = s2_options(polyline_type = "path", polyline_sibling_pairs = "discard")
     ),
@@ -297,11 +297,30 @@ test_that("binary operations use layer creation options", {
   )
   expect_true(
     s2_is_collection(
-      s2_union_agg(
+      s2_coverage_union_agg(
         "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
         options = s2_options(polyline_type = "walk")
       )
     )
+  )
+})
+
+test_that("s2_coverage_union_agg() works", {
+  expect_wkt_equal(s2_coverage_union_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
+  expect_wkt_equal(s2_coverage_union_agg(c("POINT EMPTY", "POINT EMPTY")), "GEOMETRYCOLLECTION EMPTY")
+
+  # NULL handling
+  expect_identical(
+    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
+    as_s2_geography(NA_character_)
+  )
+  expect_wkt_equal(
+    s2_coverage_union_agg(character()),
+    as_s2_geography("GEOMETRYCOLLECTION EMPTY")
+  )
+  expect_wkt_equal(
+    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    "POINT (30 10)"
   )
 })
 
@@ -311,11 +330,15 @@ test_that("s2_union_agg() works", {
 
   # NULL handling
   expect_identical(
-    s2_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
+    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
     as_s2_geography(NA_character_)
   )
   expect_wkt_equal(
-    s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    s2_union_agg(character()),
+    as_s2_geography("GEOMETRYCOLLECTION EMPTY")
+  )
+  expect_wkt_equal(
+    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
     "POINT (30 10)"
   )
 })
@@ -480,7 +503,7 @@ test_that("real data survives the S2BooleanOperation", {
 
   for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor
-    unioned <- expect_is(s2_union_agg(s2_data_countries(continent)), "s2_geography")
+    unioned <- expect_is(s2_coverage_union_agg(s2_data_countries(continent)), "s2_geography")
 
     # this is a test of Geography::Export() on potentially complex polygons
     exported <- expect_length(s2_as_binary(unioned), 1)

@@ -208,7 +208,7 @@ List cpp_s2_sym_difference(List geog1, List geog2, List s2options) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
+List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
 
   MutableS2ShapeIndex index;
