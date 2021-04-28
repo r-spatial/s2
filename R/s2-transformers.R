@@ -218,5 +218,5 @@ s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 #' @rdname s2_boundary
 #' @export
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+  new_s2_xptr(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm), "s2_geography")
 }

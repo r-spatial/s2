@@ -555,6 +555,12 @@ List cpp_s2_unary_union(List geog, List s2options) {
             throw GeographyOperatorException(error.text());
           }
 
+          // Check if the builder created a polygon whose boundary contained more than
+          // half the earth (and invert it if so)
+          if (loop->GetArea() > (2 * PI)) {
+            loop->Invert();
+          }
+
           loops.push_back(std::move(loop));
         }
 
@@ -563,9 +569,10 @@ List cpp_s2_unary_union(List geog, List s2options) {
         for (int i = 0; i < originalPoly->num_loops(); i++) {
           std::unique_ptr<S2Polygon> polygonResult = absl::make_unique<S2Polygon>();
 
-          // There is no guarantee of loop nesting if the inner loop isn't valid; however
-          // valid inner loops do appear to be properly nested inside invalid polygons
-          // even when the outer loop intersects some other loop
+          // Use original nesting to suggest if this loop should be unioned or diffed.
+          // For valid polygons loops are arranged such that the biggest loop is on the outside
+          // followed by holes such that the below strategy should work (since we are
+          // just iterating along the original loop structure)
           if ((originalPoly->loop(i)->depth() % 2) == 0) {
             polygonResult->InitToUnion(accumulatedPolygon.get(), loops[i].get());
           } else {
