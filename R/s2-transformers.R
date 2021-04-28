@@ -155,12 +155,14 @@ s2_intersection <- function(x, y, options = s2_options()) {
 #' @rdname s2_boundary
 #' @export
 s2_union <- function(x, y = NULL, options = s2_options()) {
-  if (is.null(y)) {
-    y <- as_s2_geography("POINT EMPTY")
-  }
+  x <- as_s2_geography(x)
 
-  recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
+  if (is.null(y)) {
+    new_s2_xptr(cpp_s2_unary_union(x, options), "s2_geography")
+  } else {
+    recycled <- recycle_common(x, as_s2_geography(y))
+    new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
+  }
 }
 
 #' @rdname s2_boundary

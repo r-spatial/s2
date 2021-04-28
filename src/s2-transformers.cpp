@@ -410,6 +410,39 @@ List cpp_s2_rebuild(List geog, List s2options) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_unary_union(List geog, List s2options) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    Op(List s2options) {
+      GeographyOperationOptions options(s2options);
+      this->options = options.booleanOperationOptions();
+      this->layerOptions = options.layerOptions();
+    }
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      MutableS2ShapeIndex emptyIndex;
+
+      std::unique_ptr<Geography> ptr = doBooleanOperation(
+        feature->ShapeIndex(),
+        &emptyIndex,
+        S2BooleanOperation::OpType::UNION,
+        this->options,
+        this->layerOptions
+      );
+
+      return XPtr<Geography>(ptr.release());
+    }
+
+  private:
+    S2BooleanOperation::Options options;
+    GeographyOperationOptions::LayerOptions layerOptions;
+  };
+
+  Op op(s2options);
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
 List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
   public:
