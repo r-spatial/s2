@@ -218,16 +218,5 @@ s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 #' @rdname s2_boundary
 #' @export
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  x <- as_s2_geography(x)
-  x_na <- is.na(x)
-  if (length(x) == 0) {
-    return(as_s2_geography("GEOMETRYCOLLECTION EMPTY"))
-  } else if (!na.rm && any(x_na)) {
-    return(new_s2_xptr(list(NULL), "s2_geography"))
-  }
-
-  new_s2_xptr(
-    Reduce(function(a, b) cpp_s2_union(a, b, s2options = options), x[!x_na]),
-    "s2_geography"
-  )
+  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
 }

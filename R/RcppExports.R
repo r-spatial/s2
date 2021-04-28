@@ -225,6 +225,10 @@ cpp_s2_coverage_union_agg <- function(geog, s2options, naRm) {
     .Call(`_s2_cpp_s2_coverage_union_agg`, geog, s2options, naRm)
 }
 
+cpp_s2_union_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_union_agg`, geog, s2options, naRm)
+}
+
 cpp_s2_centroid_agg <- function(geog, naRm) {
     .Call(`_s2_cpp_s2_centroid_agg`, geog, naRm)
 }

@@ -89,7 +89,7 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
     options
   );
 
-  // check for errors
+  // build and check for errors
   S2Error error;
   if (!booleanOp.Build(*index1, *index2, &error)) {
     stop(error.text());
@@ -237,6 +237,61 @@ List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
+// This approach to aggregation is slow but accurate. There is probably a more efficient way
+// to accumulate geometries and/or re-use the layers vector but thus far I haven't figured
+// out a way to make that work.
+// [[Rcpp::export]]
+List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
+  GeographyOperationOptions options(s2options);
+  GeographyOperationOptions::LayerOptions layerOptions = options.layerOptions();
+  S2BooleanOperation::Options unionOptions = options.booleanOperationOptions();
+  S2Builder::Options buillderOptions = options.builderOptions();
+
+  // using smart pointers here so that we can use swap() to
+  // use replace accumulatedIndex with index after each union
+  std::unique_ptr<MutableS2ShapeIndex> index = absl::make_unique<MutableS2ShapeIndex>();
+  std::unique_ptr<MutableS2ShapeIndex> accumulatedIndex = absl::make_unique<MutableS2ShapeIndex>();
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+    if (item == R_NilValue && !naRm) {
+      return List::create(R_NilValue);
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<Geography> feature(item);
+
+      index->Clear();
+      s2builderutil::LayerVector layers(3);
+      layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(index.get(), layerOptions.pointLayerOptions);
+      layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(index.get(), layerOptions.polylineLayerOptions);
+      layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(index.get(), layerOptions.polygonLayerOptions);
+
+      S2BooleanOperation booleanOp(
+        S2BooleanOperation::OpType::UNION,
+        s2builderutil::NormalizeClosedSet(std::move(layers)),
+        unionOptions
+      );
+
+      S2Error error;
+      if (!booleanOp.Build(*accumulatedIndex, *(feature->ShapeIndex()), &error)) {
+        stop(error.text());
+      }
+
+      accumulatedIndex.swap(index);
+    }
+  }
+
+  std::unique_ptr<Geography> geography = rebuildGeography(
+    accumulatedIndex.get(),
+    options.builderOptions(),
+    options.layerOptions()
+  );
+
+  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+}
+
 // [[Rcpp::export]]
 List cpp_s2_centroid_agg(List geog, bool naRm) {
   S2Point cumCentroid;
@@ -285,7 +340,6 @@ List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
     }
   }
 
-  MutableS2ShapeIndex emptyIndex;
   std::unique_ptr<Geography> geography = rebuildGeography(
     &index,
     options.builderOptions(),
