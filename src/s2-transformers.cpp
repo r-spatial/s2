@@ -267,6 +267,34 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
   return output;
 }
 
+// [[Rcpp::export]]
+List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
+  GeographyOperationOptions options(s2options);
+
+  MutableS2ShapeIndex index;
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+    if (item == R_NilValue && !naRm) {
+      return List::create(R_NilValue);
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<Geography> feature(item);
+      feature->BuildShapeIndex(&index);
+    }
+  }
+
+  MutableS2ShapeIndex emptyIndex;
+  std::unique_ptr<Geography> geography = rebuildGeography(
+    &index,
+    options.builderOptions(),
+    options.layerOptions()
+  );
+
+  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+}
+
 std::vector<S2Point> findClosestPoints(S2ShapeIndex* index1, S2ShapeIndex* index2) {
       // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
 

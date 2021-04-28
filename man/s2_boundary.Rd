@@ -15,6 +15,7 @@
 \alias{s2_buffer_cells}
 \alias{s2_centroid_agg}
 \alias{s2_coverage_union_agg}
+\alias{s2_rebuild_agg}
 \alias{s2_union_agg}
 \title{S2 Geography Transformations}
 \usage{
@@ -51,6 +52,8 @@ s2_buffer_cells(
 s2_centroid_agg(x, na.rm = FALSE)
 
 s2_coverage_union_agg(x, options = s2_options(), na.rm = FALSE)
+
+s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 }

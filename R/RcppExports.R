@@ -229,6 +229,10 @@ cpp_s2_centroid_agg <- function(geog, naRm) {
     .Call(`_s2_cpp_s2_centroid_agg`, geog, naRm)
 }
 
+cpp_s2_rebuild_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_rebuild_agg`, geog, s2options, naRm)
+}
+
 cpp_s2_closest_point <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_closest_point`, geog1, geog2)
 }

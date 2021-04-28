@@ -211,6 +211,12 @@ s2_coverage_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
+s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_rebuild_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
   x <- as_s2_geography(x)
   x_na <- is.na(x)

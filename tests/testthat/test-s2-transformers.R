@@ -334,11 +334,30 @@ test_that("s2_union_agg() works", {
     as_s2_geography(NA_character_)
   )
   expect_wkt_equal(
-    s2_union_agg(character()),
+    s2_coverage_union_agg(character()),
     as_s2_geography("GEOMETRYCOLLECTION EMPTY")
   )
   expect_wkt_equal(
     s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    "POINT (30 10)"
+  )
+})
+
+test_that("s2_rebuild_agg() works", {
+  expect_wkt_equal(s2_rebuild_agg(c("POINT (30 10)", "POINT EMPTY")), "POINT (30 10)")
+  expect_wkt_equal(s2_rebuild_agg(c("POINT EMPTY", "POINT EMPTY")), "GEOMETRYCOLLECTION EMPTY")
+
+  # NULL handling
+  expect_identical(
+    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
+    as_s2_geography(NA_character_)
+  )
+  expect_wkt_equal(
+    s2_rebuild_agg(character()),
+    as_s2_geography("GEOMETRYCOLLECTION EMPTY")
+  )
+  expect_wkt_equal(
+    s2_rebuild_agg(c("POINT (30 10)", NA), na.rm = TRUE),
     "POINT (30 10)"
   )
 })
