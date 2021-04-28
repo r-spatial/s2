@@ -21,6 +21,10 @@ public:
     return Geography::Type::GEOGRAPHY_POINT;
   }
 
+  bool FindValidationError(S2Error* error) {
+    return false;
+  }
+
   const std::vector<S2Point>* Point() {
     return &(this->points);
   }

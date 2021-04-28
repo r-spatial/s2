@@ -20,6 +20,10 @@ public:
     return Geography::Type::GEOGRAPHY_POLYGON;
   }
 
+  bool FindValidationError(S2Error* error) {
+    return this->polygon->FindValidationError(error);
+  }
+
   const S2Polygon* Polygon() {
     return this->polygon.get();
   }

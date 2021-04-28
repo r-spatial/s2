@@ -16,6 +16,57 @@ test_that("s2_is_collection works", {
   )
 })
 
+test_that("s2_is_valid() works", {
+  expect_identical(
+    s2_is_valid(
+      c(
+        # valid
+        "POINT (0 1)", "LINESTRING (0 0, 1 1)", "POLYGON ((0 0, 0 1, 1 0, 0 0))",
+        "GEOMETRYCOLLECTION (POINT (0 1))",
+        # (for the purposes of S2, linestrings that cross aren't considered invalid
+        # in the sense that they won't cause errors when you try to pass them to
+        # a boolean operation or the builder)
+        # invalid
+        "LINESTRING (0 0, 0 0, 1 1)",
+        "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
+        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        NA
+      )
+    ),
+    c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, NA)
+  )
+})
+
+test_that("s2_is_valid_detail() works", {
+  expect_identical(
+    s2_is_valid_detail(
+      c(
+        # valid
+        "POINT (0 1)", "LINESTRING (0 0, 1 1)", "POLYGON ((0 0, 0 1, 1 0, 0 0))",
+        "GEOMETRYCOLLECTION (POINT (0 1))",
+        # (for the purposes of S2, linestrings that cross aren't considered invalid
+        # in the sense that they won't cause errors when you try to pass them to
+        # a boolean operation or the builder)
+        # invalid
+        "LINESTRING (0 0, 0 0, 1 1)",
+        "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
+        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        NA
+      )
+    ),
+    data.frame(
+      is_valid = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, NA),
+      reason = c(
+        NA, NA, NA, NA,
+        "Vertices 0 and 1 are identical",
+        "Loop 0: Edge 3 is degenerate (duplicate vertex)",
+        "Loop 0: Edge 3 is degenerate (duplicate vertex)",
+        NA
+      )
+    )
+  )
+})
+
 test_that("s2_dimension works", {
   expect_identical(s2_dimension(NA_character_), NA_integer_)
   expect_identical(s2_dimension("POINT EMPTY"), 0L)

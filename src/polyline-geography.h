@@ -18,6 +18,19 @@ public:
     return Geography::Type::GEOGRAPHY_POLYLINE;
   }
 
+  bool FindValidationError(S2Error* error) {
+    bool result;
+    error->Clear();
+    for (size_t i = 0; i < this->polylines.size(); i++) {
+      result = this->polylines[i]->FindValidationError(error);
+      if (result) {
+        return result;
+      }
+    }
+
+    return false;
+  }
+
   const std::vector<std::unique_ptr<S2Polyline>>* Polyline() {
     return &(this->polylines);
   }

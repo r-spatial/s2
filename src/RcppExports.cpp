@@ -25,6 +25,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_is_valid
+LogicalVector cpp_s2_is_valid(List geog);
+RcppExport SEXP _s2_cpp_s2_is_valid(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_is_valid(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_is_valid_reason
+CharacterVector cpp_s2_is_valid_reason(List geog);
+RcppExport SEXP _s2_cpp_s2_is_valid_reason(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_is_valid_reason(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_dimension
 IntegerVector cpp_s2_dimension(List geog);
 RcppExport SEXP _s2_cpp_s2_dimension(SEXP geogSEXP) {
@@ -845,6 +867,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
+    {"_s2_cpp_s2_is_valid", (DL_FUNC) &_s2_cpp_s2_is_valid, 1},
+    {"_s2_cpp_s2_is_valid_reason", (DL_FUNC) &_s2_cpp_s2_is_valid_reason, 1},
     {"_s2_cpp_s2_dimension", (DL_FUNC) &_s2_cpp_s2_dimension, 1},
     {"_s2_cpp_s2_num_points", (DL_FUNC) &_s2_cpp_s2_num_points, 1},
     {"_s2_cpp_s2_is_empty", (DL_FUNC) &_s2_cpp_s2_is_empty, 1},

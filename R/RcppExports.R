@@ -9,6 +9,14 @@ cpp_s2_is_collection <- function(geog) {
     .Call(`_s2_cpp_s2_is_collection`, geog)
 }
 
+cpp_s2_is_valid <- function(geog) {
+    .Call(`_s2_cpp_s2_is_valid`, geog)
+}
+
+cpp_s2_is_valid_reason <- function(geog) {
+    .Call(`_s2_cpp_s2_is_valid_reason`, geog)
+}
+
 cpp_s2_dimension <- function(geog) {
     .Call(`_s2_cpp_s2_dimension`, geog)
 }

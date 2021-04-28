@@ -33,6 +33,8 @@ public:
     return Type::GEOGRAPHY_EMPTY;
   }
 
+  virtual bool FindValidationError(S2Error* error) = 0;
+
   // returns true for a multi-
   // or geometrycollection type
   virtual bool IsCollection() = 0;
