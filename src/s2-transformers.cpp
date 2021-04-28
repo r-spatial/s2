@@ -502,17 +502,83 @@ List cpp_s2_unary_union(List geog, List s2options) {
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      MutableS2ShapeIndex emptyIndex;
+      // complex union only needed when a polygon is involved
+      bool simpleUnionOK = feature->IsEmpty() || 
+        (feature->Dimension() < 2);
 
-      std::unique_ptr<Geography> ptr = doBooleanOperation(
-        feature->ShapeIndex(),
-        &emptyIndex,
-        S2BooleanOperation::OpType::UNION,
-        this->options,
-        this->layerOptions
-      );
+      // valid polygons that are not part of a collection can also use a
+      // simple union (common)
+      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+        S2Error validationError;
+        if(!(feature->Polygon()->FindValidationError(&validationError))) {
+          simpleUnionOK = true;
+        }
+      }
 
-      return XPtr<Geography>(ptr.release());
+      if (simpleUnionOK) {
+        MutableS2ShapeIndex emptyIndex;
+
+        std::unique_ptr<Geography> ptr = doBooleanOperation(
+          feature->ShapeIndex(),
+          &emptyIndex,
+          S2BooleanOperation::OpType::UNION,
+          this->options,
+          this->layerOptions
+        );
+
+        return XPtr<Geography>(ptr.release());
+      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+        // If we've made it here we have an invalid polygon on our hands. A geography with
+        // invalid loops won't work with the S2BooleanOperation we will use to accumulate
+        // (i.e., union) valid polygons, so we need to rebuild each loop as its own polygon,
+        // splitting crossed edges along the way.
+        const S2Polygon* originalPoly = feature->Polygon();
+        
+        // Not exposing these options as an argument (except snap function)
+        // because a particular combiation of them is required for this to work
+        S2Builder::Options builderOptions;
+        builderOptions.set_split_crossing_edges(true);
+        builderOptions.set_snap_function(this->options.snap_function());
+        s2builderutil::S2PolygonLayer::Options layerOptions;
+        layerOptions.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
+        layerOptions.set_validate(false);
+
+        // Rebuild all loops as polygons using the S2Builder()
+        std::vector<std::unique_ptr<S2Polygon>> loops;
+        for (int i = 0; i < originalPoly->num_loops(); i++) {
+          std::unique_ptr<S2Polygon> loop = absl::make_unique<S2Polygon>();
+          S2Builder builder(builderOptions);
+          builder.StartLayer(absl::make_unique<s2builderutil::S2PolygonLayer>(loop.get()));
+          builder.AddShape(S2Loop::Shape(originalPoly->loop(i)));
+          S2Error error;
+          if (!builder.Build(&error)) {
+            throw GeographyOperatorException(error.text());
+          }
+
+          loops.push_back(std::move(loop));
+        }
+
+        // Accumulate the union of outer loops (but difference of inner loops)
+        std::unique_ptr<S2Polygon> accumulatedPolygon = absl::make_unique<S2Polygon>();
+        for (int i = 0; i < originalPoly->num_loops(); i++) {
+          std::unique_ptr<S2Polygon> polygonResult = absl::make_unique<S2Polygon>();
+
+          // There is no guarantee of loop nesting if the inner loop isn't valid; however
+          // valid inner loops do appear to be properly nested inside invalid polygons
+          // even when the outer loop intersects some other loop
+          if ((originalPoly->loop(i)->depth() % 2) == 0) {
+            polygonResult->InitToUnion(accumulatedPolygon.get(), loops[i].get());
+          } else {
+            polygonResult->InitToDifference(accumulatedPolygon.get(), loops[i].get());
+          }
+
+          accumulatedPolygon.swap(polygonResult);
+        }
+
+        return XPtr<Geography>(new PolygonGeography(std::move(accumulatedPolygon)));
+      } else {
+        stop("Not implemented (collection)");
+      }
     }
 
   private:

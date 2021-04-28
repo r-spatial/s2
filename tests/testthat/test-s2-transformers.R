@@ -225,6 +225,23 @@ test_that("s2_union(x) works", {
   )
 })
 
+test_that("s2_union(x) works with polygons that have overlapping input regions", {
+  # two outer loops
+  txt <- "MULTIPOLYGON (((0 0, 0 1, 1 1, 1 0, 0 0)), ((0.1 0.9, 0.1 1.9, 1.1 1.9, 1.1 0.9, 0.1 0.9)))"
+  # geos::geos_unary_union(txt) %>% as_wkb() %>% s2_area(radius = 1)
+  unioned <- s2_union(as_s2_geography(txt, check = F))
+  expect_equal(s2_area(unioned, radius = 1), 0.0005817275)
+
+  # two outer loops, one valid inner loop
+  # geos::geos_unary_union(txt2) %>% as_wkb() %>% s2_area(radius = 1)
+  txt2 <- "MULTIPOLYGON (
+    ((0 0, 0 1, 1 1, 1 0, 0 0), (0.1 0.1, 0.5 0.1, 0.5 0.5, 0.1 0.5, 0.1 0.1)),
+    ((0.1 0.9, 0.1 1.9, 1.1 1.9, 1.1 0.9, 0.1 0.9))
+  )"
+  unioned <- s2_union(as_s2_geography(txt2, check = F))
+  expect_equal(s2_area(unioned, radius = 1), 0.0005329892)
+})
+
 test_that("s2_union(x, y) works", {
   expect_wkt_equal(s2_union("POINT (30 10)", "POINT EMPTY"), "POINT (30 10)")
   expect_wkt_equal(s2_union("POINT EMPTY", "POINT EMPTY"), "GEOMETRYCOLLECTION EMPTY")
