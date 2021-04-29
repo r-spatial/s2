@@ -34,12 +34,6 @@ as_s2_geography <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.default <- function(x, ...) {
-  as_s2_geography(wk::as_wkb(x))
-}
-
-#' @rdname as_s2_geography
-#' @export
 as_s2_geography.s2_geography <- function(x, ...) {
   x
 }
