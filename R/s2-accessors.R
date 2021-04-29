@@ -72,6 +72,23 @@ s2_is_collection <- function(x) {
 
 #' @rdname s2_is_collection
 #' @export
+s2_is_valid <- function(x) {
+  cpp_s2_is_valid(as_s2_geography(x, check = FALSE))
+}
+
+#' @rdname s2_is_collection
+#' @export
+s2_is_valid_detail <- function(x) {
+  x <- as_s2_geography(x, check = FALSE)
+  data.frame(
+    is_valid = cpp_s2_is_valid(x),
+    reason = cpp_s2_is_valid_reason(x),
+    stringsAsFactors = FALSE
+  )
+}
+
+#' @rdname s2_is_collection
+#' @export
 s2_dimension <- function(x) {
   cpp_s2_dimension(as_s2_geography(x))
 }

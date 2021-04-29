@@ -2,6 +2,8 @@
 #ifndef WK_GEOGRAPHY_H
 #define WK_GEOGRAPHY_H
 
+#include <vector>
+
 #include "wk/rcpp-io.hpp"
 #include "wk/reader.hpp"
 #include "wk/geometry-handler.hpp"
@@ -14,11 +16,16 @@
 #include <Rcpp.h>
 #include "geography.h"
 
+#define CODE_HAS_BUILD_ERROR 3938829
+
 
 class WKGeographyWriter: public WKGeometryHandler {
 public:
   Rcpp::List output;
   R_xlen_t featureId;
+
+  Rcpp::IntegerVector problemId;
+  Rcpp::CharacterVector problems;
 
   WKGeographyWriter(R_xlen_t size):
     output(size),
@@ -70,7 +77,8 @@ public:
       default:
         std::stringstream err;
         err << "Unknown geometry type in geography builder: " << meta.geometryType;
-        Rcpp::stop(err.str());
+        this->addProblem(err.str());
+        throw WKParseException(CODE_HAS_BUILD_ERROR);
       }
     }
 
@@ -86,7 +94,12 @@ public:
   }
 
   void nextLinearRingEnd(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
-    this->builder->nextLinearRingEnd(meta, size, ringId);
+    try {
+      this->builder->nextLinearRingEnd(meta, size, ringId);
+    } catch (WKParseException& e) {
+      this->addProblem(e.what());
+      throw WKParseException(CODE_HAS_BUILD_ERROR);
+    }
   }
 
   void nextGeometryEnd(const WKGeometryMeta& meta, uint32_t partId) {
@@ -95,15 +108,37 @@ public:
 
   void nextFeatureEnd(size_t featureId) {
     if (this->builder) {
-      std::unique_ptr<Geography> feature = builder->build();
-      this->output[featureId] = Rcpp::XPtr<Geography>(feature.release());
+      try {
+        std::unique_ptr<Geography> feature = builder->build();
+        this->output[featureId] = Rcpp::XPtr<Geography>(feature.release());
+      } catch (WKParseException& e) {
+        this->addProblem(e.what());
+        throw WKParseException(CODE_HAS_BUILD_ERROR);
+      }
     }
+  }
+
+  bool nextError(WKParseException& error, size_t featureId) {
+    if (error.code() == CODE_HAS_BUILD_ERROR) {
+      this->output[featureId] = R_NilValue;
+      return true;
+    } else {
+      return false;
+    }
+
+    this->nextFeatureEnd(featureId);
+    return true;
   }
 
 private:
   std::unique_ptr<GeographyBuilder> builder;
   bool oriented;
   bool check;
+
+  void addProblem(std::string what) {
+    problemId.push_back(this->featureId);
+    problems.push_back(what);
+  }
 };
 
 

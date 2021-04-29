@@ -14,6 +14,8 @@
 \alias{s2_rebuild}
 \alias{s2_buffer_cells}
 \alias{s2_centroid_agg}
+\alias{s2_coverage_union_agg}
+\alias{s2_rebuild_agg}
 \alias{s2_union_agg}
 \title{S2 Geography Transformations}
 \usage{
@@ -48,6 +50,10 @@ s2_buffer_cells(
 )
 
 s2_centroid_agg(x, na.rm = FALSE)
+
+s2_coverage_union_agg(x, options = s2_options(), na.rm = FALSE)
+
+s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 }
@@ -160,7 +166,7 @@ s2_union(
 )
 
 # use s2_union_agg() to aggregate geographies in a vector
-s2_union_agg(
+s2_coverage_union_agg(
   c(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"

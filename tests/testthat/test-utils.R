@@ -7,6 +7,30 @@ test_that("recycle_common works", {
   expect_error(recycle_common(numeric(0), 2:4), "Incompatible lengths")
 })
 
+test_that("problems stopper formats problems correctly", {
+  expect_error(
+    stop_problems_create(1, "Houston! We have a correctly formatted problem!"),
+    "Found 1 feature with invalid"
+  )
+
+  expect_error(
+    stop_problems_create(1:11, paste0("problem ", 1:11)),
+    "\\.\\.\\.and 1 more"
+  )
+})
+
+test_that("processing problems stopper formats problems correctly", {
+  expect_error(
+    stop_problems_process(1, "Houston! We have a correctly formatted problem!"),
+    "Encountered 1 processing error"
+  )
+
+  expect_error(
+    stop_problems_process(1:11, paste0("problem ", 1:11)),
+    "\\.\\.\\.and 1 more"
+  )
+})
+
 test_that("wkt tester works", {
   expect_wkt_equal("POINT (0.123456 0)", "POINT (0.1234561 0)", precision = 6)
   expect_failure(expect_wkt_equal("POINT (0.123456 0)", "POINT (0.1234561 0)", precision = 7))

@@ -95,7 +95,7 @@
 #' )
 #'
 #' # use s2_union_agg() to aggregate geographies in a vector
-#' s2_union_agg(
+#' s2_coverage_union_agg(
 #'   c(
 #'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
@@ -155,12 +155,14 @@ s2_intersection <- function(x, y, options = s2_options()) {
 #' @rdname s2_boundary
 #' @export
 s2_union <- function(x, y = NULL, options = s2_options()) {
-  if (is.null(y)) {
-    y <- as_s2_geography("POINT EMPTY")
-  }
+  x <- as_s2_geography(x)
 
-  recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
+  if (is.null(y)) {
+    new_s2_xptr(cpp_s2_unary_union(x, options), "s2_geography")
+  } else {
+    recycled <- recycle_common(x, as_s2_geography(y))
+    new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
+  }
 }
 
 #' @rdname s2_boundary
@@ -203,6 +205,18 @@ s2_centroid_agg <- function(x, na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
+s2_coverage_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_coverage_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
+s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_rebuild_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+  new_s2_xptr(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm), "s2_geography")
 }

@@ -35,6 +35,12 @@ List s2_geography_from_wkb(List wkb, bool oriented, bool check) {
     reader.iterateFeature();
   }
 
+  if (writer.problemId.size() > 0) {
+    Environment s2NS = Environment::namespace_env("s2");
+    Function stopProblems = s2NS["stop_problems_create"];
+    stopProblems(writer.problemId, writer.problems);
+  }
+
   return writer.output;
 }
 
@@ -51,6 +57,12 @@ List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check) {
   while (reader.hasNextFeature()) {
     checkUserInterrupt();
     reader.iterateFeature();
+  }
+
+  if (writer.problemId.size() > 0) {
+    Environment s2NS = Environment::namespace_env("s2");
+    Function stopProblems = s2NS["stop_problems_create"];
+    stopProblems(writer.problemId, writer.problems);
   }
 
   return writer.output;

@@ -13,6 +13,23 @@ public:
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_COLLECTION;
+  }
+
+  bool FindValidationError(S2Error* error) {
+    bool result;
+    error->Clear();
+    for (size_t i = 0; i < this->features.size(); i++) {
+      result = this->features[i]->FindValidationError(error);
+      if (result) {
+        return result;
+      }
+    }
+
+    return false;
+  }
+
   bool IsCollection() {
     return this->features.size() > 0;
   }

@@ -2,6 +2,8 @@
 % Please edit documentation in R/s2-accessors.R
 \name{s2_is_collection}
 \alias{s2_is_collection}
+\alias{s2_is_valid}
+\alias{s2_is_valid_detail}
 \alias{s2_dimension}
 \alias{s2_num_points}
 \alias{s2_is_empty}
@@ -15,6 +17,10 @@
 \title{S2 Geography Accessors}
 \usage{
 s2_is_collection(x)
+
+s2_is_valid(x)
+
+s2_is_valid_detail(x)
 
 s2_dimension(x)
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/s2-geography.R
 \name{as_s2_geography}
 \alias{as_s2_geography}
-\alias{as_s2_geography.default}
+\alias{s2_geography}
 \alias{as_s2_geography.s2_geography}
 \alias{as_s2_geography.s2_lnglat}
 \alias{as_s2_geography.s2_point}
@@ -18,7 +18,7 @@
 \usage{
 as_s2_geography(x, ...)
 
-\method{as_s2_geography}{default}(x, ...)
+s2_geography()
 
 \method{as_s2_geography}{s2_geography}(x, ...)
 

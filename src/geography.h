@@ -17,10 +17,23 @@
 class Geography {
 public:
 
+  enum class Type {
+    GEOGRAPHY_EMPTY,
+    GEOGRAPHY_POINT,
+    GEOGRAPHY_POLYLINE,
+    GEOGRAPHY_POLYGON,
+    GEOGRAPHY_COLLECTION
+  };
+
   Geography(): hasIndex(false) {}
 
   // accessors need to be methods, since their calculation
   // depends on the geometry type
+  virtual Type GeographyType() {
+    return Type::GEOGRAPHY_EMPTY;
+  }
+
+  virtual bool FindValidationError(S2Error* error) = 0;
 
   // returns true for a multi-
   // or geometrycollection type
@@ -50,6 +63,21 @@ public:
 
   virtual ~Geography() {}
 
+  // Most calculations will use the ShapeIndex, but sometimes access to the
+  // underlying point, line, or polygon is useful to keep this class from
+  // becoming bloated with the entire s2 API.
+  virtual const std::vector<S2Point>* Point() {
+    return nullptr;
+  }
+
+  virtual const std::vector<std::unique_ptr<S2Polyline>>* Polyline() {
+    return nullptr;
+  }
+
+  virtual const S2Polygon* Polygon() {
+    return nullptr;
+  }
+
   // other calculations use ShapeIndex
   virtual S2ShapeIndex* ShapeIndex() {
     if (!this->hasIndex) {
@@ -61,16 +89,16 @@ public:
   }
 
   virtual S2ShapeIndexRegion<S2ShapeIndex> ShapeIndexRegion() {
-	S2ShapeIndex *ix = this->ShapeIndex();
-	return MakeS2ShapeIndexRegion(ix);
+	  S2ShapeIndex *ix = this->ShapeIndex();
+	  return MakeS2ShapeIndexRegion(ix);
   }
 
   virtual S2Cap GetCapBound() {
-	return this->ShapeIndexRegion().GetCapBound();
+	  return this->ShapeIndexRegion().GetCapBound();
   }
 
   virtual S2LatLngRect GetRectBound() {
-	return this->ShapeIndexRegion().GetRectBound();
+	  return this->ShapeIndexRegion().GetRectBound();
   }
 
 protected:

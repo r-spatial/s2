@@ -1,4 +1,7 @@
 
+#ifndef S2_OPTIONS_H
+#define S2_OPTIONS_H
+
 #include <sstream>
 #include <Rcpp.h>
 #include "s2/s2boolean_operation.h"
@@ -191,7 +194,7 @@ public:
     // polygon layer
     out.polygonLayerOptions.set_edge_type(getEdgeType(this->polygonEdgeType));
     out.polygonLayerOptions.set_validate(this->validatePolygon);
-    
+
     return out;
   }
 
@@ -307,3 +310,5 @@ public:
     }
   }
 };
+
+#endif

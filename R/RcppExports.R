@@ -9,6 +9,14 @@ cpp_s2_is_collection <- function(geog) {
     .Call(`_s2_cpp_s2_is_collection`, geog)
 }
 
+cpp_s2_is_valid <- function(geog) {
+    .Call(`_s2_cpp_s2_is_valid`, geog)
+}
+
+cpp_s2_is_valid_reason <- function(geog) {
+    .Call(`_s2_cpp_s2_is_valid_reason`, geog)
+}
+
 cpp_s2_dimension <- function(geog) {
     .Call(`_s2_cpp_s2_dimension`, geog)
 }
@@ -221,12 +229,20 @@ cpp_s2_sym_difference <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_sym_difference`, geog1, geog2, s2options)
 }
 
+cpp_s2_coverage_union_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_coverage_union_agg`, geog, s2options, naRm)
+}
+
 cpp_s2_union_agg <- function(geog, s2options, naRm) {
     .Call(`_s2_cpp_s2_union_agg`, geog, s2options, naRm)
 }
 
 cpp_s2_centroid_agg <- function(geog, naRm) {
     .Call(`_s2_cpp_s2_centroid_agg`, geog, naRm)
+}
+
+cpp_s2_rebuild_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_rebuild_agg`, geog, s2options, naRm)
 }
 
 cpp_s2_closest_point <- function(geog1, geog2) {
@@ -247,6 +263,10 @@ cpp_s2_boundary <- function(geog) {
 
 cpp_s2_rebuild <- function(geog, s2options) {
     .Call(`_s2_cpp_s2_rebuild`, geog, s2options)
+}
+
+cpp_s2_unary_union <- function(geog, s2options) {
+    .Call(`_s2_cpp_s2_unary_union`, geog, s2options)
 }
 
 cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {

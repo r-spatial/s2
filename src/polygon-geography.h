@@ -16,6 +16,18 @@ public:
   PolygonGeography(std::unique_ptr<S2Polygon> polygon):
     polygon(std::move(polygon)) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_POLYGON;
+  }
+
+  bool FindValidationError(S2Error* error) {
+    return this->polygon->FindValidationError(error);
+  }
+
+  const S2Polygon* Polygon() {
+    return this->polygon.get();
+  }
+
   bool IsCollection() {
     return this->outerLoopIndices().size() > 1;
   }
@@ -58,11 +70,11 @@ public:
   }
 
   S2Cap GetCapBound() {
-	return this->polygon->GetCapBound();
+	  return this->polygon->GetCapBound();
   }
 
   S2LatLngRect GetRectBound() {
-	return this->polygon->GetRectBound();
+	  return this->polygon->GetRectBound();
   }
 
   std::unique_ptr<Geography> Boundary() {
@@ -76,7 +88,7 @@ public:
 
     builder.nextGeometryStart(meta, WKReader::PART_ID_NONE);
     int loopId = 0;
-    for (int i = 0; i < flatIndices.size(); i++) {
+    for (size_t i = 0; i < flatIndices.size(); i++) {
       this->exportLoops(&builder, meta, flatIndices[i], loopId);
       loopId += flatIndices[i].size();
     }
@@ -106,7 +118,7 @@ public:
       childMeta.hasSize = true;
 
       handler->nextGeometryStart(meta, partId);
-      for (int i = 0; i < flatIndices.size(); i++) {
+      for (size_t i = 0; i < flatIndices.size(); i++) {
         childMeta.size = flatIndices[i].size();
         handler->nextGeometryStart(childMeta, i);
         this->exportLoops(handler, childMeta, flatIndices[i]);
@@ -169,7 +181,7 @@ public:
         S2Error error;
         loop->FindValidationError(&error);
         err << error.text();
-        Rcpp::stop(err.str());
+        throw WKParseException(err.str());
       }
 
       this->loops.push_back(std::move(loop));
@@ -188,7 +200,7 @@ public:
       if (this->check && !polygon->IsValid()) {
         S2Error error;
         polygon->FindValidationError(&error);
-        Rcpp::stop(error.text());
+        throw WKParseException(error.text());
       }
 
       return absl::make_unique<PolygonGeography>(std::move(polygon));
@@ -222,7 +234,7 @@ private:
     std::vector<int> outerLoops = this->outerLoopIndices();
 
     std::vector<std::vector<int>> flatIndices(outerLoops.size());
-    for (int i = 0; i < outerLoops.size(); i++) {
+    for (size_t i = 0; i < outerLoops.size(); i++) {
       int k = outerLoops[i];
       flatIndices[i] = std::vector<int>();
 

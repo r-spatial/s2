@@ -17,6 +17,18 @@ public:
   }
   PointGeography(std::vector<S2Point> points): points(points) {}
 
+  Geography::Type GeographyType() {
+    return Geography::Type::GEOGRAPHY_POINT;
+  }
+
+  bool FindValidationError(S2Error* error) {
+    return false;
+  }
+
+  const std::vector<S2Point>* Point() {
+    return &(this->points);
+  }
+
   bool IsCollection() {
     return this->points.size() > 1;
   }
