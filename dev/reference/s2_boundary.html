@@ -166,6 +166,10 @@ return a geography vector.</p>
 
 <span class='fu'>s2_centroid_agg</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
+<span class='fu'>s2_coverage_union_agg</span><span class='op'>(</span><span class='va'>x</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>s2_rebuild_agg</span><span class='op'>(</span><span class='va'>x</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
 <span class='fu'>s2_union_agg</span><span class='op'>(</span><span class='va'>x</span>, options <span class='op'>=</span> <span class='fu'><a href='s2_options.html'>s2_options</a></span><span class='op'>(</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -325,7 +329,7 @@ of these operators.</p>
 </div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
 #&gt; [1] &lt;POLYGON ((5.00000004 10.0374231, 3.55739019e-08 10, 3.55739019e-08 3.55739019e-08, 10 3.50334544e-08, 10 5.01900178...&gt;</div><div class='input'>
 <span class='co'># use s2_union_agg() to aggregate geographies in a vector</span>
-<span class='fu'>s2_union_agg</span><span class='op'>(</span>
+<span class='fu'>s2_coverage_union_agg</span><span class='op'>(</span>
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
     <span class='st'>"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,
     <span class='st'>"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>
