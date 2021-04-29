@@ -1,7 +1,9 @@
 
 test_that("s2_geography class works", {
+  expect_s3_class(s2_geography(), "s2_geography")
   geog <- new_s2_xptr(list(NULL), class = "s2_geography")
   expect_output(print(geog), "s2_geography")
+  expect_output(str(geog), "s2_geography")
   expect_identical(as_s2_geography(geog), geog)
 
   # subset assignment
@@ -12,6 +14,13 @@ test_that("s2_geography class works", {
   geog2 <- geog
   geog2[[1]] <- geog
   expect_identical(geog2, geog)
+})
+
+test_that("s2_geography vectors can be put in a data frame", {
+  expect_identical(
+    data.frame(geog = s2_geography()),
+    new_data_frame(list(geog = s2_geography()))
+  )
 })
 
 test_that("s2_geography vectors can't have other types of objects concatenated or asssigned", {

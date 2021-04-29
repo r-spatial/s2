@@ -2,6 +2,7 @@
 % Please edit documentation in R/s2-geography.R
 \name{as_s2_geography}
 \alias{as_s2_geography}
+\alias{s2_geography}
 \alias{as_s2_geography.s2_geography}
 \alias{as_s2_geography.s2_lnglat}
 \alias{as_s2_geography.s2_point}
@@ -16,6 +17,8 @@
 \title{Create an S2 Geography Vector}
 \usage{
 as_s2_geography(x, ...)
+
+s2_geography()
 
 \method{as_s2_geography}{s2_geography}(x, ...)
 
