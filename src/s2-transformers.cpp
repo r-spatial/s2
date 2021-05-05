@@ -118,7 +118,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 0) {
       builder.AddShape(*shape);
     }
@@ -127,7 +127,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 1) {
       builder.AddShape(*shape);
     }
@@ -136,7 +136,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 2) {
       builder.AddShape(*shape);
     }
@@ -475,7 +475,7 @@ List cpp_s2_rebuild(List geog, List s2options) {
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       std::unique_ptr<Geography> ptr = rebuildGeography(
-        feature->ShapeIndex(), 
+        feature->ShapeIndex(),
         this->options,
         this->layerOptions
       );
@@ -503,7 +503,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       // complex union only needed when a polygon is involved
-      bool simpleUnionOK = feature->IsEmpty() || 
+      bool simpleUnionOK = feature->IsEmpty() ||
         (feature->Dimension() < 2);
 
       // valid polygons that are not part of a collection can also use a
@@ -533,7 +533,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
         // (i.e., union) valid polygons, so we need to rebuild each loop as its own polygon,
         // splitting crossed edges along the way.
         const S2Polygon* originalPoly = feature->Polygon();
-        
+
         // Not exposing these options as an argument (except snap function)
         // because a particular combiation of them is required for this to work
         S2Builder::Options builderOptions;
