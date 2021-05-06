@@ -36,6 +36,9 @@
 #'   distance a vertex should move in the snapping process.
 #' @param precision A number by which coordinates should be multiplied
 #'   before being rounded. Rounded to the nearest exponent of 10.
+#' @param dimensions A combination of 'point', 'polyline', and/or 'polygon'
+#'   that can used to constrain the output of [s2_rebuild()] or a
+#'   boolean operation.
 #'
 #' @section Model:
 #' The geometry model indicates whether or not a geometry includes its boundaries.
@@ -67,7 +70,8 @@ s2_options <- function(model = NULL,
                        polyline_sibling_pairs = "keep",
                        simplify_edge_chains = FALSE,
                        split_crossing_edges = FALSE,
-                       idempotent = FALSE) {
+                       idempotent = FALSE,
+                       dimensions = c("point", "polyline", "polygon")) {
   # check snap radius (passing in a huge snap radius can cause problems)
   if (snap_radius > 3) {
     stop(
@@ -80,13 +84,13 @@ s2_options <- function(model = NULL,
     list(
       # model needs to be "unset" by default because there are differences in polygon
       # and polyline handling by default that are good defaults to preserve
-      model = if (is.null(model)) -1 else match_option(model, c("open", "semi-open", "closed"), "model"),
+      model = if (is.null(model)) -1 else match_option(model[1], c("open", "semi-open", "closed"), "model"),
       snap = snap,
       snap_radius = snap_radius,
       duplicate_edges = duplicate_edges,
-      edge_type = match_option(edge_type, c("directed", "undirected"), "edge_type"),
+      edge_type = match_option(edge_type[1], c("directed", "undirected"), "edge_type"),
       validate = validate,
-      polyline_type = match_option(polyline_type, c("path", "walk"), "polyline_type"),
+      polyline_type = match_option(polyline_type[1], c("path", "walk"), "polyline_type"),
       polyline_sibling_pairs = match_option(
         polyline_sibling_pairs,
         c("discard", "keep"),
@@ -94,7 +98,8 @@ s2_options <- function(model = NULL,
       ),
       simplify_edge_chains = simplify_edge_chains,
       split_crossing_edges = split_crossing_edges,
-      idempotent = idempotent
+      idempotent = idempotent,
+      dimensions = match_option(dimensions, c("point", "polyline", "polygon"), "dimensions")
     ),
     class = "s2_options"
   )
@@ -131,7 +136,7 @@ s2_snap_distance <- function(distance)  {
 
 match_option <- function(x, options, arg) {
   result <- match(x, options)
-  if (identical(result, NA_integer_)) {
+  if (any(is.na(result))) {
     stop(
       sprintf("`%s` must be one of %s", arg, paste0('"', options, '"', collapse = ", ")),
       call. = FALSE

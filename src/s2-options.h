@@ -30,6 +30,13 @@ public:
   int simplifyEdgeChains;
   int splitCrossingEdges;
   int idempotent;
+  int dimensions;
+
+  enum Dimension {
+    POINT = 1,
+    POLYLINE = 2,
+    POLYGON = 4
+  };
 
   // Wraps options for the three layer types
   class LayerOptions {
@@ -37,6 +44,7 @@ public:
     s2builderutil::S2PointVectorLayer::Options pointLayerOptions;
     s2builderutil::S2PolylineVectorLayer::Options polylineLayerOptions;
     s2builderutil::S2PolygonLayer::Options polygonLayerOptions;
+    int dimensions;
   };
 
   // deaults: use S2 defaults
@@ -148,6 +156,28 @@ public:
       err << "Error setting s2_options() `idempotent`: " << e.what();
       Rcpp::stop(err.str());
     }
+
+    try {
+      this->dimensions = 0;
+      Rcpp::IntegerVector dim = s2options["dimensions"];
+      for (int i = 0; i < dim.size(); i++) {
+        switch (dim[i]) {
+        case 1:
+          this->dimensions |= Dimension::POINT;
+          break;
+        case 2:
+          this->dimensions |= Dimension::POLYLINE;
+          break;
+        case 3:
+          this->dimensions |= Dimension::POLYGON;
+          break;
+        }
+      }
+    } catch (std::exception& e) {
+      std::stringstream err;
+      err << "Error setting s2_options() `dimensions`: " << e.what();
+      Rcpp::stop(err.str());
+    }
   }
 
   // build options for passing this to the S2BooleanOperation
@@ -194,6 +224,9 @@ public:
     // polygon layer
     out.polygonLayerOptions.set_edge_type(getEdgeType(this->polygonEdgeType));
     out.polygonLayerOptions.set_validate(this->validatePolygon);
+
+    // dimensions
+    out.dimensions = this->dimensions;
 
     return out;
   }

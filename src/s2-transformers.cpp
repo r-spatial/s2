@@ -27,9 +27,16 @@ using namespace Rcpp;
 
 std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
                                                std::vector<std::unique_ptr<S2Polyline>> polylines,
-                                               std::unique_ptr<S2Polygon> polygon) {
+                                               std::unique_ptr<S2Polygon> polygon,
+                                               int dimensions) {
   // count non-empty dimensions
-  int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
+  bool has_polygon = (dimensions & GeographyOperationOptions::Dimension::POLYGON) &&
+    !polygon->is_empty();
+  bool has_polyline = (dimensions & GeographyOperationOptions::Dimension::POLYLINE) &&
+    (polylines.size() > 0);
+  bool has_points = (dimensions & GeographyOperationOptions::Dimension::POINT) &&
+    (points.size() > 0);
+  int nonEmptyDimensions = has_polygon + has_polyline + has_points;
 
   // return empty output
   if (nonEmptyDimensions == 0) {
@@ -40,15 +47,15 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   if (nonEmptyDimensions > 1) {
     std::vector<std::unique_ptr<Geography>> features;
 
-    if (points.size() > 0) {
+    if (has_points) {
       features.push_back(absl::make_unique<PointGeography>(std::move(points)));
     }
 
-    if (polylines.size() > 0) {
+    if (has_polyline) {
       features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
     }
 
-    if (!polygon->is_empty()) {
+    if (has_polygon) {
       features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
     }
 
@@ -56,9 +63,9 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   }
 
   // return single dimension output
-  if (!polygon->is_empty()) {
+  if (has_polygon) {
     return absl::make_unique<PolygonGeography>(std::move(polygon));
-  } else if (polylines.size() > 0) {
+  } else if (has_polyline) {
     return absl::make_unique<PolylineGeography>(std::move(polylines));
   } else {
     return absl::make_unique<PointGeography>(std::move(points));
@@ -99,7 +106,8 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   return geographyFromLayers(
     std::move(points),
     std::move(polylines),
-    std::move(polygon)
+    std::move(polygon),
+    layerOptions.dimensions
   );
 }
 
@@ -152,7 +160,8 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   return geographyFromLayers(
     std::move(points),
     std::move(polylines),
-    std::move(polygon)
+    std::move(polygon),
+    layerOptions.dimensions
   );
 }
 

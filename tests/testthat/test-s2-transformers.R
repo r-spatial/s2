@@ -538,6 +538,16 @@ test_that("s2_rebuild() works", {
       )
     )
   )
+
+  # dimension
+  expect_true(
+    s2_is_empty(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(dimensions = c("point", "polygon"))
+      )
+    )
+  )
 })
 
 test_that("real data survives the S2BooleanOperation", {
