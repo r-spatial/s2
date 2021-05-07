@@ -592,4 +592,13 @@ test_that("s2_interpolate() and s2_interpolate_normalized() work", {
     ),
     c("POINT (0 0)", "POINT (0 15)", "POINT (0 45)", "POINT (0 60)", NA)
   )
+
+  expect_error(
+    s2_interpolate_normalized("POINT (0 1)", 1),
+    "must be a polyline"
+  )
+  expect_error(
+    s2_interpolate_normalized("MULTILINESTRING ((0 1, 1 1), (1 1, 1 2))", 1),
+    "must be a simple geography"
+  )
 })
