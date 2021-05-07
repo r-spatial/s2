@@ -149,7 +149,8 @@ containment and how new geometries should be constructed.</p>
   polyline_sibling_pairs <span class='op'>=</span> <span class='st'>"keep"</span>,
   simplify_edge_chains <span class='op'>=</span> <span class='cn'>FALSE</span>,
   split_crossing_edges <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  idempotent <span class='op'>=</span> <span class='cn'>FALSE</span>
+  idempotent <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  dimensions <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"point"</span>, <span class='st'>"polyline"</span>, <span class='st'>"polygon"</span><span class='op'>)</span>
 <span class='op'>)</span>
 
 <span class='fu'>s2_snap_identity</span><span class='op'>(</span><span class='op'>)</span>
@@ -219,6 +220,12 @@ when creating geometries.</p></td>
       <th>idempotent</th>
       <td><p>Use <code>FALSE</code> to apply snap even if snapping is not necessary
 to satisfy vertex constraints.</p></td>
+    </tr>
+    <tr>
+      <th>dimensions</th>
+      <td><p>A combination of 'point', 'polyline', and/or 'polygon'
+that can used to constrain the output of <code><a href='s2_boundary.html'>s2_rebuild()</a></code> or a
+boolean operation.</p></td>
     </tr>
     <tr>
       <th>level</th>
@@ -293,6 +300,9 @@ of these operators.</p>
 #&gt; 
 #&gt; $idempotent
 #&gt; [1] FALSE
+#&gt; 
+#&gt; $dimensions
+#&gt; [1] 1 2 3
 #&gt; 
 #&gt; attr(,"class")
 #&gt; [1] "s2_options"</div><div class='input'>
