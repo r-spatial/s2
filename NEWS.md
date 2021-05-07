@@ -1,5 +1,11 @@
 # s2 (development version)
 
+* Added `s2_interpolate()`, `s2_interpolate_normalized()`, 
+  `s2_project()`, and `s2_project_normalized()` to provide linear
+  referencing support on the sphere (#96, #110).
+* Fixed import of empty points from WKB (#109).
+* Added argument `dimensions` to `s2_options()` to constrain the
+  output dimensions of a boolean or rebuild operation (#105, #104, #110).
 * Added `s2_is_valid()` and `s2_is_valid_detail()` to help find invalid
   spherical geometries when importing data into S2 (#100).
 * Improved error messages when importing and processing data such that
