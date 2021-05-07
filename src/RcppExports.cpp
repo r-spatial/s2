@@ -135,6 +135,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_project_normalized
+NumericVector cpp_s2_project_normalized(List geog1, List geog2);
+RcppExport SEXP _s2_cpp_s2_project_normalized(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_project_normalized(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_distance
 NumericVector cpp_s2_distance(List geog1, List geog2);
 RcppExport SEXP _s2_cpp_s2_distance(SEXP geog1SEXP, SEXP geog2SEXP) {
@@ -828,6 +840,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_interpolate_normalized
+List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized);
+RcppExport SEXP _s2_cpp_s2_interpolate_normalized(SEXP geogSEXP, SEXP distanceNormalizedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distanceNormalized(distanceNormalizedSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_interpolate_normalized(geog, distanceNormalized));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_buffer_cells
 List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel);
 RcppExport SEXP _s2_cpp_s2_buffer_cells(SEXP geogSEXP, SEXP distanceSEXP, SEXP maxCellsSEXP, SEXP minLevelSEXP) {
@@ -877,6 +901,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_perimeter", (DL_FUNC) &_s2_cpp_s2_perimeter, 1},
     {"_s2_cpp_s2_x", (DL_FUNC) &_s2_cpp_s2_x, 1},
     {"_s2_cpp_s2_y", (DL_FUNC) &_s2_cpp_s2_y, 1},
+    {"_s2_cpp_s2_project_normalized", (DL_FUNC) &_s2_cpp_s2_project_normalized, 2},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
@@ -932,6 +957,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},
     {"_s2_cpp_s2_rebuild", (DL_FUNC) &_s2_cpp_s2_rebuild, 2},
     {"_s2_cpp_s2_unary_union", (DL_FUNC) &_s2_cpp_s2_unary_union, 2},
+    {"_s2_cpp_s2_interpolate_normalized", (DL_FUNC) &_s2_cpp_s2_interpolate_normalized, 2},
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
     {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},

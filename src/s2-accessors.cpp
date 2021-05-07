@@ -146,6 +146,40 @@ NumericVector cpp_s2_y(List geog) {
 }
 
 // [[Rcpp::export]]
+NumericVector cpp_s2_project_normalized(List geog1, List geog2) {
+  class Op: public BinaryGeographyOperator<NumericVector, double> {
+    double processFeature(XPtr<Geography> feature1,
+                          XPtr<Geography> feature2,
+                          R_xlen_t i) {
+      if (feature1->IsCollection() || feature2->IsCollection()) {
+        throw GeographyOperatorException("`x` and `y` must both be simple geographies");
+      }
+
+      if (feature1->IsEmpty() || feature2->IsEmpty()) {
+        return NA_REAL;
+      }
+
+      if (feature1->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
+        if (feature2->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
+          S2Point point = feature2->Point()->at(0);
+          int next_vertex;
+          S2Point point_on_line = feature1->Polyline()->at(0)->Project(point, &next_vertex);
+          return feature1->Polyline()->at(0)->UnInterpolate(point_on_line, next_vertex);
+        } else {
+          throw GeographyOperatorException("`y` must be a point geography");
+        }
+      } else {
+        throw GeographyOperatorException("`x` must be a polyline geography");
+      }
+      return NA_REAL;
+    }
+  };
+
+  Op op;
+  return op.processVector(geog1, geog2);
+}
+
+// [[Rcpp::export]]
 NumericVector cpp_s2_distance(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<NumericVector, double> {
 

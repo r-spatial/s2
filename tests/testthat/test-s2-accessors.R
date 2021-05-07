@@ -142,6 +142,38 @@ test_that("s2_x and s2_y works", {
   expect_error(s2_y("POLYGON EMPTY"), "Can't compute")
 })
 
+test_that("s2_project() and s2_project_normalized() work", {
+  expect_equal(
+    s2_project(
+      "LINESTRING (0 0, 0 90)",
+      c("POINT (0 0)", "POINT (0 22.5)", "POINT (0 67.5)", "POINT (0 90)", NA),
+      radius = 1
+    ),
+    c(0, 0.25, 0.75, 1, NA_real_) * pi / 2
+  )
+
+  expect_equal(
+    s2_project_normalized(
+      "LINESTRING (0 0, 0 90)",
+      c("POINT (0 0)", "POINT (0 22.5)", "POINT (0 67.5)", "POINT (0 90)", "POINT EMPTY", NA)
+    ),
+    c(0, 0.25, 0.75, 1, NA_real_, NA_real_)
+  )
+
+  expect_error(
+    s2_project_normalized("POINT (0 1)", "POINT (0 1)"),
+    "must be a polyline"
+  )
+  expect_error(
+    s2_project_normalized("LINESTRING (0 1, 1 1)", "LINESTRING (0 1, 1 1)"),
+    "must be a point"
+  )
+  expect_error(
+    s2_project_normalized("LINESTRING (0 1, 1 1)", "MULTIPOINT (0 1, 1 1)"),
+    "must both be simple geographies"
+  )
+})
+
 test_that("s2_distance works", {
   expect_equal(
     s2_distance("POINT (0 0)", "POINT (90 0)", radius = 180 / pi),

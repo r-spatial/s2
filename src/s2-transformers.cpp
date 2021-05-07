@@ -27,9 +27,16 @@ using namespace Rcpp;
 
 std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
                                                std::vector<std::unique_ptr<S2Polyline>> polylines,
-                                               std::unique_ptr<S2Polygon> polygon) {
+                                               std::unique_ptr<S2Polygon> polygon,
+                                               int dimensions) {
   // count non-empty dimensions
-  int nonEmptyDimensions = (!polygon->is_empty() + (polylines.size() > 0) + (points.size() > 0));
+  bool has_polygon = (dimensions & GeographyOperationOptions::Dimension::POLYGON) &&
+    !polygon->is_empty();
+  bool has_polyline = (dimensions & GeographyOperationOptions::Dimension::POLYLINE) &&
+    (polylines.size() > 0);
+  bool has_points = (dimensions & GeographyOperationOptions::Dimension::POINT) &&
+    (points.size() > 0);
+  int nonEmptyDimensions = has_polygon + has_polyline + has_points;
 
   // return empty output
   if (nonEmptyDimensions == 0) {
@@ -40,15 +47,15 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   if (nonEmptyDimensions > 1) {
     std::vector<std::unique_ptr<Geography>> features;
 
-    if (points.size() > 0) {
+    if (has_points) {
       features.push_back(absl::make_unique<PointGeography>(std::move(points)));
     }
 
-    if (polylines.size() > 0) {
+    if (has_polyline) {
       features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
     }
 
-    if (!polygon->is_empty()) {
+    if (has_polygon) {
       features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
     }
 
@@ -56,9 +63,9 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   }
 
   // return single dimension output
-  if (!polygon->is_empty()) {
+  if (has_polygon) {
     return absl::make_unique<PolygonGeography>(std::move(polygon));
-  } else if (polylines.size() > 0) {
+  } else if (has_polyline) {
     return absl::make_unique<PolylineGeography>(std::move(polylines));
   } else {
     return absl::make_unique<PointGeography>(std::move(points));
@@ -99,7 +106,8 @@ std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex
   return geographyFromLayers(
     std::move(points),
     std::move(polylines),
-    std::move(polygon)
+    std::move(polygon),
+    layerOptions.dimensions
   );
 }
 
@@ -118,7 +126,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 0) {
       builder.AddShape(*shape);
     }
@@ -127,7 +135,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 1) {
       builder.AddShape(*shape);
     }
@@ -136,7 +144,7 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
   );
-  for (S2Shape* shape : *index) { 
+  for (S2Shape* shape : *index) {
     if (shape->dimension() == 2) {
       builder.AddShape(*shape);
     }
@@ -152,7 +160,8 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   return geographyFromLayers(
     std::move(points),
     std::move(polylines),
-    std::move(polygon)
+    std::move(polygon),
+    layerOptions.dimensions
   );
 }
 
@@ -475,7 +484,7 @@ List cpp_s2_rebuild(List geog, List s2options) {
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       std::unique_ptr<Geography> ptr = rebuildGeography(
-        feature->ShapeIndex(), 
+        feature->ShapeIndex(),
         this->options,
         this->layerOptions
       );
@@ -503,7 +512,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       // complex union only needed when a polygon is involved
-      bool simpleUnionOK = feature->IsEmpty() || 
+      bool simpleUnionOK = feature->IsEmpty() ||
         (feature->Dimension() < 2);
 
       // valid polygons that are not part of a collection can also use a
@@ -533,7 +542,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
         // (i.e., union) valid polygons, so we need to rebuild each loop as its own polygon,
         // splitting crossed edges along the way.
         const S2Polygon* originalPoly = feature->Polygon();
-        
+
         // Not exposing these options as an argument (except snap function)
         // because a particular combiation of them is required for this to work
         S2Builder::Options builderOptions;
@@ -596,6 +605,38 @@ List cpp_s2_unary_union(List geog, List s2options) {
   };
 
   Op op(s2options);
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    NumericVector distanceNormalized;
+    Op(NumericVector distanceNormalized): distanceNormalized(distanceNormalized) {}
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      if (NumericVector::is_na(this->distanceNormalized[i])) {
+        return R_NilValue;
+      }
+
+      if (feature->IsCollection()) {
+        throw GeographyOperatorException("`x` must be a simple geography");
+      }
+
+      if (feature->IsEmpty()) {
+        return R_NilValue;
+      }
+
+      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
+        S2Point point = feature->Polyline()->at(0)->Interpolate(this->distanceNormalized[i]);
+        return XPtr<PointGeography>(new PointGeography(point));
+      } else {
+        throw GeographyOperatorException("`x` must be a polyline geography");
+      }
+    }
+  };
+
+  Op op(distanceNormalized);
   return op.processVector(geog);
 }
 

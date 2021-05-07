@@ -49,6 +49,10 @@ cpp_s2_y <- function(geog) {
     .Call(`_s2_cpp_s2_y`, geog)
 }
 
+cpp_s2_project_normalized <- function(geog1, geog2) {
+    .Call(`_s2_cpp_s2_project_normalized`, geog1, geog2)
+}
+
 cpp_s2_distance <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_distance`, geog1, geog2)
 }
@@ -267,6 +271,10 @@ cpp_s2_rebuild <- function(geog, s2options) {
 
 cpp_s2_unary_union <- function(geog, s2options) {
     .Call(`_s2_cpp_s2_unary_union`, geog, s2options)
+}
+
+cpp_s2_interpolate_normalized <- function(geog, distanceNormalized) {
+    .Call(`_s2_cpp_s2_interpolate_normalized`, geog, distanceNormalized)
 }
 
 cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {

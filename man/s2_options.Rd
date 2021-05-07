@@ -19,7 +19,8 @@ s2_options(
   polyline_sibling_pairs = "keep",
   simplify_edge_chains = FALSE,
   split_crossing_edges = FALSE,
-  idempotent = FALSE
+  idempotent = FALSE,
+  dimensions = c("point", "polyline", "polygon")
 )
 
 s2_snap_identity()
@@ -65,6 +66,10 @@ when creating geometries.}
 
 \item{idempotent}{Use \code{FALSE} to apply snap even if snapping is not necessary
 to satisfy vertex constraints.}
+
+\item{dimensions}{A combination of 'point', 'polyline', and/or 'polygon'
+that can used to constrain the output of \code{\link[=s2_rebuild]{s2_rebuild()}} or a
+boolean operation.}
 
 \item{level}{A value from 0 to 30 corresponding to the cell level
 at which snapping should occur.}

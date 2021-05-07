@@ -538,6 +538,16 @@ test_that("s2_rebuild() works", {
       )
     )
   )
+
+  # dimension
+  expect_true(
+    s2_is_empty(
+      s2_rebuild(
+        "LINESTRING (0 0, 0 1, 0 2, 0 1, 0 3)",
+        s2_options(dimensions = c("point", "polygon"))
+      )
+    )
+  )
 })
 
 test_that("real data survives the S2BooleanOperation", {
@@ -564,4 +574,31 @@ test_that("real data survives the S2BooleanOperation", {
     expect_equal(s2_num_points(reloaded), s2_num_points(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
   }
+})
+
+test_that("s2_interpolate() and s2_interpolate_normalized() work", {
+  expect_identical(
+    s2_as_text(
+      s2_interpolate_normalized("LINESTRING (0 0, 0 60)", c(0, 0.25, 0.75, 1, NA)),
+      precision = 5
+    ),
+    c("POINT (0 0)", "POINT (0 15)", "POINT (0 45)", "POINT (0 60)", NA)
+  )
+
+  expect_identical(
+    s2_as_text(
+      s2_interpolate("LINESTRING (0 0, 0 60)", c(0, 0.25, 0.75, 1, NA) * pi / 3, radius = 1),
+      precision = 5
+    ),
+    c("POINT (0 0)", "POINT (0 15)", "POINT (0 45)", "POINT (0 60)", NA)
+  )
+
+  expect_error(
+    s2_interpolate_normalized("POINT (0 1)", 1),
+    "must be a polyline"
+  )
+  expect_error(
+    s2_interpolate_normalized("MULTILINESTRING ((0 1, 1 1), (1 1, 1 2))", 1),
+    "must be a simple geography"
+  )
 })

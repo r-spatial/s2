@@ -220,3 +220,50 @@ s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
   new_s2_xptr(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm), "s2_geography")
 }
+
+
+#' Linear referencing
+#'
+#' @param x A simple polyline geography vector
+#' @param y A simple point geography vector. The point will be
+#'   snapped to the nearest point on `x` for the purposes of
+#'   interpolation.
+#' @param distance A distance along `x` in `radius` units.
+#' @param distance_normalized A `distance` normalized to [s2_length()] of
+#'   `x`.
+#' @inheritParams s2_is_collection
+#'
+#' @return
+#'   - `s2_interpolate()` returns the point on `x`, `distance` meters
+#'     along the line.
+#'   - `s2_interpolate_normalized()` returns the point on `x` interpolated
+#'     to a fraction along the line.
+#'   - `s2_project()` returns the `distance` that `point` occurs along `x`.
+#'   - `s2_project_normalized()` returns the `distance_normalized` along `x`
+#'     where `point` occurs.
+#' @export
+#'
+#' @examples
+#' s2_project_normalized("LINESTRING (0 0, 0 90)", "POINT (0 22.5)")
+#' s2_project("LINESTRING (0 0, 0 90)", "POINT (0 22.5)")
+#' s2_interpolate_normalized("LINESTRING (0 0, 0 90)", 0.25)
+#' s2_interpolate("LINESTRING (0 0, 0 90)", 2501890)
+#'
+s2_interpolate <- function(x, distance, radius = s2_earth_radius_meters()) {
+  recycled <- recycle_common(as_s2_geography(x), distance / radius)
+  length <- cpp_s2_length(recycled[[1]])
+  new_s2_xptr(
+    cpp_s2_interpolate_normalized(recycled[[1]], distance / radius / length),
+    "s2_geography"
+  )
+}
+
+#' @rdname s2_interpolate
+#' @export
+s2_interpolate_normalized <- function(x, distance_normalized) {
+  recycled <- recycle_common(as_s2_geography(x), distance_normalized)
+  new_s2_xptr(
+    cpp_s2_interpolate_normalized(recycled[[1]], distance_normalized),
+    "s2_geography"
+  )
+}
