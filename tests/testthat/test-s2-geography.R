@@ -130,6 +130,11 @@ test_that("s2_geography vectors can be created from wkt", {
   expect_output(print(as_s2_geography("GEOMETRYCOLLECTION EMPTY")), "<GEOMETRYCOLLECTION EMPTY>")
 })
 
+test_that("empty points are empty when imported from WKB", {
+  wkb_empty <- wk::as_wkb("POINT EMPTY")
+  expect_true(s2_is_empty(s2_geog_from_wkb(wkb_empty)))
+})
+
 test_that("nested ring depths are correctly exported", {
   # polygon with hole
   expect_output(
