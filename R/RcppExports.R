@@ -273,6 +273,10 @@ cpp_s2_unary_union <- function(geog, s2options) {
     .Call(`_s2_cpp_s2_unary_union`, geog, s2options)
 }
 
+cpp_s2_interpolate_normalized <- function(geog, distanceNormalized) {
+    .Call(`_s2_cpp_s2_interpolate_normalized`, geog, distanceNormalized)
+}
+
 cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
     .Call(`_s2_cpp_s2_buffer_cells`, geog, distance, maxCells, minLevel)
 }

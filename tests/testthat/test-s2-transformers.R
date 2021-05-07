@@ -575,3 +575,21 @@ test_that("real data survives the S2BooleanOperation", {
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
   }
 })
+
+test_that("s2_interpolate() and s2_interpolate_normalized() work", {
+  expect_identical(
+    s2_as_text(
+      s2_interpolate_normalized("LINESTRING (0 0, 0 60)", c(0, 0.25, 0.75, 1, NA)),
+      precision = 5
+    ),
+    c("POINT (0 0)", "POINT (0 15)", "POINT (0 45)", "POINT (0 60)", NA)
+  )
+
+  expect_identical(
+    s2_as_text(
+      s2_interpolate("LINESTRING (0 0, 0 60)", c(0, 0.25, 0.75, 1, NA) * pi / 3, radius = 1),
+      precision = 5
+    ),
+    c("POINT (0 0)", "POINT (0 15)", "POINT (0 45)", "POINT (0 60)", NA)
+  )
+})

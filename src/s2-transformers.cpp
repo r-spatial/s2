@@ -609,6 +609,38 @@ List cpp_s2_unary_union(List geog, List s2options) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    NumericVector distanceNormalized;
+    Op(NumericVector distanceNormalized): distanceNormalized(distanceNormalized) {}
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      if (NumericVector::is_na(this->distanceNormalized[i])) {
+        return R_NilValue;
+      }
+
+      if (feature->IsCollection()) {
+        throw GeographyOperatorException("`x` must be a simple geography");
+      }
+
+      if (feature->IsEmpty()) {
+        return R_NilValue;
+      }
+
+      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
+        S2Point point = feature->Polyline()->at(0)->Interpolate(this->distanceNormalized[i]);
+        return XPtr<PointGeography>(new PointGeography(point));
+      } else {
+        throw GeographyOperatorException("`x` must be a polyline geography");
+      }
+    }
+  };
+
+  Op op(distanceNormalized);
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
 List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
   public:

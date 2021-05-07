@@ -138,7 +138,8 @@ s2_y <- function(x) {
   cpp_s2_y(as_s2_geography(x))
 }
 
-#' @rdname s2_is_collection
+# document these with the other linear referencers
+#' @rdname s2_interpolate
 #' @export
 s2_project <- function(x, y, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y), radius)
@@ -146,7 +147,7 @@ s2_project <- function(x, y, radius = s2_earth_radius_meters()) {
   cpp_s2_project_normalized(recycled[[1]], recycled[[2]]) * length
 }
 
-#' @rdname s2_is_collection
+#' @rdname s2_interpolate
 #' @export
 s2_project_normalized <- function(x, y) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
