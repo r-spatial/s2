@@ -135,6 +135,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_project_normalized
+NumericVector cpp_s2_project_normalized(List geog1, List geog2);
+RcppExport SEXP _s2_cpp_s2_project_normalized(SEXP geog1SEXP, SEXP geog2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_project_normalized(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_distance
 NumericVector cpp_s2_distance(List geog1, List geog2);
 RcppExport SEXP _s2_cpp_s2_distance(SEXP geog1SEXP, SEXP geog2SEXP) {
@@ -877,6 +889,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_perimeter", (DL_FUNC) &_s2_cpp_s2_perimeter, 1},
     {"_s2_cpp_s2_x", (DL_FUNC) &_s2_cpp_s2_x, 1},
     {"_s2_cpp_s2_y", (DL_FUNC) &_s2_cpp_s2_y, 1},
+    {"_s2_cpp_s2_project_normalized", (DL_FUNC) &_s2_cpp_s2_project_normalized, 2},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},

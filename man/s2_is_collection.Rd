@@ -12,6 +12,8 @@
 \alias{s2_perimeter}
 \alias{s2_x}
 \alias{s2_y}
+\alias{s2_project}
+\alias{s2_project_normalized}
 \alias{s2_distance}
 \alias{s2_max_distance}
 \title{S2 Geography Accessors}
@@ -37,6 +39,10 @@ s2_perimeter(x, radius = s2_earth_radius_meters())
 s2_x(x)
 
 s2_y(x)
+
+s2_project(x, y, radius = s2_earth_radius_meters())
+
+s2_project_normalized(x, y)
 
 s2_distance(x, y, radius = s2_earth_radius_meters())
 
