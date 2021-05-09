@@ -1,5 +1,7 @@
 # s2 (development version)
 
+* Added `s2_nearest_edges()` to make k-nearest neighbours calculation
+  possible on the sphere (#111, #112).
 * Added `s2_interpolate()`, `s2_interpolate_normalized()`, 
   `s2_project()`, and `s2_project_normalized()` to provide linear
   referencing support on the sphere (#96, #110).
