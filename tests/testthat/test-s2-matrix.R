@@ -14,6 +14,36 @@ test_that("s2_closest|farthest_feature() works", {
   expect_identical(s2_data_tbl_countries$name[country_match_farthest], "New Zealand")
 })
 
+test_that("s2_closest_edges() works", {
+  expect_identical(
+    s2_closest_edges(
+      "POINT (0 0)",
+      c("POINT (0 0)", "POINT (0 1)", "POINT (0 2)", "POINT (0 3)"),
+      k = 1
+    ),
+    list(1L)
+  )
+
+  expect_identical(
+    s2_closest_edges(
+      "POINT (0 0)",
+      c("POINT (0 0)", "POINT (0 1)", "POINT (0 2)", "POINT (0 3)"),
+      k = 2,
+      min_distance = 0
+    ),
+    list(2L)
+  )
+
+  expect_identical(
+    s2_closest_edges(
+      "POINT (0 0)",
+      c("POINT (0 0)", "POINT (0 1)", "POINT (0 2)", "POINT (0 3)"),
+      k = 5
+    ) %>% lapply(sort),
+    list(1:4)
+  )
+})
+
 test_that("matrix predicates work", {
   expect_identical(
     s2_contains_matrix(
