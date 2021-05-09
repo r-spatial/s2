@@ -142,6 +142,8 @@ the feature at <code>x[i]</code>.</p>
 
     <pre class="usage"><span class='fu'>s2_closest_feature</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 
+<span class='fu'>s2_closest_edges</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>k</span>, min_distance <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+
 <span class='fu'>s2_farthest_feature</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 
 <span class='fu'>s2_distance_matrix</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
@@ -175,6 +177,17 @@ the feature at <code>x[i]</code>.</p>
       <th>x, y</th>
       <td><p>Geography vectors, coerced using <code><a href='as_s2_geography.html'>as_s2_geography()</a></code>.
 <code>x</code> is considered the source, where as <code>y</code> is considered the target.</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>The number of closest edges to consider when searching. Note
+that in S2 a point is also considered an edge.</p></td>
+    </tr>
+    <tr>
+      <th>min_distance</th>
+      <td><p>The minimum distance to consider when searching for
+edges. This filter is applied after the search is complete (i.e.,
+may cause fewer than <code>k</code> values to be returned).</p></td>
     </tr>
     <tr>
       <th>radius</th>
@@ -230,6 +243,11 @@ performance.</p></td>
 <span class='co'># for each feature in x</span>
 <span class='va'>country_names</span><span class='op'>[</span><span class='fu'>s2_farthest_feature</span><span class='op'>(</span><span class='va'>cities</span>, <span class='va'>countries</span><span class='op'>)</span><span class='op'>]</span>
 </div><div class='output co'>#&gt; [1] "New Zealand" "New Zealand" "New Zealand"</div><div class='input'>
+<span class='co'># use s2_closest_edges() to find the k-nearest neighbours</span>
+<span class='va'>nearest</span> <span class='op'>&lt;-</span> <span class='fu'>s2_closest_edges</span><span class='op'>(</span><span class='va'>cities</span>, <span class='va'>cities</span>, k <span class='op'>=</span> <span class='fl'>2</span>, min_distance <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>city_names</span>
+</div><div class='output co'>#&gt; [1] "Vatican City" "San Marino"   "Luxembourg"  </div><div class='input'><span class='va'>city_names</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>nearest</span><span class='op'>)</span><span class='op'>]</span>
+</div><div class='output co'>#&gt; [1] "San Marino"   "Vatican City" "San Marino"  </div><div class='input'>
 <span class='co'># predicate matrices</span>
 <span class='va'>country_names</span><span class='op'>[</span><span class='fu'>s2_intersects_matrix</span><span class='op'>(</span><span class='va'>cities</span>, <span class='va'>countries</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>]</span>
 </div><div class='output co'>#&gt; [1] "Italy"</div><div class='input'>
