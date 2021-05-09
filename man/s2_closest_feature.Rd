@@ -2,6 +2,7 @@
 % Please edit documentation in R/s2-matrix.R
 \name{s2_closest_feature}
 \alias{s2_closest_feature}
+\alias{s2_closest_edges}
 \alias{s2_farthest_feature}
 \alias{s2_distance_matrix}
 \alias{s2_max_distance_matrix}
@@ -18,6 +19,8 @@
 \title{Matrix Functions}
 \usage{
 s2_closest_feature(x, y)
+
+s2_closest_edges(x, y, k, min_distance = -1, radius = s2_earth_radius_meters())
 
 s2_farthest_feature(x, y)
 
@@ -48,6 +51,13 @@ s2_may_intersect_matrix(x, y, max_edges_per_cell = 50, max_feature_cells = 4)
 \arguments{
 \item{x, y}{Geography vectors, coerced using \code{\link[=as_s2_geography]{as_s2_geography()}}.
 \code{x} is considered the source, where as \code{y} is considered the target.}
+
+\item{k}{The number of closest edges to consider when searching. Note
+that in S2 a point is also considered an edge.}
+
+\item{min_distance}{The minimum distance to consider when searching for
+edges. This filter is applied after the search is complete (i.e.,
+may cause fewer than \code{k} values to be returned).}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}
@@ -93,6 +103,11 @@ country_names[s2_closest_feature(cities, countries)]
 # farthest feature returns y indices of the farthest feature
 # for each feature in x
 country_names[s2_farthest_feature(cities, countries)]
+
+# use s2_closest_edges() to find the k-nearest neighbours
+nearest <- s2_closest_edges(cities, cities, k = 2, min_distance = 0)
+city_names
+city_names[unlist(nearest)]
 
 # predicate matrices
 country_names[s2_intersects_matrix(cities, countries)[[1]]]

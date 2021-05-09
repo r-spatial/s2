@@ -368,6 +368,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_closest_edges
+List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance);
+RcppExport SEXP _s2_cpp_s2_closest_edges(SEXP geog1SEXP, SEXP geog2SEXP, SEXP nSEXP, SEXP min_distanceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type min_distance(min_distanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_closest_edges(geog1, geog2, n, min_distance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_may_intersect_matrix
 List cpp_s2_may_intersect_matrix(List geog1, List geog2, int maxEdgesPerCell, int maxFeatureCells, List s2options);
 RcppExport SEXP _s2_cpp_s2_may_intersect_matrix(SEXP geog1SEXP, SEXP geog2SEXP, SEXP maxEdgesPerCellSEXP, SEXP maxFeatureCellsSEXP, SEXP s2optionsSEXP) {
@@ -920,6 +934,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_data_frame_from_s2_lnglat", (DL_FUNC) &_s2_data_frame_from_s2_lnglat, 1},
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},
     {"_s2_cpp_s2_farthest_feature", (DL_FUNC) &_s2_cpp_s2_farthest_feature, 2},
+    {"_s2_cpp_s2_closest_edges", (DL_FUNC) &_s2_cpp_s2_closest_edges, 4},
     {"_s2_cpp_s2_may_intersect_matrix", (DL_FUNC) &_s2_cpp_s2_may_intersect_matrix, 5},
     {"_s2_cpp_s2_contains_matrix", (DL_FUNC) &_s2_cpp_s2_contains_matrix, 3},
     {"_s2_cpp_s2_within_matrix", (DL_FUNC) &_s2_cpp_s2_within_matrix, 3},

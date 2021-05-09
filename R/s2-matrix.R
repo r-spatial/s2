@@ -11,6 +11,11 @@
 #' @inheritParams s2_contains
 #' @param x,y Geography vectors, coerced using [as_s2_geography()].
 #'   `x` is considered the source, where as `y` is considered the target.
+#' @param k The number of closest edges to consider when searching. Note
+#'   that in S2 a point is also considered an edge.
+#' @param min_distance The minimum distance to consider when searching for
+#'   edges. This filter is applied after the search is complete (i.e.,
+#'   may cause fewer than `k` values to be returned).
 #' @param max_edges_per_cell For [s2_may_intersect_matrix()],
 #'   this values controls the nature of the index on `y`, with higher values
 #'   leading to coarser index. Values should be between 10 and 50; the default
@@ -42,6 +47,11 @@
 #' # for each feature in x
 #' country_names[s2_farthest_feature(cities, countries)]
 #'
+#' # use s2_closest_edges() to find the k-nearest neighbours
+#' nearest <- s2_closest_edges(cities, cities, k = 2, min_distance = 0)
+#' city_names
+#' city_names[unlist(nearest)]
+#'
 #' # predicate matrices
 #' country_names[s2_intersects_matrix(cities, countries)[[1]]]
 #'
@@ -51,6 +61,13 @@
 #'
 s2_closest_feature <- function(x, y) {
   cpp_s2_closest_feature(as_s2_geography(x), as_s2_geography(y))
+}
+
+#' @rdname s2_closest_feature
+#' @export
+s2_closest_edges <- function(x, y, k, min_distance = -1, radius = s2_earth_radius_meters()) {
+  stopifnot(k >= 1)
+  cpp_s2_closest_edges(as_s2_geography(x), as_s2_geography(y), k, min_distance / radius)
 }
 
 #' @rdname s2_closest_feature

@@ -165,6 +165,39 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   return op.processVector(geog1);
 }
 
+// [[Rcpp::export]]
+List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance) {
+
+  class Op: public IndexedBinaryGeographyOperator<List, IntegerVector> {
+  public:
+    IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
+      S2ClosestEdgeQuery query(this->geog2Index.get());
+      query.mutable_options()->set_max_results(n);
+      S2ClosestEdgeQuery::ShapeIndexTarget target(feature->ShapeIndex());
+      const auto& result = query.FindClosestEdges(&target);
+
+      // this code searches edges, which may come from the same feature
+      std::unordered_set<int> features;
+      for (S2ClosestEdgeQuery::Result res : result) {
+        if (res.distance().radians() > this->min_distance) {
+          features.insert(this->geog2IndexSource[res.shape_id()] + 1);
+        }
+      }
+
+      return IntegerVector(features.begin(), features.end());
+    }
+
+    int n;
+    double min_distance;
+  };
+
+  Op op;
+  op.n = n;
+  op.min_distance = min_distance;
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
+}
+
 // ----------- indexed binary predicate operators -----------
 
 class IndexedMatrixPredicateOperator: public IndexedBinaryGeographyOperator<List, IntegerVector> {
