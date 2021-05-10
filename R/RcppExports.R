@@ -77,6 +77,10 @@ cpp_s2_cell_from_lnglat <- function(lnglat) {
     .Call(`_s2_cpp_s2_cell_from_lnglat`, lnglat)
 }
 
+cpp_s2_cell_to_lnglat <- function(cellId) {
+    .Call(`_s2_cpp_s2_cell_to_lnglat`, cellId)
+}
+
 cpp_s2_cell_to_string <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_to_string`, cellIdVector)
 }

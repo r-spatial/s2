@@ -8,7 +8,9 @@
 #' @export
 #'
 #' @examples
-#' s2_cell("87754e64dffffff")
+#' s2_cell("4b59a0cd83b5de49")
+#' as_s2_cell(s2_lnglat(-64, 45))
+#' as_s2_cell(s2_data_cities("Ottawa"))
 #'
 s2_cell <- function(x = character()) {
   new_s2_cell(cpp_s2_cell_from_string(x))
@@ -18,6 +20,12 @@ s2_cell <- function(x = character()) {
 #' @export
 as_s2_cell <- function(x, ...) {
   UseMethod("as_s2_cell")
+}
+
+#' @rdname s2_cell
+#' @export
+as_s2_cell.s2_cell <- function(x, ...) {
+  x
 }
 
 #' @rdname s2_cell
@@ -73,8 +81,18 @@ format.s2_cell <- function(x, ...) {
   x
 }
 
+#' S2 cell operators
+#'
+#' @param x An [s2_cell()] vector
+#' @export
+#'
 s2_cell_is_valid <- function(x) {
-  cpp_s2_cell_is_valid(x)
+  cpp_s2_cell_is_valid(as_s2_cell(x))
 }
 
-
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_to_lnglat <- function(x) {
+  lnglat <- cpp_s2_cell_to_lnglat(as_s2_cell(x))
+  s2_lnglat(lnglat[[1]], lnglat[[2]])
+}

@@ -215,6 +215,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_to_lnglat
+List cpp_s2_cell_to_lnglat(NumericVector cellId);
+RcppExport SEXP _s2_cpp_s2_cell_to_lnglat(SEXP cellIdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_lnglat(cellId));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_to_string
 CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector);
 RcppExport SEXP _s2_cpp_s2_cell_to_string(SEXP cellIdVectorSEXP) {
@@ -966,6 +977,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
     {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
+    {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
     {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
     {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},

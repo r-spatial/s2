@@ -95,3 +95,11 @@ test_that("s2_cell default format/print/str methods work", {
   expect_output(str(as_s2_cell(character())), "s2_cell\\[0\\]")
   expect_output(str(as_s2_cell(NA_character_)), "NA")
 })
+
+test_that("s2 cell operators work", {
+  expect_identical(s2_cell_is_valid(c("4b5f6a7856889a33", "x", NA)), c(TRUE, FALSE, NA))
+  expect_equal(
+    as.data.frame(s2_cell_to_lnglat(c("4b59a0cd83b5de49", "x", NA))),
+    as.data.frame(c(s2_lnglat(-64, 45), s2_lnglat(NA, NA), s2_lnglat(NA, NA)))
+  )
+})

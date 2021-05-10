@@ -3,6 +3,7 @@
 \name{s2_cell}
 \alias{s2_cell}
 \alias{as_s2_cell}
+\alias{as_s2_cell.s2_cell}
 \alias{as_s2_cell.character}
 \alias{as_s2_cell.s2_geography}
 \alias{as_s2_cell.s2_lnglat}
@@ -12,6 +13,8 @@
 s2_cell(x = character())
 
 as_s2_cell(x, ...)
+
+\method{as_s2_cell}{s2_cell}(x, ...)
 
 \method{as_s2_cell}{character}(x, ...)
 
@@ -33,6 +36,8 @@ An object of class s2_cell
 Create S2 Cell vectors
 }
 \examples{
-s2_cell("87754e64dffffff")
+s2_cell("4b59a0cd83b5de49")
+as_s2_cell(s2_lnglat(-64, 45))
+as_s2_cell(s2_data_cities("Ottawa"))
 
 }

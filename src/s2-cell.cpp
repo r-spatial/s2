@@ -31,7 +31,8 @@ public:
         output[i] = VectorType::get_na();
       } else {
         try {
-          output[i] = this->processCell(*((uint64_t*) &(cellIdVector[i])), i);
+          S2CellId cell(*((uint64_t*) &(cellIdVector[i])));
+          output[i] = this->processCell(cell, i);
         } catch (S2CellOperatorException& e) {
           output[i] = VectorType::get_na();
           problemId.push_back(i);
@@ -49,7 +50,7 @@ public:
     return output;
   }
 
-  virtual ScalarType processCell(uint64_t cellId, R_xlen_t i) = 0;
+  virtual ScalarType processCell(S2CellId cellId, R_xlen_t i) = 0;
 };
 
 // [[Rcpp::export]]
@@ -60,6 +61,10 @@ NumericVector cpp_s2_cell_from_string(CharacterVector cellString) {
   uint64_t* ptrCellId = (uint64_t*) ptrDouble;
 
   for (R_xlen_t i = 0; i < size; i++) {
+    if ((i % 1000) == 0) {
+      Rcpp::checkUserInterrupt();
+    }
+
     if (CharacterVector::is_na(cellString[i])) {
       ptrDouble[i] = NA_REAL;
     } else {
@@ -81,6 +86,10 @@ NumericVector cpp_s2_cell_from_lnglat(List lnglat) {
     uint64_t* ptrCellId = (uint64_t*) ptrDouble;
 
     for (R_xlen_t i = 0; i < size; i++) {
+      if ((i % 1000) == 0) {
+        Rcpp::checkUserInterrupt();
+      }
+
       if (NumericVector::is_na(lng[i]) || NumericVector::is_na(lat[i])) {
           ptrDouble[i] = NA_REAL;
       } else {
@@ -94,10 +103,43 @@ NumericVector cpp_s2_cell_from_lnglat(List lnglat) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_cell_to_lnglat(NumericVector cellId) {
+    R_xlen_t size = cellId.size();
+    double* ptrDouble = REAL(cellId);
+    uint64_t* ptrCellId = (uint64_t*) ptrDouble;
+
+    NumericVector lng(size);
+    NumericVector lat(size);
+
+    for (R_xlen_t i = 0; i < size; i++) {
+      if ((i % 1000) == 0) {
+        Rcpp::checkUserInterrupt();
+      }
+
+      if (NumericVector::is_na(ptrDouble[i])) {
+          lng[i] = NA_REAL;
+          lat[i] = NA_REAL;
+      } else {
+          S2CellId cell(ptrCellId[i]);
+          if (!cell.is_valid()) {
+            lng[i] = NA_REAL;
+            lat[i] = NA_REAL;
+          } else {
+            S2LatLng ll = S2CellId(ptrCellId[i]).ToLatLng();
+            lng[i] = ll.lng().degrees();
+            lat[i] = ll.lat().degrees();
+          }
+      }
+    }
+
+    return List::create(_["x"] = lng, _["y"] = lat);
+}
+
+// [[Rcpp::export]]
 CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<CharacterVector, std::string> {
-    std::string processCell(uint64_t cellId, R_xlen_t i) {
-      return S2CellId(cellId).ToToken();
+    std::string processCell(S2CellId cellId, R_xlen_t i) {
+      return cellId.ToToken();
     }
   };
 
@@ -108,8 +150,8 @@ CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
 // [[Rcpp::export]]
 LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<LogicalVector, int> {
-    int processCell(uint64_t cellId, R_xlen_t i) {
-      return S2CellId(cellId).is_valid();
+    int processCell(S2CellId cellId, R_xlen_t i) {
+      return cellId.is_valid();
     }
   };
 
