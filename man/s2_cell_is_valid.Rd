@@ -3,14 +3,78 @@
 \name{s2_cell_is_valid}
 \alias{s2_cell_is_valid}
 \alias{s2_cell_to_lnglat}
+\alias{s2_cell_center}
+\alias{s2_cell_boundary}
+\alias{s2_cell_polygon}
+\alias{s2_cell_vertex}
+\alias{s2_cell_edge}
+\alias{s2_cell_vertices}
+\alias{s2_cell_level}
+\alias{s2_cell_is_leaf}
+\alias{s2_cell_area}
+\alias{s2_cell_area_approx}
+\alias{s2_cell_contains}
+\alias{s2_cell_distance}
+\alias{s2_cell_boundary_distance}
+\alias{s2_cell_max_distace}
+\alias{s2_cell_may_intersect}
+\alias{s2_cell_parent}
+\alias{s2_cell_child}
+\alias{s2_cell_edge_neighbour}
+\alias{s2_cell_vertex_neighbour}
+\alias{s2_cell_neighbour}
 \title{S2 cell operators}
 \usage{
 s2_cell_is_valid(x)
 
 s2_cell_to_lnglat(x)
+
+s2_cell_center(x)
+
+s2_cell_boundary(x)
+
+s2_cell_polygon(x)
+
+s2_cell_vertex(x, k)
+
+s2_cell_edge(x, k)
+
+s2_cell_vertices(x)
+
+s2_cell_level(x)
+
+s2_cell_is_leaf(x)
+
+s2_cell_area(x)
+
+s2_cell_area_approx(x)
+
+s2_cell_contains(x, y)
+
+s2_cell_distance(x, y)
+
+s2_cell_boundary_distance(x, y)
+
+s2_cell_max_distace(x, y)
+
+s2_cell_may_intersect(x, y)
+
+s2_cell_parent(x, level)
+
+s2_cell_child(x, k)
+
+s2_cell_edge_neighbour(x, k)
+
+s2_cell_vertex_neighbour(x, k)
+
+s2_cell_neighbour(x, k)
 }
 \arguments{
-\item{x}{An \code{\link[=s2_cell]{s2_cell()}} vector}
+\item{x, y}{An \code{\link[=s2_cell]{s2_cell()}} vector}
+
+\item{k}{An integer between 1 and 4}
+
+\item{level}{An integer between 0 and 30, inclusive.}
 }
 \description{
 S2 cell operators
