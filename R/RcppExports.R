@@ -69,6 +69,22 @@ cpp_s2_bounds_rect <- function(geog) {
     .Call(`_s2_cpp_s2_bounds_rect`, geog)
 }
 
+cpp_s2_cell_from_string <- function(cellString) {
+    .Call(`_s2_cpp_s2_cell_from_string`, cellString)
+}
+
+cpp_s2_cell_from_lnglat <- function(lnglat) {
+    .Call(`_s2_cpp_s2_cell_from_lnglat`, lnglat)
+}
+
+cpp_s2_cell_to_string <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_to_string`, cellIdVector)
+}
+
+cpp_s2_cell_is_valid <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_is_valid`, cellIdVector)
+}
+
 cpp_s2_geog_point <- function(x, y) {
     .Call(`_s2_cpp_s2_geog_point`, x, y)
 }

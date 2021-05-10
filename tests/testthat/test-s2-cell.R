@@ -1,0 +1,97 @@
+
+test_that("s2_cell class works", {
+  expect_s3_class(new_s2_cell(double()), "s2_cell")
+  expect_s3_class(new_s2_cell(NA_real_), "s2_cell")
+  expect_true(is.na(new_s2_cell(NA_real_)))
+})
+
+test_that("s2_cell_is_valid() works", {
+  expect_identical(
+    s2_cell_is_valid(new_s2_cell(double())),
+    logical()
+  )
+  expect_identical(
+    s2_cell_is_valid(new_s2_cell(NA_real_)),
+    NA
+  )
+})
+
+test_that("s2_cell subsetting and concatenation work", {
+  cells <- new_s2_cell(c(NA_real_, NA_real_))
+  expect_identical(cells[1], new_s2_cell(NA_real_))
+  expect_identical(cells[[1]], cells[1])
+  expect_identical(
+    c(cells, cells),
+    new_s2_cell(c(NA_real_, NA_real_, NA_real_, NA_real_))
+  )
+  expect_identical(
+    rep(cells, 2),
+    new_s2_cell(c(NA_real_, NA_real_, NA_real_, NA_real_))
+  )
+  expect_identical(
+    rep_len(cells, 4),
+    new_s2_cell(c(NA_real_, NA_real_, NA_real_, NA_real_))
+  )
+  expect_error(
+    c(new_s2_cell(c(NA_real_, NA_real_)), 1:5),
+    "Can't combine"
+  )
+})
+
+test_that("s2_cell() can be created from s2_geography()", {
+  expect_identical(
+    as_s2_cell(as_s2_geography("POINT (-64 45)")),
+    s2_cell("4b59a0cd83b5de49")
+  )
+})
+
+test_that("s2_cell() can be created from s2_lnglat()", {
+  expect_identical(
+    as_s2_cell(s2_lnglat(-64, 45)),
+    s2_cell("4b59a0cd83b5de49")
+  )
+})
+
+test_that("s2_cell() can be created from s2_point()", {
+  expect_identical(
+    as_s2_cell(as_s2_point(s2_lnglat(-64, 45))),
+    s2_cell("4b59a0cd83b5de49")
+  )
+})
+
+test_that("s2_cell() can be created from character", {
+  expect_identical(
+    as_s2_cell("4b59a0cd83b5de49"),
+    as_s2_cell(s2_lnglat(-64, 45))
+  )
+})
+
+test_that("subset-assignment works", {
+  x <- as_s2_cell(c(NA, "4b59a0cd83b5de49", "4b5f6a7856889a33"))
+  expect_identical(as.character(x[3]), "4b5f6a7856889a33")
+  x[3] <- "4b59a0cd83b5de49"
+  expect_identical(as.character(x[3]), "4b59a0cd83b5de49")
+
+  x[[3]] <- "4b5f6a7856889a33"
+  expect_identical(as.character(x[3]), "4b5f6a7856889a33")
+})
+
+test_that("s2_cell can be put into a data.frame", {
+  expect_identical(
+    data.frame(geom = new_s2_cell(NA_real_)),
+    new_data_frame(list(geom = new_s2_cell(NA_real_)))
+  )
+  expect_error(as.data.frame(new_s2_cell(NA_real_)), "cannot coerce class")
+})
+
+test_that("s2_cell default format/print/str methods work", {
+  expect_identical(
+    format(s2_cell()),
+    as.character(s2_cell())
+  )
+  expect_output(print(new_s2_cell(double())), "s2_cell")
+  expect_output(print(new_s2_cell(NA_real_)), "s2_cell")
+
+  expect_output(str(as_s2_cell(character())), "s2_cell\\[0\\]")
+  expect_output(str(as_s2_cell(NA_character_)), "NA")
+})

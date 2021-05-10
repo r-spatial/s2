@@ -193,6 +193,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_from_string
+NumericVector cpp_s2_cell_from_string(CharacterVector cellString);
+RcppExport SEXP _s2_cpp_s2_cell_from_string(SEXP cellStringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type cellString(cellStringSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_from_string(cellString));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_from_lnglat
+NumericVector cpp_s2_cell_from_lnglat(List lnglat);
+RcppExport SEXP _s2_cpp_s2_cell_from_lnglat(SEXP lnglatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type lnglat(lnglatSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_from_lnglat(lnglat));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_to_string
+CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_to_string(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_string(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_is_valid
+LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_is_valid(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_is_valid(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_geog_point
 List cpp_s2_geog_point(NumericVector x, NumericVector y);
 RcppExport SEXP _s2_cpp_s2_geog_point(SEXP xSEXP, SEXP ySEXP) {
@@ -920,6 +964,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
+    {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
+    {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
+    {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
+    {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},
