@@ -12,7 +12,7 @@ test_that("s2_cell_is_valid() works", {
   )
   expect_identical(
     s2_cell_is_valid(new_s2_cell(NA_real_)),
-    NA
+    FALSE
   )
 })
 
@@ -122,7 +122,7 @@ test_that("s2 cell exporters work", {
 test_that("s2_cell() accessors work", {
   expect_identical(
     s2_cell_is_valid(s2_cell(c("4b5f6a7856889a33", "5", "x", NA))),
-    c(TRUE, TRUE, FALSE, NA)
+    c(TRUE, TRUE, FALSE, FALSE)
   )
 
   expect_identical(

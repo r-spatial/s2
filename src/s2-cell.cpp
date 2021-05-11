@@ -26,32 +26,13 @@ public:
   VectorType processVector(Rcpp::NumericVector cellIdVector) {
     VectorType output(cellIdVector.size());
 
-    Rcpp::IntegerVector problemId;
-    Rcpp::CharacterVector problems;
-
     for (R_xlen_t i = 0; i < cellIdVector.size(); i++) {
       if ((i % 1000) == 0) {
         Rcpp::checkUserInterrupt();
       }
 
-      if (NumericVector::is_na(cellIdVector[i])) {
-        output[i] = VectorType::get_na();
-      } else {
-        try {
-          S2CellId cell(*((uint64_t*) &(cellIdVector[i])));
-          output[i] = this->processCell(cell, i);
-        } catch (S2CellOperatorException& e) {
-          output[i] = VectorType::get_na();
-          problemId.push_back(i);
-          problems.push_back(e.what());
-        }
-      }
-    }
-
-    if (problemId.size() > 0) {
-      Rcpp::Environment s2NS = Rcpp::Environment::namespace_env("s2");
-      Rcpp::Function stopProblems = s2NS["stop_problems_process"];
-      stopProblems(problemId, problems);
+      S2CellId cell(*((uint64_t*) &(cellIdVector[i])));
+      output[i] = this->processCell(cell, i);
     }
 
     return output;
@@ -144,9 +125,13 @@ List cpp_s2_cell_to_lnglat(NumericVector cellId) {
 
 // [[Rcpp::export]]
 CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
-  class Op: public UnaryS2CellOperator<CharacterVector, std::string> {
-    std::string processCell(S2CellId cellId, R_xlen_t i) {
-      return cellId.ToToken();
+  class Op: public UnaryS2CellOperator<CharacterVector, String> {
+    String processCell(S2CellId cellId, R_xlen_t i) {
+      if (NumericVector::is_na(reinterpret_double(cellId.id()))) {
+        return NA_STRING;
+      } else {
+        return cellId.ToToken();
+      }
     }
   };
 
@@ -156,9 +141,13 @@ CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
 
 // [[Rcpp::export]]
 CharacterVector cpp_s2_cell_debug_string(NumericVector cellIdVector) {
-  class Op: public UnaryS2CellOperator<CharacterVector, std::string> {
-    std::string processCell(S2CellId cellId, R_xlen_t i) {
-      return cellId.ToString();
+  class Op: public UnaryS2CellOperator<CharacterVector, String> {
+    String processCell(S2CellId cellId, R_xlen_t i) {
+      if (NumericVector::is_na(reinterpret_double(cellId.id()))) {
+        return NA_STRING;
+      } else {
+        return cellId.ToString();
+      }
     }
   };
 
@@ -182,7 +171,11 @@ LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
 List cpp_s2_cell_center(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
-      return R_NilValue;
+      if (cellId.is_valid()) {
+        return R_NilValue;
+      } else {
+        return R_NilValue;
+      }
     }
   };
 
