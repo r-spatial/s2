@@ -28,6 +28,47 @@ test_that("Ops, Math, and Summary ops work", {
       s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
     c(TRUE, FALSE, FALSE, TRUE, NA, NA, NA)
   )
+
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) !=
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(FALSE, TRUE, TRUE, FALSE, NA, NA, NA)
+  )
+
+  # 'invalid' is 0
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) >
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(FALSE, TRUE, FALSE, FALSE, NA, NA, NA)
+  )
+
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) >=
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(TRUE, TRUE, FALSE, TRUE, NA, NA, NA)
+  )
+
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) <
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(FALSE, FALSE, TRUE, FALSE, NA, NA, NA)
+  )
+
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) <=
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(TRUE, FALSE, TRUE, TRUE, NA, NA, NA)
+  )
+
+  expect_identical(
+    cummax(s2_cell(c("5", "x", "5", "x", NA, "x", NA))),
+           s2_cell(c("5", "5", "5", "5", NA, NA, NA))
+  )
+
+  expect_identical(
+    cummin(s2_cell(c("5", "x", "5", "x", NA, "x", NA))),
+           s2_cell(c("5", "x", "x", "x", NA, NA, NA))
+  )
 })
 
 test_that("Binary ops are recycled at the C++ level", {

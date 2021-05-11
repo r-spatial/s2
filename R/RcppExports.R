@@ -133,8 +133,36 @@ cpp_s2_cell_edge_neighbour <- function(cellIdVector, k) {
     .Call(`_s2_cpp_s2_cell_edge_neighbour`, cellIdVector, k)
 }
 
+cpp_s2_cell_cummax <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_cummax`, cellIdVector)
+}
+
+cpp_s2_cell_cummin <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_cummin`, cellIdVector)
+}
+
 cpp_s2_cell_eq <- function(cellIdVector1, cellIdVector2) {
     .Call(`_s2_cpp_s2_cell_eq`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_neq <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_neq`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_lt <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_lt`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_lte <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_lte`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_gte <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_gte`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_gt <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_gt`, cellIdVector1, cellIdVector2)
 }
 
 cpp_s2_geog_point <- function(x, y) {

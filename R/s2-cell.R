@@ -91,11 +91,11 @@ Ops.s2_cell <- function(e1, e2) {
   switch(
     .Generic,
     "==" = cpp_s2_cell_eq(e1, e2),
-    "!=" = stop("Not implemented"),
-    "<" = stop("Not implemented"),
-    "<=" = stop("Not implemented"),
-    ">=" = stop("Not implemented"),
-    ">" = stop("Not implemented"),
+    "!=" = cpp_s2_cell_neq(e1, e2),
+    "<" = cpp_s2_cell_lt(e1, e2),
+    "<=" = cpp_s2_cell_lte(e1, e2),
+    ">=" = cpp_s2_cell_gte(e1, e2),
+    ">" = cpp_s2_cell_gt(e1, e2),
     stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
   )
 }
@@ -104,8 +104,8 @@ Ops.s2_cell <- function(e1, e2) {
 Math.s2_cell <- function(x, ...) {
   switch(
     .Generic,
-    "cummax" = stop("Not implemented"),
-    "cummin" = stop("Not implementeed"),
+    "cummax" = cpp_s2_cell_cummax(x),
+    "cummin" = cpp_s2_cell_cummin(x),
     stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
   )
 }
