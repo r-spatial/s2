@@ -372,6 +372,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_eq
+LogicalVector cpp_s2_cell_eq(NumericVector cellIdVector1, NumericVector cellIdVector2);
+RcppExport SEXP _s2_cpp_s2_cell_eq(SEXP cellIdVector1SEXP, SEXP cellIdVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector1(cellIdVector1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector2(cellIdVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_eq(cellIdVector1, cellIdVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_geog_point
 List cpp_s2_geog_point(NumericVector x, NumericVector y);
 RcppExport SEXP _s2_cpp_s2_geog_point(SEXP xSEXP, SEXP ySEXP) {
@@ -1115,6 +1127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_parent", (DL_FUNC) &_s2_cpp_s2_cell_parent, 2},
     {"_s2_cpp_s2_cell_child", (DL_FUNC) &_s2_cpp_s2_cell_child, 2},
     {"_s2_cpp_s2_cell_edge_neighbour", (DL_FUNC) &_s2_cpp_s2_cell_edge_neighbour, 2},
+    {"_s2_cpp_s2_cell_eq", (DL_FUNC) &_s2_cpp_s2_cell_eq, 2},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},

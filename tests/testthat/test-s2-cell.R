@@ -22,6 +22,21 @@ test_that("Ops, Math, and Summary errors for non-meaningful s2_cell() ops", {
   expect_error(all(s2_cell("X")), "not meaningful")
 })
 
+test_that("Ops, Math, and Summary ops work", {
+  expect_identical(
+    s2_cell(c("5", "5", "x", "x", "x", NA, NA)) ==
+      s2_cell(c("5", "x", "5", "x", NA, "x", NA)),
+    c(TRUE, FALSE, FALSE, TRUE, NA, NA, NA)
+  )
+})
+
+test_that("Binary ops are recycled at the C++ level", {
+  expect_identical(s2_cell(rep("5", 2)) == s2_cell(rep("5", 2)), c(TRUE, TRUE))
+  expect_identical(s2_cell(rep("5", 1)) == s2_cell(rep("5", 2)), c(TRUE, TRUE))
+  expect_identical(s2_cell(rep("5", 2)) == s2_cell(rep("5", 1)), c(TRUE, TRUE))
+  expect_error(s2_cell(rep("5", 2)) == s2_cell(rep("5", 0)), "Can't recycle")
+})
+
 test_that("s2_cell is not numeric", {
   expect_false(is.numeric(s2_cell()))
 })

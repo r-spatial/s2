@@ -90,7 +90,7 @@ is.numeric.s2_cell <- function(x, ...) {
 Ops.s2_cell <- function(e1, e2) {
   switch(
     .Generic,
-    "==" = stop("Not implemented"),
+    "==" = cpp_s2_cell_eq(e1, e2),
     "!=" = stop("Not implemented"),
     "<" = stop("Not implemented"),
     "<=" = stop("Not implemented"),

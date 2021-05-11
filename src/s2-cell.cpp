@@ -1,6 +1,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <sstream>
 
 #include "s2/s2cell_id.h"
 #include "s2/s2cell.h"
@@ -39,6 +40,70 @@ public:
   }
 
   virtual ScalarType processCell(S2CellId cellId, R_xlen_t i) = 0;
+};
+
+// For speed, take care of recycling here (only works if there is no
+// additional parameter). Most binary ops don't have a parameter and some
+// (like Ops, and Math) make recycling harder to incorporate at the R level
+template<class VectorType, class ScalarType>
+class BinaryS2CellOperator {
+public:
+  VectorType processVector(Rcpp::NumericVector cellIdVector1,
+                           Rcpp::NumericVector cellIdVector2) {
+
+    if (cellIdVector1.size() == cellIdVector2.size()) {
+      VectorType output(cellIdVector1.size());
+
+      for (R_xlen_t i = 0; i < cellIdVector1.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        S2CellId cell1(*((uint64_t*) &(cellIdVector1[i])));
+        S2CellId cell2(*((uint64_t*) &(cellIdVector2[i])));
+        output[i] = this->processCell(cell1, cell2, i);
+      }
+
+      return output;
+    } else if (cellIdVector1.size() == 1) {
+      VectorType output(cellIdVector2.size());
+
+      for (R_xlen_t i = 0; i < cellIdVector2.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        S2CellId cell1(*((uint64_t*) &(cellIdVector1[0])));
+        S2CellId cell2(*((uint64_t*) &(cellIdVector2[i])));
+        output[i] = this->processCell(cell1, cell2, i);
+      }
+
+      return output;
+    } else if (cellIdVector2.size() == 1) {
+      VectorType output(cellIdVector1.size());
+
+      for (R_xlen_t i = 0; i < cellIdVector1.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        S2CellId cell1(*((uint64_t*) &(cellIdVector1[i])));
+        S2CellId cell2(*((uint64_t*) &(cellIdVector2[0])));
+        output[i] = this->processCell(cell1, cell2, i);
+      }
+
+      return output;
+    } else {
+      std::stringstream err;
+      err << 
+        "Can't recycle vectors of size " << cellIdVector1.size() << 
+        " and " << cellIdVector2.size() <<
+        " to a common length.";
+      stop(err.str());
+    }
+  }
+
+  virtual ScalarType processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) = 0;
 };
 
 // [[Rcpp::export]]
@@ -354,4 +419,25 @@ NumericVector cpp_s2_cell_edge_neighbour(NumericVector cellIdVector, IntegerVect
   NumericVector result = op.processVector(cellIdVector);
   result.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
   return result;
+}
+
+// Ops for Ops, Math, Summary generics
+// These are unique in that invalid cells (e.g., Sentinel)
+// should not return NA; but NA_real_ should
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_eq(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<LogicalVector, int> {
+    int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
+            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+        return NA_LOGICAL;
+      } else {
+        return cellId1.id() == cellId2.id();
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
 }
