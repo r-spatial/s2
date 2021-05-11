@@ -2,6 +2,8 @@
 % Please edit documentation in R/s2-cell.R
 \name{s2_cell}
 \alias{s2_cell}
+\alias{s2_cell_sentinel}
+\alias{s2_cell_invalid}
 \alias{as_s2_cell}
 \alias{as_s2_cell.s2_cell}
 \alias{as_s2_cell.character}
@@ -11,6 +13,12 @@
 \title{Create S2 Cell vectors}
 \usage{
 s2_cell(x = character())
+
+s2_cell_sentinel()
+
+s2_cell_invalid()
+
+s2_cell_sentinel()
 
 as_s2_cell(x, ...)
 

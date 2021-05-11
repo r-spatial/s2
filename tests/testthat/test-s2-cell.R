@@ -5,6 +5,14 @@ test_that("s2_cell class works", {
   expect_true(is.na(new_s2_cell(NA_real_)))
 })
 
+test_that("invalid and sentinel values work as expected", {
+  expect_false(s2_cell_is_valid(s2_cell_sentinel()))
+  expect_false(s2_cell_is_valid(s2_cell_invalid()))
+  expect_false(is.na(s2_cell_sentinel()))
+  expect_false(is.na(s2_cell_invalid()))
+  expect_true(s2_cell_sentinel() > s2_cell_invalid())
+})
+
 test_that("s2_cell_is_valid() works", {
   expect_identical(
     s2_cell_is_valid(new_s2_cell(double())),

@@ -107,6 +107,13 @@ public:
 };
 
 // [[Rcpp::export]]
+NumericVector cpp_s2_cell_sentinel() {
+  NumericVector result = NumericVector::create(reinterpret_double(S2CellId::Sentinel().id()));
+  result.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return result;
+}
+
+// [[Rcpp::export]]
 NumericVector cpp_s2_cell_from_string(CharacterVector cellString) {
   R_xlen_t size = cellString.size();
   NumericVector cellId(size);
@@ -143,7 +150,7 @@ NumericVector cpp_s2_cell_from_lnglat(List lnglat) {
         Rcpp::checkUserInterrupt();
       }
 
-      if (NumericVector::is_na(lng[i]) || NumericVector::is_na(lat[i])) {
+      if (R_IsNA(lng[i]) || R_IsNA(lat[i])) {
           ptrDouble[i] = NA_REAL;
       } else {
           S2LatLng ll = S2LatLng::FromDegrees(lat[i], lng[i]).Normalized();
@@ -169,7 +176,7 @@ List cpp_s2_cell_to_lnglat(NumericVector cellId) {
         Rcpp::checkUserInterrupt();
       }
 
-      if (NumericVector::is_na(ptrDouble[i])) {
+      if (R_IsNA(ptrDouble[i])) {
           lng[i] = NA_REAL;
           lat[i] = NA_REAL;
       } else {
@@ -189,10 +196,19 @@ List cpp_s2_cell_to_lnglat(NumericVector cellId) {
 }
 
 // [[Rcpp::export]]
+LogicalVector cpp_s2_cell_is_na(NumericVector cellIdVector) {
+  LogicalVector out(cellIdVector.size());
+  for (R_xlen_t i = 0; i < cellIdVector.size(); i++) {
+    out = R_IsNA(cellIdVector[i]);
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
 CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<CharacterVector, String> {
     String processCell(S2CellId cellId, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId.id()))) {
+      if (R_IsNA(reinterpret_double(cellId.id()))) {
         return NA_STRING;
       } else {
         return cellId.ToToken();
@@ -208,7 +224,7 @@ CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
 CharacterVector cpp_s2_cell_debug_string(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<CharacterVector, String> {
     String processCell(S2CellId cellId, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId.id()))) {
+      if (R_IsNA(reinterpret_double(cellId.id()))) {
         return NA_STRING;
       } else {
         return cellId.ToString();
@@ -431,7 +447,7 @@ NumericVector cpp_s2_cell_cummax(NumericVector cellIdVector) {
 
     double processCell(S2CellId cellId, R_xlen_t i) {
       double doubleVal = reinterpret_double(cellId.id());
-      if (NumericVector::is_na(this->current) || NumericVector::is_na(doubleVal)) {
+      if (R_IsNA(this->current) || R_IsNA(doubleVal)) {
         this->current = NA_REAL;
         this->currentId = cellId.id();
         return NA_REAL;
@@ -458,12 +474,11 @@ NumericVector cpp_s2_cell_cummax(NumericVector cellIdVector) {
 NumericVector cpp_s2_cell_cummin(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<NumericVector, double> {
   public:
-    Op(): currentNA(false), current(reinterpret_double(UINT64_MAX)), currentId(UINT64_MAX) {}
+    Op(): current(reinterpret_double(UINT64_MAX)), currentId(UINT64_MAX) {}
 
     double processCell(S2CellId cellId, R_xlen_t i) {
       double doubleVal = reinterpret_double(cellId.id());
-      if (this->currentNA || NumericVector::is_na(doubleVal)) {
-        this->currentNA = true;
+      if (R_IsNA(this->current) || R_IsNA(doubleVal)) {
         this->current = NA_REAL;
         this->currentId = cellId.id();
         return NA_REAL;
@@ -476,7 +491,6 @@ NumericVector cpp_s2_cell_cummin(NumericVector cellIdVector) {
       }
     }
 
-    bool currentNA;
     double current;
     uint64_t currentId;
   };
@@ -494,8 +508,8 @@ NumericVector cpp_s2_cell_cummin(NumericVector cellIdVector) {
 LogicalVector cpp_s2_cell_eq(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() == cellId2.id();
@@ -511,8 +525,8 @@ LogicalVector cpp_s2_cell_eq(NumericVector cellIdVector1, NumericVector cellIdVe
 LogicalVector cpp_s2_cell_neq(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() != cellId2.id();
@@ -528,8 +542,8 @@ LogicalVector cpp_s2_cell_neq(NumericVector cellIdVector1, NumericVector cellIdV
 LogicalVector cpp_s2_cell_lt(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() < cellId2.id();
@@ -545,8 +559,8 @@ LogicalVector cpp_s2_cell_lt(NumericVector cellIdVector1, NumericVector cellIdVe
 LogicalVector cpp_s2_cell_lte(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() <= cellId2.id();
@@ -562,8 +576,8 @@ LogicalVector cpp_s2_cell_lte(NumericVector cellIdVector1, NumericVector cellIdV
 LogicalVector cpp_s2_cell_gte(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() >= cellId2.id();
@@ -579,8 +593,8 @@ LogicalVector cpp_s2_cell_gte(NumericVector cellIdVector1, NumericVector cellIdV
 LogicalVector cpp_s2_cell_gt(NumericVector cellIdVector1, NumericVector cellIdVector2) {
   class Op: public BinaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
-      if (NumericVector::is_na(reinterpret_double(cellId1.id())) || 
-            NumericVector::is_na(reinterpret_double(cellId2.id()))) {
+      if (R_IsNA(reinterpret_double(cellId1.id())) || 
+            R_IsNA(reinterpret_double(cellId2.id()))) {
         return NA_LOGICAL;
       } else {
         return cellId1.id() > cellId2.id();

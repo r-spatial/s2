@@ -18,6 +18,24 @@ s2_cell <- function(x = character()) {
 
 #' @rdname s2_cell
 #' @export
+s2_cell_sentinel <- function() {
+  cpp_s2_cell_sentinel()
+}
+
+#' @rdname s2_cell
+#' @export
+s2_cell_invalid <- function() {
+  new_s2_cell(0)
+}
+
+#' @rdname s2_cell
+#' @export
+s2_cell_sentinel <- function() {
+  cpp_s2_cell_sentinel()
+}
+
+#' @rdname s2_cell
+#' @export
 as_s2_cell <- function(x, ...) {
   UseMethod("as_s2_cell")
 }
@@ -79,6 +97,11 @@ format.s2_cell <- function(x, ...) {
 `[[<-.s2_cell` <- function(x, i, value) {
   x[i] <- value
   x
+}
+
+#' @export
+is.na.s2_cell <- function(x) {
+  cpp_s2_cell_is_na(x)
 }
 
 #' @export

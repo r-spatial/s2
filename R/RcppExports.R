@@ -69,6 +69,10 @@ cpp_s2_bounds_rect <- function(geog) {
     .Call(`_s2_cpp_s2_bounds_rect`, geog)
 }
 
+cpp_s2_cell_sentinel <- function() {
+    .Call(`_s2_cpp_s2_cell_sentinel`)
+}
+
 cpp_s2_cell_from_string <- function(cellString) {
     .Call(`_s2_cpp_s2_cell_from_string`, cellString)
 }
@@ -79,6 +83,10 @@ cpp_s2_cell_from_lnglat <- function(lnglat) {
 
 cpp_s2_cell_to_lnglat <- function(cellId) {
     .Call(`_s2_cpp_s2_cell_to_lnglat`, cellId)
+}
+
+cpp_s2_cell_is_na <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_is_na`, cellIdVector)
 }
 
 cpp_s2_cell_to_string <- function(cellIdVector) {

@@ -193,6 +193,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_sentinel
+NumericVector cpp_s2_cell_sentinel();
+RcppExport SEXP _s2_cpp_s2_cell_sentinel() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_sentinel());
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_from_string
 NumericVector cpp_s2_cell_from_string(CharacterVector cellString);
 RcppExport SEXP _s2_cpp_s2_cell_from_string(SEXP cellStringSEXP) {
@@ -223,6 +233,17 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_lnglat(cellId));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_is_na
+LogicalVector cpp_s2_cell_is_na(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_is_na(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_is_na(cellIdVector));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1193,9 +1214,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
+    {"_s2_cpp_s2_cell_sentinel", (DL_FUNC) &_s2_cpp_s2_cell_sentinel, 0},
     {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
     {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
+    {"_s2_cpp_s2_cell_is_na", (DL_FUNC) &_s2_cpp_s2_cell_is_na, 1},
     {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
     {"_s2_cpp_s2_cell_debug_string", (DL_FUNC) &_s2_cpp_s2_cell_debug_string, 1},
     {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
