@@ -1,6 +1,28 @@
 
 #' Create S2 Cell vectors
 #'
+#' The S2 cell indexing system forms the basis for spatial indexing
+#' in the S2 library. On their own, S2 cells can represent points
+#' or areas. As a union, a vector of S2 cells can approximate a
+#' line or polygon. These functions allow direct access to the
+#' S2 cell indexing system and are designed to have minimal overhead
+#' such that looping and recursion have acceptable performance
+#' when used within R code.
+#'
+#' Under the hood, S2 cell vectors are represented in R as vectors
+#' of type [double()]. This works because S2 cell identifiers are
+#' 64 bits wide, as are `double`s on all systems where R runs (The
+#' same trick is used by the bit64 package to represent signed
+#' 64-bit integers). As a happy accident, `NA_real_` is not a valid
+#' or meaningful cell identifier, so missing value support in the
+#' way R users might expect is preserved. It is worth noting that
+#' `NaN` becomes an invalid but meaningful cell identifier when
+#' interpreted as an unsigned 64-bit integer (it is
+#' the underlying value of `s2_cell_sentinel()`). Users can and should
+#' implement compiled code that uses the underlying bytes of the
+#' vector, ensuring that the class of any returned object that should
+#' be interpreted in this way is constructed with `new_s2_cell()`.
+#'
 #' @param x The canonical S2 cell identifier as a character vector.
 #' @param ... Passed to methods
 #'
@@ -70,7 +92,8 @@ as_s2_cell.s2_point <- function(x, ...) {
   as_s2_cell(as_s2_lnglat(x))
 }
 
-# keep private for now
+#' @rdname s2_cell
+#' @export
 new_s2_cell <- function(x) {
   structure(x, class = c("s2_cell", "wk_vctr"))
 }

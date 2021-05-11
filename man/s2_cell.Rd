@@ -10,6 +10,7 @@
 \alias{as_s2_cell.s2_geography}
 \alias{as_s2_cell.s2_lnglat}
 \alias{as_s2_cell.s2_point}
+\alias{new_s2_cell}
 \title{Create S2 Cell vectors}
 \usage{
 s2_cell(x = character())
@@ -31,6 +32,8 @@ as_s2_cell(x, ...)
 \method{as_s2_cell}{s2_lnglat}(x, ...)
 
 \method{as_s2_cell}{s2_point}(x, ...)
+
+new_s2_cell(x)
 }
 \arguments{
 \item{x}{The canonical S2 cell identifier as a character vector.}
@@ -41,7 +44,28 @@ as_s2_cell(x, ...)
 An object of class s2_cell
 }
 \description{
-Create S2 Cell vectors
+The S2 cell indexing system forms the basis for spatial indexing
+in the S2 library. On their own, S2 cells can represent points
+or areas. As a union, a vector of S2 cells can approximate a
+line or polygon. These functions allow direct access to the
+S2 cell indexing system and are designed to have minimal overhead
+such that looping and recursion have acceptable performance
+when used within R code.
+}
+\details{
+Under the hood, S2 cell vectors are represented in R as vectors
+of type \code{\link[=double]{double()}}. This works because S2 cell identifiers are
+64 bits wide, as are \code{double}s on all systems where R runs (The
+same trick is used by the bit64 package to represent signed
+64-bit integers). As a happy accident, \code{NA_real_} is not a valid
+or meaningful cell identifier, so missing value support in the
+way R users might expect is preserved. It is worth noting that
+\code{NaN} becomes an invalid but meaningful cell identifier when
+interpreted as an unsigned 64-bit integer (it is
+the underlying value of \code{s2_cell_sentinel()}). Users can and should
+implement compiled code that uses the underlying bytes of the
+vector, ensuring that the class of any returned object that should
+be interpreted in this way is constructed with \code{new_s2_cell()}.
 }
 \examples{
 s2_cell("4b59a0cd83b5de49")
