@@ -96,6 +96,12 @@ s2_cell_is_valid <- function(x) {
 
 #' @rdname s2_cell_is_valid
 #' @export
+s2_cell_to_debug_string <- function(x) {
+  cpp_s2_cell_to_debug_string(x)
+}
+
+#' @rdname s2_cell_is_valid
+#' @export
 s2_cell_to_lnglat <- function(x) {
   lnglat <- cpp_s2_cell_to_lnglat(as_s2_cell(x))
   s2_lnglat(lnglat[[1]], lnglat[[2]])
@@ -104,37 +110,25 @@ s2_cell_to_lnglat <- function(x) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_center <- function(x) {
-
+  cpp_s2_cell_center(x)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_boundary <- function(x) {
-
+  cpp_s2_cell_boundary(x)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_polygon <- function(x) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_vertex <- function(x, k) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_edge <- function(x, k) {
-
+  cpp_s2_cell_polygon(x)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_vertices <- function(x) {
-
+  cpp_s2_cell_vertices(x)
 }
 
 # accessors
@@ -142,25 +136,54 @@ s2_cell_vertices <- function(x) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_level <- function(x) {
-
+  cpp_s2_cell_level(x)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_is_leaf <- function(x) {
+  s2_cell_level(x) == 30L
+}
 
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_is_face <- function(x) {
+  s2_cell_level(x) == 0L
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_area <- function(x) {
-
+  cpp_s2_cell_area(x)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_area_approx <- function(x) {
+  cpp_s2_cell_area_approx(x)
+}
 
+# transversers
+
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_parent <- function(x, level) {
+  recycled <- recycle_common(x, level)
+  cpp_s2_cell_parent(recycled[[1]], recycled[[2]])
+}
+
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_child <- function(x, k) {
+  recycled <- recycle_common(x, level)
+  cpp_s2_cell_child(recycled[[1]], recycled[[2]])
+}
+
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_edge_neighbour <- function(x, k) {
+  recycled <- recycle_common(x, level)
+  cpp+s2_cell_edge_neighbour(recycled[[1]], recycled[[2]])
 }
 
 # binary operators
@@ -192,37 +215,5 @@ s2_cell_max_distace <- function(x, y) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_may_intersect <- function(x, y) {
-
-}
-
-# transversers
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_parent <- function(x, level) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_child <- function(x, k) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_edge_neighbour <- function(x, k) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_vertex_neighbour <- function(x, k) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_neighbour <- function(x, k) {
 
 }

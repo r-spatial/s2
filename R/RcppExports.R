@@ -85,8 +85,52 @@ cpp_s2_cell_to_string <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_to_string`, cellIdVector)
 }
 
+cpp_s2_cell_to_debug_string <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_to_debug_string`, cellIdVector)
+}
+
 cpp_s2_cell_is_valid <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_is_valid`, cellIdVector)
+}
+
+cpp_s2_cell_center <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_center`, cellIdVector)
+}
+
+cpp_s2_cell_boundary <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_boundary`, cellIdVector)
+}
+
+cpp_s2_cell_polygon <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_polygon`, cellIdVector)
+}
+
+cpp_s2_cell_vertices <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_vertices`, cellIdVector)
+}
+
+cpp_s2_cell_level <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_level`, cellIdVector)
+}
+
+cpp_s2_cell_area <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_area`, cellIdVector)
+}
+
+cpp_s2_cell_area_approx <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_area_approx`, cellIdVector)
+}
+
+cpp_s2_cell_parent <- function(cellIdVector, level) {
+    .Call(`_s2_cpp_s2_cell_parent`, cellIdVector, level)
+}
+
+cpp_s2_cell_child <- function(cellIdVector, k) {
+    .Call(`_s2_cpp_s2_cell_child`, cellIdVector, k)
+}
+
+cpp_s2_cell_area_edge_neighbour <- function(cellIdVector, k) {
+    .Call(`_s2_cpp_s2_cell_area_edge_neighbour`, cellIdVector, k)
 }
 
 cpp_s2_geog_point <- function(x, y) {

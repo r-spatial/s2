@@ -3,10 +3,17 @@
 #include <vector>
 
 #include "s2/s2cell_id.h"
+#include "s2/s2cell.h"
 #include "s2/s2latlng.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
+
+static inline double reinterpret_double(uint64_t id) {
+  double doppelganger;
+  memcpy(&doppelganger, &id, sizeof(double));
+  return doppelganger;
+}
 
 class S2CellOperatorException: public std::runtime_error {
 public:
@@ -148,6 +155,18 @@ CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
+CharacterVector cpp_s2_cell_to_debug_string(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<CharacterVector, std::string> {
+    std::string processCell(S2CellId cellId, R_xlen_t i) {
+      return cellId.ToString();
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
 LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<LogicalVector, int> {
     int processCell(S2CellId cellId, R_xlen_t i) {
@@ -157,4 +176,183 @@ LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
 
   Op op;
   return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_center(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<List, SEXP> {
+    SEXP processCell(S2CellId cellId, R_xlen_t i) {
+      return R_NilValue;
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_boundary(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<List, SEXP> {
+    SEXP processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return R_NilValue;
+      } else {
+        return R_NilValue;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_polygon(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<List, SEXP> {
+    SEXP processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return R_NilValue;
+      } else {
+        return R_NilValue;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_vertices(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<List, SEXP> {
+    SEXP processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return R_NilValue;
+      } else {
+        return R_NilValue;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+IntegerVector cpp_s2_cell_level(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<IntegerVector, int> {
+    int processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return cellId.level();
+      } else {
+        return NA_INTEGER;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_area(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return S2Cell(cellId).ExactArea();
+      } else {
+        return NA_REAL;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_area_approx(NumericVector cellIdVector) {
+  class Op: public UnaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId, R_xlen_t i) {
+      if (cellId.is_valid()) {
+        return S2Cell(cellId).ApproxArea();
+      } else {
+        return NA_REAL;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_parent(NumericVector cellIdVector, IntegerVector level) {
+  class Op: public UnaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId, R_xlen_t i) {
+      int leveli = this->level[i];
+      if (cellId.is_valid() && (leveli >= 0) && (leveli < cellId.level())) {
+        return reinterpret_double(cellId.parent(leveli).id());
+      } else {
+        return NA_REAL;
+      }
+    }
+
+  public:
+    IntegerVector level;
+  };
+
+  Op op;
+  op.level = level;
+  NumericVector result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return result;
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_child(NumericVector cellIdVector, IntegerVector k) {
+  class Op: public UnaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId, R_xlen_t i) {
+      int ki = this->k[i];
+      if (cellId.is_valid() && (ki >=0) && (ki <= 3)) {
+        return reinterpret_double(cellId.child(ki).id());
+      } else {
+        return NA_REAL;
+      }
+    }
+
+  public:
+    IntegerVector k;
+  };
+
+  Op op;
+  op.k = k;
+  NumericVector result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return result;
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_area_edge_neighbour(NumericVector cellIdVector, IntegerVector k) {
+  class Op: public UnaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId, R_xlen_t i) {
+      int ki = this->k[i];
+      if (cellId.is_valid() && (ki >=0) && (ki <= 3)) {
+        S2CellId neighbours[4];
+        cellId.GetEdgeNeighbors(neighbours);
+        return reinterpret_double(neighbours[ki].id());
+      } else {
+        return NA_REAL;
+      }
+    }
+
+  public:
+    IntegerVector k;
+  };
+
+  Op op;
+  op.k = k;
+  NumericVector result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return result;
 }

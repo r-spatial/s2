@@ -237,6 +237,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_to_debug_string
+CharacterVector cpp_s2_cell_to_debug_string(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_to_debug_string(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_debug_string(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_is_valid
 LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector);
 RcppExport SEXP _s2_cpp_s2_cell_is_valid(SEXP cellIdVectorSEXP) {
@@ -245,6 +256,119 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_is_valid(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_center
+List cpp_s2_cell_center(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_center(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_center(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_boundary
+List cpp_s2_cell_boundary(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_boundary(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_boundary(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_polygon
+List cpp_s2_cell_polygon(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_polygon(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_polygon(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_vertices
+List cpp_s2_cell_vertices(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_vertices(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_vertices(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_level
+IntegerVector cpp_s2_cell_level(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_level(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_level(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_area
+NumericVector cpp_s2_cell_area(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_area(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_area(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_area_approx
+NumericVector cpp_s2_cell_area_approx(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_area_approx(SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_area_approx(cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_parent
+NumericVector cpp_s2_cell_parent(NumericVector cellIdVector, IntegerVector level);
+RcppExport SEXP _s2_cpp_s2_cell_parent(SEXP cellIdVectorSEXP, SEXP levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type level(levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_parent(cellIdVector, level));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_child
+NumericVector cpp_s2_cell_child(NumericVector cellIdVector, IntegerVector k);
+RcppExport SEXP _s2_cpp_s2_cell_child(SEXP cellIdVectorSEXP, SEXP kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_child(cellIdVector, k));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_area_edge_neighbour
+NumericVector cpp_s2_cell_area_edge_neighbour(NumericVector cellIdVector, IntegerVector k);
+RcppExport SEXP _s2_cpp_s2_cell_area_edge_neighbour(SEXP cellIdVectorSEXP, SEXP kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_area_edge_neighbour(cellIdVector, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -979,7 +1103,18 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
     {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
     {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
+    {"_s2_cpp_s2_cell_to_debug_string", (DL_FUNC) &_s2_cpp_s2_cell_to_debug_string, 1},
     {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
+    {"_s2_cpp_s2_cell_center", (DL_FUNC) &_s2_cpp_s2_cell_center, 1},
+    {"_s2_cpp_s2_cell_boundary", (DL_FUNC) &_s2_cpp_s2_cell_boundary, 1},
+    {"_s2_cpp_s2_cell_polygon", (DL_FUNC) &_s2_cpp_s2_cell_polygon, 1},
+    {"_s2_cpp_s2_cell_vertices", (DL_FUNC) &_s2_cpp_s2_cell_vertices, 1},
+    {"_s2_cpp_s2_cell_level", (DL_FUNC) &_s2_cpp_s2_cell_level, 1},
+    {"_s2_cpp_s2_cell_area", (DL_FUNC) &_s2_cpp_s2_cell_area, 1},
+    {"_s2_cpp_s2_cell_area_approx", (DL_FUNC) &_s2_cpp_s2_cell_area_approx, 1},
+    {"_s2_cpp_s2_cell_parent", (DL_FUNC) &_s2_cpp_s2_cell_parent, 2},
+    {"_s2_cpp_s2_cell_child", (DL_FUNC) &_s2_cpp_s2_cell_child, 2},
+    {"_s2_cpp_s2_cell_area_edge_neighbour", (DL_FUNC) &_s2_cpp_s2_cell_area_edge_neighbour, 2},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},
