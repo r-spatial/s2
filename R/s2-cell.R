@@ -81,6 +81,46 @@ format.s2_cell <- function(x, ...) {
   x
 }
 
+#' @export
+is.numeric.s2_cell <- function(x, ...) {
+  FALSE
+}
+
+#' @export
+Ops.s2_cell <- function(e1, e2) {
+  switch(
+    .Generic,
+    "==" = stop("Not implemented"),
+    "!=" = stop("Not implemented"),
+    "<" = stop("Not implemented"),
+    "<=" = stop("Not implemented"),
+    ">=" = stop("Not implemented"),
+    ">" = stop("Not implemented"),
+    stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
+  )
+}
+
+#' @export
+Math.s2_cell <- function(x, ...) {
+  switch(
+    .Generic,
+    "cummax" = stop("Not implemented"),
+    "cummin" = stop("Not implementeed"),
+    stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
+  )
+}
+
+#' @export
+Summary.s2_cell <- function(x, ...) {
+  switch(
+    .Generic,
+    "min" = stop("Not implemented"),
+    "max" = stop("Not implemented"),
+    "range" = stop("Not implemented"),
+    stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
+  )
+}
+
 #' S2 cell operators
 #'
 #' @param x,y An [s2_cell()] vector
@@ -89,7 +129,7 @@ format.s2_cell <- function(x, ...) {
 #' @export
 #'
 s2_cell_is_valid <- function(x) {
-  cpp_s2_cell_is_valid(as_s2_cell(x))
+  cpp_s2_cell_is_valid(x)
 }
 
 # exporters
@@ -103,7 +143,7 @@ s2_cell_to_debug_string <- function(x) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_to_lnglat <- function(x) {
-  lnglat <- cpp_s2_cell_to_lnglat(as_s2_cell(x))
+  lnglat <- cpp_s2_cell_to_lnglat(x)
   s2_lnglat(lnglat[[1]], lnglat[[2]])
 }
 
@@ -167,7 +207,7 @@ s2_cell_area_approx <- function(x) {
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_parent <- function(x, level) {
+s2_cell_parent <- function(x, level = -1L) {
   recycled <- recycle_common(x, level)
   cpp_s2_cell_parent(recycled[[1]], recycled[[2]])
 }

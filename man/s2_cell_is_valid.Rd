@@ -47,7 +47,7 @@ s2_cell_area(x)
 
 s2_cell_area_approx(x)
 
-s2_cell_parent(x, level)
+s2_cell_parent(x, level = -1L)
 
 s2_cell_child(x, k)
 

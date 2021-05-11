@@ -16,6 +16,16 @@ test_that("s2_cell_is_valid() works", {
   )
 })
 
+test_that("Ops, Math, and Summary errors for non-meaningful s2_cell() ops", {
+  expect_error(s2_cell("X") + 1, "not meaningful")
+  expect_error(abs(s2_cell("X")), "not meaningful")
+  expect_error(all(s2_cell("X")), "not meaningful")
+})
+
+test_that("s2_cell is not numeric", {
+  expect_false(is.numeric(s2_cell()))
+})
+
 test_that("s2_cell subsetting and concatenation work", {
   cells <- new_s2_cell(c(NA_real_, NA_real_))
   expect_identical(cells[1], new_s2_cell(NA_real_))
@@ -96,10 +106,21 @@ test_that("s2_cell default format/print/str methods work", {
   expect_output(str(as_s2_cell(NA_character_)), "NA")
 })
 
-test_that("s2 cell operators work", {
-  expect_identical(s2_cell_is_valid(c("4b5f6a7856889a33", "x", NA)), c(TRUE, FALSE, NA))
+test_that("s2 cell extractors work", {
+  expect_identical(
+    s2_cell_is_valid(s2_cell(c("4b5f6a7856889a33", "x", NA))),
+    c(TRUE, FALSE, NA)
+  )
+
   expect_equal(
-    as.data.frame(s2_cell_to_lnglat(c("4b59a0cd83b5de49", "x", NA))),
+    as.data.frame(s2_cell_to_lnglat(s2_cell(c("4b59a0cd83b5de49", "x", NA)))),
     as.data.frame(c(s2_lnglat(-64, 45), s2_lnglat(NA, NA), s2_lnglat(NA, NA)))
   )
+
+  expect_identical(
+    s2_cell_to_debug_string(s2_cell(c("4b5f6a7856889a33", NA))),
+    c("2/112233231103300223101010310121", NA)
+  )
+  expect_match(s2_cell_to_debug_string(s2_cell("X")), "Invalid")
+
 })

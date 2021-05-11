@@ -291,7 +291,13 @@ NumericVector cpp_s2_cell_parent(NumericVector cellIdVector, IntegerVector level
   class Op: public UnaryS2CellOperator<NumericVector, double> {
     double processCell(S2CellId cellId, R_xlen_t i) {
       int leveli = this->level[i];
-      if (cellId.is_valid() && (leveli >= 0) && (leveli < cellId.level())) {
+
+      // allow negative numbers to relate to current level
+      if (leveli < 0) {
+        leveli = cellId.level() + leveli;
+      }
+
+      if (cellId.is_valid() && (leveli >= 0) && (leveli <= cellId.level())) {
         return reinterpret_double(cellId.parent(leveli).id());
       } else {
         return NA_REAL;
