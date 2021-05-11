@@ -155,7 +155,7 @@ CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
-CharacterVector cpp_s2_cell_to_debug_string(NumericVector cellIdVector) {
+CharacterVector cpp_s2_cell_debug_string(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<CharacterVector, std::string> {
     std::string processCell(S2CellId cellId, R_xlen_t i) {
       return cellId.ToString();
@@ -339,7 +339,7 @@ NumericVector cpp_s2_cell_child(NumericVector cellIdVector, IntegerVector k) {
 }
 
 // [[Rcpp::export]]
-NumericVector cpp_s2_cell_area_edge_neighbour(NumericVector cellIdVector, IntegerVector k) {
+NumericVector cpp_s2_cell_edge_neighbour(NumericVector cellIdVector, IntegerVector k) {
   class Op: public UnaryS2CellOperator<NumericVector, double> {
     double processCell(S2CellId cellId, R_xlen_t i) {
       int ki = this->k[i];

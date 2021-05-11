@@ -2,7 +2,7 @@
 % Please edit documentation in R/s2-cell.R
 \name{s2_cell_is_valid}
 \alias{s2_cell_is_valid}
-\alias{s2_cell_to_debug_string}
+\alias{s2_cell_debug_string}
 \alias{s2_cell_to_lnglat}
 \alias{s2_cell_center}
 \alias{s2_cell_boundary}
@@ -25,7 +25,7 @@
 \usage{
 s2_cell_is_valid(x)
 
-s2_cell_to_debug_string(x)
+s2_cell_debug_string(x)
 
 s2_cell_to_lnglat(x)
 
@@ -43,9 +43,9 @@ s2_cell_is_leaf(x)
 
 s2_cell_is_face(x)
 
-s2_cell_area(x)
+s2_cell_area(x, radius = s2_earth_radius_meters())
 
-s2_cell_area_approx(x)
+s2_cell_area_approx(x, radius = s2_earth_radius_meters())
 
 s2_cell_parent(x, level = -1L)
 
@@ -65,6 +65,8 @@ s2_cell_may_intersect(x, y)
 }
 \arguments{
 \item{x, y}{An \code{\link[=s2_cell]{s2_cell()}} vector}
+
+\item{radius}{The radius to use (e.g., \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}})}
 
 \item{level}{An integer between 0 and 30, inclusive.}
 

@@ -126,6 +126,7 @@ Summary.s2_cell <- function(x, ...) {
 #' @param x,y An [s2_cell()] vector
 #' @param level An integer between 0 and 30, inclusive.
 #' @param k An integer between 1 and 4
+#' @param radius The radius to use (e.g., [s2_earth_radius_meters()])
 #' @export
 #'
 s2_cell_is_valid <- function(x) {
@@ -136,8 +137,8 @@ s2_cell_is_valid <- function(x) {
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_to_debug_string <- function(x) {
-  cpp_s2_cell_to_debug_string(x)
+s2_cell_debug_string <- function(x) {
+  cpp_s2_cell_debug_string(x)
 }
 
 #' @rdname s2_cell_is_valid
@@ -193,14 +194,14 @@ s2_cell_is_face <- function(x) {
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_area <- function(x) {
-  cpp_s2_cell_area(x)
+s2_cell_area <- function(x, radius = s2_earth_radius_meters()) {
+  cpp_s2_cell_area(x) * radius ^ 2
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_area_approx <- function(x) {
-  cpp_s2_cell_area_approx(x)
+s2_cell_area_approx <- function(x, radius = s2_earth_radius_meters()) {
+  cpp_s2_cell_area_approx(x) * radius ^ 2
 }
 
 # transversers
@@ -215,15 +216,15 @@ s2_cell_parent <- function(x, level = -1L) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_child <- function(x, k) {
-  recycled <- recycle_common(x, level)
+  recycled <- recycle_common(x, k)
   cpp_s2_cell_child(recycled[[1]], recycled[[2]])
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_edge_neighbour <- function(x, k) {
-  recycled <- recycle_common(x, level)
-  cpp+s2_cell_edge_neighbour(recycled[[1]], recycled[[2]])
+  recycled <- recycle_common(x, k)
+  cpp_s2_cell_edge_neighbour(recycled[[1]], recycled[[2]])
 }
 
 # binary operators

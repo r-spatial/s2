@@ -85,8 +85,8 @@ cpp_s2_cell_to_string <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_to_string`, cellIdVector)
 }
 
-cpp_s2_cell_to_debug_string <- function(cellIdVector) {
-    .Call(`_s2_cpp_s2_cell_to_debug_string`, cellIdVector)
+cpp_s2_cell_debug_string <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_debug_string`, cellIdVector)
 }
 
 cpp_s2_cell_is_valid <- function(cellIdVector) {
@@ -129,8 +129,8 @@ cpp_s2_cell_child <- function(cellIdVector, k) {
     .Call(`_s2_cpp_s2_cell_child`, cellIdVector, k)
 }
 
-cpp_s2_cell_area_edge_neighbour <- function(cellIdVector, k) {
-    .Call(`_s2_cpp_s2_cell_area_edge_neighbour`, cellIdVector, k)
+cpp_s2_cell_edge_neighbour <- function(cellIdVector, k) {
+    .Call(`_s2_cpp_s2_cell_edge_neighbour`, cellIdVector, k)
 }
 
 cpp_s2_geog_point <- function(x, y) {

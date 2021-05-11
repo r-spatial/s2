@@ -237,14 +237,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_cell_to_debug_string
-CharacterVector cpp_s2_cell_to_debug_string(NumericVector cellIdVector);
-RcppExport SEXP _s2_cpp_s2_cell_to_debug_string(SEXP cellIdVectorSEXP) {
+// cpp_s2_cell_debug_string
+CharacterVector cpp_s2_cell_debug_string(NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_debug_string(SEXP cellIdVectorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_debug_string(cellIdVector));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_debug_string(cellIdVector));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -360,15 +360,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_cell_area_edge_neighbour
-NumericVector cpp_s2_cell_area_edge_neighbour(NumericVector cellIdVector, IntegerVector k);
-RcppExport SEXP _s2_cpp_s2_cell_area_edge_neighbour(SEXP cellIdVectorSEXP, SEXP kSEXP) {
+// cpp_s2_cell_edge_neighbour
+NumericVector cpp_s2_cell_edge_neighbour(NumericVector cellIdVector, IntegerVector k);
+RcppExport SEXP _s2_cpp_s2_cell_edge_neighbour(SEXP cellIdVectorSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_area_edge_neighbour(cellIdVector, k));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_edge_neighbour(cellIdVector, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1103,7 +1103,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
     {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
     {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
-    {"_s2_cpp_s2_cell_to_debug_string", (DL_FUNC) &_s2_cpp_s2_cell_to_debug_string, 1},
+    {"_s2_cpp_s2_cell_debug_string", (DL_FUNC) &_s2_cpp_s2_cell_debug_string, 1},
     {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
     {"_s2_cpp_s2_cell_center", (DL_FUNC) &_s2_cpp_s2_cell_center, 1},
     {"_s2_cpp_s2_cell_boundary", (DL_FUNC) &_s2_cpp_s2_cell_boundary, 1},
@@ -1114,7 +1114,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_area_approx", (DL_FUNC) &_s2_cpp_s2_cell_area_approx, 1},
     {"_s2_cpp_s2_cell_parent", (DL_FUNC) &_s2_cpp_s2_cell_parent, 2},
     {"_s2_cpp_s2_cell_child", (DL_FUNC) &_s2_cpp_s2_cell_child, 2},
-    {"_s2_cpp_s2_cell_area_edge_neighbour", (DL_FUNC) &_s2_cpp_s2_cell_area_edge_neighbour, 2},
+    {"_s2_cpp_s2_cell_edge_neighbour", (DL_FUNC) &_s2_cpp_s2_cell_edge_neighbour, 2},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},
