@@ -5,7 +5,7 @@
   cpp_s2_init()
 
   # dynamically register vctrs dependencies
-  for (cls in c("s2_geography", "s2_point", "s2_lnglat")) {
+  for (cls in c("s2_geography", "s2_point", "s2_lnglat", "s2_cell")) {
     s3_register("vctrs::vec_proxy", cls)
     s3_register("vctrs::vec_restore", cls)
     s3_register("vctrs::vec_ptype_abbr", cls)

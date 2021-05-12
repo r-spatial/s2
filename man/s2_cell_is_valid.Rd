@@ -18,8 +18,7 @@
 \alias{s2_cell_edge_neighbour}
 \alias{s2_cell_contains}
 \alias{s2_cell_distance}
-\alias{s2_cell_boundary_distance}
-\alias{s2_cell_max_distace}
+\alias{s2_cell_max_distance}
 \alias{s2_cell_may_intersect}
 \title{S2 cell operators}
 \usage{
@@ -55,11 +54,9 @@ s2_cell_edge_neighbour(x, k)
 
 s2_cell_contains(x, y)
 
-s2_cell_distance(x, y)
+s2_cell_distance(x, y, radius = s2_earth_radius_meters())
 
-s2_cell_boundary_distance(x, y)
-
-s2_cell_max_distace(x, y)
+s2_cell_max_distance(x, y, radius = s2_earth_radius_meters())
 
 s2_cell_may_intersect(x, y)
 }

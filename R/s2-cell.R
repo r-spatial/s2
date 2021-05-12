@@ -123,6 +123,16 @@ format.s2_cell <- function(x, ...) {
 }
 
 #' @export
+unique.s2_cell <- function(x, ...) {
+  cpp_s2_cell_unique(x)
+}
+
+#' @export
+sort.s2_cell <- function(x, decreasing = FALSE, ...) {
+  cpp_s2_cell_sort(x, decreasing)
+}
+
+#' @export
 is.na.s2_cell <- function(x) {
   cpp_s2_cell_is_na(x)
 }
@@ -203,7 +213,7 @@ s2_cell_center <- function(x) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_boundary <- function(x) {
-  cpp_s2_cell_boundary(x)
+  s2_boundary(cpp_s2_cell_polygon(x))
 }
 
 #' @rdname s2_cell_is_valid
@@ -278,29 +288,25 @@ s2_cell_edge_neighbour <- function(x, k) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_contains <- function(x, y) {
-
+  cpp_s2_cell_contains(x, y)
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_distance <- function(x, y) {
-
+s2_cell_distance <- function(x, y, radius = s2_earth_radius_meters()) {
+  recycled <- recycle_common(x, y, radius)
+  cpp_s2_cell_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_boundary_distance <- function(x, y) {
-
-}
-
-#' @rdname s2_cell_is_valid
-#' @export
-s2_cell_max_distace <- function(x, y) {
-
+s2_cell_max_distance <- function(x, y, radius = s2_earth_radius_meters()) {
+  recycled <- recycle_common(x, y, radius)
+  cpp_s2_cell_max_distance(recycled[[1]], recycled[[2]]) * radius
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_may_intersect <- function(x, y) {
-
+  cpp_s2_cell_may_intersect(x, y)
 }

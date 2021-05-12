@@ -89,6 +89,14 @@ cpp_s2_cell_is_na <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_is_na`, cellIdVector)
 }
 
+cpp_s2_cell_sort <- function(cellIdVector, decreasing) {
+    .Call(`_s2_cpp_s2_cell_sort`, cellIdVector, decreasing)
+}
+
+cpp_s2_cell_unique <- function(cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_unique`, cellIdVector)
+}
+
 cpp_s2_cell_to_string <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_to_string`, cellIdVector)
 }
@@ -103,10 +111,6 @@ cpp_s2_cell_is_valid <- function(cellIdVector) {
 
 cpp_s2_cell_center <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_center`, cellIdVector)
-}
-
-cpp_s2_cell_boundary <- function(cellIdVector) {
-    .Call(`_s2_cpp_s2_cell_boundary`, cellIdVector)
 }
 
 cpp_s2_cell_polygon <- function(cellIdVector) {
@@ -171,6 +175,22 @@ cpp_s2_cell_gte <- function(cellIdVector1, cellIdVector2) {
 
 cpp_s2_cell_gt <- function(cellIdVector1, cellIdVector2) {
     .Call(`_s2_cpp_s2_cell_gt`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_contains <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_contains`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_may_intersect <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_may_intersect`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_distance <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_distance`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_max_distance <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_max_distance`, cellIdVector1, cellIdVector2)
 }
 
 cpp_s2_geog_point <- function(x, y) {

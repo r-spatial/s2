@@ -13,6 +13,44 @@ test_that("invalid and sentinel values work as expected", {
   expect_true(s2_cell_sentinel() > s2_cell_invalid())
 })
 
+test_that("sort() and unique() work", {
+  # temporary workaround for broken c() in wk
+  expect_identical(
+    unique(new_s2_cell(c(unclass(s2_cell_sentinel()), NA, 0, 0, unclass(s2_cell("5"))))),
+    new_s2_cell(c(0, unclass(s2_cell("5")), NA, unclass(s2_cell_sentinel())))
+  )
+
+  expect_identical(
+    sort(new_s2_cell(c(unclass(s2_cell_sentinel()), NA, 0, 0, unclass(s2_cell("5"))))),
+    new_s2_cell(c(0, 0, unclass(s2_cell("5")), NA, unclass(s2_cell_sentinel())))
+  )
+
+  expect_identical(
+    sort(
+      new_s2_cell(c(unclass(s2_cell_sentinel()), NA, 0, 0, unclass(s2_cell("5")))),
+      decreasing = TRUE
+    ),
+    rev(new_s2_cell(c(0, 0, unclass(s2_cell("5")), NA, unclass(s2_cell_sentinel()))))
+  )
+})
+
+test_that("geography exporters work", {
+  expect_identical(
+    s2_as_text(s2_cell_center(as_s2_cell(s2_lnglat(c(-64, NA), c(45, NA)))), precision = 5),
+    c("POINT (-64 45)", NA)
+  )
+
+  expect_identical(
+    s2_as_text(s2_cell_polygon(as_s2_cell(s2_lnglat(c(-64, NA), c(45, NA)))), precision = 5),
+    c("POLYGON ((-64 45, -64 45, -64 45, -64 45, -64 45))", NA)
+  )
+
+  expect_identical(
+    s2_as_text(s2_cell_boundary(as_s2_cell(s2_lnglat(c(-64, NA), c(45, NA)))), precision = 5),
+    c("LINESTRING (-64 45, -64 45, -64 45, -64 45, -64 45)", NA)
+  )
+})
+
 test_that("s2_cell_is_valid() works", {
   expect_identical(
     s2_cell_is_valid(new_s2_cell(double())),
@@ -255,4 +293,47 @@ test_that("s2_cell() transversers work", {
     s2_cell_edge_neighbour(s2_cell(c("5", "5", "5", "x", NA)), c(-1, 4, NA, 0, 0)),
     s2_cell(as.character(c(NA, NA, NA, NA, NA)))
   )
+})
+
+test_that("s2_cell() binary operators work", {
+  cell <- s2_cell("4b5f6a7856889a33")
+  expect_true(s2_cell_contains(s2_cell_parent(cell), cell))
+  expect_false(s2_cell_contains(cell, s2_cell_parent(cell)))
+  expect_identical(s2_cell_contains(s2_cell_sentinel(), s2_cell_sentinel()), NA)
+
+  expect_equal(
+    s2_cell_distance(
+      as_s2_cell(s2_lnglat(0, 90)),
+      as_s2_cell(s2_lnglat(0, 0)),
+      radius = 1
+    ),
+    pi / 2
+  )
+
+  expect_equal(
+    s2_cell_max_distance(
+      as_s2_cell(s2_lnglat(0, 90)),
+      as_s2_cell(s2_lnglat(0, 0)),
+      radius = 1
+    ),
+    pi / 2
+  )
+
+  f1 <- s2_cell_parent(as_s2_cell(s2_lnglat(0, 0)), 0)
+  f2 <- s2_cell_parent(as_s2_cell(s2_lnglat(0, 90)), 0)
+  expect_equal(s2_cell_distance(f1, f2), 0)
+  expect_equal(s2_cell_max_distance(f1, f2, radius = 1), pi)
+  expect_identical(s2_cell_max_distance(s2_cell_sentinel(), s2_cell_sentinel()), NA_real_)
+  expect_identical(s2_cell_distance(s2_cell_sentinel(), s2_cell_sentinel()), NA_real_)
+
+  expect_false(
+    s2_cell_may_intersect(
+      as_s2_cell(s2_lnglat(0, 90)),
+      as_s2_cell(s2_lnglat(0, 0))
+    )
+  )
+
+  expect_true(s2_cell_may_intersect(s2_cell_parent(cell), cell))
+  expect_true(s2_cell_may_intersect(cell, s2_cell_parent(cell)))
+  expect_identical(s2_cell_may_intersect(s2_cell_sentinel(), s2_cell_sentinel()), NA)
 })

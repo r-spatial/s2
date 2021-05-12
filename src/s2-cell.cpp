@@ -2,10 +2,16 @@
 #include <cstdint>
 #include <vector>
 #include <sstream>
+#include <algorithm>
+#include <set>
 
 #include "s2/s2cell_id.h"
 #include "s2/s2cell.h"
 #include "s2/s2latlng.h"
+
+#include "point-geography.h"
+#include "polyline-geography.h"
+#include "polygon-geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -205,6 +211,40 @@ LogicalVector cpp_s2_cell_is_na(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
+NumericVector cpp_s2_cell_sort(NumericVector cellIdVector, bool decreasing) {
+  NumericVector out = clone(cellIdVector);
+  uint64_t* data = (uint64_t*) REAL(out);
+
+  if (decreasing) {
+    std::sort(data, data + out.size(), std::greater<uint64_t>());
+  } else {
+    std::sort(data, data + out.size());
+  }
+
+  out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return out;
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_unique(NumericVector cellIdVector) {
+  std::set<uint64_t> uniqueValues;
+  uint64_t value;
+  for (R_xlen_t i = 0; i < cellIdVector.size(); i++) {
+    memcpy(&value, &(cellIdVector[i]), sizeof(uint64_t));
+    uniqueValues.insert(value);
+  }
+
+  NumericVector out(uniqueValues.size());
+  R_xlen_t i = 0;
+  for (uint64_t value : uniqueValues) {
+    out[i++] = reinterpret_double(value);
+  }
+
+  out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+  return out;
+}
+
+// [[Rcpp::export]]
 CharacterVector cpp_s2_cell_to_string(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<CharacterVector, String> {
     String processCell(S2CellId cellId, R_xlen_t i) {
@@ -253,7 +293,7 @@ List cpp_s2_cell_center(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
-        return R_NilValue;
+        return XPtr<PointGeography>(new PointGeography(cellId.ToPoint()));
       } else {
         return R_NilValue;
       }
@@ -261,23 +301,9 @@ List cpp_s2_cell_center(NumericVector cellIdVector) {
   };
 
   Op op;
-  return op.processVector(cellIdVector);
-}
-
-// [[Rcpp::export]]
-List cpp_s2_cell_boundary(NumericVector cellIdVector) {
-  class Op: public UnaryS2CellOperator<List, SEXP> {
-    SEXP processCell(S2CellId cellId, R_xlen_t i) {
-      if (cellId.is_valid()) {
-        return R_NilValue;
-      } else {
-        return R_NilValue;
-      }
-    }
-  };
-
-  Op op;
-  return op.processVector(cellIdVector);
+  List result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  return result;
 }
 
 // [[Rcpp::export]]
@@ -285,7 +311,7 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
-        return R_NilValue;
+        return XPtr<PolygonGeography>(new PolygonGeography(absl::make_unique<S2Polygon>(S2Cell(cellId))));
       } else {
         return R_NilValue;
       }
@@ -293,7 +319,9 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
   };
 
   Op op;
-  return op.processVector(cellIdVector);
+  List result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  return result;
 }
 
 // [[Rcpp::export]]
@@ -598,6 +626,70 @@ LogicalVector cpp_s2_cell_gt(NumericVector cellIdVector1, NumericVector cellIdVe
         return NA_LOGICAL;
       } else {
         return cellId1.id() > cellId2.id();
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_contains(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<LogicalVector, int> {
+    int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (cellId1.is_valid() && cellId2.is_valid()) {
+        return cellId1.contains(cellId2);
+      } else {
+        return NA_LOGICAL;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_may_intersect(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<LogicalVector, int> {
+    int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (cellId1.is_valid() && cellId2.is_valid()) {
+        return S2Cell(cellId1).MayIntersect(S2Cell(cellId2));
+      } else {
+        return NA_LOGICAL;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_distance(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (cellId1.is_valid() && cellId2.is_valid()) {
+        return S2Cell(cellId1).GetDistance(S2Cell(cellId2)).radians();
+      } else {
+        return NA_REAL;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+NumericVector cpp_s2_cell_max_distance(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<NumericVector, double> {
+    double processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (cellId1.is_valid() && cellId2.is_valid()) {
+        return S2Cell(cellId1).GetMaxDistance(S2Cell(cellId2)).radians();
+      } else {
+        return NA_REAL;
       }
     }
   };
