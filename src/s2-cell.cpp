@@ -227,12 +227,6 @@ NumericVector cpp_s2_cell_sort(NumericVector cellIdVector, bool decreasing) {
 
 // [[Rcpp::export]]
 NumericVector cpp_s2_cell_range(NumericVector cellIdVector, bool naRm) {
-  if (cellIdVector.size() == 0) {
-    NumericVector out = NumericVector::create(NA_REAL, NA_REAL);
-    out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
-    return out;
-  }
-
   uint64_t* data = (uint64_t*) REAL(cellIdVector);
   uint64_t zero = 0;
   uint64_t big = ~zero;
@@ -256,12 +250,18 @@ NumericVector cpp_s2_cell_range(NumericVector cellIdVector, bool naRm) {
     }
   }
 
-  NumericVector out = NumericVector::create(
-    reinterpret_double(dataRange.first),
-    reinterpret_double(dataRange.second)
-  );
-  out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
-  return out;
+  if (dataRange.first > dataRange.second) {
+    NumericVector out = NumericVector::create(NA_REAL, NA_REAL);
+    out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+    return out;
+  } else {
+    NumericVector out = NumericVector::create(
+      reinterpret_double(dataRange.first),
+      reinterpret_double(dataRange.second)
+    );
+    out.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
+    return out;
+  }
 }
 
 // [[Rcpp::export]]

@@ -141,6 +141,12 @@ test_that("Ops, Math, and Summary ops work", {
     range(s2_cell(c("5", "x", "5", "x", NA, "x", NA))),
     s2_cell(c(NA_character_, NA_character_))
   )
+
+  expect_identical(range(s2_cell()), s2_cell(c(NA_character_, NA_character_)))
+  expect_identical(
+    range(s2_cell(NA_character_), na.rm = TRUE),
+    s2_cell(c(NA_character_, NA_character_))
+  )
 })
 
 test_that("Binary ops are recycled at the C++ level", {
