@@ -34,3 +34,15 @@ vec_restore.s2_lnglat <- function(x, ...) {
 vec_ptype_abbr.s2_lnglat <- function(x, ...) {
   "s2_lnglat"
 }
+
+vec_proxy.s2_cell <- function(x, ...) {
+  unclass(x)
+}
+
+vec_restore.s2_cell <- function(x, ...) {
+  new_s2_cell(x)
+}
+
+vec_ptype_abbr.s2_cell <- function(x, ...) {
+  "s2cell"
+}

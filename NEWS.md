@@ -1,5 +1,7 @@
 # s2 (development version)
 
+* Added an `s2_cell()` vector class to expose a subset of the S2
+  indexing system to R users (#85, #114).
 * Added `s2_closest_edges()` to make k-nearest neighbours calculation
   possible on the sphere (#111, #112).
 * Added `s2_interpolate()`, `s2_interpolate_normalized()`, 
