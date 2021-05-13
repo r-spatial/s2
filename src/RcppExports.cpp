@@ -259,6 +259,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_range
+NumericVector cpp_s2_cell_range(NumericVector cellIdVector, bool naRm);
+RcppExport SEXP _s2_cpp_s2_cell_range(SEXP cellIdVectorSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_range(cellIdVector, naRm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_unique
 NumericVector cpp_s2_cell_unique(NumericVector cellIdVector);
 RcppExport SEXP _s2_cpp_s2_cell_unique(SEXP cellIdVectorSEXP) {
@@ -1281,6 +1293,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
     {"_s2_cpp_s2_cell_is_na", (DL_FUNC) &_s2_cpp_s2_cell_is_na, 1},
     {"_s2_cpp_s2_cell_sort", (DL_FUNC) &_s2_cpp_s2_cell_sort, 2},
+    {"_s2_cpp_s2_cell_range", (DL_FUNC) &_s2_cpp_s2_cell_range, 2},
     {"_s2_cpp_s2_cell_unique", (DL_FUNC) &_s2_cpp_s2_cell_unique, 1},
     {"_s2_cpp_s2_cell_to_string", (DL_FUNC) &_s2_cpp_s2_cell_to_string, 1},
     {"_s2_cpp_s2_cell_debug_string", (DL_FUNC) &_s2_cpp_s2_cell_debug_string, 1},

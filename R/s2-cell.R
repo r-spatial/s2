@@ -169,12 +169,12 @@ Math.s2_cell <- function(x, ...) {
 }
 
 #' @export
-Summary.s2_cell <- function(x, ...) {
+Summary.s2_cell <- function(x, ..., na.rm = FALSE) {
   switch(
     .Generic,
-    "min" = stop("Not implemented"),
-    "max" = stop("Not implemented"),
-    "range" = stop("Not implemented"),
+    "min" = cpp_s2_cell_range(x, na.rm)[1],
+    "max" = cpp_s2_cell_range(x, na.rm)[2],
+    "range" = cpp_s2_cell_range(x, na.rm),
     stop("Arithmetic operations are not meaningful for type 's2_cell'", call. = FALSE)
   )
 }

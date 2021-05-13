@@ -121,6 +121,26 @@ test_that("Ops, Math, and Summary ops work", {
     cummin(s2_cell(c("5", "x", "5", "x", NA, "x", NA))),
            s2_cell(c("5", "x", "x", "x", NA, NA, NA))
   )
+
+  expect_identical(
+    range(s2_cell(c("5", "x", "5", "x", NA, "x", NA)), na.rm = TRUE),
+    s2_cell(c("X", "5"))
+  )
+
+  expect_identical(
+    max(s2_cell(c("5", "x", "5", "x", NA, "x", NA)), na.rm = TRUE),
+    s2_cell("5")
+  )
+
+  expect_identical(
+    min(s2_cell(c("5", "x", "5", "x", NA, "x", NA)), na.rm = TRUE),
+    s2_cell("X")
+  )
+
+  expect_identical(
+    range(s2_cell(c("5", "x", "5", "x", NA, "x", NA))),
+    s2_cell(c(NA_character_, NA_character_))
+  )
 })
 
 test_that("Binary ops are recycled at the C++ level", {

@@ -93,6 +93,10 @@ cpp_s2_cell_sort <- function(cellIdVector, decreasing) {
     .Call(`_s2_cpp_s2_cell_sort`, cellIdVector, decreasing)
 }
 
+cpp_s2_cell_range <- function(cellIdVector, naRm) {
+    .Call(`_s2_cpp_s2_cell_range`, cellIdVector, naRm)
+}
+
 cpp_s2_cell_unique <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_unique`, cellIdVector)
 }
