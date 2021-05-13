@@ -16,9 +16,11 @@
 #' 64-bit integers). As a happy accident, `NA_real_` is not a valid
 #' or meaningful cell identifier, so missing value support in the
 #' way R users might expect is preserved. It is worth noting that
-#' `NaN` becomes an invalid but meaningful cell identifier when
-#' interpreted as an unsigned 64-bit integer (it is
-#' the underlying value of `s2_cell_sentinel()`). Users can and should
+#' the underlying value of `s2_cell_sentinel()` would normally be
+#' considered `NA`; however, as it is meaningful and useful when
+#' programming with S2 cells, custom `is.na()` and comparison methods
+#' are implemented such that `s2_cell_sentinel()` is greater than
+#' all valid S2 cells and not considered missing. Users can and should
 #' implement compiled code that uses the underlying bytes of the
 #' vector, ensuring that the class of any returned object that should
 #' be interpreted in this way is constructed with `new_s2_cell()`.
