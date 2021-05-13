@@ -325,19 +325,25 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_cell_vertices(NumericVector cellIdVector) {
+List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
-      if (cellId.is_valid()) {
-        return R_NilValue;
+      if (cellId.is_valid() && (this->k[i] >= 0)) {
+        return XPtr<PointGeography>(new PointGeography(S2Cell(cellId).GetVertex(this->k[i])));
       } else {
         return R_NilValue;
       }
     }
+
+  public:
+    IntegerVector k;
   };
 
   Op op;
-  return op.processVector(cellIdVector);
+  op.k = k;
+  List result = op.processVector(cellIdVector);
+  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  return result;
 }
 
 // [[Rcpp::export]]

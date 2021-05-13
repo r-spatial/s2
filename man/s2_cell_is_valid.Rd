@@ -7,7 +7,7 @@
 \alias{s2_cell_center}
 \alias{s2_cell_boundary}
 \alias{s2_cell_polygon}
-\alias{s2_cell_vertices}
+\alias{s2_cell_vertex}
 \alias{s2_cell_level}
 \alias{s2_cell_is_leaf}
 \alias{s2_cell_is_face}
@@ -34,7 +34,7 @@ s2_cell_boundary(x)
 
 s2_cell_polygon(x)
 
-s2_cell_vertices(x)
+s2_cell_vertex(x, k)
 
 s2_cell_level(x)
 
@@ -63,11 +63,11 @@ s2_cell_may_intersect(x, y)
 \arguments{
 \item{x, y}{An \code{\link[=s2_cell]{s2_cell()}} vector}
 
+\item{k}{An integer between 1 and 4}
+
 \item{radius}{The radius to use (e.g., \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}})}
 
 \item{level}{An integer between 0 and 30, inclusive.}
-
-\item{k}{An integer between 1 and 4}
 }
 \description{
 S2 cell operators

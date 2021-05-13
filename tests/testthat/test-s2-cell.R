@@ -3,6 +3,7 @@ test_that("s2_cell class works", {
   expect_s3_class(new_s2_cell(double()), "s2_cell")
   expect_s3_class(new_s2_cell(NA_real_), "s2_cell")
   expect_true(is.na(new_s2_cell(NA_real_)))
+  expect_identical(as_s2_cell(s2_cell()), s2_cell())
 })
 
 test_that("invalid and sentinel values work as expected", {
@@ -48,6 +49,11 @@ test_that("geography exporters work", {
   expect_identical(
     s2_as_text(s2_cell_boundary(as_s2_cell(s2_lnglat(c(-64, NA), c(45, NA)))), precision = 5),
     c("LINESTRING (-64 45, -64 45, -64 45, -64 45, -64 45)", NA)
+  )
+
+  expect_equal(
+    s2_x(s2_cell_vertex(s2_cell(c("5", "5", "5", NA)), k = c(0, 1, NA, 1))),
+    c(45, 135, NA, NA)
   )
 })
 

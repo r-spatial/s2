@@ -224,8 +224,9 @@ s2_cell_polygon <- function(x) {
 
 #' @rdname s2_cell_is_valid
 #' @export
-s2_cell_vertices <- function(x) {
-  cpp_s2_cell_vertices(x)
+s2_cell_vertex <- function(x, k) {
+  recycled <- recycle_common(x, k)
+  cpp_s2_cell_vertex(recycled[[1]], recycled[[2]])
 }
 
 # accessors

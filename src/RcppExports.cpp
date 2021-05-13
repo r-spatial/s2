@@ -325,14 +325,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_cell_vertices
-List cpp_s2_cell_vertices(NumericVector cellIdVector);
-RcppExport SEXP _s2_cpp_s2_cell_vertices(SEXP cellIdVectorSEXP) {
+// cpp_s2_cell_vertex
+List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k);
+RcppExport SEXP _s2_cpp_s2_cell_vertex(SEXP cellIdVectorSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_vertices(cellIdVector));
+    Rcpp::traits::input_parameter< IntegerVector >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_vertex(cellIdVector, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1286,7 +1287,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_is_valid", (DL_FUNC) &_s2_cpp_s2_cell_is_valid, 1},
     {"_s2_cpp_s2_cell_center", (DL_FUNC) &_s2_cpp_s2_cell_center, 1},
     {"_s2_cpp_s2_cell_polygon", (DL_FUNC) &_s2_cpp_s2_cell_polygon, 1},
-    {"_s2_cpp_s2_cell_vertices", (DL_FUNC) &_s2_cpp_s2_cell_vertices, 1},
+    {"_s2_cpp_s2_cell_vertex", (DL_FUNC) &_s2_cpp_s2_cell_vertex, 2},
     {"_s2_cpp_s2_cell_level", (DL_FUNC) &_s2_cpp_s2_cell_level, 1},
     {"_s2_cpp_s2_cell_area", (DL_FUNC) &_s2_cpp_s2_cell_area, 1},
     {"_s2_cpp_s2_cell_area_approx", (DL_FUNC) &_s2_cpp_s2_cell_area_approx, 1},

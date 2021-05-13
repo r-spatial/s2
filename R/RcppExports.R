@@ -117,8 +117,8 @@ cpp_s2_cell_polygon <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_polygon`, cellIdVector)
 }
 
-cpp_s2_cell_vertices <- function(cellIdVector) {
-    .Call(`_s2_cpp_s2_cell_vertices`, cellIdVector)
+cpp_s2_cell_vertex <- function(cellIdVector, k) {
+    .Call(`_s2_cpp_s2_cell_vertex`, cellIdVector, k)
 }
 
 cpp_s2_cell_level <- function(cellIdVector) {
