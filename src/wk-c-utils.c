@@ -258,7 +258,7 @@ SEXP c_s2_coord_filter_new(SEXP handler_xptr, SEXP projection_xptr, SEXP unproje
   }
 
   if (!IS_SIMPLE_SCALAR(unproject, LGLSXP)) {
-    Rf_error("`unproject` must be TRUE or FALSE");
+    Rf_error("`unproject` must be TRUE or FALSE"); // # nocov
   }
 
   if (!IS_SIMPLE_SCALAR(tessellate_tol, REALSXP) || (REAL(tessellate_tol)[0] < 1e-9)) {

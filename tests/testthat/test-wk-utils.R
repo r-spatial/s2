@@ -1,4 +1,11 @@
 
+test_that("the projection/unprojection filter errors for invalid input", {
+  expect_error(s2_unprojection_filter(NULL), "must be a ")
+  expect_error(s2_unprojection_filter(wk::wk_void_handler(), projection = NULL), "must be an")
+  expect_error(s2_unprojection_filter(wk::wk_void_handler(), tessellate_tol = -1), "must be")
+  expect_error(s2_unprojection_filter(wk::wk_void_handler(), tessellate_tol = -1), "must be")
+})
+
 test_that("unprojection using a wk filter works", {
   expect_equal(
     wk::wk_handle(wk::xy(0, 0), s2_unprojection_filter(wk::xy_writer())),
