@@ -70,3 +70,61 @@ test_that("tessellating + unprojection using a wk filter works", {
     wk::wkt(NA_character_)
   )
 })
+
+test_that("projection using a wk filter works", {
+  expect_equal(
+    wk::wk_handle(wk::xyz(1, 0, 0), s2_projection_filter(wk::xy_writer())),
+    wk::xy(0, 0)
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"),
+      s2_projection_filter(wk::wkt_format_handler(precision = 4))
+    ),
+    "LINESTRING (0 0, 0 45, -60 45)"
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("POLYGON Z ((1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071, 1 0 0))"),
+      s2_projection_filter(wk::wkt_format_handler(precision = 4))
+    ),
+    "POLYGON ((0 0, 0 45, -60 45, 0 0))"
+  )
+
+  expect_identical(
+    wk::wk_handle(wk::wkt(NA_character_), s2_projection_filter(wk::wkt_writer())),
+    wk::wkt(NA_character_)
+  )
+})
+
+test_that("projection + tessellating using a wk filter works", {
+  tol <- 100000 / s2_earth_radius_meters()
+
+  expect_equal(
+    wk::wk_handle(wk::xyz(1, 0, 0), s2_projection_filter(wk::xy_writer(), tessellate_tol = tol)),
+    wk::xy(0, 0)
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"),
+      s2_projection_filter(wk::wkb_writer(), tessellate_tol = tol)
+    ) %>% s2_num_points(),
+    6L
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("POLYGON Z ((1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071, 1 0 0))"),
+      s2_projection_filter(wk::wkb_writer(), tessellate_tol = tol)
+    ) %>% s2_num_points(),
+    8L
+  )
+
+  expect_identical(
+    wk::wk_handle(wk::wkt(NA_character_), s2_projection_filter(wk::wkt_writer(), tessellate_tol = tol)),
+    wk::wkt(NA_character_)
+  )
+})

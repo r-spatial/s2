@@ -248,6 +248,58 @@ int s2_coord_filter_coord_unproject(const wk_meta_t* meta, const double* coord, 
   return WK_CONTINUE;
 }
 
+int s2_coord_filter_coord_project(const wk_meta_t* meta, const double* coord, uint32_t coord_id, void* handler_data) {
+  coord_filter_t* coord_filter = (coord_filter_t*) handler_data;
+  modify_meta_for_filter(coord_filter, meta);
+  double coord_out[4];
+
+  if ((coord_filter->tessellator == NULL) || (meta->geometry_type == WK_POINT)) {
+    s2_projection_project(coord_filter->projection, coord, coord_out);
+    return coord_filter->next->coord(
+      &(coord_filter->meta_copy),
+      coord_out, coord_id, coord_filter->next->handler_data
+    );
+  }
+
+  s2_tessellator_add_s2_point(coord_filter->tessellator, coord);
+
+  int size = s2_tessellator_r2_points_size(coord_filter->tessellator);
+  int result;
+
+  if (size < 2) {
+    s2_projection_project(coord_filter->projection, coord, coord_out);
+    result = coord_filter->next->coord(
+      &(coord_filter->meta_copy),
+      coord_out, coord_id, coord_filter->next->handler_data
+    );
+    coord_filter->coord_id++;
+
+    if (result != WK_CONTINUE) {
+      return result;
+    }
+  } else {
+    for (int i = 1; i < size; i++) {
+      s2_tessellator_r2_point(coord_filter->tessellator, i, coord_out);
+      result = coord_filter->next->coord(
+        &(coord_filter->meta_copy),
+        coord_out, coord_filter->coord_id, coord_filter->next->handler_data
+      );
+      coord_filter->coord_id++;
+
+      if (result != WK_CONTINUE) {
+        return result;
+      }
+    }
+
+    // Clear the tessellator and re-add this point to be ready for the next
+    // point that forms an edge
+    s2_tessellator_reset(coord_filter->tessellator);
+    s2_tessellator_add_s2_point(coord_filter->tessellator, coord);
+  }
+
+  return WK_CONTINUE;
+}
+
 SEXP c_s2_coord_filter_new(SEXP handler_xptr, SEXP projection_xptr, SEXP unproject, SEXP tessellate_tol) {
   if (TYPEOF(handler_xptr) != EXTPTRSXP) {
     Rf_error("`handler` must be a wk_handler pointer");
@@ -281,8 +333,6 @@ SEXP c_s2_coord_filter_new(SEXP handler_xptr, SEXP projection_xptr, SEXP unproje
   handler->ring_start = &s2_coord_filter_ring_start;
   handler->ring_end = &s2_coord_filter_ring_end;
 
-  handler->coord = &s2_coord_filter_coord_unproject;
-
   handler->error = &s2_coord_filter_error;
 
   handler->deinitialize = &s2_coord_filter_deinitialize;
@@ -302,6 +352,12 @@ SEXP c_s2_coord_filter_new(SEXP handler_xptr, SEXP projection_xptr, SEXP unproje
   }
   
   coord_filter->unproject = LOGICAL(unproject)[0];
+  if (coord_filter->unproject) {
+    handler->coord = &s2_coord_filter_coord_unproject;
+  } else {
+    handler->coord = &s2_coord_filter_coord_project;
+  }
+
   coord_filter->next = R_ExternalPtrAddr(handler_xptr);
 
   if (coord_filter->next->api_version != 1) {
