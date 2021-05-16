@@ -4,14 +4,6 @@
 #include "s2/s2projections.h"
 #include "s2/s2edge_tessellator.h"
 
-typedef struct {
-    int (*project)(double* coord_in, double* coord_out, void* data);
-    int (*unproject)(double* coord_in, double* coord_out, void* data);
-    double wrap_distance_x;
-    double wrap_distance_y;
-    void* data;
-} s2_simple_projection_t;
-
 typedef struct s2_projection_t s2_projection_t;
 typedef struct s2_tessellator_t s2_tessellator_t;
 
@@ -21,7 +13,6 @@ extern "C" {
 
 s2_projection_t* s2_projection_create_plate_carree(double scale);
 s2_projection_t* s2_projection_create_mercator(double max_x);
-s2_projection_t* s2_projection_create(s2_simple_projection_t projection);
 void s2_projection_destroy(s2_projection_t* projection);
 int s2_projection_project(s2_projection_t* projection, const double* coord_in, double* coord_out);
 int s2_projection_unproject(s2_projection_t* projection, const double* coord_in, double* coord_out);
@@ -39,50 +30,6 @@ int s2_tessellator_s2_point(s2_tessellator_t* tessellator, int i, double* coord)
 #ifdef __cplusplus
 }
 #endif
-
-// Wrapper class around a projection created using C callables
-class SimpleProjection: public S2::Projection {
-public:
-    SimpleProjection(s2_simple_projection_t projection): projection(projection) {}
-
-    R2Point Project(const S2Point& p) const override {
-        double swap_in[4];
-        double swap_out[4];
-        swap_in[0] = p.x();
-        swap_in[1] = p.y();
-        swap_in[2] = p.z();
-        projection.project(swap_in, swap_out, projection.data);
-        return R2Point(swap_out[0], swap_out[1]);
-    }
-
-    S2Point Unproject(const R2Point& p) const override {
-        double swap_in[4];
-        double swap_out[4];
-        swap_in[0] = p.x();
-        swap_in[1] = p.y();
-        projection.unproject(swap_in, swap_out, projection.data);
-        return S2Point(swap_out[0], swap_out[1], swap_out[2]);
-    }
-
-    R2Point FromLatLng(const S2LatLng& ll) const override {
-        return this->Project(ll.ToPoint());
-    }
-
-    S2LatLng ToLatLng(const R2Point& p) const override {
-        return S2LatLng(this->Unproject(p));
-    }
-
-    R2Point wrap_distance() const override {
-        return R2Point(projection.wrap_distance_x, projection.wrap_distance_y);
-    }
-
-private:
-    s2_simple_projection_t projection;
-};
-
-s2_projection_t* s2_projection_create(s2_simple_projection_t projection) {
-    return (s2_projection_t*) new SimpleProjection(projection);
-}
 
 s2_projection_t* s2_projection_create_plate_carree(double scale) {
     return (s2_projection_t*) new S2::PlateCarreeProjection(scale);

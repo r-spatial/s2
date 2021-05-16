@@ -128,3 +128,13 @@ test_that("projection + tessellating using a wk filter works", {
     wk::wkt(NA_character_)
   )
 })
+
+test_that("mercator projection works", {
+  expect_equal(
+    wk::wk_handle(
+      wk::xy(c(0, 180), 0),
+      s2_unprojection_filter(s2_projection_filter(wk::xy_writer(), s2_projection_mercator()))
+    ),
+    wk::xy(c(0, 20037508), 0)
+  )
+})

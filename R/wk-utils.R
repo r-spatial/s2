@@ -18,3 +18,7 @@ s2_projection_filter <- function(handler, projection = s2_projection_plate_carre
 s2_projection_plate_carree <- function() {
   .Call(c_s2_projection_plate_carree)
 }
+
+s2_projection_mercator <- function() {
+  .Call(c_s2_projection_mercator)
+}

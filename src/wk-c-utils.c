@@ -4,14 +4,6 @@
 #include <Rinternals.h>
 #include "wk-v1.h"
 
-typedef struct {
-    int (*project)(double* coord_in, double* coord_out, void* data);
-    int (*unproject)(double* coord_in, double* coord_out, void* data);
-    double wrap_distance_x;
-    double wrap_distance_y;
-    void* data;
-} s2_simple_projection_t;
-
 typedef struct s2_projection_t s2_projection_t;
 typedef struct s2_tessellator_t s2_tessellator_t;
 
@@ -21,7 +13,6 @@ extern "C" {
 
 s2_projection_t* s2_projection_create_plate_carree(double scale);
 s2_projection_t* s2_projection_create_mercator(double max_x);
-s2_projection_t* s2_projection_create(s2_simple_projection_t projection);
 void s2_projection_destroy(s2_projection_t* projection);
 int s2_projection_project(s2_projection_t* projection, const double* coord_in, double* coord_out);
 int s2_projection_unproject(s2_projection_t* projection, const double* coord_in, double* coord_out);
@@ -48,6 +39,13 @@ void s2_projection_xptr_destroy(SEXP projection_xptr) {
 
 SEXP c_s2_projection_plate_carree() {
   SEXP projection_xptr = PROTECT(R_MakeExternalPtr(s2_projection_create_plate_carree(180), R_NilValue, R_NilValue));
+  R_RegisterCFinalizer(projection_xptr, &s2_projection_xptr_destroy);
+  UNPROTECT(1);
+  return projection_xptr;
+}
+
+SEXP c_s2_projection_mercator() {
+  SEXP projection_xptr = PROTECT(R_MakeExternalPtr(s2_projection_create_mercator(20037508), R_NilValue, R_NilValue));
   R_RegisterCFinalizer(projection_xptr, &s2_projection_xptr_destroy);
   UNPROTECT(1);
   return projection_xptr;
