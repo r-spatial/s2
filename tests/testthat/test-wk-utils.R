@@ -29,4 +29,37 @@ test_that("unprojection using a wk filter works", {
   )
 })
 
+test_that("tessellating + unprojection using a wk filter works", {
+  # using big examples here, so use a tolerance of 100 km (forces
+  # adding at least one point)
+  tol <- 100000 / s2_earth_radius_meters()
 
+  expect_equal(
+    wk::wk_handle(
+      wk::xy(0, 0),
+      s2_unprojection_filter(wk::xy_writer(), tessellate_tol = tol)
+    ),
+    wk::xyz(1, 0, 0)
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("LINESTRING (0 0, 0 45, -60 45)"),
+      s2_unprojection_filter(wk::wkb_writer(), tessellate_tol = tol)
+    ) %>% s2_num_points(),
+    6L
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      wk::wkt("POLYGON ((0 0, 0 45, -60 45, 0 0))"),
+      s2_unprojection_filter(wk::wkb_writer(), tessellate_tol = tol)
+    ) %>% s2_num_points(),
+    8L
+  )
+
+  expect_identical(
+    wk::wk_handle(wk::wkt(NA_character_), s2_unprojection_filter(wk::wkt_writer(), tessellate_tol = tol)),
+    wk::wkt(NA_character_)
+  )
+})

@@ -208,23 +208,24 @@ int s2_coord_filter_coord_unproject(const wk_meta_t* meta, const double* coord, 
   s2_tessellator_add_r2_point(coord_filter->tessellator, coord);
 
   // If we have an edge in the tessellator, reguritate all the points
-  // except the first one to the next handler. If we have just one point,
-  // we send it to the handler right away since we'll skip it when
+  // except the first one to the next handler. If we have zero points,
+  // we send the it to the handler right away since we'll skip it when
   // the next point arrives.
   int size = s2_tessellator_s2_points_size(coord_filter->tessellator);
   int result;
 
-  if (size == 1) {
+  if (size < 2) {
     s2_projection_unproject(coord_filter->projection, coord, coord_out);
     result = coord_filter->next->coord(
       &(coord_filter->meta_copy),
       coord_out, coord_id, coord_filter->next->handler_data
     );
+    coord_filter->coord_id++;
 
     if (result != WK_CONTINUE) {
       return result;
     }
-  } else if (size >= 2) {
+  } else {
     for (int i = 1; i < size; i++) {
       s2_tessellator_s2_point(coord_filter->tessellator, i, coord_out);
       result = coord_filter->next->coord(

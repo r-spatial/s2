@@ -120,27 +120,32 @@ int s2_projection_unproject(s2_projection_t* projection, const double* coord_in,
 class TessellatorWrapper {
 public:
     TessellatorWrapper(s2_projection_t* projection, double tolerance_radians):
-        tessellator((S2::Projection*) projection, S1Angle::Radians(tolerance_radians)) {}
+        tessellator((S2::Projection*) projection, S1Angle::Radians(tolerance_radians)),
+        has_r2_last(false), has_s2_last(false) {}
     
     void reset() {
         s2points.clear();
         r2points.clear();
+        has_r2_last = false;
+        has_s2_last = false;
     }
 
     void add_r2_point(const double* coord) {
         R2Point pt(coord[0], coord[1]);
-        if (r2points.size() > 0) {
+        if (has_r2_last) {
             this->tessellator.AppendUnprojected(r2last, pt, &(this->s2points));
         }
         this->r2last = pt;
+        this->has_r2_last = true;
     }
 
     void add_s2_point(const double* coord) {
         S2Point pt(coord[0], coord[1], coord[2]);
-        if (r2points.size() > 0) {
+        if (has_s2_last) {
             this->tessellator.AppendProjected(s2last, pt, &(this->r2points));
         }
         this->s2last = pt;
+        this->has_s2_last = true;
     }
 
     int r2_points_size() {
@@ -170,6 +175,8 @@ private:
     std::vector<R2Point> r2points;
     R2Point r2last;
     S2Point s2last;
+    bool has_r2_last;
+    bool has_s2_last;
 };
 
 s2_tessellator_t* s2_tessellator_create(s2_projection_t* projection, double tolerance_radians) {
