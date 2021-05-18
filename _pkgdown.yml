@@ -66,6 +66,10 @@ reference:
   contents:
   - s2_closest_feature
 
+- title: Linear Referencing
+  contents:
+  - s2_interpolate
+
 - title: Utility Functions
   contents:
   - s2_earth_radius_meters
@@ -75,3 +79,10 @@ reference:
   desc: Useful data for testing and demonstrating s2 functions
   contents:
   - starts_with("s2_data")
+
+- title: Low-level Details
+  desc: Interact with spherical geometry at a low level
+  contents:
+  - s2_cell
+  - s2_cell_is_valid
+  - s2_unprojection_filter
