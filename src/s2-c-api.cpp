@@ -113,7 +113,7 @@ public:
         const S2Point& pt = s2points[i];
         coord[0] = pt.x();
         coord[1] = pt.y();
-        coord[3] = pt.z();
+        coord[2] = pt.z();
     }
 
 private:
