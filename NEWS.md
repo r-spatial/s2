@@ -1,5 +1,9 @@
 # s2 (development version)
 
+* Added `s2_projection_filter()` and `s2_unprojection_filter()` to
+  expose the S2 edge tessellator, which can be used to make Cartesian
+  or great circle assumptions of line segments explicit by adding
+  points where necessary (#115).
 * Added an `s2_cell()` vector class to expose a subset of the S2
   indexing system to R users (#85, #114).
 * Added `s2_closest_edges()` to make k-nearest neighbours calculation
