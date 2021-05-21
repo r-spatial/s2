@@ -1269,6 +1269,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP c_s2_coord_filter_new(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP c_s2_projection_mercator();
+RcppExport SEXP c_s2_projection_plate_carree();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
@@ -1375,6 +1379,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
     {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
+    {"c_s2_coord_filter_new",        (DL_FUNC) &c_s2_coord_filter_new,        4},
+    {"c_s2_projection_mercator",     (DL_FUNC) &c_s2_projection_mercator,     0},
+    {"c_s2_projection_plate_carree", (DL_FUNC) &c_s2_projection_plate_carree, 0},
     {NULL, NULL, 0}
 };
 
