@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an S2 Geography Vector — as_s2_geography • s2</title>
+<title>Create S2 Cell vectors — s2_cell • s2</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,14 @@
 
 
 
-<meta property="og:title" content="Create an S2 Geography Vector — as_s2_geography" />
-<meta property="og:description" content="Geography vectors are arrays of points, lines, polygons, and/or collections
-of these. Geography vectors assume coordinates are longitude and latitude
-on a perfect sphere." />
+<meta property="og:title" content="Create S2 Cell vectors — s2_cell" />
+<meta property="og:description" content="The S2 cell indexing system forms the basis for spatial indexing
+in the S2 library. On their own, S2 cells can represent points
+or areas. As a union, a vector of S2 cells can approximate a
+line or polygon. These functions allow direct access to the
+S2 cell indexing system and are designed to have minimal overhead
+such that looping and recursion have acceptable performance
+when used within R code." />
 
 
 
@@ -125,95 +129,91 @@ on a perfect sphere." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an S2 Geography Vector</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-geography.R'><code>R/s2-geography.R</code></a></small>
-    <div class="hidden name"><code>as_s2_geography.Rd</code></div>
+    <h1>Create S2 Cell vectors</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-cell.R'><code>R/s2-cell.R</code></a></small>
+    <div class="hidden name"><code>s2_cell.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Geography vectors are arrays of points, lines, polygons, and/or collections
-of these. Geography vectors assume coordinates are longitude and latitude
-on a perfect sphere.</p>
+    <p>The S2 cell indexing system forms the basis for spatial indexing
+in the S2 library. On their own, S2 cells can represent points
+or areas. As a union, a vector of S2 cells can approximate a
+line or polygon. These functions allow direct access to the
+S2 cell indexing system and are designed to have minimal overhead
+such that looping and recursion have acceptable performance
+when used within R code.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>s2_cell</span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>s2_geography</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>s2_cell_sentinel</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>s2_cell_invalid</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>s2_cell_sentinel</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_point</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='co'># S3 method for wk_wkb</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='co'># S3 method for WKB</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='co'># S3 method for blob</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='co'># S3 method for wk_wkt</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='co'># S3 method for s2_cell</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, oriented <span class='op'>=</span> <span class='cn'>FALSE</span>, check <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='co'># S3 method for logical</span>
-<span class='fu'>as_s2_geography</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_wkt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='co'># S3 method for s2_lnglat</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for s2_point</span>
+<span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>new_s2_cell</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object that can be converted to an s2_geography vector</p></td>
+      <td><p>The canonical S2 cell identifier as a character vector.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Unused</p></td>
-    </tr>
-    <tr>
-      <th>oriented</th>
-      <td><p>TRUE if polygon ring directions are known to be correct
-(i.e., exterior rings are defined counter clockwise and interior
-rings are defined clockwise).</p></td>
-    </tr>
-    <tr>
-      <th>check</th>
-      <td><p>Use <code>check = FALSE</code> to skip error on invalid geometries</p></td>
+      <td><p>Passed to methods</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object with class s2_geography</p>
+    <p>An object of class s2_cell</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The coercion function <code>as_s2_geography()</code> is used to wrap the input
-of most functions in the s2 package so that you can use other objects with
-an unambiguious interpretation as a geography vector. Geography vectors
-have a minimal <a href='https://vctrs.r-lib.org/reference/vctrs-package.html'>vctrs</a> implementation, so you can
-use these objects in tibble, dplyr, and other packages that use the vctrs
-framework.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p>Under the hood, S2 cell vectors are represented in R as vectors
+of type <code><a href='https://rdrr.io/r/base/double.html'>double()</a></code>. This works because S2 cell identifiers are
+64 bits wide, as are <code>double</code>s on all systems where R runs (The
+same trick is used by the bit64 package to represent signed
+64-bit integers). As a happy accident, <code>NA_real_</code> is not a valid
+or meaningful cell identifier, so missing value support in the
+way R users might expect is preserved. It is worth noting that
+the underlying value of <code>s2_cell_sentinel()</code> would normally be
+considered <code>NA</code>; however, as it is meaningful and useful when
+programming with S2 cells, custom <code><a href='https://rdrr.io/r/base/NA.html'>is.na()</a></code> and comparison methods
+are implemented such that <code>s2_cell_sentinel()</code> is greater than
+all valid S2 cells and not considered missing. Users can and should
+implement compiled code that uses the underlying bytes of the
+vector, ensuring that the class of any returned object that should
+be interpreted in this way is constructed with <code>new_s2_cell()</code>.</p>
 
-    <div class='dont-index'><p><code><a href='s2_geog_point.html'>s2_geog_from_wkb()</a></code>, <code><a href='s2_geog_point.html'>s2_geog_from_text()</a></code>, <code><a href='s2_geog_point.html'>s2_geog_point()</a></code>,
-<code><a href='s2_geog_point.html'>s2_make_line()</a></code>, <code><a href='s2_geog_point.html'>s2_make_polygon()</a></code> for other ways to
-create geography vectors, and <code><a href='s2_geog_point.html'>s2_as_binary()</a></code> and <code><a href='s2_geog_point.html'>s2_as_text()</a></code>
-for other ways to export them.</p></div>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>s2_cell</span><span class='op'>(</span><span class='st'>"4b59a0cd83b5de49"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_cell[1]&gt;
+#&gt; [1] 4b59a0cd83b5de49</div><div class='input'><span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='fu'><a href='s2_lnglat.html'>s2_lnglat</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>64</span>, <span class='fl'>45</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_cell[1]&gt;
+#&gt; [1] 4b59a0cd83b5de49</div><div class='input'><span class='fu'>as_s2_cell</span><span class='op'>(</span><span class='fu'><a href='s2_data_tbl_countries.html'>s2_data_cities</a></span><span class='op'>(</span><span class='st'>"Ottawa"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_cell[1]&gt;
+#&gt; [1] 4cce045470cbd267</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

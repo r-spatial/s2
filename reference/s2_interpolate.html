@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an S2 Point Vector — s2_point • s2</title>
+<title>Linear referencing — s2_project • s2</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Create an S2 Point Vector — s2_point" />
-<meta property="og:description" content="In S2 terminology, a &quot;point&quot; is a 3-dimensional unit vector representation
-of an s2_lnglat(). Internally, all s2 objects are stored as
-3-dimensional unit vectors." />
+<meta property="og:title" content="Linear referencing — s2_project" />
+<meta property="og:description" content="Linear referencing" />
 
 
 
@@ -125,63 +123,74 @@ of an s2_lnglat(). Internally, all s2 objects are stored as
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an S2 Point Vector</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-point.R'><code>R/s2-point.R</code></a></small>
-    <div class="hidden name"><code>s2_point.Rd</code></div>
+    <h1>Linear referencing</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/s2/blob/master/R/s2-accessors.R'><code>R/s2-accessors.R</code></a>, <a href='https://github.com/r-spatial/s2/blob/master/R/s2-transformers.R'><code>R/s2-transformers.R</code></a></small>
+    <div class="hidden name"><code>s2_interpolate.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>In S2 terminology, a "point" is a 3-dimensional unit vector representation
-of an <code><a href='s2_lnglat.html'>s2_lnglat()</a></code>. Internally, all s2 objects are stored as
-3-dimensional unit vectors.</p>
+    <p>Linear referencing</p>
     </div>
 
-    <pre class="usage"><span class='fu'>s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>z</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>s2_project</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>s2_project_normalized</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_point</span>
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>s2_interpolate</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>distance</span>, radius <span class='op'>=</span> <span class='fu'><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='co'># S3 method for s2_lnglat</span>
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for s2_geography</span>
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for matrix</span>
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for s2_point</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for s2_point</span>
-<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>s2_interpolate_normalized</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>distance_normalized</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x, y, z</th>
-      <td><p>Vectors of latitude and longitude values in degrees.</p></td>
+      <th>x</th>
+      <td><p>A simple polyline geography vector</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Unused</p></td>
+      <th>y</th>
+      <td><p>A simple point geography vector. The point will be
+snapped to the nearest point on <code>x</code> for the purposes of
+interpolation.</p></td>
+    </tr>
+    <tr>
+      <th>radius</th>
+      <td><p>Radius of the earth. Defaults to the average radius of
+the earth in meters as defined by <code><a href='s2_earth_radius_meters.html'>s2_earth_radius_meters()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>distance</th>
+      <td><p>A distance along <code>x</code> in <code>radius</code> units.</p></td>
+    </tr>
+    <tr>
+      <th>distance_normalized</th>
+      <td><p>A <code>distance</code> normalized to <code><a href='s2_is_collection.html'>s2_length()</a></code> of
+<code>x</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object with class s2_point</p>
+    
+<ul>
+<li><p><code>s2_interpolate()</code> returns the point on <code>x</code>, <code>distance</code> meters
+along the line.</p></li>
+<li><p><code>s2_interpolate_normalized()</code> returns the point on <code>x</code> interpolated
+to a fraction along the line.</p></li>
+<li><p><code>s2_project()</code> returns the <code>distance</code> that <code>point</code> occurs along <code>x</code>.</p></li>
+<li><p><code>s2_project_normalized()</code> returns the <code>distance_normalized</code> along <code>x</code>
+where <code>point</code> occurs.</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>lnglat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='s2_lnglat.html'>s2_lnglat</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>64</span>, <span class='fl'>45</span><span class='op'>)</span> <span class='co'># Halifax, Nova Scotia!</span>
-<span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>lnglat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;s2_point[1]&gt;
-#&gt; [1] [0.3099752 -0.6355434 0.7071068]</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'>as_s2_point</span><span class='op'>(</span><span class='va'>lnglat</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;           x          y         z
-#&gt; 1 0.3099752 -0.6355434 0.7071068</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>s2_project_normalized</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 90)"</span>, <span class='st'>"POINT (0 22.5)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.25</div><div class='input'><span class='fu'>s2_project</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 90)"</span>, <span class='st'>"POINT (0 22.5)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 2501890</div><div class='input'><span class='fu'>s2_interpolate_normalized</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 90)"</span>, <span class='fl'>0.25</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (0 22.5)&gt;</div><div class='input'><span class='fu'>s2_interpolate</span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 90)"</span>, <span class='fl'>2501890</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;s2_geography[1]&gt;
+#&gt; [1] &lt;POINT (0 22.500002)&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

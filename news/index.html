@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -126,9 +126,27 @@
       <small>Source: <a href='https://github.com/r-spatial/s2/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="s2-105" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.5">
+<a href="#s2-105" class="anchor"></a>s2 1.0.5<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added <code><a href="../reference/s2_unprojection_filter.html">s2_projection_filter()</a></code> and <code><a href="../reference/s2_unprojection_filter.html">s2_unprojection_filter()</a></code> to expose the S2 edge tessellator, which can be used to make Cartesian or great circle assumptions of line segments explicit by adding points where necessary (<a href='https://github.com/r-spatial/s2/issues/115'>#115</a>).</li>
+<li>Added an <code><a href="../reference/s2_cell.html">s2_cell()</a></code> vector class to expose a subset of the S2 indexing system to R users (<a href='https://github.com/r-spatial/s2/issues/85'>#85</a>, <a href='https://github.com/r-spatial/s2/issues/114'>#114</a>).</li>
+<li>Added <code><a href="../reference/s2_closest_feature.html">s2_closest_edges()</a></code> to make k-nearest neighbours calculation possible on the sphere (<a href='https://github.com/r-spatial/s2/issues/111'>#111</a>, <a href='https://github.com/r-spatial/s2/issues/112'>#112</a>).</li>
+<li>Added <code><a href="../reference/s2_project.html">s2_interpolate()</a></code>, <code><a href="../reference/s2_project.html">s2_interpolate_normalized()</a></code>, <code><a href="../reference/s2_project.html">s2_project()</a></code>, and <code><a href="../reference/s2_project.html">s2_project_normalized()</a></code> to provide linear referencing support on the sphere (<a href='https://github.com/r-spatial/s2/issues/96'>#96</a>, <a href='https://github.com/r-spatial/s2/issues/110'>#110</a>).</li>
+<li>Fixed import of empty points from WKB (<a href='https://github.com/r-spatial/s2/issues/109'>#109</a>).</li>
+<li>Added argument <code>dimensions</code> to <code><a href="../reference/s2_options.html">s2_options()</a></code> to constrain the output dimensions of a boolean or rebuild operation (<a href='https://github.com/r-spatial/s2/issues/105'>#105</a>, <a href='https://github.com/r-spatial/s2/issues/104'>#104</a>, <a href='https://github.com/r-spatial/s2/issues/110'>#110</a>).</li>
+<li>Added <code><a href="../reference/s2_is_collection.html">s2_is_valid()</a></code> and <code><a href="../reference/s2_is_collection.html">s2_is_valid_detail()</a></code> to help find invalid spherical geometries when importing data into S2 (<a href='https://github.com/r-spatial/s2/issues/100'>#100</a>).</li>
+<li>Improved error messages when importing and processing data such that errors can be debugged more readily (<a href='https://github.com/r-spatial/s2/issues/100'>#100</a>, <a href='https://github.com/r-spatial/s2/issues/98'>#98</a>).</li>
+<li>The unary version of <code><a href="../reference/s2_boundary.html">s2_union()</a></code> can now handle MULTIPOLYGON geometries with overlapping rings in addition to other invalid polygons. <code><a href="../reference/s2_boundary.html">s2_union()</a></code> can now sanitize almost any input to be valid spherical geometry with minimal modification (<a href='https://github.com/r-spatial/s2/issues/100'>#100</a>, <a href='https://github.com/r-spatial/s2/issues/99'>#99</a>).</li>
+<li>Renamed the existing implementation of <code><a href="../reference/s2_boundary.html">s2_union_agg()</a></code> to <code><a href="../reference/s2_boundary.html">s2_coverage_union_agg()</a></code> to make clear that the function only works when the individual geometries do not have overlapping interiors. <code><a href="../reference/s2_boundary.html">s2_union_agg()</a></code> was replaced with a true aggregate union that can handle unions of most geometries (<a href='https://github.com/r-spatial/s2/issues/100'>#100</a>, <a href='https://github.com/r-spatial/s2/issues/97'>#97</a>).</li>
+<li>Added <code><a href="../reference/s2_boundary.html">s2_rebuild_agg()</a></code> to match <code><a href="../reference/s2_boundary.html">s2_union_agg()</a></code>. Like <code><a href="../reference/s2_boundary.html">s2_rebuild()</a></code>, <code><a href="../reference/s2_boundary.html">s2_rebuild_agg()</a></code> collects the edges in the input and builds them into a feature, optionally snapping or simplifying vertices in the process (<a href='https://github.com/r-spatial/s2/issues/100'>#100</a>).</li>
+</ul>
+</div>
     <div id="s2-104" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.4">
-<a href="#s2-104" class="anchor"></a>s2 1.0.4<small> Unreleased </small>
+<a href="#s2-104" class="anchor"></a>s2 1.0.4<small> 2021-01-05 </small>
 </h1>
 <ul>
 <li>Fixed errors that resulted from compilation on clang 12.2 (<a href='https://github.com/r-spatial/s2/issues/88'>#88</a>, <a href='https://github.com/r-spatial/s2/issues/89'>#89</a>).</li>
