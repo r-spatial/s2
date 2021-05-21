@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 ![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/s2)
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
@@ -151,10 +149,10 @@ nc_s2 %>%
   mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>% 
   st_as_sf()
 #> Simple feature collection with 100 features and 1 field
-#> geometry type:  GEOMETRY
-#> dimension:      XY
-#> bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-#> CRS:            NA
+#> Geometry type: GEOMETRY
+#> Dimension:     XY
+#> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+#> CRS:           NA
 #> # A tibble: 100 x 2
 #>    NAME                                                                 geometry
 #>    <chr>                                                              <GEOMETRY>
