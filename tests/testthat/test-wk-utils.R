@@ -129,6 +129,44 @@ test_that("projection + tessellating using a wk filter works", {
   )
 })
 
+test_that("errors are propagated through the coordinate filter", {
+  expect_error(
+    wk::wk_handle(wk::new_wk_wkt("POINT ENTPY"),  s2_projection_filter(wk::wk_void_handler())),
+    "ENTPY"
+  )
+})
+
+test_that("early returns are respected by s2_projection_filter()", {
+  big_line <- as_wkt(s2::s2_make_line(1:10, 1:10))
+  unprojected <- wk::wk_handle(big_line, s2_unprojection_filter(wk::wkt_writer()))
+  expect_identical(
+    wk::wk_handle(unprojected, s2_projection_filter(wk::wkt_format_handler(max_coords = 2))),
+    "LINESTRING (1 1, 2 2...",
+  )
+  expect_identical(
+    wk::wk_handle(
+      unprojected,
+      s2_projection_filter(wk::wkt_format_handler(max_coords = 2), tessellate_tol = 1e-8)
+    ),
+    "LINESTRING (1 1, 1.062476 1.062512...",
+  )
+})
+
+test_that("early returns are respected by s2_unprojection_filter()", {
+  big_line <- as_wkt(s2::s2_make_line(1:10, 1:10))
+  expect_identical(
+    wk::wk_handle(big_line, s2_unprojection_filter(wk::wkt_format_handler(max_coords = 2))),
+    "LINESTRING Z (0.9996954 0.01744975 0.01745241, 0.998782 0.03487824 0.0348995...",
+  )
+  expect_identical(
+    wk::wk_handle(
+      big_line,
+      s2_unprojection_filter(wk::wkt_format_handler(max_coords = 2), tessellate_tol = 1e-8)
+    ),
+    "LINESTRING Z (0.9996954 0.01744975 0.01745241, 0.9996562 0.01853987 0.01854306...",
+  )
+})
+
 test_that("mercator projection works", {
   expect_equal(
     wk::wk_handle(
