@@ -566,7 +566,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
 
           // Check if the builder created a polygon whose boundary contained more than
           // half the earth (and invert it if so)
-          if (loop->GetArea() > (2 * PI)) {
+          if (loop->GetArea() > (2 * M_PI)) {
             loop->Invert();
           }
 
