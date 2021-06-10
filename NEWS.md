@@ -1,3 +1,5 @@
+# s2 (development version)
+
 # s2 1.0.5
 
 * Added `s2_projection_filter()` and `s2_unprojection_filter()` to

@@ -14,6 +14,24 @@ test_that("s2_centroid() works", {
   )
 })
 
+test_that("s2_centroid() and s2_centroid_agg() normalize points", {
+  expect_equal(
+    s2_distance(
+      s2_centroid("MULTIPOINT (1 1, 1 1)"),
+      "POINT (1 1)"
+    ),
+    0
+  )
+
+  expect_equal(
+    s2_distance(
+      s2_centroid_agg(c("POINT (1 1)", "POINT (1 1)")),
+      "POINT (1 1)"
+    ),
+    0
+  )
+})
+
 test_that("s2_boundary() works", {
   expect_true(s2_is_empty(s2_boundary("POINT (30 10)")))
   expect_true(s2_is_empty(s2_boundary("POINT EMPTY")))
