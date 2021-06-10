@@ -34,7 +34,7 @@ jobs:
         run: |
           # conflicts with gfortran from r-lib/actions when linking gcc
           rm '/usr/local/bin/gfortran'
-          brew install pkg-config gdal proj geos openssl@1.1
+          brew install pkg-config gdal proj geos openssl@1.1 udunits
 
       - name: Install dependencies
         run: |
