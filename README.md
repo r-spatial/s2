@@ -1,28 +1,34 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
 
 # s2
 
 <!-- badges: start -->
+
 ![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/s2)
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
 [![Downloads](http://cranlogs.r-pkg.org/badges/s2?color=brightgreen)](http://www.r-pkg.org/pkg/s2)
 <!-- badges: end -->
 
-The s2 R package provides bindings to Google's [S2Geometry](https://s2geometry.io) library. The package exposes an API similar to Google's [BigQuery Geography API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions), whose functions also operate on spherical geometries. Package [sf](https://cran.r-project.org/web/packages/sf/index.html) uses this package by default for nearly all its geometrical operations on objects with ellipsoidal (unprojected) coordinates; in cases where it doesn't, such as `st_relate()`, it emits a warning.
+The s2 R package provides bindings to Google’s
+[S2Geometry](https://s2geometry.io) library. The package exposes an API
+similar to Google’s [BigQuery Geography
+API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions),
+whose functions also operate on spherical geometries. Package
+[sf](https://cran.r-project.org/web/packages/sf/index.html) uses this
+package by default for nearly all its geometrical operations on objects
+with ellipsoidal (unprojected) coordinates; in cases where it doesn’t,
+such as `st_relate()`, it emits a warning.
 
-This package is a complete rewrite of an earlier CRAN package s2 with versions up 
-to 0.4-2, for which the sources are found [here](https://github.com/spatstat/s2/).
+This package is a complete rewrite of an earlier CRAN package s2 with
+versions up to 0.4-2, for which the sources are found
+[here](https://github.com/spatstat/s2/).
 
 ## Installation
 
-You can install the released version of s2 from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of s2 from
+[CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("s2")
@@ -37,10 +43,12 @@ remotes::install_github("r-spatial/s2")
 
 ## Example
 
-The s2 package provides geometry transformers and predicates similar to those found in [GEOS](https://trac.osgeo.org/geos/), except instead of assuming a planar geometry, s2's functions work in latitude and longitude and assume a spherical geometry:
+The s2 package provides geometry transformers and predicates similar to
+those found in [GEOS](https://trac.osgeo.org/geos/), except instead of
+assuming a planar geometry, s2’s functions work in latitude and
+longitude and assume a spherical geometry:
 
-
-```r
+``` r
 library(s2)
 
 s2_contains(
@@ -52,10 +60,12 @@ s2_contains(
 #> [1] TRUE
 ```
 
-The [sf package](https://r-spatial.github.io/sf/) uses s2 for geographic coordinates with `sf::sf_use_s2(TRUE)`, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using `as_s2_geography()`:
+The [sf package](https://r-spatial.github.io/sf/) uses s2 for geographic
+coordinates with `sf::sf_use_s2(TRUE)`, and will become the default
+after sf version 1.0.0. The sf package also supports creating s2 vectors
+using `as_s2_geography()`:
 
-
-```r
+``` r
 library(dplyr)
 library(sf)
 
@@ -83,8 +93,7 @@ nc_s2
 
 Use accessors to extract information about geometries:
 
-
-```r
+``` r
 nc_s2 %>% 
   mutate(
     area = s2_area(geometry),
@@ -108,8 +117,7 @@ nc_s2 %>%
 
 Use predicates to subset vectors:
 
-
-```r
+``` r
 nc_s2 %>% 
   filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
 #> # A tibble: 1 x 2
@@ -120,8 +128,7 @@ nc_s2 %>%
 
 Use transformers to create new geometries:
 
-
-```r
+``` r
 nc_s2 %>% 
   mutate(geometry = s2_boundary(geometry))
 #> # A tibble: 100 x 2
@@ -140,10 +147,10 @@ nc_s2 %>%
 #> # … with 90 more rows
 ```
 
-Finally, use the WKB or WKT exporters to export to sf or some other package:
+Finally, use the WKB or WKT exporters to export to sf or some other
+package:
 
-
-```r
+``` r
 nc_s2 %>% 
   mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>% 
   st_as_sf()
@@ -170,8 +177,8 @@ nc_s2 %>%
 
 ## Acknowledgment
 
-This project gratefully acknowledges financial [support](https://www.r-consortium.org/projects) from the
+This project gratefully acknowledges financial
+[support](https://www.r-consortium.org/projects) from the
 
 <a href="https://www.r-consortium.org/projects/awarded-projects">
-<img src="man/figures/rc300.png" width="300" />
-</a>
+<img src="man/figures/rc300.png" width="300" /> </a>
