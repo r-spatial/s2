@@ -1,5 +1,11 @@
 # s2 (development version)
 
+- Added support for `STRICT_R_HEADERS` (@eddelbuettel, #118).
+- Fixed a bug where the result of `s2_centroid_agg()` did not
+  behave like a normal point in distance calculations (#119, #121).
+- Fixed a Windows UCRT check failure and updated openssl linking
+  (@jeroen, #122).
+
 # s2 1.0.5
 
 * Added `s2_projection_filter()` and `s2_unprojection_filter()` to
