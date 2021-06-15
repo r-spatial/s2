@@ -8,7 +8,7 @@
 ![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
 [![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/s2)
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
-[![Downloads](http://cranlogs.r-pkg.org/badges/s2?color=brightgreen)](http://www.r-pkg.org/pkg/s2)
+[![Downloads](http://cranlogs.r-pkg.org/badges/s2?color=brightgreen)](https://www.r-pkg.org/pkg/s2)
 <!-- badges: end -->
 
 The s2 R package provides bindings to Google’s
@@ -16,10 +16,10 @@ The s2 R package provides bindings to Google’s
 similar to Google’s [BigQuery Geography
 API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions),
 whose functions also operate on spherical geometries. Package
-[sf](https://cran.r-project.org/web/packages/sf/index.html) uses this
-package by default for nearly all its geometrical operations on objects
-with ellipsoidal (unprojected) coordinates; in cases where it doesn’t,
-such as `st_relate()`, it emits a warning.
+[sf](https://cran.r-project.org/package=sf) uses this package by default
+for nearly all its geometrical operations on objects with ellipsoidal
+(unprojected) coordinates; in cases where it doesn’t, such as
+`st_relate()`, it emits a warning.
 
 This package is a complete rewrite of an earlier CRAN package s2 with
 versions up to 0.4-2, for which the sources are found
