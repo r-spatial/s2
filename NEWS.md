@@ -1,4 +1,4 @@
-# s2 (development version)
+# s2 1.0.6
 
 - Added support for `STRICT_R_HEADERS` (@eddelbuettel, #118).
 - Fixed a bug where the result of `s2_centroid_agg()` did not
