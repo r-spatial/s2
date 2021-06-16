@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
       </span>
     </div>
 
@@ -126,9 +126,19 @@
       <small>Source: <a href='https://github.com/r-spatial/s2/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="s2-106" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.6">
+<a href="#s2-106" class="anchor"></a>s2 1.0.6<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added support for <code>STRICT_R_HEADERS</code> (<a href='https://github.com/eddelbuettel'>@eddelbuettel</a>, <a href='https://github.com/r-spatial/s2/issues/118'>#118</a>).</li>
+<li>Fixed a bug where the result of <code><a href="../reference/s2_boundary.html">s2_centroid_agg()</a></code> did not behave like a normal point in distance calculations (<a href='https://github.com/r-spatial/s2/issues/119'>#119</a>, <a href='https://github.com/r-spatial/s2/issues/121'>#121</a>).</li>
+<li>Fixed a Windows UCRT check failure and updated openssl linking (<a href='https://github.com/jeroen'>@jeroen</a>, <a href='https://github.com/r-spatial/s2/issues/122'>#122</a>).</li>
+</ul>
+</div>
     <div id="s2-105" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.5">
-<a href="#s2-105" class="anchor"></a>s2 1.0.5<small> Unreleased </small>
+<a href="#s2-105" class="anchor"></a>s2 1.0.5<small> 2021-06-01 </small>
 </h1>
 <ul>
 <li>Added <code><a href="../reference/s2_unprojection_filter.html">s2_projection_filter()</a></code> and <code><a href="../reference/s2_unprojection_filter.html">s2_unprojection_filter()</a></code> to expose the S2 edge tessellator, which can be used to make Cartesian or great circle assumptions of line segments explicit by adding points where necessary (<a href='https://github.com/r-spatial/s2/issues/115'>#115</a>).</li>

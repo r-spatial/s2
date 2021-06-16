@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
       </span>
     </div>
 
@@ -90,7 +90,8 @@
 <a href="#s2" class="anchor"></a>s2</h1></div>
 <!-- badges: start -->
 
-<p>The goal of s2 is to provide R bindings to Google’s <a href="https://s2geometry.io">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions">BigQuery Geography API</a>, whose functions also operate on spherical geometries. This package is a complete rewrite of an earlier CRAN package s2 with versions up to 0.4-2, for which the sources are found <a href="https://github.com/spatstat/s2/">here</a>.</p>
+<p>The s2 R package provides bindings to Google’s <a href="https://s2geometry.io">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions">BigQuery Geography API</a>, whose functions also operate on spherical geometries. Package <a href="https://cran.r-project.org/package=sf">sf</a> uses this package by default for nearly all its geometrical operations on objects with ellipsoidal (unprojected) coordinates; in cases where it doesn’t, such as <code>st_relate()</code>, it emits a warning.</p>
+<p>This package is a complete rewrite of an earlier CRAN package s2 with versions up to 0.4-2, for which the sources are found <a href="https://github.com/spatstat/s2/">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -255,6 +256,7 @@
 <ul class="list-unstyled">
 <li><a href="https://codecov.io/gh/r-spatial/s2"><img src="https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg" alt="codecov"></a></li>
 <li><a href="https://cran.r-project.org/package=s2"><img src="http://www.r-pkg.org/badges/version/s2" alt="CRAN"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/s2"><img src="http://cranlogs.r-pkg.org/badges/s2?color=brightgreen" alt="Downloads"></a></li>
 </ul>
 </div>
 </div>
