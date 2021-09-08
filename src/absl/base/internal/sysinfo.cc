@@ -158,6 +158,7 @@ static int64_t ReadMonotonicClockNanos() {
     perror("clock_gettime() failed");
     // dd: R CMD check will fail if abort() is used
     // abort();
+    cpp_compat_abort();
   }
   return int64_t{t.tv_sec} * 1000000000 + t.tv_nsec;
 }
@@ -418,7 +419,7 @@ pid_t GetTID() {
 
   if (pthread_setspecific(tid_key, reinterpret_cast<void *>(tid)) != 0) {
     perror("pthread_setspecific failed");
-    abort();
+    cpp_compat_abort();
   }
 
   return static_cast<pid_t>(tid);
