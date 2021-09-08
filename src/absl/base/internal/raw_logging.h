@@ -41,6 +41,14 @@
 // This will print an almost standard log line like this to stderr only:
 //   E0821 211317 file.cc:123] RAW: Failed foo with 22: bad_file
 
+// __VA_ARGS__ isn't passed along properly on Windows and we don't ever log
+// to stderr because R CMD check won't let us; so ignore log messages.
+#ifdef _WIN32
+
+#define ABSL_RAW_LOG(severity, ...)
+
+#else
+
 #define ABSL_RAW_LOG(severity, ...)                                            \
   do {                                                                         \
     constexpr const char* absl_raw_logging_internal_basename =                 \
@@ -49,7 +57,9 @@
     ::absl::raw_logging_internal::RawLog(ABSL_RAW_LOGGING_INTERNAL_##severity, \
                                          absl_raw_logging_internal_basename,   \
                                          __LINE__, __VA_ARGS__);               \
-  } while (0)
+  } while (0)                                                  \
+
+#endif
 
 // Similar to CHECK(condition) << message, but for low-level modules:
 // we use only ABSL_RAW_LOG that does not allocate memory.
