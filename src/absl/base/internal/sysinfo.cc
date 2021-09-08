@@ -1,3 +1,4 @@
+#include "cpp-compat.h"
 // Copyright 2017 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -155,7 +156,8 @@ static int64_t ReadMonotonicClockNanos() {
 #endif
   if (rc != 0) {
     perror("clock_gettime() failed");
-    abort();
+    // dd: R CMD check will fail if abort() is used
+    // abort();
   }
   return int64_t{t.tv_sec} * 1000000000 + t.tv_nsec;
 }
@@ -372,7 +374,9 @@ static void InitGetTID() {
   if (pthread_key_create(&tid_key, FreeTID) != 0) {
     // The logging system calls GetTID() so it can't be used here.
     perror("pthread_key_create failed");
-    abort();
+    // dd: R CMD check will fail if abort() is used
+    // abort();
+    cpp_compat_abort();
   }
 
   // Initialize tid_array.
