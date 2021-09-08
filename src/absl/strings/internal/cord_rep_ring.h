@@ -31,13 +31,13 @@ ABSL_NAMESPACE_BEGIN
 namespace cord_internal {
 
 // See https://bugs.llvm.org/show_bug.cgi?id=48477
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow"
-#if __has_warning("-Wshadow-field")
-#pragma clang diagnostic ignored "-Wshadow-field"
-#endif
-#endif
+// #ifdef __clang__
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wshadow"
+// #if __has_warning("-Wshadow-field")
+// #pragma clang diagnostic ignored "-Wshadow-field"
+// #endif
+// #endif
 
 // All operations modifying a ring buffer are implemented as static methods
 // requiring a CordRepRing instance with a reference adopted by the method.
@@ -578,9 +578,9 @@ inline const CordRepRing* CordRep::ring() const {
 
 std::ostream& operator<<(std::ostream& s, const CordRepRing& rep);
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+// #ifdef __clang__
+// #pragma clang diagnostic pop
+// #endif
 
 }  // namespace cord_internal
 ABSL_NAMESPACE_END

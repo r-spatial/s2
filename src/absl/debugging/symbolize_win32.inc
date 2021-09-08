@@ -18,10 +18,10 @@
 #include <windows.h>
 
 // MSVC header dbghelp.h has a warning for an ignored typedef.
-#pragma warning(push)
-#pragma warning(disable:4091)
+// #pragma warning(push)
+// #pragma warning(disable:4091)
 #include <dbghelp.h>
-#pragma warning(pop)
+// #pragma warning(pop)
 
 #pragma comment(lib, "dbghelp.lib")
 

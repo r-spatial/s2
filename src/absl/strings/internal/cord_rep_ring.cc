@@ -33,13 +33,13 @@ ABSL_NAMESPACE_BEGIN
 namespace cord_internal {
 
 // See https://bugs.llvm.org/show_bug.cgi?id=48477
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow"
-#if __has_warning("-Wshadow-field")
-#pragma clang diagnostic ignored "-Wshadow-field"
-#endif
-#endif
+// #ifdef __clang__
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wshadow"
+// #if __has_warning("-Wshadow-field")
+// #pragma clang diagnostic ignored "-Wshadow-field"
+// #endif
+// #endif
 
 namespace {
 
@@ -888,9 +888,9 @@ CordRepRing* CordRepRing::RemoveSuffix(CordRepRing* rep, size_t len,
   return Validate(rep);
 }
 
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+// #ifdef __clang__
+// #pragma clang diagnostic pop
+// #endif
 
 }  // namespace cord_internal
 ABSL_NAMESPACE_END

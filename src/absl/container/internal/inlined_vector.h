@@ -34,10 +34,10 @@ ABSL_NAMESPACE_BEGIN
 namespace inlined_vector_internal {
 
 // GCC does not deal very well with the below code
-#if !defined(__clang__) && defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
+// #if !defined(__clang__) && defined(__GNUC__)
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// #endif
 
 template <typename Iterator>
 using IsAtLeastForwardIterator = std::is_convertible<
@@ -956,9 +956,9 @@ auto Storage<T, N, A>::Swap(Storage* other_storage_ptr) -> void {
 }
 
 // End ignore "maybe-uninitialized"
-#if !defined(__clang__) && defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
+// #if !defined(__clang__) && defined(__GNUC__)
+// #pragma GCC diagnostic pop
+// #endif
 
 }  // namespace inlined_vector_internal
 ABSL_NAMESPACE_END

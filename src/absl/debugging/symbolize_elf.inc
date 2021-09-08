@@ -404,7 +404,7 @@ Symbolizer::~Symbolizer() {
 // We don't use assert() since it's not guaranteed to be
 // async-signal-safe.  Instead we define a minimal assertion
 // macro. So far, we don't need pretty printing for __FILE__, etc.
-#define SAFE_ASSERT(expr) ((expr) ? static_cast<void>(0) : abort())
+#define SAFE_ASSERT(expr) ((expr) ? static_cast<void>(0) : cpp_compat_abort())
 
 // Read up to "count" bytes from file descriptor "fd" into the buffer
 // starting at "buf" while handling short reads and EINTR.  On
