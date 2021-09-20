@@ -32,10 +32,10 @@
 #include <string>
 #include <type_traits>
 
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/port.h"
-#include "s2/third_party/absl/numeric/int128.h"
-#include "s2/third_party/absl/strings/string_view.h"
+#include "absl/base/macros.h"
+#include "absl/base/port.h"
+#include "absl/numeric/int128.h"
+#include "absl/strings/string_view.h"
 
 namespace absl {
 

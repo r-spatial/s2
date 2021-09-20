@@ -32,9 +32,9 @@
 #include <iosfwd>
 #include <limits>
 
-#include "s2/third_party/absl/base/config.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/port.h"
+#include "absl/base/config.h"
+#include "absl/base/macros.h"
+#include "absl/base/port.h"
 
 namespace absl {
 
@@ -643,9 +643,9 @@ inline uint128& uint128::operator--() {
 
 
 #if defined(ABSL_HAVE_INTRINSIC_INT128)
-#include "s2/third_party/absl/numeric/int128_have_intrinsic.inc"
+#include "absl/numeric/int128_have_intrinsic.inc"
 #else  // ABSL_HAVE_INTRINSIC_INT128
-#include "s2/third_party/absl/numeric/int128_no_intrinsic.inc"
+#include "absl/numeric/int128_no_intrinsic.inc"
 #endif  // ABSL_HAVE_INTRINSIC_INT128
 
 }  // namespace absl

@@ -15,7 +15,7 @@
 #ifndef S2_THIRD_PARTY_ABSL_STRINGS_ASCII_CTYPE_H_
 #define S2_THIRD_PARTY_ABSL_STRINGS_ASCII_CTYPE_H_
 
-#include "s2/third_party/absl/strings/ascii.h"
+#include "absl/strings/ascii.h"
 
 inline bool ascii_isalpha(unsigned char c) {
   return absl::ascii_isalpha(c);

@@ -24,11 +24,11 @@
 #include <cstddef>
 #include <string>
 
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/strings/ascii.h"
-#include "s2/third_party/absl/strings/ascii_ctype.h"
-#include "s2/third_party/absl/strings/match.h"
-#include "s2/third_party/absl/strings/string_view.h"
+#include "absl/base/macros.h"
+#include "absl/strings/ascii.h"
+#include "absl/strings/ascii_ctype.h"
+#include "absl/strings/match.h"
+#include "absl/strings/string_view.h"
 
 namespace absl {
 

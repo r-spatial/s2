@@ -23,10 +23,10 @@
 #ifndef S2_THIRD_PARTY_ABSL_BASE_INTERNAL_RAW_LOGGING_H_
 #define S2_THIRD_PARTY_ABSL_BASE_INTERNAL_RAW_LOGGING_H_
 
-#include "s2/third_party/absl/base/attributes.h"
-#include "s2/third_party/absl/base/log_severity.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/port.h"
+#include "absl/base/attributes.h"
+#include "absl/base/log_severity.h"
+#include "absl/base/macros.h"
+#include "absl/base/port.h"
 
 // This is similar to LOG(severity) << format..., but
 // * it is to be used ONLY by low-level modules that can't use normal LOG()

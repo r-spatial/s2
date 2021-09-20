@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "s2/base/logging.h"
-#include "s2/third_party/absl/memory/memory.h"
+#include "absl/memory/memory.h"
 #include "s2/util/math/mathutil.h"
 
 namespace s2polyline_alignment {
@@ -102,7 +102,7 @@ Window Window::Dilate(const int radius) const {
 }
 
 // Debug string implemented primarily for testing purposes.
-string Window::DebugString() const {
+std::string Window::DebugString() const {
   std::stringstream buffer;
   for (int row = 0; row < rows_; ++row) {
     for (int col = 0; col < cols_; ++col) {

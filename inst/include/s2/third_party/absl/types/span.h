@@ -64,12 +64,12 @@
 #include <type_traits>
 #include <utility>
 
-#include "s2/third_party/absl/algorithm/algorithm.h"
-#include "s2/third_party/absl/base/internal/throw_delegate.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/optimization.h"
-#include "s2/third_party/absl/base/port.h"
-#include "s2/third_party/absl/meta/type_traits.h"
+#include "absl/algorithm/algorithm.h"
+#include "absl/base/internal/throw_delegate.h"
+#include "absl/base/macros.h"
+#include "absl/base/optimization.h"
+#include "absl/base/port.h"
+#include "absl/meta/type_traits.h"
 
 namespace absl {
 

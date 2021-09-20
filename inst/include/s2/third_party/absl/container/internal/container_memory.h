@@ -30,8 +30,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "s2/third_party/absl/memory/memory.h"
-#include "s2/third_party/absl/utility/utility.h"
+#include "absl/memory/memory.h"
+#include "absl/utility/utility.h"
 
 namespace absl {
 namespace container_internal {

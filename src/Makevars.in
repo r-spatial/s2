@@ -194,18 +194,6 @@ OBJECTS = $(ABSL_LIBS) \
      s2/s2wedge_relations.o \
      s2/strings/ostringstream.o \
      s2/strings/serialize.o \
-     s2/third_party/absl/base/dynamic_annotations.o \
-     s2/third_party/absl/base/internal/raw_logging.o \
-     s2/third_party/absl/base/internal/throw_delegate.o \
-     s2/third_party/absl/numeric/int128.o \
-     s2/third_party/absl/strings/ascii.o \
-     s2/third_party/absl/strings/internal/memutil.o \
-     s2/third_party/absl/strings/match.o \
-     s2/third_party/absl/strings/numbers.o \
-     s2/third_party/absl/strings/str_cat.o \
-     s2/third_party/absl/strings/str_split.o \
-     s2/third_party/absl/strings/string_view.o \
-     s2/third_party/absl/strings/strip.o \
      s2/util/bits/bit-interleave.o \
      s2/util/bits/bits.o \
      s2/util/coding/coder.o \

@@ -48,7 +48,7 @@
 #include <string>
 #include "s2/base/integral_types.h"
 #include "s2/base/port.h"
-#include "s2/third_party/absl/base/macros.h"
+#include "absl/base/macros.h"
 
 // Adapter functions for handling overflow and errno.
 int32 strto32_adapter(const char *nptr, char **endptr, int base);
@@ -95,11 +95,11 @@ inline int64 atoi64(const char *nptr) {
 }
 
 // Convenience versions of the above that take a string argument.
-inline int32 atoi32(const string &s) {
+inline int32 atoi32(const std::string &s) {
   return atoi32(s.c_str());
 }
 
-inline int64 atoi64(const string &s) {
+inline int64 atoi64(const std::string &s) {
   return atoi64(s.c_str());
 }
 

@@ -16,7 +16,7 @@
 #ifndef S2_UTIL_GTL_LAYOUT_H_
 #define S2_UTIL_GTL_LAYOUT_H_
 
-#include "s2/third_party/absl/container/internal/layout.h"
+#include "absl/container/internal/layout.h"
 
 namespace gtl {
 

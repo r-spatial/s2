@@ -28,7 +28,7 @@
 #define S2_THIRD_PARTY_ABSL_STRINGS_STRING_VIEW_H_
 
 #include <algorithm>
-#include "s2/third_party/absl/base/config.h"
+#include "absl/base/config.h"
 
 #ifdef ABSL_HAVE_STD_STRING_VIEW
 
@@ -48,9 +48,9 @@ using std::string_view;
 #include <limits>
 #include <string>
 
-#include "s2/third_party/absl/base/internal/throw_delegate.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/port.h"
+#include "absl/base/internal/throw_delegate.h"
+#include "absl/base/macros.h"
+#include "absl/base/port.h"
 
 // string_view has *two* size types.
 // string_view::size_type

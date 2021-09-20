@@ -36,7 +36,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "s2/third_party/absl/utility/utility.h"
+#include "absl/utility/utility.h"
 
 #ifdef _MSC_VER
 // We need to mark these classes with this declspec to ensure that

@@ -174,10 +174,10 @@
 #include <sanitizer/asan_interface.h>
 #endif
 
-#include "s2/third_party/absl/meta/type_traits.h"
-#include "s2/third_party/absl/strings/str_cat.h"
-#include "s2/third_party/absl/types/span.h"
-#include "s2/third_party/absl/utility/utility.h"
+#include "absl/meta/type_traits.h"
+#include "absl/strings/str_cat.h"
+#include "absl/types/span.h"
+#include "absl/utility/utility.h"
 
 #if defined(__GXX_RTTI)
 #define ABSL_INTERNAL_HAS_CXA_DEMANGLE

@@ -66,13 +66,13 @@
 #include <utility>
 
 #include "s2/base/integral_types.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/container/internal/compressed_tuple.h"
-#include "s2/third_party/absl/container/internal/container_memory.h"
-#include "s2/third_party/absl/memory/memory.h"
-#include "s2/third_party/absl/meta/type_traits.h"
-#include "s2/third_party/absl/strings/string_view.h"
-#include "s2/third_party/absl/utility/utility.h"
+#include "absl/base/macros.h"
+#include "absl/container/internal/compressed_tuple.h"
+#include "absl/container/internal/container_memory.h"
+#include "absl/memory/memory.h"
+#include "absl/meta/type_traits.h"
+#include "absl/strings/string_view.h"
+#include "absl/utility/utility.h"
 #include "s2/util/gtl/layout.h"
 
 namespace gtl {
@@ -202,7 +202,7 @@ bool bool_compare_keys(const Compare &comp, const K &x, const LK &y) {
   return btree_is_key_compare_to<Compare>::value ? comp(x, y) < 0 : comp(x, y);
 }
 
-// Detects a 'goog_btree_prefer_linear_node_search' member. This is
+// Detects a 'absl_btree_prefer_linear_node_search' member. This is
 // a protocol used as an opt-in or opt-out of linear search.
 //
 //  For example, this would be useful for key types that wrap an integer
@@ -210,7 +210,7 @@ bool bool_compare_keys(const Compare &comp, const K &x, const LK &y) {
 //
 //   class K {
 //    public:
-//     using goog_btree_prefer_linear_node_search = std::true_type;
+//     using absl_btree_prefer_linear_node_search = std::true_type;
 //     ...
 //    private:
 //     friend bool operator<(K a, K b) { return a.k_ < b.k_; }
@@ -228,12 +228,12 @@ template <typename T, typename = void>
 struct prefers_linear_node_search : std::false_type {};
 template <typename T>
 struct has_linear_node_search_preference<
-    T, absl::void_t<typename T::goog_btree_prefer_linear_node_search>>
+    T, absl::void_t<typename T::absl_btree_prefer_linear_node_search>>
     : std::true_type {};
 template <typename T>
 struct prefers_linear_node_search<
-    T, absl::void_t<typename T::goog_btree_prefer_linear_node_search>>
-    : T::goog_btree_prefer_linear_node_search {};
+    T, absl::void_t<typename T::absl_btree_prefer_linear_node_search>>
+    : T::absl_btree_prefer_linear_node_search {};
 
 template <typename Key, typename Compare, typename Alloc, int TargetNodeSize,
           int ValueSize, bool Multi>

@@ -39,7 +39,7 @@
 #include <functional>
 #include <type_traits>
 
-#include "s2/third_party/absl/base/config.h"
+#include "absl/base/config.h"
 
 namespace absl {
 

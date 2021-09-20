@@ -55,8 +55,8 @@
 #include <algorithm>
 #include <string>
 
-#include "s2/third_party/absl/base/attributes.h"
-#include "s2/third_party/absl/strings/string_view.h"
+#include "absl/base/attributes.h"
+#include "absl/strings/string_view.h"
 
 namespace absl {
 namespace ascii_internal {

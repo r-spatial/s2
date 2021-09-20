@@ -63,7 +63,7 @@
 #include <TargetConditionals.h>
 #endif
 
-#include "s2/third_party/absl/base/policy_checks.h"
+#include "absl/base/policy_checks.h"
 
 // -----------------------------------------------------------------------------
 // Compiler Feature Checks

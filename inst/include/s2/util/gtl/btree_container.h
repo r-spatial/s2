@@ -22,7 +22,7 @@
 #include <initializer_list>
 #include <utility>
 
-#include "s2/third_party/absl/base/internal/throw_delegate.h"
+#include "absl/base/internal/throw_delegate.h"
 #include "s2/util/gtl/btree.h"  // IWYU pragma: export
 
 namespace gtl {

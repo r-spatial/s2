@@ -21,8 +21,8 @@
 #include <type_traits>
 #include <utility>
 
-#include "s2/third_party/absl/base/port.h"
-#include "s2/third_party/absl/meta/type_traits.h"  //  for void_t
+#include "absl/base/port.h"
+#include "absl/meta/type_traits.h"  //  for void_t
 
 namespace absl {
 namespace strings_internal {

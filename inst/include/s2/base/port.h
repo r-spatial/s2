@@ -35,8 +35,8 @@
 #include <cstring>
 
 #include "s2/base/integral_types.h"
-#include "s2/third_party/absl/base/config.h"
-#include "s2/third_party/absl/base/port.h"
+#include "absl/base/config.h"
+#include "absl/base/port.h"
 
 #ifdef SWIG
 %include "third_party/absl/base/port.h"
@@ -385,7 +385,7 @@ static inline uint64 bswap_64(uint64 x) {
 
 #ifdef __cplusplus
 #ifdef STL_MSVC  // not always the same as _MSC_VER
-#include "s2/third_party/absl/base/internal/port_hash.inc"
+#include "absl/base/internal/port_hash.inc"
 #else
 struct PortableHashBase {};
 #endif  // STL_MSVC

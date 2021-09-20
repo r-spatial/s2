@@ -65,8 +65,8 @@
 #include <cstddef>
 #include <cstring>
 
-#include "s2/third_party/absl/base/port.h"  // disable some warnings on Windows
-#include "s2/third_party/absl/strings/ascii.h"  // for absl::ascii_tolower
+#include "absl/base/port.h"  // disable some warnings on Windows
+#include "absl/strings/ascii.h"  // for absl::ascii_tolower
 
 namespace absl {
 namespace strings_internal {

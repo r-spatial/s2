@@ -28,8 +28,8 @@
 #include <memory>
 #include <type_traits>
 
-#include "s2/third_party/absl/base/internal/identity.h"
-#include "s2/third_party/absl/base/macros.h"
+#include "absl/base/internal/identity.h"
+#include "absl/base/macros.h"
 
 namespace absl {
 

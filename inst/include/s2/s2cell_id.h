@@ -32,7 +32,7 @@
 #include "s2/r2rect.h"
 #include "s2/s1angle.h"
 #include "s2/s2coords.h"
-#include "s2/third_party/absl/strings/string_view.h"
+#include "absl/strings/string_view.h"
 #include "s2/util/bits/bits.h"
 #include "s2/util/coding/coder.h"
 
@@ -362,9 +362,9 @@ class S2CellId {
   // These methods guarantee that FromToken(ToToken(x)) == x even when
   // "x" is an invalid cell id.  All tokens are alphanumeric strings.
   // FromToken() returns S2CellId::None() for malformed inputs.
-  string ToToken() const;
+  std::string ToToken() const;
   static S2CellId FromToken(const char* token, size_t length);
-  static S2CellId FromToken(const string& token);
+  static S2CellId FromToken(const std::string& token);
 
   // Use encoder to generate a serialized representation of this cell id.
   // Can also encode an invalid cell.
@@ -381,7 +381,7 @@ class S2CellId {
   //
   // For example "4/" represents S2CellId::FromFace(4), and "3/02" represents
   // S2CellId::FromFace(3).child(0).child(2).
-  string ToString() const;
+  std::string ToString() const;
 
   // Converts a string in the format returned by ToString() to an S2CellId.
   // Returns S2CellId::None() if the string could not be parsed.
@@ -445,7 +445,7 @@ class S2CellId {
   // When S2CellId is used as a key in one of the btree container types
   // (util/btree), indicate that linear rather than binary search should be
   // used.  This is much faster when the comparison function is cheap.
-  typedef std::true_type goog_btree_prefer_linear_node_search;
+  typedef std::true_type absl_btree_prefer_linear_node_search;
 
  private:
   // This is the offset required to wrap around from the beginning of the

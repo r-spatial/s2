@@ -21,9 +21,9 @@
 #ifndef S2_THIRD_PARTY_ABSL_BASE_PORT_H_
 #define S2_THIRD_PARTY_ABSL_BASE_PORT_H_
 
-#include "s2/third_party/absl/base/attributes.h"
-#include "s2/third_party/absl/base/config.h"
-#include "s2/third_party/absl/base/optimization.h"
+#include "absl/base/attributes.h"
+#include "absl/base/config.h"
+#include "absl/base/optimization.h"
 
 #ifdef SWIG
 %include "third_party/absl/base/attributes.h"

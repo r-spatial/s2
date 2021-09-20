@@ -41,14 +41,14 @@
 #include <new>
 #include <type_traits>
 
-#include "s2/third_party/absl/algorithm/algorithm.h"
-#include "s2/third_party/absl/base/dynamic_annotations.h"
-#include "s2/third_party/absl/base/internal/throw_delegate.h"
-#include "s2/third_party/absl/base/macros.h"
-#include "s2/third_party/absl/base/optimization.h"
-#include "s2/third_party/absl/base/port.h"
-#include "s2/third_party/absl/container/internal/compressed_tuple.h"
-#include "s2/third_party/absl/memory/memory.h"
+#include "absl/algorithm/algorithm.h"
+#include "absl/base/dynamic_annotations.h"
+#include "absl/base/internal/throw_delegate.h"
+#include "absl/base/macros.h"
+#include "absl/base/optimization.h"
+#include "absl/base/port.h"
+#include "absl/container/internal/compressed_tuple.h"
+#include "absl/memory/memory.h"
 
 namespace absl {
 
