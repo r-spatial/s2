@@ -1,4 +1,4 @@
-PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -I../windows/openssl-1.1.1k/include -I../inst/include -I../src
+PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -I../windows/openssl-1.1.1k/include -I../src
 PKG_LIBS = -Ls2 -ls2static -L../windows/openssl-1.1.1k/lib${R_ARCH}${CRT} -lssl -lcrypto -lcrypt32 -lws2_32
 
 CXX_STD = CXX11
