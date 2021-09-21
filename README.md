@@ -75,7 +75,7 @@ nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>%
   select(NAME, geometry)
 
 nc_s2
-#> # A tibble: 100 x 2
+#> # A tibble: 100 × 2
 #>    NAME        geometry                                                         
 #>    <chr>       <s2_geography>                                                   
 #>  1 Ashe        <POLYGON ((-81.4528885 36.2395859, -81.4310379 36.2607193, -81.4…
@@ -99,19 +99,19 @@ nc_s2 %>%
     area = s2_area(geometry),
     perimeter = s2_perimeter(geometry)
   )
-#> # A tibble: 100 x 4
-#>    NAME      geometry                                             area perimeter
-#>    <chr>     <s2_geography>                                      <dbl>     <dbl>
-#>  1 Ashe      <POLYGON ((-81.4528885 36.2395859, -81.4310379 …   1.14e9   141627.
-#>  2 Alleghany <POLYGON ((-81.1766739 36.4154434, -81.1533661 …   6.11e8   119876.
-#>  3 Surry     <POLYGON ((-80.4530106 36.2570877, -80.4353104 …   1.42e9   160458.
-#>  4 Currituck <MULTIPOLYGON (((-75.9419327 36.2943382, -75.95…   6.94e8   301644.
-#>  5 Northamp… <POLYGON ((-77.1419601 36.4170647, -77.1393204 …   1.52e9   211794.
-#>  6 Hertford  <POLYGON ((-76.7074966 36.2661324, -76.7413483 …   9.68e8   160780.
-#>  7 Camden    <POLYGON ((-76.0173492 36.3377304, -76.0328751 …   6.16e8   150430.
-#>  8 Gates     <POLYGON ((-76.46035 36.3738976, -76.5024643 36…   9.03e8   123170.
-#>  9 Warren    <POLYGON ((-78.1347198 36.2365837, -78.1096268 …   1.18e9   141073.
-#> 10 Stokes    <POLYGON ((-80.0240555 36.5450249, -80.0480957 …   1.23e9   140583.
+#> # A tibble: 100 × 4
+#>    NAME        geometry                                           area perimeter
+#>    <chr>       <s2_geography>                                    <dbl>     <dbl>
+#>  1 Ashe        <POLYGON ((-81.4528885 36.2395859, -81.431037…   1.14e9   141627.
+#>  2 Alleghany   <POLYGON ((-81.1766739 36.4154434, -81.153366…   6.11e8   119876.
+#>  3 Surry       <POLYGON ((-80.4530106 36.2570877, -80.435310…   1.42e9   160458.
+#>  4 Currituck   <MULTIPOLYGON (((-75.9419327 36.2943382, -75.…   6.94e8   301644.
+#>  5 Northampton <POLYGON ((-77.1419601 36.4170647, -77.139320…   1.52e9   211794.
+#>  6 Hertford    <POLYGON ((-76.7074966 36.2661324, -76.741348…   9.68e8   160780.
+#>  7 Camden      <POLYGON ((-76.0173492 36.3377304, -76.032875…   6.16e8   150430.
+#>  8 Gates       <POLYGON ((-76.46035 36.3738976, -76.5024643 …   9.03e8   123170.
+#>  9 Warren      <POLYGON ((-78.1347198 36.2365837, -78.109626…   1.18e9   141073.
+#> 10 Stokes      <POLYGON ((-80.0240555 36.5450249, -80.048095…   1.23e9   140583.
 #> # … with 90 more rows
 ```
 
@@ -120,7 +120,7 @@ Use predicates to subset vectors:
 ``` r
 nc_s2 %>% 
   filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
-#> # A tibble: 1 x 2
+#> # A tibble: 1 × 2
 #>   NAME    geometry                                                              
 #>   <chr>   <s2_geography>                                                        
 #> 1 Catawba <POLYGON ((-80.9312744 35.6195908, -81.0035782 35.6970558, -81.054779…
@@ -131,7 +131,7 @@ Use transformers to create new geometries:
 ``` r
 nc_s2 %>% 
   mutate(geometry = s2_boundary(geometry))
-#> # A tibble: 100 x 2
+#> # A tibble: 100 × 2
 #>    NAME        geometry                                                         
 #>    <chr>       <s2_geography>                                                   
 #>  1 Ashe        <LINESTRING (-81.4528885 36.2395859, -81.4310379 36.2607193, -81…
@@ -159,19 +159,19 @@ nc_s2 %>%
 #> Dimension:     XY
 #> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
 #> CRS:           NA
-#> # A tibble: 100 x 2
+#> # A tibble: 100 × 2
 #>    NAME                                                                 geometry
 #>    <chr>                                                              <GEOMETRY>
-#>  1 Ashe       POLYGON ((-81.45289 36.23959, -81.43104 36.26072, -81.41233 36.26…
-#>  2 Alleghany  POLYGON ((-81.17667 36.41544, -81.15337 36.42474, -81.1384 36.417…
-#>  3 Surry      POLYGON ((-80.45301 36.25709, -80.43531 36.55104, -80.61105 36.55…
-#>  4 Currituck  MULTIPOLYGON (((-75.94193 36.29434, -75.95751 36.25945, -75.91376…
-#>  5 Northampt… POLYGON ((-77.14196 36.41706, -77.13932 36.45648, -77.12733 36.47…
-#>  6 Hertford   POLYGON ((-76.7075 36.26613, -76.74135 36.31517, -76.92408 36.392…
-#>  7 Camden     POLYGON ((-76.01735 36.33773, -76.03288 36.33598, -76.04395 36.35…
-#>  8 Gates      POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.503…
-#>  9 Warren     POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.21…
-#> 10 Stokes     POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.551…
+#>  1 Ashe        POLYGON ((-81.45289 36.23959, -81.43104 36.26072, -81.41233 36.2…
+#>  2 Alleghany   POLYGON ((-81.17667 36.41544, -81.15337 36.42474, -81.1384 36.41…
+#>  3 Surry       POLYGON ((-80.45301 36.25709, -80.43531 36.55104, -80.61105 36.5…
+#>  4 Currituck   MULTIPOLYGON (((-75.94193 36.29434, -75.95751 36.25945, -75.9137…
+#>  5 Northampton POLYGON ((-77.14196 36.41706, -77.13932 36.45648, -77.12733 36.4…
+#>  6 Hertford    POLYGON ((-76.7075 36.26613, -76.74135 36.31517, -76.92408 36.39…
+#>  7 Camden      POLYGON ((-76.01735 36.33773, -76.03288 36.33598, -76.04395 36.3…
+#>  8 Gates       POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.50…
+#>  9 Warren      POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.2…
+#> 10 Stokes      POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.55…
 #> # … with 90 more rows
 ```
 
