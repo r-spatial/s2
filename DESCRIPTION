@@ -32,7 +32,7 @@ LinkingTo:
     wk
 Imports: 
     Rcpp,
-    wk
+    wk (>= 0.5.0)
 Suggests: 
     testthat,
     vctrs
