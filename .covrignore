@@ -2,3 +2,4 @@ src/s2
 src/tests
 inst/include/s2
 inst/include/wk
+src/absl

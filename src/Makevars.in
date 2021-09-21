@@ -1,9 +1,92 @@
-PKG_CPPFLAGS = -I../inst/include -DSTRICT_R_HEADERS
+PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
 PKG_LIBS = @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 CXX_STD = CXX11
 
-OBJECTS = cpp-compat.o \
+ABSL_LIBS = absl/base/internal/cycleclock.o \
+    absl/base/internal/exponential_biased.o \
+    absl/base/internal/low_level_alloc.o \
+    absl/base/internal/periodic_sampler.o \
+    absl/base/internal/raw_logging.o \
+    absl/base/internal/scoped_set_env.o \
+    absl/base/internal/spinlock_wait.o \
+    absl/base/internal/spinlock.o \
+    absl/base/internal/strerror.o \
+    absl/base/internal/sysinfo.o \
+    absl/base/internal/thread_identity.o \
+    absl/base/internal/throw_delegate.o \
+    absl/base/internal/unscaledcycleclock.o \
+    absl/base/log_severity.o \
+    absl/container/internal/hashtablez_sampler_force_weak_definition.o \
+    absl/container/internal/hashtablez_sampler.o \
+    absl/container/internal/raw_hash_set.o \
+    absl/debugging/failure_signal_handler.o \
+    absl/debugging/internal/address_is_readable.o \
+    absl/debugging/internal/demangle.o \
+    absl/debugging/internal/elf_mem_image.o \
+    absl/debugging/internal/examine_stack.o \
+    absl/debugging/internal/stack_consumption.o \
+    absl/debugging/internal/vdso_support.o \
+    absl/debugging/leak_check_disable.o \
+    absl/debugging/leak_check.o \
+    absl/debugging/stacktrace.o \
+    absl/debugging/symbolize.o \
+    absl/numeric/int128.o \
+    absl/strings/ascii.o \
+    absl/strings/charconv.o \
+    absl/strings/cord.o \
+    absl/strings/escaping.o \
+    absl/strings/internal/charconv_bigint.o \
+    absl/strings/internal/charconv_parse.o \
+    absl/strings/internal/cord_internal.o \
+    absl/strings/internal/cord_rep_ring.o \
+    absl/strings/internal/escaping.o \
+    absl/strings/internal/memutil.o \
+    absl/strings/internal/ostringstream.o \
+    absl/strings/internal/pow10_helper.o \
+    absl/strings/internal/str_format/arg.o \
+    absl/strings/internal/str_format/bind.o \
+    absl/strings/internal/str_format/extension.o \
+    absl/strings/internal/str_format/float_conversion.o \
+    absl/strings/internal/str_format/output.o \
+    absl/strings/internal/str_format/parser.o \
+    absl/strings/internal/utf8.o \
+    absl/strings/match.o \
+    absl/strings/numbers.o \
+    absl/strings/str_cat.o \
+    absl/strings/str_replace.o \
+    absl/strings/str_split.o \
+    absl/strings/string_view.o \
+    absl/strings/substitute.o \
+    absl/synchronization/barrier.o \
+    absl/synchronization/blocking_counter.o \
+    absl/synchronization/internal/create_thread_identity.o \
+    absl/synchronization/internal/graphcycles.o \
+    absl/synchronization/internal/per_thread_sem.o \
+    absl/synchronization/internal/waiter.o \
+    absl/synchronization/mutex.o \
+    absl/synchronization/notification.o \
+    absl/time/civil_time.o \
+    absl/time/clock.o \
+    absl/time/duration.o \
+    absl/time/format.o \
+    absl/time/internal/cctz/src/civil_time_detail.o \
+    absl/time/internal/cctz/src/time_zone_fixed.o \
+    absl/time/internal/cctz/src/time_zone_format.o \
+    absl/time/internal/cctz/src/time_zone_if.o \
+    absl/time/internal/cctz/src/time_zone_impl.o \
+    absl/time/internal/cctz/src/time_zone_info.o \
+    absl/time/internal/cctz/src/time_zone_libc.o \
+    absl/time/internal/cctz/src/time_zone_lookup.o \
+    absl/time/internal/cctz/src/time_zone_posix.o \
+    absl/time/internal/cctz/src/zone_info_source.o \
+    absl/time/time.o \
+    absl/types/bad_any_cast.o \
+    absl/types/bad_optional_access.o \
+    absl/types/bad_variant_access.o
+
+OBJECTS = $(ABSL_LIBS) \
+     cpp-compat.o \
      s2-accessors.o \
      s2-bounds.o \
      s2-cell.o \
@@ -111,18 +194,6 @@ OBJECTS = cpp-compat.o \
      s2/s2wedge_relations.o \
      s2/strings/ostringstream.o \
      s2/strings/serialize.o \
-     s2/third_party/absl/base/dynamic_annotations.o \
-     s2/third_party/absl/base/internal/raw_logging.o \
-     s2/third_party/absl/base/internal/throw_delegate.o \
-     s2/third_party/absl/numeric/int128.o \
-     s2/third_party/absl/strings/ascii.o \
-     s2/third_party/absl/strings/internal/memutil.o \
-     s2/third_party/absl/strings/match.o \
-     s2/third_party/absl/strings/numbers.o \
-     s2/third_party/absl/strings/str_cat.o \
-     s2/third_party/absl/strings/str_split.o \
-     s2/third_party/absl/strings/string_view.o \
-     s2/third_party/absl/strings/strip.o \
      s2/util/bits/bit-interleave.o \
      s2/util/bits/bits.o \
      s2/util/coding/coder.o \
