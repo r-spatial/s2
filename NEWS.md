@@ -1,3 +1,5 @@
+# s2 (development version)
+
 # s2 1.0.7
 
 - Update the internal copy of s2geometry to use updated Abseil,
