@@ -40,15 +40,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install openssl (MacOS)
-        if: runner.os == 'MacOS'
-        run: |
-          brew reinstall pkg-config openssl@1.1
-          echo "$PKG_CONFIG_PATH"
-          export PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig
-          echo "$PKG_CONFIG_PATH"
-          pkg-config --cflags openssl
-
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
