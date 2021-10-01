@@ -44,7 +44,7 @@ jobs:
         if: runner.os == 'MacOS'
         run: |
           brew install pkg-config openssl@1.1
-          cat "$PKG_CONFIG_PATH"
+          echo "$PKG_CONFIG_PATH"
           pkg-config --cflags openssl
 
       - uses: r-lib/actions/setup-r-dependencies@v1
