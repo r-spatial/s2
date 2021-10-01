@@ -13,7 +13,7 @@
 //   limitations under the License.
 
 #if !defined(HAS_STRPTIME)
-#if !defined(_WIN32)
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
 #define HAS_STRPTIME 1  // assume everyone has strptime() except windows
 #endif
 #endif
