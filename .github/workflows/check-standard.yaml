@@ -43,10 +43,7 @@ jobs:
       - name: Debug OSX
         if: runner.os == 'MacOS'
         run: |
-          brew --prefix openssl
-          ls /usr/local/opt/openssl/include || true
-          ls /usr/local/opt/openssl@1.1/include || true
-
+          ls $(brew --prefix openssl) || true
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:

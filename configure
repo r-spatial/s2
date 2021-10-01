@@ -33,7 +33,7 @@ elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
 elif [ `uname` = "Darwin" ]; then
   brew --version 2>/dev/null
   if [ $? -eq 0 ]; then
-    BREWDIR=`brew --prefix openssl@1.1`
+    BREWDIR=`brew --prefix openssl`
     PKG_CFLAGS="-I$BREWDIR/include"
     PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
   else
