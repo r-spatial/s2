@@ -45,6 +45,8 @@ jobs:
         run: |
           brew install pkg-config openssl@1.1
           echo "$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig
+          echo "$PKG_CONFIG_PATH"
           pkg-config --cflags openssl
 
       - uses: r-lib/actions/setup-r-dependencies@v1
