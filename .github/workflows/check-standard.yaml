@@ -40,16 +40,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Debug OSX
-        if: runner.os == 'MacOS'
-        run: |
-          brew --prefix openssl@1.1 || true
-          ls $(brew --prefix openssl@1.1) || true
-          brew install openssl@1.1
-          brew --prefix openssl@1.1 || true
-          ls $(brew --prefix openssl@1.1) || true
-          ls /opt/homebrew/opt/openssl@1.1 || true
-
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
