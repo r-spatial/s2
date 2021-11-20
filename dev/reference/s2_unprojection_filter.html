@@ -178,40 +178,44 @@ to an S2 projection.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://paleolimbot.github.io/wk/'>wk</a></span><span class='op'>)</span>
-
-<span class='co'># simple conversion of individual coordinates *to* unit sphere</span>
-<span class='co'># space</span>
-<span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span>
-  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 45, -60 45)"</span><span class='op'>)</span>,
-  <span class='fu'>s2_unprojection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "LINESTRING Z (1 0 0, 0.70711 0 0.70711, 0.35355 -0.61237 0.70711)"</div><div class='input'>
-<span class='co'># simple conversion of individual coordinates *from* unit sphere</span>
-<span class='co'># space</span>
-<span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span>
-  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"</span><span class='op'>)</span>,
-  <span class='fu'>s2_projection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "LINESTRING (0 0, 0 45, -59.998 44.998)"</div><div class='input'>
-<span class='co'># use tessellate_tol to force points to be added to an edge</span>
-<span class='co'># unprojection will ensure an edge maintains its cartesian</span>
-<span class='co'># assumption when transformed to the unit sphere</span>
-<span class='co'># (i.e., what you probably want when importing a geography)</span>
-<span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span>
-  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 45, -60 45)"</span><span class='op'>)</span>,
-  <span class='fu'>s2_unprojection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>, tessellate_tol <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "LINESTRING Z (1 0 0, 0.70711 0 0.70711, 0.70559 -0.046247 0.70711, 0.70106 -0.092296 0.70711, 0.69352 -0.13795 0.70711, 0.68301 -0.18301 0.70711..."</div><div class='input'>
-<span class='co'># projection will ensure an edge maintains its geodesic</span>
-<span class='co'># assumption when transformed to projected space</span>
-<span class='co'># (i.e., what you probably want when exporting a geography)</span>
-<span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span>
-  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"</span><span class='op'>)</span>,
-  <span class='fu'>s2_projection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>, tessellate_tol <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "LINESTRING (0 0, 0 45, -3.4459 45.927, -7.0019 46.747, -10.66 47.453, -14.409 48.04..."</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://paleolimbot.github.io/wk/'>wk</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># simple conversion of individual coordinates *to* unit sphere</span></span>
+<span class='r-in'><span class='co'># space</span></span>
+<span class='r-in'><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 45, -60 45)"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'>s2_unprojection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LINESTRING Z (1 0 0, 0.70711 0 0.70711, 0.35355 -0.61237 0.70711)"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># simple conversion of individual coordinates *from* unit sphere</span></span>
+<span class='r-in'><span class='co'># space</span></span>
+<span class='r-in'><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'>s2_projection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LINESTRING (0 0, 0 45, -59.998 44.998)"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># use tessellate_tol to force points to be added to an edge</span></span>
+<span class='r-in'><span class='co'># unprojection will ensure an edge maintains its cartesian</span></span>
+<span class='r-in'><span class='co'># assumption when transformed to the unit sphere</span></span>
+<span class='r-in'><span class='co'># (i.e., what you probably want when importing a geography)</span></span>
+<span class='r-in'><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING (0 0, 0 45, -60 45)"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'>s2_unprojection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>, tessellate_tol <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LINESTRING Z (1 0 0, 0.70711 0 0.70711, 0.70559 -0.046247 0.70711, 0.70106 -0.092296 0.70711, 0.69352 -0.13795 0.70711, 0.68301 -0.18301 0.70711..."</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># projection will ensure an edge maintains its geodesic</span></span>
+<span class='r-in'><span class='co'># assumption when transformed to projected space</span></span>
+<span class='r-in'><span class='co'># (i.e., what you probably want when exporting a geography)</span></span>
+<span class='r-in'><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_handle.html'>wk_handle</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wkt.html'>wkt</a></span><span class='op'>(</span><span class='st'>"LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'>s2_projection_filter</span><span class='op'>(</span><span class='fu'><a href='https://paleolimbot.github.io/wk/reference/wk_format.html'>wkt_format_handler</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span>, tessellate_tol <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "LINESTRING (0 0, 0 45, -3.4459 45.927, -7.0019 46.747, -10.66 47.453, -14.409 48.04..."</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
