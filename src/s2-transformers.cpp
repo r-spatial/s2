@@ -166,7 +166,6 @@ std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
   );
 }
 
-
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, List s2options):
