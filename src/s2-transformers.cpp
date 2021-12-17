@@ -704,10 +704,8 @@ List cpp_s2_convex_hull_agg(List geog, List s2options) {
       }
     }
   }
-  // Suggested:  return XPtr<Geography>(new PolygonGeography(std::move(convexHullQuery.GetConvexHull()))):
-//   S2Polygon outCH(convexHullQuery.GetConvexHull());
+  // Builds the convex hull and returns the polygon as a geography
   std::unique_ptr<S2Polygon> outP = absl::make_unique<S2Polygon>(convexHullQuery.GetConvexHull());
   XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
   return List::create(outG);
-//   return List::create(XPtr<Geography>(new PolygonGeography(std::move(convexHullQuery.GetConvexHull()))));
 }

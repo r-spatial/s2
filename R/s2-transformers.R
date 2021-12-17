@@ -94,7 +94,8 @@
 #'   s2_options(snap = s2_snap_level(30))
 #' )
 #'
-#' s2_convex_hull(
+#' # s2_convex_hull_agg builds the convex hull of a list of geometries
+#' s2_convex_hull_agg(
 #'   c(
 #'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
@@ -230,7 +231,7 @@ s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
   new_s2_xptr(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm), "s2_geography")
 }
 
-# @rdname s2_boundary
+#' @rdname s2_boundary
 #' @export
 s2_convex_hull_agg <- function(x, options = s2_options() ) {
   new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), options), "s2_geography")
