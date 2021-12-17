@@ -676,29 +676,14 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
 
 
 // [[Rcpp::export]]
-List cpp_s2_convex_hull(List geog, List s2options) {
-  GeographyOperationOptions options(s2options);
-  GeographyOperationOptions::LayerOptions layerOptions = options.layerOptions();
-  S2Builder::Options buillderOptions = options.builderOptions();
-
-  // create the builder
-  S2Builder builder(buillderOptions);
-
-  // create the data structures that will contain the output
-  std::vector<S2Point> points;
-  std::vector<std::unique_ptr<S2Polyline>> polylines;
-  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
-
+List cpp_s2_convex_hull_agg(List geog, List s2options) {
   // create the convex hull query
   S2ConvexHullQuery convexHullQuery;
-  MutableS2ShapeIndex index;
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     item = geog[i];
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      feature->BuildShapeIndex(&index);
-      //std::cout << typeid(feature).name() << "\n";
       if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
           const S2Polygon* pol = feature->Polygon();
           convexHullQuery.AddPolygon(*pol);
@@ -714,40 +699,15 @@ List cpp_s2_convex_hull(List geog, List s2options) {
           }
       } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_COLLECTION) {
           if (!feature->IsEmpty()) {
-            // TODO: recursion?
-              std::cerr << "GeometryCollection is not (yet) allowed and is therefore ignored.\n";
+              Rcpp::stop("GeometryCollection is not supported");
           }
       }
     }
   }
-  
-  // add shapes to the layer with the appropriate dimension
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
-  );
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
-  );
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
-  );
-  
-  S2Polygon outCH(convexHullQuery.GetConvexHull());
-  builder.AddPolygon(outCH);
-
-  // build the output
-  S2Error error;
-  if (!builder.Build(&error)) {
-    throw GeographyOperatorException(error.text());
-  }
-
-  // construct output
-  std::unique_ptr<Geography> geography = geographyFromLayers(
-    std::move(points),
-    std::move(polylines),
-    std::move(polygon),
-    layerOptions.dimensions
-  );
-  
-  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+  // Suggested:  return XPtr<Geography>(new PolygonGeography(std::move(convexHullQuery.GetConvexHull()))):
+//   S2Polygon outCH(convexHullQuery.GetConvexHull());
+  std::unique_ptr<S2Polygon> outP = absl::make_unique<S2Polygon>(convexHullQuery.GetConvexHull());
+  XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
+  return List::create(outG);
+//   return List::create(XPtr<Geography>(new PolygonGeography(std::move(convexHullQuery.GetConvexHull()))));
 }
