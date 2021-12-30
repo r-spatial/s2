@@ -37,10 +37,10 @@ test_that("s2_geography vectors can be created from s2_lnglat  and s2_point", {
 })
 
 test_that("s2_geography vectors can be created from WKB and WKT", {
-  wkb_point <- wk::as_wkb("POINT (-64 45)")
+  wkb_point <- wk::as_wkb(wk::wkt("POINT (-64 45)", geodesic = TRUE))
   expect_output(print(as_s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
 
-  wkt_point <- wk::as_wkt("POINT (-64 45)")
+  wkt_point <- wk::as_wkt(wk::wkt("POINT (-64 45)", geodesic = TRUE))
   expect_output(print(as_s2_geography(wkt_point)), "<POINT \\(-64 45\\)>")
 
   # also test other classes commonly used to signify WKB or WKT
@@ -51,12 +51,12 @@ test_that("s2_geography vectors can be created from WKB and WKT", {
 test_that("s2_geography can be exported to WKB/WKT", {
   expect_wkt_equal(
     wk::as_wkb(as_s2_geography("POINT (-64 45)")),
-    wk::as_wkb("POINT (-64 45)"),
+    wk::as_wkb(wk::wkt("POINT (-64 45)", geodesic = TRUE)),
     precision = 10
   )
   expect_wkt_equal(
     wk::as_wkt(as_s2_geography("POINT (-64 45)")),
-    wk::as_wkt("POINT (-64 45)"),
+    wk::as_wkt(wk::wkt("POINT (-64 45)", geodesic = TRUE)),
     precision = 10
   )
 })

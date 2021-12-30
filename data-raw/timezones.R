@@ -23,7 +23,7 @@ tz_wkb <- st_as_binary(tz$geometry, EWKB = TRUE)
 s2_data_tbl_timezones <- as.data.frame(
   tibble::tibble(
     utc_offset = tz$zone,
-    geometry = wk::wkb(tz_wkb)
+    geometry = wk::wkb(tz_wkb, geodesic = TRUE)
   )
 )
 

@@ -53,7 +53,9 @@ test_that("tessellating + unprojection using a wk filter works", {
     wk::wk_handle(
       wk::wkt("LINESTRING (0 0, 0 45, -60 45)"),
       s2_unprojection_filter(wk::wkb_writer(), tessellate_tol = tol)
-    ) %>% s2_num_points(),
+    ) %>%
+      wk::wk_set_geodesic(TRUE) %>%
+      s2_num_points(),
     6L
   )
 
@@ -61,7 +63,9 @@ test_that("tessellating + unprojection using a wk filter works", {
     wk::wk_handle(
       wk::wkt("POLYGON ((0 0, 0 45, -60 45, 0 0))"),
       s2_unprojection_filter(wk::wkb_writer(), tessellate_tol = tol)
-    ) %>% s2_num_points(),
+    ) %>%
+      wk::wk_set_geodesic(TRUE) %>%
+      s2_num_points(),
     8L
   )
 
@@ -111,7 +115,9 @@ test_that("projection + tessellating using a wk filter works", {
     wk::wk_handle(
       wk::wkt("LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"),
       s2_projection_filter(wk::wkb_writer(), tessellate_tol = tol)
-    ) %>% s2_num_points(),
+    ) %>%
+      wk::wk_set_geodesic(TRUE) %>%
+      s2_num_points(),
     6L
   )
 
@@ -119,7 +125,9 @@ test_that("projection + tessellating using a wk filter works", {
     wk::wk_handle(
       wk::wkt("POLYGON Z ((1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071, 1 0 0))"),
       s2_projection_filter(wk::wkb_writer(), tessellate_tol = tol)
-    ) %>% s2_num_points(),
+    ) %>%
+      wk::wk_set_geodesic(TRUE) %>%
+      s2_num_points(),
     8L
   )
 

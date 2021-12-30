@@ -583,12 +583,12 @@ test_that("real data survives the S2BooleanOperation", {
 
     # the output WKB should load as a polygon with oriented = TRUE and result in the
     # same number of points and similar area
-    reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = TRUE)
+    reloaded <- s2_geog_from_wkb(exported, oriented = TRUE)
     expect_equal(s2_num_points(reloaded), s2_num_points(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
 
     # also check with oriented = FALSE (may catch quirky nesting)
-    reloaded <- as_s2_geography(structure(exported, class = "wk_wkb"), oriented = FALSE)
+    reloaded <- s2_geog_from_wkb(exported, oriented = FALSE)
     expect_equal(s2_num_points(reloaded), s2_num_points(unioned))
     expect_equal(s2_area(reloaded, radius = 1), s2_area(unioned, radius = 1))
   }

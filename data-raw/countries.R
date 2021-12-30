@@ -18,7 +18,7 @@ ne$geometry[[ant_ind]][] <- lapply(ne$geometry[[ant_ind]], function(ply) {
   })
 })
 
-ne_wkb <- st_as_binary(ne$geometry, EWKT = TRUE) %>% wk::wkb()
+ne_wkb <- st_as_binary(ne$geometry, EWKT = TRUE) %>% wk::wkb(geodesic = TRUE)
 s2_data_tbl_countries <- as.data.frame(
   tibble::tibble(
     name = ne$admin,
