@@ -36,6 +36,7 @@ Imports:
 Suggests: 
     testthat,
     vctrs
+Remotes: paleolimbot/wk
 URL: https://r-spatial.github.io/s2/, https://github.com/r-spatial/s2, https://s2geometry.io/
 BugReports: https://github.com/r-spatial/s2/issues
 Depends: 
