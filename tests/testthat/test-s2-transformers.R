@@ -628,23 +628,23 @@ test_that("s2_convex_hull_agg() works", {
     s2_area("POLYGON ((0 0, 3.61 43.21, 3.6 43.2, 0 0))")
   )
 
-  expect_wkt_equal(
-    s2_as_text(s2_convex_hull_agg(c(
+  expect_equal(
+    s2_area(s2_convex_hull_agg(c(
     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"))),
-    "POLYGON ((0 0, 10 0, 15 5, 15 15, 5 15, 0 10, 0 0))",
-    precision = 6
+    s2_area("POLYGON ((0 0, 10 0, 15 5, 15 15, 5 15, 0 10, 0 0))")
   )
 
-  expect_wkt_equal(
-    s2_as_text(s2_convex_hull_agg(c(
+  expect_equal(
+    s2_area(s2_convex_hull_agg(c(
      "POINT (3.6 43.2)",
      "LINESTRING (3.49 43.05, 3.52 43.1, 3.38 43.2, 3.1 43.1)",
      "POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2))",
      "GEOMETRYCOLLECTION EMPTY"
     ))),
-    "POLYGON ((3.49 43.05, 3.6 43.2, 3.4 44.01, 3.01 43.2, 3.1 43.1, 3.49 43.05))",
-    precision = 6
+    s2_area(
+      "POLYGON ((3.49 43.05, 3.6 43.2, 3.4 44.01, 3.01 43.2, 3.1 43.1, 3.49 43.05))"
+    )
   )
 
   expect_error(
