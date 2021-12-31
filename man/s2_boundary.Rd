@@ -17,6 +17,7 @@
 \alias{s2_coverage_union_agg}
 \alias{s2_rebuild_agg}
 \alias{s2_union_agg}
+\alias{s2_convex_hull_agg}
 \title{S2 Geography Transformations}
 \usage{
 s2_boundary(x)
@@ -56,6 +57,8 @@ s2_coverage_union_agg(x, options = s2_options(), na.rm = FALSE)
 s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
+
+s2_convex_hull_agg(x, options = s2_options())
 }
 \arguments{
 \item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
@@ -161,6 +164,16 @@ s2_intersection(
 s2_union(
   "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
   "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))",
+  # 32 bit platforms may need to set snap rounding
+  s2_options(snap = s2_snap_level(30))
+)
+
+# s2_convex_hull_agg builds the convex hull of a list of geometries
+s2_convex_hull_agg(
+  c(
+    "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
+    "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
+  ),
   # 32 bit platforms may need to set snap rounding
   s2_options(snap = s2_snap_level(30))
 )
