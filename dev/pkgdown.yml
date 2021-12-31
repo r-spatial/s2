@@ -1,7 +1,10 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
-  articles/intro: intro.html
-last_built: 2021-11-20T21:44Z
+  intro: intro.html
+last_built: 2021-12-31T21:26Z
+urls:
+  reference: https://r-spatial.github.io/s2/reference
+  article: https://r-spatial.github.io/s2/articles
 

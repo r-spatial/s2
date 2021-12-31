@@ -24,6 +24,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -43,12 +45,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -59,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/articles/intro.html">Introduction to s2</a>
+      <a href="articles/intro.html">Introduction to s2</a>
     </li>
   </ul>
 </li>
@@ -69,7 +65,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/s2/">
+  <a href="https://github.com/r-spatial/s2/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,30 +82,30 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="s2" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#s2" class="anchor"></a>s2</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="s2">s2<a class="anchor" aria-label="anchor" href="#s2"></a>
+</h1></div>
 <!-- badges: start -->
 
-<p>The s2 R package provides bindings to Google’s <a href="https://s2geometry.io">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions">BigQuery Geography API</a>, whose functions also operate on spherical geometries. Package <a href="https://cran.r-project.org/package=sf">sf</a> uses this package by default for nearly all its geometrical operations on objects with ellipsoidal (unprojected) coordinates; in cases where it doesn’t, such as <code>st_relate()</code>, it emits a warning.</p>
-<p>This package is a complete rewrite of an earlier CRAN package s2 with versions up to 0.4-2, for which the sources are found <a href="https://github.com/spatstat/s2/">here</a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of s2 from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
+<p>The s2 R package provides bindings to Google’s <a href="https://s2geometry.io" class="external-link">S2Geometry</a> library. The package exposes an API similar to Google’s <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions" class="external-link">BigQuery Geography API</a>, whose functions also operate on spherical geometries. Package <a href="https://cran.r-project.org/package=sf" class="external-link">sf</a> uses this package by default for nearly all its geometrical operations on objects with ellipsoidal (unprojected) coordinates; in cases where it doesn’t, such as <code>st_relate()</code>, it emits a warning.</p>
+<p>This package is a complete rewrite of an earlier CRAN package s2 with versions up to 0.4-2, for which the sources are found <a href="https://github.com/spatstat/s2/" class="external-link">here</a>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the released version of s2 from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"s2"</span><span class="op">)</span></code></pre></div>
-<p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"s2"</span><span class="op">)</span></code></pre></div>
+<p>And the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"r-spatial/s2"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
-<p>The s2 package provides geometry transformers and predicates similar to those found in <a href="https://trac.osgeo.org/geos/">GEOS</a>, except instead of assuming a planar geometry, s2’s functions work in latitude and longitude and assume a spherical geometry:</p>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>The s2 package provides geometry transformers and predicates similar to those found in <a href="https://trac.osgeo.org/geos/" class="external-link">GEOS</a>, except instead of assuming a planar geometry, s2’s functions work in latitude and longitude and assume a spherical geometry:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span>
 
 <span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span>
   <span class="co"># polygon containing much  of the northern hemisphere</span>
@@ -118,12 +114,12 @@
   <span class="st">"POINT (0 90)"</span>
 <span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
-<p>The <a href="https://r-spatial.github.io/sf/">sf package</a> uses s2 for geographic coordinates with <code>sf::sf_use_s2(TRUE)</code>, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using <code><a href="reference/as_s2_geography.html">as_s2_geography()</a></code>:</p>
+<p>The <a href="https://r-spatial.github.io/sf/" class="external-link">sf package</a> uses s2 for geographic coordinates with <code>sf::sf_use_s2(TRUE)</code>, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using <code><a href="reference/as_s2_geography.html">as_s2_geography()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
 
-<span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span>
@@ -167,7 +163,7 @@
 <p>Use predicates to subset vectors:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;   NAME    geometry                                                              </span>
 <span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span>
@@ -215,61 +211,71 @@
 <span class="co">#&gt; 10 Stokes      POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.55…</span>
 <span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
 </div>
-<div id="acknowledgment" class="section level2">
-<h2 class="hasAnchor">
-<a href="#acknowledgment" class="anchor"></a>Acknowledgment</h2>
-<p>This project gratefully acknowledges financial <a href="https://www.r-consortium.org/projects">support</a> from the</p>
-<p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="reference/figures/rc300.png" width="300"></a></p>
+<div class="section level2">
+<h2 id="acknowledgment">Acknowledgment<a class="anchor" aria-label="anchor" href="#acknowledgment"></a>
+</h2>
+<p>This project gratefully acknowledges financial <a href="https://www.r-consortium.org/projects" class="external-link">support</a> from the</p>
+<p><a href="https://www.r-consortium.org/projects/awarded-projects" class="external-link"> <img src="reference/figures/rc300.png" width="300"></a></p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=s2">https://​cloud.r-project.org/​package=s2</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/r-spatial/s2/">https://​github.com/​r-spatial/​s2/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/r-spatial/s2/issues">https://​github.com/​r-spatial/​s2/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=s2" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/r-spatial/s2/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/r-spatial/s2/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>Apache License (== 2.0)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Dewey Dunnington <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9415-4582" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Ege Rubak <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing s2</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://codecov.io/gh/r-spatial/s2"><img src="https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg" alt="codecov"></a></li>
-<li><a href="https://cran.r-project.org/package=s2"><img src="http://www.r-pkg.org/badges/version/s2" alt="CRAN"></a></li>
-<li><a href="https://www.r-pkg.org/pkg/s2"><img src="http://cranlogs.r-pkg.org/badges/s2?color=brightgreen" alt="Downloads"></a></li>
+<li>Dewey Dunnington <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9415-4582" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Ege Rubak <br><small class="roles"> Author </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://codecov.io/gh/r-spatial/s2" class="external-link"><img src="https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://cran.r-project.org/package=s2" class="external-link"><img src="http://www.r-pkg.org/badges/version/s2" alt="CRAN"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/s2" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/s2?color=brightgreen" alt="Downloads"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Dewey Dunnington, Edzer Pebesma, Ege Rubak.</p>
+  <p></p>
+<p>Developed by Dewey Dunnington, Edzer Pebesma, Ege Rubak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -277,6 +283,8 @@
 
   
 
+
+  
 
   </body>
 </html>
