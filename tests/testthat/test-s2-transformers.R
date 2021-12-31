@@ -623,10 +623,9 @@ test_that("s2_interpolate() and s2_interpolate_normalized() work", {
 
 
 test_that("s2_convex_hull_agg() works", {
-  expect_wkt_equal(
-    s2_as_text(s2_convex_hull_agg(c("POINT(3.6 43.2)", "POINT(3.61 43.21)"))),
-    "POLYGON ((3.6 43.2, 3.61 43.21, 3.605 43.205, 3.6 43.2))",
-    precision = 6
+  expect_equal(
+    s2_area(s2_convex_hull_agg(c("POINT(3.6 43.2)", "POINT (0 0)", "POINT(3.61 43.21)"))),
+    s2_area("POLYGON ((0 0, 3.61 43.21, 3.6 43.2, 0 0))")
   )
 
   expect_wkt_equal(
@@ -652,5 +651,4 @@ test_that("s2_convex_hull_agg() works", {
     s2_convex_hull_agg(c("GEOMETRYCOLLECTION(POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2)), POINT (3.6 43.2))")),
     "GeometryCollection is not supported"
   )
-
 })
