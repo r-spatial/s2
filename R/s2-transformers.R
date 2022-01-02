@@ -119,8 +119,8 @@
 #'
 #' # s2_point_on_surface moves centroid to closest point on polygon
 #' # Note: this is not the same as st_point_on_surface
-#' s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", T)
-#' s2_centroid_agg("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", T)
+#' s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", TRUE)
+#' s2_centroid_agg("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", TRUE)
 #'
 s2_boundary <- function(x) {
   new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
