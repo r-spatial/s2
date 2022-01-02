@@ -417,6 +417,10 @@ cpp_s2_convex_hull_agg <- function(geog, s2options) {
     .Call(`_s2_cpp_s2_convex_hull_agg`, geog, s2options)
 }
 
+cpp_s2_point_on_surface_agg <- function(geog, naRm) {
+    .Call(`_s2_cpp_s2_point_on_surface_agg`, geog, naRm)
+}
+
 s2_xptr_test <- function(size) {
     .Call(`_s2_s2_xptr_test`, size)
 }

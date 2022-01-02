@@ -18,6 +18,7 @@
 \alias{s2_rebuild_agg}
 \alias{s2_union_agg}
 \alias{s2_convex_hull_agg}
+\alias{s2_point_on_surface}
 \title{S2 Geography Transformations}
 \usage{
 s2_boundary(x)
@@ -59,6 +60,8 @@ s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_convex_hull_agg(x, options = s2_options())
+
+s2_point_on_surface(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
@@ -190,6 +193,11 @@ s2_coverage_union_agg(
 
 # snap to grid rounds coordinates to a specified grid size
 s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
+
+# s2_point_on_surface moves centroid to closest point on polygon
+# Note: this is not the same as st_point_on_surface
+s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", T)
+s2_centroid_agg("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", T)
 
 }
 \seealso{

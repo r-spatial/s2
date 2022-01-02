@@ -709,3 +709,52 @@ List cpp_s2_convex_hull_agg(List geog, List s2options) {
   XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
   return List::create(outG);
 }
+
+
+
+// [[Rcpp::export]]
+List cpp_s2_point_on_surface_agg(List geog, bool naRm) {
+  S2Point cumPoint;
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+
+    if (item == R_NilValue && !naRm) {
+      return List::create(R_NilValue);
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<Geography> feature(item);
+
+      S2Point point;
+
+      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+        point = feature->Polygon()->Project(feature->Centroid());
+      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
+        point = feature->Centroid();
+      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
+        // Not sure why it is not working
+        // point = feature->Polyline()->Project(feature->Centroid());
+        Rcpp::stop("Polyline is not supported");
+      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_COLLECTION) {
+        if (!feature->IsEmpty()) {
+          Rcpp::stop("GeometryCollection is not supported");
+        }
+      }
+
+      if (point.Norm2() > 0) {
+        cumPoint += point.Normalize();
+      }
+    }
+  }
+
+  List output(1);
+  if (cumPoint.Norm2() == 0) {
+    output[0] = Rcpp::XPtr<Geography>(new PointGeography());
+  } else {
+    output[0] = Rcpp::XPtr<Geography>(new PointGeography(cumPoint.Normalize()));
+  }
+
+  return output;
+}

@@ -1264,6 +1264,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_point_on_surface_agg
+List cpp_s2_point_on_surface_agg(List geog, bool naRm);
+RcppExport SEXP _s2_cpp_s2_point_on_surface_agg(SEXP geogSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_point_on_surface_agg(geog, naRm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2_xptr_test
 List s2_xptr_test(R_xlen_t size);
 RcppExport SEXP _s2_s2_xptr_test(SEXP sizeSEXP) {
@@ -1395,6 +1407,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_interpolate_normalized", (DL_FUNC) &_s2_cpp_s2_interpolate_normalized, 2},
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
+    {"_s2_cpp_s2_point_on_surface_agg", (DL_FUNC) &_s2_cpp_s2_point_on_surface_agg, 2},
     {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
     {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
     {"c_s2_coord_filter_new",        (DL_FUNC) &c_s2_coord_filter_new,        4},
