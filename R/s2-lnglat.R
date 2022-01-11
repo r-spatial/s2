@@ -53,17 +53,17 @@ as_s2_lnglat.matrix <- function(x, ...) {
 
 #' @export
 as_s2_lnglat.character <- function(x, ...) {
-  as_s2_lnglat.wk_wkt(x)
+  as_s2_lnglat.wk_wkt(wk::new_wk_wkt(x, geodesic = TRUE))
 }
 
 #' @export
 as_s2_lnglat.wk_wkt <- function(x, ...) {
-  as_s2_lnglat(as_s2_geography(x), ...)
+  as_s2_lnglat(as_s2_geography(wk::wk_set_geodesic(x, TRUE)), ...)
 }
 
 #' @export
 as_s2_lnglat.wk_wkb <- function(x, ...) {
-  as_s2_lnglat(as_s2_geography(x), ...)
+  as_s2_lnglat(as_s2_geography(wk::wk_set_geodesic(x, TRUE)), ...)
 }
 
 #' @rdname s2_lnglat

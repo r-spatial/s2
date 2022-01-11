@@ -14,7 +14,7 @@ s2_data_tbl_cities <- as.data.frame(
   tibble::tibble(
     name = sf$NAMEASCII,
     population = sf$POP_MIN,
-    geometry = wk::wkb(st_as_binary(sf$geometry, EKWB = TRUE))
+    geometry = wk::wkb(st_as_binary(sf$geometry, EKWB = TRUE), geodesic = NA)
   )
 )
 

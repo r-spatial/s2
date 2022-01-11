@@ -38,7 +38,7 @@ s2_data_countries <- function(name = NULL) {
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
-    wkb <- structure(df$geometry[(df$name %in% name) | (df$continent %in% name)], class = "wk_wkb")
+    wkb <- df$geometry[(df$name %in% name) | (df$continent %in% name)]
   }
 
   as_s2_geography(wkb)
@@ -52,7 +52,7 @@ s2_data_timezones <- function(utc_offset_min = NULL, utc_offset_max = utc_offset
     wkb <- df$geometry
   } else {
     matches <- (df$utc_offset >= utc_offset_min) & (df$utc_offset <= utc_offset_max)
-    wkb <- structure(df$geometry[matches], class = "wk_wkb")
+    wkb <- df$geometry[matches]
   }
 
   as_s2_geography(wkb)
@@ -65,7 +65,7 @@ s2_data_cities <- function(name = NULL) {
   if (is.null(name)) {
     wkb <- df$geometry
   } else {
-    wkb <- structure(df$geometry[(df$name %in% name)], class = "wk_wkb")
+    wkb <- df$geometry[df$name %in% name]
   }
 
   as_s2_geography(wkb)

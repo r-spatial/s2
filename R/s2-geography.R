@@ -60,6 +60,22 @@ as_s2_geography.s2_point <- function(x, ...) {
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
+  if (identical(wk::wk_is_geodesic(x), FALSE)) {
+
+    # points and an empty vector are OK and shouldn't trigger an error
+    meta <- wk::wk_meta(x)
+    if (!all(meta$geometry_type %in% c(1, 4, NA), na.rm = TRUE)) {
+      stop(
+        paste0(
+          "Can't create s2_geography from Cartesian wkb().\n",
+          "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
+          "interpolated along the sphere."
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   new_s2_xptr(
     s2_geography_from_wkb(x, oriented = oriented, check = check),
     "s2_geography"
@@ -87,6 +103,22 @@ as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE) {
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE) {
+  if (identical(wk::wk_is_geodesic(x), FALSE)) {
+
+    # points and an empty vector are OK and shouldn't trigger an error
+    meta <- wk::wk_meta(x)
+    if (!all(meta$geometry_type %in% c(1, 4, NA), na.rm = TRUE)) {
+      stop(
+        paste0(
+          "Can't create s2_geography from Cartesian wkt().\n",
+          "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
+          "interpolated along the sphere."
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   new_s2_xptr(
     s2_geography_from_wkt(x, oriented = oriented, check = check),
     "s2_geography"
@@ -113,14 +145,22 @@ as_s2_geography.logical <- function(x, ...) {
 #' @rdname as_s2_geography
 #' @export
 as_wkb.s2_geography <- function(x, ...) {
-  wk::new_wk_wkb(s2_geography_to_wkb(x, wk::wk_platform_endian()))
+  wk::new_wk_wkb(
+    s2_geography_to_wkb(x, wk::wk_platform_endian()),
+    crs = wk::wk_crs_longlat("WGS84"),
+    geodesic = TRUE
+  )
 }
 
 #' @importFrom wk as_wkt
 #' @rdname as_s2_geography
 #' @export
 as_wkt.s2_geography <- function(x, ...) {
-  wk::new_wk_wkt(s2_geography_to_wkt(x, precision = 16, trim = TRUE))
+  wk::new_wk_wkt(
+    s2_geography_to_wkt(x, precision = 16, trim = TRUE),
+    crs = wk::wk_crs_longlat(),
+    geodesic = TRUE
+  )
 }
 
 
