@@ -61,14 +61,19 @@ as_s2_geography.s2_point <- function(x, ...) {
 #' @export
 as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
   if (identical(wk::wk_is_geodesic(x), FALSE)) {
-    stop(
-      paste0(
-        "Can't create s2_geography from Cartesian wkb().\n",
-        "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
-        "interpolated along the sphere."
-      ),
-      call. = FALSE
-    )
+
+    # points and an empty vector are OK and shouldn't trigger an error
+    meta <- wk::wk_meta(x)
+    if (!all(meta$geometry_type %in% c(1, 4, NA), na.rm = TRUE)) {
+      stop(
+        paste0(
+          "Can't create s2_geography from Cartesian wkb().\n",
+          "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
+          "interpolated along the sphere."
+        ),
+        call. = FALSE
+      )
+    }
   }
 
   new_s2_xptr(
@@ -99,14 +104,19 @@ as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE) {
 #' @export
 as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE) {
   if (identical(wk::wk_is_geodesic(x), FALSE)) {
-    stop(
-      paste0(
-        "Can't create s2_geography from Cartesian wkt().\n",
-        "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
-        "interpolated along the sphere."
-      ),
-      call. = FALSE
-    )
+
+    # points and an empty vector are OK and shouldn't trigger an error
+    meta <- wk::wk_meta(x)
+    if (!all(meta$geometry_type %in% c(1, 4, NA), na.rm = TRUE)) {
+      stop(
+        paste0(
+          "Can't create s2_geography from Cartesian wkt().\n",
+          "Use `wk_set_geodesic(x, TRUE)` to assert that edges can be\n",
+          "interpolated along the sphere."
+        ),
+        call. = FALSE
+      )
+    }
   }
 
   new_s2_xptr(

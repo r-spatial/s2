@@ -39,9 +39,29 @@ test_that("s2_geography vectors can be created from s2_lnglat  and s2_point", {
 test_that("s2_geography vectors can be created from WKB and WKT", {
   wkb_point <- wk::as_wkb(wk::wkt("POINT (-64 45)", geodesic = TRUE))
   expect_output(print(as_s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
+  expect_error(
+    as_s2_geography(wk::as_wkb("LINESTRING (0 0, 1 1)")),
+    "Cartesian wkb\\(\\)"
+  )
+
+  # empty, null, and point features are OK
+  expect_identical(as_s2_geography(wk::wkb()), as_s2_geography(character()))
+  expect_identical(as_s2_geography(wk::wkb(list(NULL))), as_s2_geography(NA_character_))
+  expect_silent(as_s2_geography(wk::as_wkb("POINT (0 1)")))
+  expect_silent(as_s2_geography(wk::as_wkb("MULTIPOINT (0 1)")))
 
   wkt_point <- wk::as_wkt(wk::wkt("POINT (-64 45)", geodesic = TRUE))
   expect_output(print(as_s2_geography(wkt_point)), "<POINT \\(-64 45\\)>")
+  expect_error(
+    as_s2_geography(wk::wkt("LINESTRING (0 0, 1 1)")),
+    "Cartesian wkt\\(\\)"
+  )
+
+  # empty, null, and point features are OK
+  expect_identical(as_s2_geography(wk::wkt()), as_s2_geography(character()))
+  expect_identical(as_s2_geography(wk::wkt(NA_character_)), as_s2_geography(NA_character_))
+  expect_silent(as_s2_geography(wk::wkt("POINT (0 1)")))
+  expect_silent(as_s2_geography(wk::wkt("MULTIPOINT (0 1)")))
 
   # also test other classes commonly used to signify WKB or WKT
   expect_output(print(as_s2_geography(structure(wkb_point, class = "WKB")), "<POINT \\(-64 45\\)>"))
