@@ -13,6 +13,7 @@
 \alias{s2_simplify}
 \alias{s2_rebuild}
 \alias{s2_buffer_cells}
+\alias{s2_convex_hull}
 \alias{s2_centroid_agg}
 \alias{s2_coverage_union_agg}
 \alias{s2_rebuild_agg}
@@ -50,6 +51,8 @@ s2_buffer_cells(
   radius = s2_earth_radius_meters()
 )
 
+s2_convex_hull(x)
+
 s2_centroid_agg(x, na.rm = FALSE)
 
 s2_coverage_union_agg(x, options = s2_options(), na.rm = FALSE)
@@ -58,7 +61,7 @@ s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 
-s2_convex_hull_agg(x, options = s2_options(), na.rm = FALSE)
+s2_convex_hull_agg(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{\link[=as_s2_geography]{geography vectors}. These inputs

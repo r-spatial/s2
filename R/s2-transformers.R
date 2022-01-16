@@ -209,6 +209,12 @@ s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
 
 #' @rdname s2_boundary
 #' @export
+s2_convex_hull <- function(x) {
+  new_s2_xptr(cpp_s2_convex_hull(as_s2_geography(x)), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
 s2_centroid_agg <- function(x, na.rm = FALSE) {
   new_s2_xptr(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm), "s2_geography")
 }
@@ -233,8 +239,8 @@ s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
-s2_convex_hull_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+s2_convex_hull_agg <- function(x, na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), na.rm), "s2_geography")
 }
 
 #' Linear referencing

@@ -698,11 +698,31 @@ public:
       }
     }
   }
+
+  std::unique_ptr<S2Polygon> GetConvexHullPolygon() {
+    return absl::make_unique<S2Polygon>(this->GetConvexHull());
+  }
 };
+
+// [[Rcpp::export]]
+List cpp_s2_convex_hull(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      ConvexHullGeographyQuery convexHullQuery;
+      convexHullQuery.AddGeography(feature);
+
+      std::unique_ptr<S2Polygon> outP = convexHullQuery.GetConvexHullPolygon();
+      return XPtr<Geography>(new PolygonGeography(std::move(outP)));
+    }
+  };
+
+  Op op;
+  return op.processVector(geog);
+}
 
 
 // [[Rcpp::export]]
-List cpp_s2_convex_hull_agg(List geog, List s2options, bool naRm) {
+List cpp_s2_convex_hull_agg(List geog, bool naRm) {
   // create the convex hull query
   ConvexHullGeographyQuery convexHullQuery;
   SEXP item;
@@ -717,8 +737,8 @@ List cpp_s2_convex_hull_agg(List geog, List s2options, bool naRm) {
       convexHullQuery.AddGeography(feature);
     }
   }
-  // Builds the convex hull and returns the polygon as a geography
-  std::unique_ptr<S2Polygon> outP = absl::make_unique<S2Polygon>(convexHullQuery.GetConvexHull());
+
+  std::unique_ptr<S2Polygon> outP = convexHullQuery.GetConvexHullPolygon();
   XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
   return List::create(outG);
 }
