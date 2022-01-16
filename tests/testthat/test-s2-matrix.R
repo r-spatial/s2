@@ -42,6 +42,17 @@ test_that("s2_closest_edges() works", {
     ) %>% lapply(sort),
     list(1:4)
   )
+
+  expect_identical(
+    s2_closest_edges(
+      "POINT (0 0)",
+      c("POINT (0 0)", "POINT (0 1)", "POINT (0 2)", "POINT (0 3)"),
+      k = 5,
+      max_distance = 2.5 * pi / 180,
+      radius = 1
+    ) %>% lapply(sort),
+    list(1:3)
+  )
 })
 
 test_that("matrix predicates work", {
