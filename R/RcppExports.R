@@ -253,8 +253,8 @@ cpp_s2_farthest_feature <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_farthest_feature`, geog1, geog2)
 }
 
-cpp_s2_closest_edges <- function(geog1, geog2, n, min_distance) {
-    .Call(`_s2_cpp_s2_closest_edges`, geog1, geog2, n, min_distance)
+cpp_s2_closest_edges <- function(geog1, geog2, n, min_distance, max_distance) {
+    .Call(`_s2_cpp_s2_closest_edges`, geog1, geog2, n, min_distance, max_distance)
 }
 
 cpp_s2_may_intersect_matrix <- function(geog1, geog2, maxEdgesPerCell, maxFeatureCells, s2options) {

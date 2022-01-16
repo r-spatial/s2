@@ -65,9 +65,16 @@ s2_closest_feature <- function(x, y) {
 
 #' @rdname s2_closest_feature
 #' @export
-s2_closest_edges <- function(x, y, k, min_distance = -1, radius = s2_earth_radius_meters()) {
+s2_closest_edges <- function(x, y, k, min_distance = -1, max_distance = Inf,
+                             radius = s2_earth_radius_meters()) {
   stopifnot(k >= 1)
-  cpp_s2_closest_edges(as_s2_geography(x), as_s2_geography(y), k, min_distance / radius)
+  cpp_s2_closest_edges(
+    as_s2_geography(x),
+    as_s2_geography(y),
+    k,
+    min_distance / radius,
+    max_distance / radius
+  )
 }
 
 #' @rdname s2_closest_feature
