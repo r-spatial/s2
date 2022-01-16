@@ -73,7 +73,14 @@ the feature at <code>x[i]</code>.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_closest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
 
-<span class="fu">s2_closest_edges</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">k</span>, min_distance <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">s2_closest_edges</span><span class="op">(</span>
+  <span class="va">x</span>,
+  <span class="va">y</span>,
+  <span class="va">k</span>,
+  min_distance <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
+  max_distance <span class="op">=</span> <span class="cn">Inf</span>,
+  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
 
 <span class="fu">s2_farthest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
 
@@ -114,6 +121,9 @@ that in S2 a point is also considered an edge.</p></dd>
 <dd><p>The minimum distance to consider when searching for
 edges. This filter is applied after the search is complete (i.e.,
 may cause fewer than <code>k</code> values to be returned).</p></dd>
+<dt>max_distance</dt>
+<dd><p>The maximum distance to consider when searching for
+edges. This filter is applied before the search.</p></dd>
 <dt>radius</dt>
 <dd><p>Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by <code><a href="s2_earth_radius_meters.html">s2_earth_radius_meters()</a></code>.</p></dd>
@@ -199,7 +209,7 @@ performance.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>
