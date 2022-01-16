@@ -20,7 +20,14 @@
 \usage{
 s2_closest_feature(x, y)
 
-s2_closest_edges(x, y, k, min_distance = -1, radius = s2_earth_radius_meters())
+s2_closest_edges(
+  x,
+  y,
+  k,
+  min_distance = -1,
+  max_distance = Inf,
+  radius = s2_earth_radius_meters()
+)
 
 s2_farthest_feature(x, y)
 
@@ -58,6 +65,9 @@ that in S2 a point is also considered an edge.}
 \item{min_distance}{The minimum distance to consider when searching for
 edges. This filter is applied after the search is complete (i.e.,
 may cause fewer than \code{k} values to be returned).}
+
+\item{max_distance}{The maximum distance to consider when searching for
+edges. This filter is applied before the search.}
 
 \item{radius}{Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}}.}

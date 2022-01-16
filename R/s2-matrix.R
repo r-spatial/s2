@@ -16,6 +16,8 @@
 #' @param min_distance The minimum distance to consider when searching for
 #'   edges. This filter is applied after the search is complete (i.e.,
 #'   may cause fewer than `k` values to be returned).
+#' @param max_distance The maximum distance to consider when searching for
+#'   edges. This filter is applied before the search.
 #' @param max_edges_per_cell For [s2_may_intersect_matrix()],
 #'   this values controls the nature of the index on `y`, with higher values
 #'   leading to coarser index. Values should be between 10 and 50; the default
