@@ -16,6 +16,8 @@
 #' @param min_distance The minimum distance to consider when searching for
 #'   edges. This filter is applied after the search is complete (i.e.,
 #'   may cause fewer than `k` values to be returned).
+#' @param max_distance The maximum distance to consider when searching for
+#'   edges. This filter is applied before the search.
 #' @param max_edges_per_cell For [s2_may_intersect_matrix()],
 #'   this values controls the nature of the index on `y`, with higher values
 #'   leading to coarser index. Values should be between 10 and 50; the default
@@ -65,9 +67,16 @@ s2_closest_feature <- function(x, y) {
 
 #' @rdname s2_closest_feature
 #' @export
-s2_closest_edges <- function(x, y, k, min_distance = -1, radius = s2_earth_radius_meters()) {
+s2_closest_edges <- function(x, y, k, min_distance = -1, max_distance = Inf,
+                             radius = s2_earth_radius_meters()) {
   stopifnot(k >= 1)
-  cpp_s2_closest_edges(as_s2_geography(x), as_s2_geography(y), k, min_distance / radius)
+  cpp_s2_closest_edges(
+    as_s2_geography(x),
+    as_s2_geography(y),
+    k,
+    min_distance / radius,
+    max_distance / radius
+  )
 }
 
 #' @rdname s2_closest_feature

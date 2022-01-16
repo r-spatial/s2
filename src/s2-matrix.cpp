@@ -38,11 +38,11 @@ std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeInd
   return indexSource;
 }
 
-std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region, 
+std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region,
                                                        const MutableS2ShapeIndex* index,
                                                        std::unordered_map<int, R_xlen_t>& source,
                                                        int maxRegionCells) {
-  
+
   std::unordered_set<R_xlen_t> mightIntersectIndices;
   MutableS2ShapeIndex::Iterator indexIterator(index);
 
@@ -63,7 +63,7 @@ std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region,
         int shapeId = cell.clipped(k).shape_id();
         mightIntersectIndices.insert(source[shapeId]);
       }
-    
+
     } else if(relation  == S2ShapeIndex::CellRelation::SUBDIVIDED) {
       // promising! the geog2 index has a child cell of it.id()
       // (at which indexIterator is now positioned)
@@ -166,13 +166,15 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance) {
+List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance,
+                          double max_distance) {
 
   class Op: public IndexedBinaryGeographyOperator<List, IntegerVector> {
   public:
     IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
       S2ClosestEdgeQuery query(this->geog2Index.get());
       query.mutable_options()->set_max_results(n);
+      query.mutable_options()->set_max_distance(S1ChordAngle::Radians(max_distance));
       S2ClosestEdgeQuery::ShapeIndexTarget target(feature->ShapeIndex());
       const auto& result = query.FindClosestEdges(&target);
 
@@ -189,11 +191,13 @@ List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance) {
 
     int n;
     double min_distance;
+    double max_distance;
   };
 
   Op op;
   op.n = n;
   op.min_distance = min_distance;
+  op.max_distance = max_distance;
   op.buildIndex(geog2);
   return op.processVector(geog1);
 }
@@ -259,13 +263,13 @@ public:
 };
 
 // [[Rcpp::export]]
-List cpp_s2_may_intersect_matrix(List geog1, List geog2, 
+List cpp_s2_may_intersect_matrix(List geog1, List geog2,
                                  int maxEdgesPerCell, int maxFeatureCells, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
-    Op(List s2options, int maxFeatureCells): 
+    Op(List s2options, int maxFeatureCells):
       IndexedMatrixPredicateOperator(s2options, maxFeatureCells) {}
-    
+
     bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
       return true;
     };
@@ -559,8 +563,8 @@ List cpp_s2_contains_matrix_brute_force(List geog1, List geog2, List s2options) 
         return false;
       } else {
         return S2BooleanOperation::Contains(
-          *feature1->ShapeIndex(), 
-          *feature2->ShapeIndex(), 
+          *feature1->ShapeIndex(),
+          *feature2->ShapeIndex(),
           this->options
         );
       }
@@ -579,7 +583,7 @@ List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
       // note reversed index2, index1
-      
+
       // by default Contains() will return true for Contains(x, EMPTY), which is
       // not true in BigQuery or GEOS
       if (feature1->IsEmpty()) {
@@ -590,7 +594,7 @@ List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
           *feature1->ShapeIndex(),
           this->options
         );
-      }      
+      }
     };
   };
 

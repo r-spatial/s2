@@ -5,6 +5,8 @@
 - Fix for s2 build on 32-bit openssl (#143, #147)
 - Added `s2_convex_hull()` and `s2_convex_hull_agg()` (@spiry34, #150, 
   #151, #163).
+- Added `max_distance` argument to `s2_closest_edges()`, making
+  distance-constrained k-nearest neighbours possible (#125, #156, #162).
 
 # s2 1.0.7
 
