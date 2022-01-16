@@ -233,8 +233,8 @@ s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
-s2_convex_hull_agg <- function(x, options = s2_options() ) {
-  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), options), "s2_geography")
+s2_convex_hull_agg <- function(x, options = s2_options(), na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), options, na.rm), "s2_geography")
 }
 
 #' Linear referencing

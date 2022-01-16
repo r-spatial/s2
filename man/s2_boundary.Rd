@@ -58,7 +58,7 @@ s2_rebuild_agg(x, options = s2_options(), na.rm = FALSE)
 
 s2_union_agg(x, options = s2_options(), na.rm = FALSE)
 
-s2_convex_hull_agg(x, options = s2_options())
+s2_convex_hull_agg(x, options = s2_options(), na.rm = FALSE)
 }
 \arguments{
 \item{x}{\link[=as_s2_geography]{geography vectors}. These inputs

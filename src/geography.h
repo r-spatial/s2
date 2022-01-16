@@ -78,6 +78,10 @@ public:
     return nullptr;
   }
 
+  virtual const std::vector<std::unique_ptr<Geography>>* CollectionFeatures() {
+    return nullptr;
+  }
+
   // other calculations use ShapeIndex
   virtual S2ShapeIndex* ShapeIndex() {
     if (!this->hasIndex) {

@@ -413,8 +413,8 @@ cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
     .Call(`_s2_cpp_s2_buffer_cells`, geog, distance, maxCells, minLevel)
 }
 
-cpp_s2_convex_hull_agg <- function(geog, s2options) {
-    .Call(`_s2_cpp_s2_convex_hull_agg`, geog, s2options)
+cpp_s2_convex_hull_agg <- function(geog, s2options, naRm) {
+    .Call(`_s2_cpp_s2_convex_hull_agg`, geog, s2options, naRm)
 }
 
 s2_xptr_test <- function(size) {
