@@ -3,7 +3,10 @@
 #include "s2/s2cell.h"
 #include "s2/s2latlng.h"
 #include "s2/s2cell_union.h"
+#include "s2/s2region_coverer.h"
+#include "s2/s2shape_index_buffered_region.h"
 
+#include "geography-operator.h"
 #include "point-geography.h"
 #include "polyline-geography.h"
 #include "polygon-geography.h"
@@ -27,7 +30,7 @@ S2CellUnion cell_union_from_cell_id_vector(NumericVector cellIdNumeric) {
 NumericVector cell_id_vector_from_cell_union(const S2CellUnion& cellUnion) {
   NumericVector cellIdNumeric(cellUnion.size());
   for (R_xlen_t i = 0; i < cellIdNumeric.size(); i++) {
-    cellIdNumeric = reinterpret_double(cellUnion.cell_id(i).id());
+    cellIdNumeric[i] = reinterpret_double(cellUnion.cell_id(i).id());
   }
 
   cellIdNumeric.attr("class") = CharacterVector::create("s2_cell", "wk_vctr");
@@ -84,6 +87,45 @@ List cpp_s2_cell_union_normalize(List cellUnionVector) {
 
   Op op;
   List out = op.processVector(cellUnionVector);
+  out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+  return out;
+}
+
+
+// [[Rcpp::export]]
+List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
+                              int max_cells, NumericVector buffer, bool interior) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    NumericVector distance;
+    S2RegionCoverer& coverer;
+    bool interior;
+
+    Op(NumericVector distance, S2RegionCoverer& coverer, bool interior):
+      distance(distance), coverer(coverer), interior(interior) {}
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      S2ShapeIndexBufferedRegion region;
+      region.Init(feature->ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+
+      S2CellUnion cellUnion;
+      if (interior) {
+        cellUnion = coverer.GetInteriorCovering(region);
+      } else {
+        cellUnion = coverer.GetCovering(region);
+      }
+
+      return cell_id_vector_from_cell_union(cellUnion);
+    }
+  };
+
+  S2RegionCoverer coverer;
+  coverer.mutable_options()->set_min_level(min_level);
+  coverer.mutable_options()->set_max_level(max_level);
+  coverer.mutable_options()->set_max_cells(max_cells);
+
+  Op op(buffer, coverer, interior);
+  List out = op.processVector(geog);
   out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
   return out;
 }

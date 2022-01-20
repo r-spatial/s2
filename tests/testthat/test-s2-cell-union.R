@@ -7,6 +7,7 @@ test_that("s2_cell_union() class works", {
   expect_identical(as_s2_cell_union(x), x)
   expect_output(expect_identical(str(x), x), "s2_cell_union")
   expect_output(expect_identical(print(x), x), "s2_cell_union")
+  expect_identical(unlist(x), s2_cell())
 })
 
 test_that("s2_cell_union_normalize() works", {
@@ -21,4 +22,17 @@ test_that("s2_cell_union_normalize() works", {
     s2_cell_union_normalize(new_s2_cell_union(list(NULL))),
     new_s2_cell_union(list(NULL))
   )
+})
+
+test_that("s2_covering_cell_ids() works", {
+  expect_length(unlist(s2_covering_cell_ids(s2_data_countries("France"))), 8)
+  expect_length(
+    unlist(s2_covering_cell_ids(s2_data_countries("France"), max_cells = 4)),
+    4
+  )
+  expect_length(
+    unlist(s2_covering_cell_ids(s2_data_countries("France"), interior = TRUE)),
+    8
+  )
+  expect_identical(s2_covering_cell_ids(NA_character_), new_s2_cell_union(list(NULL)))
 })

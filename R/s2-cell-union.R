@@ -36,11 +36,19 @@ new_s2_cell_union <- function(x) {
 
 #' @export
 print.s2_cell_union <- function(x, ...) {
-  str(x, ...)
+  utils::str(x, ...)
   invisible(x)
 }
 
+#' @method unlist s2_cell_union
+#' @export
+unlist.s2_cell_union <- function(x, recursive = TRUE, use.names = TRUE) {
+  unlisted <- unlist(unclass(x), recursive = recursive, use.name = use.names)
+  new_s2_cell(as.double(unlisted))
+}
 
+
+#' @importFrom utils str
 #' @export
 str.s2_cell_union <- function(x, ..., indent.str = "") {
   cat(sprintf("%s<s2_cell_union[%d]>\n%s", indent.str, length(x), indent.str))
@@ -48,10 +56,38 @@ str.s2_cell_union <- function(x, ..., indent.str = "") {
   invisible(x)
 }
 
-#' @rdname s2_cell_union
+
+
+#' S2 cell union operators
+#'
+#' @param x An [s2_geography][as_s2_geography] or [s2_cell_union()].
+#' @param min_level,max_level The minimum and maximum levels to constrain the
+#'   covering.
+#' @param max_cells The maximum number of cells in the covering. Defaults to
+#'   8.
+#' @param buffer A distance to buffer outside the geography
+#' @param interior Use `TRUE` to force the covering inside the geography.
+#' @inheritParams s2_cell_is_valid
+#'
 #' @export
+#'
 s2_cell_union_normalize <- function(x) {
   cpp_s2_cell_union_normalize(as_s2_cell_union(x))
 }
 
-
+#' @rdname s2_cell_union_normalize
+#' @export
+s2_covering_cell_ids <- function(x, min_level = 0, max_level = 30,
+                                 max_cells = 8, buffer = 0,
+                                 interior = FALSE,
+                                 radius = s2_earth_radius_meters()) {
+  recycled <- recycle_common(as_s2_geography(x), buffer / radius)
+  cpp_s2_covering_cell_ids(
+    recycled[[1]],
+    min_level,
+    max_level,
+    max_cells,
+    recycled[[2]],
+    interior
+  )
+}

@@ -209,6 +209,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_covering_cell_ids
+List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level, int max_cells, NumericVector buffer, bool interior);
+RcppExport SEXP _s2_cpp_s2_covering_cell_ids(SEXP geogSEXP, SEXP min_levelSEXP, SEXP max_levelSEXP, SEXP max_cellsSEXP, SEXP bufferSEXP, SEXP interiorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< int >::type min_level(min_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_level(max_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_cells(max_cellsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type buffer(bufferSEXP);
+    Rcpp::traits::input_parameter< bool >::type interior(interiorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_covering_cell_ids(geog, min_level, max_level, max_cells, buffer, interior));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_sentinel
 NumericVector cpp_s2_cell_sentinel();
 RcppExport SEXP _s2_cpp_s2_cell_sentinel() {
@@ -1321,6 +1337,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
     {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},
+    {"_s2_cpp_s2_covering_cell_ids", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids, 6},
     {"_s2_cpp_s2_cell_sentinel", (DL_FUNC) &_s2_cpp_s2_cell_sentinel, 0},
     {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
