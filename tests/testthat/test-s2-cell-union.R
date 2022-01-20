@@ -10,6 +10,16 @@ test_that("s2_cell_union() class works", {
   expect_identical(unlist(x), s2_cell())
 })
 
+test_that("as_s2_geography() for s2_cell_union works", {
+  union <- s2_cell_union(c("4b59a0cd83b5de49", NA))
+  geog <- as_s2_geography(union)
+  expect_identical(
+    s2_intersects(geog, s2_lnglat(c(-64, NA), c(45, NA))),
+    c(TRUE, NA)
+  )
+  expect_identical(s2_dimension(geog), c(2L, NA))
+})
+
 test_that("s2_cell_union_normalize() works", {
   cell <- s2_cell_parent(as_s2_cell("4b59a0cd83b5de49"), 10)
   children <- s2_cell_child(cell, 0:3)

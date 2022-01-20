@@ -8,7 +8,16 @@
 #' @export
 #'
 s2_cell_union <- function(x = list()) {
-  new_s2_cell_union(lapply(x, as_s2_cell))
+  input_na <- is.na(x)
+  union <- new_s2_cell_union(lapply(x, as_s2_cell))
+  union[input_na] <- list(NULL)
+  union
+}
+
+#' @rdname s2_cell_union
+#' @export
+as_s2_geography.s2_cell_union <- function(x, ...) {
+  new_s2_xptr(cpp_s2_geography_from_cell_union(as_s2_cell_union(x)), "s2_geography")
 }
 
 #' @rdname s2_cell_union
@@ -50,10 +59,10 @@ unlist.s2_cell_union <- function(x, recursive = TRUE, use.names = TRUE) {
 
 #' @importFrom utils str
 #' @export
-str.s2_cell_union <- function(x, ..., indent.str = "") {
-  cat(sprintf("%s<s2_cell_union[%d]>\n%s", indent.str, length(x), indent.str))
-  str(unclass(x), ..., indent.str = indent.str)
-  invisible(x)
+str.s2_cell_union <- function(object, ..., indent.str = "") {
+  cat(sprintf("%s<s2_cell_union[%d]>\n%s", indent.str, length(object), indent.str))
+  str(unclass(object), ..., indent.str = indent.str)
+  invisible(object)
 }
 
 

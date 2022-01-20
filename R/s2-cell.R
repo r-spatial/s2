@@ -112,6 +112,11 @@ format.s2_cell <- function(x, ...) {
 }
 
 #' @export
+as.list.s2_cell <- function(x, ...) {
+  lapply(NextMethod(), new_s2_cell)
+}
+
+#' @export
 `[<-.s2_cell` <- function(x, i, value) {
   replacement <- as_s2_cell(value)
   x <- unclass(x)

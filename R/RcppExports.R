@@ -73,6 +73,10 @@ cpp_s2_cell_union_normalize <- function(cellUnionVector) {
     .Call(`_s2_cpp_s2_cell_union_normalize`, cellUnionVector)
 }
 
+cpp_s2_geography_from_cell_union <- function(cellUnionVector) {
+    .Call(`_s2_cpp_s2_geography_from_cell_union`, cellUnionVector)
+}
+
 cpp_s2_covering_cell_ids <- function(geog, min_level, max_level, max_cells, buffer, interior) {
     .Call(`_s2_cpp_s2_covering_cell_ids`, geog, min_level, max_level, max_cells, buffer, interior)
 }

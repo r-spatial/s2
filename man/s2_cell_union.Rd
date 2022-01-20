@@ -2,12 +2,15 @@
 % Please edit documentation in R/s2-cell-union.R
 \name{s2_cell_union}
 \alias{s2_cell_union}
+\alias{as_s2_geography.s2_cell_union}
 \alias{as_s2_cell_union}
 \alias{as_s2_cell_union.s2_cell_union}
 \alias{as_s2_cell_union.s2_cell}
 \title{Create S2 Cell Union vectors}
 \usage{
 s2_cell_union(x = list())
+
+\method{as_s2_geography}{s2_cell_union}(x, ...)
 
 as_s2_cell_union(x, ...)
 

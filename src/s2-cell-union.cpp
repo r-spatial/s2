@@ -93,6 +93,21 @@ List cpp_s2_cell_union_normalize(List cellUnionVector) {
 
 
 // [[Rcpp::export]]
+List cpp_s2_geography_from_cell_union(List cellUnionVector) {
+  class Op: public UnaryS2CellUnionOperator<List, SEXP> {
+    SEXP processCell(S2CellUnion& cellUnion, R_xlen_t i) {
+      std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+      polygon->InitToCellUnionBorder(cellUnion);
+      return XPtr<PolygonGeography>(new PolygonGeography(std::move(polygon)));
+    }
+  };
+
+  Op op;
+  return op.processVector(cellUnionVector);
+}
+
+
+// [[Rcpp::export]]
 List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
                               int max_cells, NumericVector buffer, bool interior) {
   class Op: public UnaryGeographyOperator<List, SEXP> {

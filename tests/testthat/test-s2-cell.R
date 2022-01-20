@@ -4,6 +4,10 @@ test_that("s2_cell class works", {
   expect_s3_class(new_s2_cell(NA_real_), "s2_cell")
   expect_true(is.na(new_s2_cell(NA_real_)))
   expect_identical(as_s2_cell(s2_cell()), s2_cell())
+  expect_identical(
+    as.list(new_s2_cell(NA_real_)),
+    list(new_s2_cell(NA_real_))
+  )
 })
 
 test_that("invalid and sentinel values work as expected", {
