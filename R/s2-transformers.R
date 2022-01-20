@@ -50,6 +50,11 @@
 #' s2_centroid("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 #' s2_centroid("LINESTRING (0 0, 10 0)")
 #'
+#' # s2_point_on_surface guarantees a point on surface
+#' # Note: this is not the same as st_point_on_surface
+#' s2_centroid("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0)"")
+#' s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))")
+#'
 #' # returns the unweighted centroid of the entire input
 #' s2_centroid_agg(c("POINT (0 0)", "POINT (10 0)"))
 #'
@@ -117,10 +122,6 @@
 #' # snap to grid rounds coordinates to a specified grid size
 #' s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
 #'
-#' # s2_point_on_surface moves centroid to closest point on polygon
-#' # Note: this is not the same as st_point_on_surface
-#' s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", TRUE)
-#' s2_centroid_agg("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))", TRUE)
 #'
 s2_boundary <- function(x) {
   new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
@@ -291,5 +292,5 @@ s2_interpolate_normalized <- function(x, distance_normalized) {
 #' @rdname s2_boundary
 #' @export
 s2_point_on_surface <- function(x, na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_point_on_surface_agg(as_s2_geography(x), naRm=na.rm), "s2_geography")
+  new_s2_xptr(cpp_s2_point_on_surface(as_s2_geography(x)), "s2_geography")
 }

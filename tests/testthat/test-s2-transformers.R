@@ -32,6 +32,17 @@ test_that("s2_centroid() and s2_centroid_agg() normalize points", {
   )
 })
 
+test_that("s2_point_on_surface() works", {
+  expect_wkt_equal(s2_point_on_surface("POINT (30 10)"), "POINT (30 10)")
+  expect_true(s2_is_empty(s2_point_on_surface("POINT EMPTY")))
+  expect_wkt_equal(s2_point_on_surface("LINESTRING (0 0, 0 10)"), "POINT (0 5)", precision = 15)
+  expect_wkt_equal(
+    s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))"),
+    "POINT (0.4502368024893488 0.4502229020796313)",
+    precision = 15
+  )
+})
+
 test_that("s2_boundary() works", {
   expect_true(s2_is_empty(s2_boundary("POINT (30 10)")))
   expect_true(s2_is_empty(s2_boundary("POINT EMPTY")))

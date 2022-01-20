@@ -461,6 +461,50 @@ List cpp_s2_centroid(List geog) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_point_on_surface(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    S2RegionCoverer coverer;
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+        // Create Interior Covering of Polygon
+        S2CellUnion cellUnion;
+        cellUnion = coverer.GetInteriorCovering(*feature->Polygon());
+
+        // Take center of cell with smallest level (biggest)
+        int min_level = 31;
+        S2Point pt;
+        for(S2CellId id : cellUnion) {
+          if(id.level() < min_level) {
+            // Already normalized
+            // https://github.com/r-spatial/s2/blob/a323a74774d0526f1165e334a3d76a9da38316b9/src/s2/s2cell_id.h#L128
+            pt = id.ToPoint();
+            min_level = id.level();
+          }
+        }
+
+        return XPtr<Geography>(new PointGeography(pt));
+      }
+      // @TODO: How to handle multipoint?
+      // Otherwise take centroid of multiline/point
+      // Those will be on surface
+      else {
+        S2Point centroid = feature->Centroid();
+        if (centroid.Norm2() == 0) {
+          return XPtr<Geography>(new PointGeography());
+        } else {
+          return XPtr<Geography>(new PointGeography(centroid.Normalize()));
+        }
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
 List cpp_s2_boundary(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
@@ -708,53 +752,4 @@ List cpp_s2_convex_hull_agg(List geog, List s2options) {
   std::unique_ptr<S2Polygon> outP = absl::make_unique<S2Polygon>(convexHullQuery.GetConvexHull());
   XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
   return List::create(outG);
-}
-
-
-
-// [[Rcpp::export]]
-List cpp_s2_point_on_surface_agg(List geog, bool naRm) {
-  S2Point cumPoint;
-
-  SEXP item;
-  for (R_xlen_t i = 0; i < geog.size(); i++) {
-    item = geog[i];
-
-    if (item == R_NilValue && !naRm) {
-      return List::create(R_NilValue);
-    }
-
-    if (item != R_NilValue) {
-      Rcpp::XPtr<Geography> feature(item);
-
-      S2Point point;
-
-      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
-        point = feature->Polygon()->Project(feature->Centroid());
-      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
-        point = feature->Centroid();
-      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
-        // Not sure why it is not working
-        // point = feature->Polyline()->Project(feature->Centroid());
-        Rcpp::stop("Polyline is not supported");
-      } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_COLLECTION) {
-        if (!feature->IsEmpty()) {
-          Rcpp::stop("GeometryCollection is not supported");
-        }
-      }
-
-      if (point.Norm2() > 0) {
-        cumPoint += point.Normalize();
-      }
-    }
-  }
-
-  List output(1);
-  if (cumPoint.Norm2() == 0) {
-    output[0] = Rcpp::XPtr<Geography>(new PointGeography());
-  } else {
-    output[0] = Rcpp::XPtr<Geography>(new PointGeography(cumPoint.Normalize()));
-  }
-
-  return output;
 }

@@ -393,6 +393,10 @@ cpp_s2_centroid <- function(geog) {
     .Call(`_s2_cpp_s2_centroid`, geog)
 }
 
+cpp_s2_point_on_surface <- function(geog) {
+    .Call(`_s2_cpp_s2_point_on_surface`, geog)
+}
+
 cpp_s2_boundary <- function(geog) {
     .Call(`_s2_cpp_s2_boundary`, geog)
 }
@@ -415,10 +419,6 @@ cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
 
 cpp_s2_convex_hull_agg <- function(geog, s2options) {
     .Call(`_s2_cpp_s2_convex_hull_agg`, geog, s2options)
-}
-
-cpp_s2_point_on_surface_agg <- function(geog, naRm) {
-    .Call(`_s2_cpp_s2_point_on_surface_agg`, geog, naRm)
 }
 
 s2_xptr_test <- function(size) {
