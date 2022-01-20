@@ -22,8 +22,8 @@ static inline double reinterpret_double(uint64_t id) {
 }
 
 S2CellUnion cell_union_from_cell_id_vector(NumericVector cellIdNumeric) {
-  uint64_t* cellIds = (uint64_t*) &(cellIdNumeric[0]);
-  std::vector<uint64_t> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
+  uint64* cellIds = (uint64*) &(cellIdNumeric[0]);
+  std::vector<uint64> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
   return S2CellUnion(cellIdsVector);
 }
 
