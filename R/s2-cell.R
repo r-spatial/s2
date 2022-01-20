@@ -97,6 +97,7 @@ as_s2_cell.s2_point <- function(x, ...) {
 #' @rdname s2_cell
 #' @export
 new_s2_cell <- function(x) {
+  stopifnot(is.double(x))
   structure(x, class = c("s2_cell", "wk_vctr"))
 }
 

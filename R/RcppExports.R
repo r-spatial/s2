@@ -69,6 +69,10 @@ cpp_s2_bounds_rect <- function(geog) {
     .Call(`_s2_cpp_s2_bounds_rect`, geog)
 }
 
+cpp_s2_cell_union_normalize <- function(cellUnionVector) {
+    .Call(`_s2_cpp_s2_cell_union_normalize`, cellUnionVector)
+}
+
 cpp_s2_cell_sentinel <- function() {
     .Call(`_s2_cpp_s2_cell_sentinel`)
 }
