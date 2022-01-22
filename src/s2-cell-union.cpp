@@ -222,6 +222,47 @@ LogicalVector cpp_s2_cell_union_intersects(List cellUnionVector1, List cellUnion
   return op.processVector(cellUnionVector1, cellUnionVector2);
 }
 
+// [[Rcpp::export]]
+List cpp_s2_cell_union_intersection(List cellUnionVector1, List cellUnionVector2) {
+  class Op: public BinaryS2CellUnionOperator<List, SEXP> {
+    SEXP processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {
+      return cell_id_vector_from_cell_union(cellUnion1.Intersection(cellUnion2));
+    }
+  };
+
+  Op op;
+  List out = op.processVector(cellUnionVector1, cellUnionVector2);
+  out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+  return out;
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_union_union(List cellUnionVector1, List cellUnionVector2) {
+  class Op: public BinaryS2CellUnionOperator<List, SEXP> {
+    SEXP processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {
+      return cell_id_vector_from_cell_union(cellUnion1.Union(cellUnion2));
+    }
+  };
+
+  Op op;
+  List out = op.processVector(cellUnionVector1, cellUnionVector2);
+  out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+  return out;
+}
+
+// [[Rcpp::export]]
+List cpp_s2_cell_union_difference(List cellUnionVector1, List cellUnionVector2) {
+  class Op: public BinaryS2CellUnionOperator<List, SEXP> {
+    SEXP processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {
+      return cell_id_vector_from_cell_union(cellUnion1.Difference(cellUnion2));
+    }
+  };
+
+  Op op;
+  List out = op.processVector(cellUnionVector1, cellUnionVector2);
+  out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+  return out;
+}
 
 // [[Rcpp::export]]
 List cpp_s2_geography_from_cell_union(List cellUnionVector) {

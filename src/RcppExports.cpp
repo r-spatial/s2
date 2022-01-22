@@ -233,6 +233,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_union_intersection
+List cpp_s2_cell_union_intersection(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_intersection(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_intersection(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_union
+List cpp_s2_cell_union_union(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_union(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_union(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_difference
+List cpp_s2_cell_union_difference(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_difference(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_difference(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_geography_from_cell_union
 List cpp_s2_geography_from_cell_union(List cellUnionVector);
 RcppExport SEXP _s2_cpp_s2_geography_from_cell_union(SEXP cellUnionVectorSEXP) {
@@ -1374,6 +1410,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},
     {"_s2_cpp_s2_cell_union_contains", (DL_FUNC) &_s2_cpp_s2_cell_union_contains, 2},
     {"_s2_cpp_s2_cell_union_intersects", (DL_FUNC) &_s2_cpp_s2_cell_union_intersects, 2},
+    {"_s2_cpp_s2_cell_union_intersection", (DL_FUNC) &_s2_cpp_s2_cell_union_intersection, 2},
+    {"_s2_cpp_s2_cell_union_union", (DL_FUNC) &_s2_cpp_s2_cell_union_union, 2},
+    {"_s2_cpp_s2_cell_union_difference", (DL_FUNC) &_s2_cpp_s2_cell_union_difference, 2},
     {"_s2_cpp_s2_geography_from_cell_union", (DL_FUNC) &_s2_cpp_s2_geography_from_cell_union, 1},
     {"_s2_cpp_s2_covering_cell_ids", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids, 6},
     {"_s2_cpp_s2_cell_sentinel", (DL_FUNC) &_s2_cpp_s2_cell_sentinel, 0},

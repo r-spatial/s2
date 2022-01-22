@@ -98,6 +98,24 @@ s2_cell_union_intersects <- function(x, y) {
 
 #' @rdname s2_cell_union_normalize
 #' @export
+s2_cell_union_intersection <- function(x, y) {
+  cpp_s2_cell_union_intersection(as_s2_cell_union(x), as_s2_cell_union(y))
+}
+
+#' @rdname s2_cell_union_normalize
+#' @export
+s2_cell_union_union <- function(x, y) {
+  cpp_s2_cell_union_union(as_s2_cell_union(x), as_s2_cell_union(y))
+}
+
+#' @rdname s2_cell_union_normalize
+#' @export
+s2_cell_union_difference <- function(x, y) {
+  cpp_s2_cell_union_difference(as_s2_cell_union(x), as_s2_cell_union(y))
+}
+
+#' @rdname s2_cell_union_normalize
+#' @export
 s2_covering_cell_ids <- function(x, min_level = 0, max_level = 30,
                                  max_cells = 8, buffer = 0,
                                  interior = FALSE,

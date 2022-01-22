@@ -81,6 +81,18 @@ cpp_s2_cell_union_intersects <- function(cellUnionVector1, cellUnionVector2) {
     .Call(`_s2_cpp_s2_cell_union_intersects`, cellUnionVector1, cellUnionVector2)
 }
 
+cpp_s2_cell_union_intersection <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_intersection`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_union <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_union`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_difference <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_difference`, cellUnionVector1, cellUnionVector2)
+}
+
 cpp_s2_geography_from_cell_union <- function(cellUnionVector) {
     .Call(`_s2_cpp_s2_geography_from_cell_union`, cellUnionVector)
 }

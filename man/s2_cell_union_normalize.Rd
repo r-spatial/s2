@@ -4,6 +4,9 @@
 \alias{s2_cell_union_normalize}
 \alias{s2_cell_union_contains}
 \alias{s2_cell_union_intersects}
+\alias{s2_cell_union_intersection}
+\alias{s2_cell_union_union}
+\alias{s2_cell_union_difference}
 \alias{s2_covering_cell_ids}
 \title{S2 cell union operators}
 \usage{
@@ -12,6 +15,12 @@ s2_cell_union_normalize(x)
 s2_cell_union_contains(x, y)
 
 s2_cell_union_intersects(x, y)
+
+s2_cell_union_intersection(x, y)
+
+s2_cell_union_union(x, y)
+
+s2_cell_union_difference(x, y)
 
 s2_covering_cell_ids(
   x,
