@@ -77,6 +77,10 @@ cpp_s2_cell_union_contains <- function(cellUnionVector1, cellUnionVector2) {
     .Call(`_s2_cpp_s2_cell_union_contains`, cellUnionVector1, cellUnionVector2)
 }
 
+cpp_s2_cell_union_intersects <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_intersects`, cellUnionVector1, cellUnionVector2)
+}
+
 cpp_s2_geography_from_cell_union <- function(cellUnionVector) {
     .Call(`_s2_cpp_s2_geography_from_cell_union`, cellUnionVector)
 }

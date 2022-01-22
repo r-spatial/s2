@@ -210,6 +210,18 @@ LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVe
   return op.processVector(cellUnionVector1, cellUnionVector2);
 }
 
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_union_intersects(List cellUnionVector1, List cellUnionVector2) {
+  class Op: public BinaryS2CellUnionOperator<LogicalVector, int> {
+    int processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {
+      return cellUnion1.Intersects(cellUnion2);
+    }
+  };
+
+  Op op;
+  return op.processVector(cellUnionVector1, cellUnionVector2);
+}
+
 
 // [[Rcpp::export]]
 List cpp_s2_geography_from_cell_union(List cellUnionVector) {
