@@ -61,10 +61,7 @@ public:
         output[i] = VectorType::get_na();
       } else {
         Rcpp::NumericVector cellIdNumeric(item);
-        uint64_t* cellIds = (uint64_t*) &(cellIdNumeric[0]);
-        std::vector<uint64_t> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
-        S2CellUnion cellUnion(cellIdsVector);
-
+        S2CellUnion cellUnion = cell_union_from_cell_id_vector(cellIdNumeric);
         output[i] = this->processCell(cellUnion, i);
       }
     }
