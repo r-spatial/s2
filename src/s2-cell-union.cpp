@@ -23,8 +23,8 @@ static inline double reinterpret_double(uint64_t id) {
 
 S2CellUnion cell_union_from_cell_id_vector(NumericVector cellIdNumeric) {
   uint64* cellIds = (uint64*) &(cellIdNumeric[0]);
-  std::vector<uint64> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
-  return S2CellUnion(cellIdsVector);
+  std::vector<S2CellId> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
+  return S2CellUnion(std::move(cellIdsVector));
 }
 
 NumericVector cell_id_vector_from_cell_union(const S2CellUnion& cellUnion) {
