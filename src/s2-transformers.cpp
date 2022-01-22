@@ -467,7 +467,10 @@ List cpp_s2_point_on_surface(List geog) {
     S2RegionCoverer coverer;
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+      if(feature->IsEmpty()) {
+        return XPtr<Geography>(new PointGeography());
+      }
+      else if(feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
         // Create Interior Covering of Polygon
         S2CellUnion cellUnion;
         cellUnion = coverer.GetInteriorCovering(*feature->Polygon());
@@ -475,7 +478,7 @@ List cpp_s2_point_on_surface(List geog) {
         // Take center of cell with smallest level (biggest)
         int min_level = 31;
         S2Point pt;
-        for(S2CellId id : cellUnion) {
+        for(const S2CellId& id : cellUnion) {
           if(id.level() < min_level) {
             // Already normalized
             // https://github.com/r-spatial/s2/blob/a323a74774d0526f1165e334a3d76a9da38316b9/src/s2/s2cell_id.h#L128
@@ -486,16 +489,17 @@ List cpp_s2_point_on_surface(List geog) {
 
         return XPtr<Geography>(new PointGeography(pt));
       }
-      // @TODO: How to handle multipoint?
-      // Otherwise take centroid of multiline/point
-      // Those will be on surface
-      else {
-        S2Point centroid = feature->Centroid();
-        if (centroid.Norm2() == 0) {
-          return XPtr<Geography>(new PointGeography());
-        } else {
-          return XPtr<Geography>(new PointGeography(centroid.Normalize()));
-        }
+      else if(feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
+        stop("POLYLINE type not supported in s2_point_on_surface()");
+      }
+      else if(feature->GeographyType() == Geography::Type::GEOGRAPHY_COLLECTION) {
+        stop("COLLECTION type not supported in s2_point_on_surface()");
+      }
+      // For point, just return first point
+      else if(feature->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
+        S2Point pt = feature->Point()->front();
+
+        return XPtr<Geography>(new PointGeography(pt));
       }
     }
   };
