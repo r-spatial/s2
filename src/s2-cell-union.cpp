@@ -72,6 +72,116 @@ public:
   virtual ScalarType processCell(S2CellUnion& cellUnion, R_xlen_t i) = 0;
 };
 
+// For speed, take care of recycling here (only works if there is no
+// additional parameter). Most binary ops don't have a parameter and some
+// (like Ops, and Math) make recycling harder to incorporate at the R level
+template<class VectorType, class ScalarType>
+class BinaryS2CellUnionOperator {
+public:
+  VectorType processVector(Rcpp::List cellUnionVector1,
+                           Rcpp::List cellUnionVector2) {
+
+    SEXP item1 = R_NilValue;
+    SEXP item2 = R_NilValue;
+
+    if (cellUnionVector1.size() == cellUnionVector2.size()) {
+      VectorType output(cellUnionVector1.size());
+
+      for (R_xlen_t i = 0; i < cellUnionVector1.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        item1 = cellUnionVector1[i];
+        item2 = cellUnionVector2[i];
+
+        if (item1 == R_NilValue || item2 == R_NilValue) {
+          output[i] = VectorType::get_na();
+        } else {
+          S2CellUnion cellUnion1 = cell_union_from_cell_id_vector(item1);
+          S2CellUnion cellUnion2 = cell_union_from_cell_id_vector(item2);
+          output[i] = this->processCell(cellUnion1, cellUnion2, i);
+        }
+      }
+
+      return output;
+    } else if (cellUnionVector1.size() == 1) {
+      VectorType output(cellUnionVector2.size());
+
+      item1 = cellUnionVector1[0];
+      if (item1 == R_NilValue) {
+        for (R_xlen_t i = 0; i < cellUnionVector2.size(); i++) {
+          if ((i % 1000) == 0) {
+            Rcpp::checkUserInterrupt();
+          }
+          output[i] = VectorType::get_na();
+        }
+
+        return output;
+      }
+
+      S2CellUnion cellUnion1 = cell_union_from_cell_id_vector(item1);
+
+      for (R_xlen_t i = 0; i < cellUnionVector2.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        item2 = cellUnionVector2[i];
+        if (item2 == R_NilValue) {
+          output[i] = VectorType::get_na();
+        } else {
+          S2CellUnion cellUnion2 = cell_union_from_cell_id_vector(item2);
+          output[i] = this->processCell(cellUnion1, cellUnion2, i);
+        }
+      }
+
+      return output;
+    } else if (cellUnionVector2.size() == 1) {
+      VectorType output(cellUnionVector1.size());
+
+      item2 = cellUnionVector2[0];
+      if (item2 == R_NilValue) {
+        for (R_xlen_t i = 0; i < cellUnionVector1.size(); i++) {
+          if ((i % 1000) == 0) {
+            Rcpp::checkUserInterrupt();
+          }
+          output[i] = VectorType::get_na();
+        }
+
+        return output;
+      }
+
+      S2CellUnion cellUnion2 = cell_union_from_cell_id_vector(item2);
+
+      for (R_xlen_t i = 0; i < cellUnionVector1.size(); i++) {
+        if ((i % 1000) == 0) {
+          Rcpp::checkUserInterrupt();
+        }
+
+        item1 = cellUnionVector1[i];
+        if (item1 == R_NilValue) {
+          output[i] = VectorType::get_na();
+        } else {
+          S2CellUnion cellUnion1 = cell_union_from_cell_id_vector(item1);
+          output[i] = this->processCell(cellUnion1, cellUnion2, i);
+        }
+      }
+
+      return output;
+    } else {
+      std::stringstream err;
+      err <<
+        "Can't recycle vectors of size " << cellUnionVector1.size() <<
+        " and " << cellUnionVector2.size() <<
+        " to a common length.";
+      stop(err.str());
+    }
+  }
+
+  virtual ScalarType processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) = 0;
+};
+
 
 // [[Rcpp::export]]
 List cpp_s2_cell_union_normalize(List cellUnionVector) {
@@ -86,6 +196,18 @@ List cpp_s2_cell_union_normalize(List cellUnionVector) {
   List out = op.processVector(cellUnionVector);
   out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
   return out;
+}
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVector2) {
+  class Op: public BinaryS2CellUnionOperator<LogicalVector, int> {
+    int processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {
+      return cellUnion1.Contains(cellUnion2);
+    }
+  };
+
+  Op op;
+  return op.processVector(cellUnionVector1, cellUnionVector2);
 }
 
 

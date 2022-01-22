@@ -2,10 +2,13 @@
 % Please edit documentation in R/s2-cell-union.R
 \name{s2_cell_union_normalize}
 \alias{s2_cell_union_normalize}
+\alias{s2_cell_union_contains}
 \alias{s2_covering_cell_ids}
 \title{S2 cell union operators}
 \usage{
 s2_cell_union_normalize(x)
+
+s2_cell_union_contains(x, y)
 
 s2_covering_cell_ids(
   x,
@@ -18,7 +21,7 @@ s2_covering_cell_ids(
 )
 }
 \arguments{
-\item{x}{An \link[=as_s2_geography]{s2_geography} or \code{\link[=s2_cell_union]{s2_cell_union()}}.}
+\item{x, y}{An \link[=as_s2_geography]{s2_geography} or \code{\link[=s2_cell_union]{s2_cell_union()}}.}
 
 \item{min_level, max_level}{The minimum and maximum levels to constrain the
 covering.}

@@ -52,7 +52,7 @@ print.s2_cell_union <- function(x, ...) {
 #' @method unlist s2_cell_union
 #' @export
 unlist.s2_cell_union <- function(x, recursive = TRUE, use.names = TRUE) {
-  unlisted <- unlist(unclass(x), recursive = recursive, use.name = use.names)
+  unlisted <- unlist(unclass(x), recursive = recursive, use.names = use.names)
   new_s2_cell(as.double(unlisted))
 }
 
@@ -69,7 +69,7 @@ str.s2_cell_union <- function(object, ..., indent.str = "") {
 
 #' S2 cell union operators
 #'
-#' @param x An [s2_geography][as_s2_geography] or [s2_cell_union()].
+#' @param x,y An [s2_geography][as_s2_geography] or [s2_cell_union()].
 #' @param min_level,max_level The minimum and maximum levels to constrain the
 #'   covering.
 #' @param max_cells The maximum number of cells in the covering. Defaults to
@@ -82,6 +82,12 @@ str.s2_cell_union <- function(object, ..., indent.str = "") {
 #'
 s2_cell_union_normalize <- function(x) {
   cpp_s2_cell_union_normalize(as_s2_cell_union(x))
+}
+
+#' @rdname s2_cell_union_normalize
+#' @export
+s2_cell_union_contains <- function(x, y) {
+  cpp_s2_cell_union_contains(as_s2_cell_union(x), as_s2_cell_union(y))
 }
 
 #' @rdname s2_cell_union_normalize
