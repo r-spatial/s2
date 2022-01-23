@@ -10,8 +10,15 @@ test_that("s2_cell_union() class works", {
   expect_identical(unlist(x), s2_cell())
 })
 
+test_that("as_s2_cell_union() for s2_cell() works", {
+  expect_identical(
+    as_s2_cell_union(s2_cell(c("4b59a0cd83b5de49", NA))),
+    s2_cell_union(list(s2_cell("4b59a0cd83b5de49"), NULL))
+  )
+})
+
 test_that("as_s2_geography() for s2_cell_union works", {
-  union <- s2_cell_union(c("4b59a0cd83b5de49", NA))
+  union <- as_s2_cell_union(s2_cell(c("4b59a0cd83b5de49", NA)))
   geog <- as_s2_geography(union)
   expect_identical(
     s2_intersects(geog, s2_lnglat(c(-64, NA), c(45, NA))),
@@ -35,7 +42,7 @@ test_that("s2_cell_union_normalize() works", {
 })
 
 test_that("s2_cell_union_contains() works", {
-  cell_na <- s2_cell_union(s2_cell(NA))
+  cell_na <- s2_cell_union(list(NULL))
   cell <- s2_cell_parent(as_s2_cell("4b59a0cd83b5de49"), 10)
   children <- as_s2_cell_union(s2_cell_child(cell, 0:3))
 
@@ -97,7 +104,7 @@ test_that("s2_cell_union_contains() works for cell y", {
 })
 
 test_that("s2_cell_union_intersects() works", {
-  cell_na <- s2_cell_union(s2_cell(NA))
+  cell_na <- s2_cell_union(list(NULL))
   cell <- s2_cell_parent(as_s2_cell("4b59a0cd83b5de49"), 10)
   children <- as_s2_cell_union(s2_cell_child(cell, 0:3))
 

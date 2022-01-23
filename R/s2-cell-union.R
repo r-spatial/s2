@@ -8,10 +8,12 @@
 #' @export
 #'
 s2_cell_union <- function(x = list()) {
-  input_na <- is.na(x)
-  union <- new_s2_cell_union(lapply(x, as_s2_cell))
+  x <- as.list(x)
+  input_na <- vapply(x, is.null, logical(1))
+  union <- vector("list", length(x))
   union[input_na] <- list(NULL)
-  union
+  union[!input_na] <- lapply(x[!input_na], as_s2_cell)
+  new_s2_cell_union(union)
 }
 
 #' @rdname s2_cell_union
