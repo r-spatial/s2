@@ -21,7 +21,7 @@ static inline double reinterpret_double(uint64_t id) {
   return doppelganger;
 }
 
-S2CellUnion cell_union_from_cell_id_vector(NumericVector cellIdNumeric) {
+S2CellUnion cell_union_from_cell_id_vector(const NumericVector& cellIdNumeric) {
   uint64* cellIds = (uint64*) &(cellIdNumeric[0]);
   std::vector<S2CellId> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
   return S2CellUnion(std::move(cellIdsVector));
@@ -60,8 +60,7 @@ public:
       if (item == R_NilValue) {
         output[i] = VectorType::get_na();
       } else {
-        Rcpp::NumericVector cellIdNumeric(item);
-        S2CellUnion cellUnion = cell_union_from_cell_id_vector(cellIdNumeric);
+        S2CellUnion cellUnion = cell_union_from_cell_id_vector(item);
         output[i] = this->processCell(cellUnion, i);
       }
     }
@@ -208,6 +207,34 @@ LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVe
 
   Op op;
   return op.processVector(cellUnionVector1, cellUnionVector2);
+}
+
+// optimized because it's a common case
+// [[Rcpp::export]]
+LogicalVector cpp_s2_cell_union_contains_cell(List cellUnionVector, NumericVector cellIdVector) {
+  class Op: public UnaryS2CellUnionOperator<LogicalVector, int> {
+    double* cellIdDouble;
+    R_xlen_t cellIdVectorSize;
+
+  public:
+
+    Op(NumericVector cellIdVector) {
+      cellIdDouble = REAL(cellIdVector);
+      cellIdVectorSize = cellIdVector.size();
+    }
+
+    int processCell(S2CellUnion& cellUnion, R_xlen_t i) {
+      if (R_IsNA(cellIdDouble[i % cellIdVectorSize])) {
+        return NA_LOGICAL;
+      } else {
+        S2CellId cellId(((uint64_t*) cellIdDouble)[i % cellIdVectorSize]);
+        return cellUnion.Contains(cellId);
+      }
+    }
+  };
+
+  Op op(cellIdVector);
+  return op.processVector(cellUnionVector);
 }
 
 // [[Rcpp::export]]

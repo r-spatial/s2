@@ -87,7 +87,12 @@ s2_cell_union_normalize <- function(x) {
 #' @rdname s2_cell_union_normalize
 #' @export
 s2_cell_union_contains <- function(x, y) {
-  cpp_s2_cell_union_contains(as_s2_cell_union(x), as_s2_cell_union(y))
+  if (inherits(y, "s2_cell")) {
+    recycled <- recycle_common(as_s2_cell_union(x), y)
+    cpp_s2_cell_union_contains_cell(recycled[[1]], recycled[[2]])
+  } else {
+    cpp_s2_cell_union_contains(as_s2_cell_union(x), as_s2_cell_union(y))
+  }
 }
 
 #' @rdname s2_cell_union_normalize

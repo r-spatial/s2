@@ -65,6 +65,37 @@ test_that("s2_cell_union_contains() works", {
   )
 })
 
+test_that("s2_cell_union_contains() works for cell y", {
+  cell_na <- s2_cell(NA)
+  cell <- s2_cell_parent(as_s2_cell("4b59a0cd83b5de49"), 10)
+  children <- s2_cell_child(cell, 0:3)
+
+  expect_identical(
+    s2_cell_union_contains(cell, c(children, cell_na)),
+    c(rep(TRUE, 4), NA)
+  )
+
+  expect_identical(
+    s2_cell_union_contains(cell_na, children),
+    rep(NA, 4)
+  )
+
+  expect_identical(
+    s2_cell_union_contains(c(children, cell_na), cell),
+    c(rep(FALSE, 4), NA)
+  )
+
+  expect_identical(
+    s2_cell_union_contains(children, cell_na),
+    rep(NA, 4)
+  )
+
+  expect_error(
+    s2_cell_union_contains(children, c(children, cell_na)),
+    "Incompatible lengths"
+  )
+})
+
 test_that("s2_cell_union_intersects() works", {
   cell_na <- s2_cell_union(s2_cell(NA))
   cell <- s2_cell_parent(as_s2_cell("4b59a0cd83b5de49"), 10)
