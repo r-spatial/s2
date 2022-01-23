@@ -117,6 +117,10 @@ cpp_s2_cell_to_lnglat <- function(cellId) {
     .Call(`_s2_cpp_s2_cell_to_lnglat`, cellId)
 }
 
+cpp_s2_cell_to_cell_union <- function(cellId) {
+    .Call(`_s2_cpp_s2_cell_to_cell_union`, cellId)
+}
+
 cpp_s2_cell_is_na <- function(cellIdVector) {
     .Call(`_s2_cpp_s2_cell_is_na`, cellIdVector)
 }

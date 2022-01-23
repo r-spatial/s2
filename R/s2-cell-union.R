@@ -35,7 +35,7 @@ as_s2_cell_union.s2_cell_union <- function(x, ...) {
 #' @rdname s2_cell_union
 #' @export
 as_s2_cell_union.s2_cell <- function(x, ...) {
-  new_s2_cell_union(list(x))
+  cpp_s2_cell_to_cell_union(x)
 }
 
 new_s2_cell_union <- function(x) {
