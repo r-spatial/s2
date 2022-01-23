@@ -40,6 +40,10 @@ test_that("s2_point_on_surface() works", {
     "POINT (0.4502368024893488 0.4502229020796313)",
     precision = 15
   )
+  expect_wkt_equal(
+      s2_point_on_surface("MULTIPOINT ((0 0), (0 5), (0 10))"),
+      "Point (0 5)"
+  )
 })
 
 test_that("s2_boundary() works", {
