@@ -42,7 +42,7 @@ test_that("s2_point_on_surface() works", {
   )
   expect_wkt_equal(
       s2_point_on_surface("MULTIPOINT ((0 0), (0 5), (0 10))"),
-      "Point (0 5)"
+      "POINT (0 5)"
   )
 })
 
