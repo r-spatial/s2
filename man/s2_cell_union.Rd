@@ -22,6 +22,8 @@ as_s2_cell_union(x, ...)
 \item{x}{A \code{list()} of \code{\link[=s2_cell]{s2_cell()}} vectors.}
 
 \item{...}{Passed to S3 methods}
+
+\item{na.rm}{Remove NAs prior to computing aggregate?}
 }
 \value{
 An object of class "s2_cell_union".

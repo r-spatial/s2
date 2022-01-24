@@ -229,7 +229,7 @@ List cpp_s2_cell_to_cell_union(NumericVector cellId) {
 LogicalVector cpp_s2_cell_is_na(NumericVector cellIdVector) {
   LogicalVector out(cellIdVector.size());
   for (R_xlen_t i = 0; i < cellIdVector.size(); i++) {
-    out = R_IsNA(cellIdVector[i]);
+    out[i] = R_IsNA(cellIdVector[i]);
   }
   return out;
 }
@@ -765,4 +765,49 @@ NumericVector cpp_s2_cell_max_distance(NumericVector cellIdVector1, NumericVecto
 
   Op op;
   return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+IntegerVector cpp_s2_cell_common_ancestor_level(NumericVector cellIdVector1, NumericVector cellIdVector2) {
+  class Op: public BinaryS2CellOperator<IntegerVector, int> {
+    int processCell(S2CellId cellId1, S2CellId cellId2, R_xlen_t i) {
+      if (cellId1.is_valid() && cellId2.is_valid()) {
+        return cellId1.GetCommonAncestorLevel(cellId2);
+      } else {
+        return NA_INTEGER;
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(cellIdVector1, cellIdVector2);
+}
+
+// [[Rcpp::export]]
+int cpp_s2_cell_common_ancestor_level_agg(NumericVector cellId) {
+  R_xlen_t size = cellId.size();
+
+  if (size == 0) {
+    return -1;
+  }
+
+  double* ptrDouble = REAL(cellId);
+  uint64_t* ptrCellId = (uint64_t*) ptrDouble;
+
+  S2CellId cellIdCommon(ptrCellId[0]);
+
+  for (R_xlen_t i = 1; i < size; i++) {
+    if ((i % 1000) == 0) {
+      Rcpp::checkUserInterrupt();
+    }
+
+    int commonLevel = cellIdCommon.GetCommonAncestorLevel(S2CellId(ptrCellId[i]));
+    if (commonLevel == -1) {
+      return -1;
+    }
+
+    cellIdCommon = cellIdCommon.parent(commonLevel);
+  }
+
+  return cellIdCommon.level();
 }

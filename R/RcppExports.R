@@ -241,6 +241,14 @@ cpp_s2_cell_max_distance <- function(cellIdVector1, cellIdVector2) {
     .Call(`_s2_cpp_s2_cell_max_distance`, cellIdVector1, cellIdVector2)
 }
 
+cpp_s2_cell_common_ancestor_level <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_common_ancestor_level`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_common_ancestor_level_agg <- function(cellId) {
+    .Call(`_s2_cpp_s2_cell_common_ancestor_level_agg`, cellId)
+}
+
 cpp_s2_geog_point <- function(x, y) {
     .Call(`_s2_cpp_s2_geog_point`, x, y)
 }

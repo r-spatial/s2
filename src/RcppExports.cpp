@@ -703,6 +703,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_common_ancestor_level
+IntegerVector cpp_s2_cell_common_ancestor_level(NumericVector cellIdVector1, NumericVector cellIdVector2);
+RcppExport SEXP _s2_cpp_s2_cell_common_ancestor_level(SEXP cellIdVector1SEXP, SEXP cellIdVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector1(cellIdVector1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector2(cellIdVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_common_ancestor_level(cellIdVector1, cellIdVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_common_ancestor_level_agg
+int cpp_s2_cell_common_ancestor_level_agg(NumericVector cellId);
+RcppExport SEXP _s2_cpp_s2_cell_common_ancestor_level_agg(SEXP cellIdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_common_ancestor_level_agg(cellId));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_geog_point
 List cpp_s2_geog_point(NumericVector x, NumericVector y);
 RcppExport SEXP _s2_cpp_s2_geog_point(SEXP xSEXP, SEXP ySEXP) {
@@ -1490,6 +1513,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_may_intersect", (DL_FUNC) &_s2_cpp_s2_cell_may_intersect, 2},
     {"_s2_cpp_s2_cell_distance", (DL_FUNC) &_s2_cpp_s2_cell_distance, 2},
     {"_s2_cpp_s2_cell_max_distance", (DL_FUNC) &_s2_cpp_s2_cell_max_distance, 2},
+    {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
+    {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},

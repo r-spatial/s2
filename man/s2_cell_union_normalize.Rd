@@ -58,6 +58,8 @@ covering.}
 \item{interior}{Use \code{TRUE} to force the covering inside the geography.}
 
 \item{radius}{The radius to use (e.g., \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}})}
+
+\item{na.rm}{Remove NAs prior to computing aggregate?}
 }
 \description{
 S2 cell union operators
