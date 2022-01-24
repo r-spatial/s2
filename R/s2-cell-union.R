@@ -3,7 +3,6 @@
 #'
 #' @param x A `list()` of [s2_cell()] vectors.
 #' @param ... Passed to S3 methods
-#' @param na.rm Remove NAs prior to computing aggregate?
 #'
 #' @return An object of class "s2_cell_union".
 #' @export
