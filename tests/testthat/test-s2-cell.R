@@ -4,6 +4,10 @@ test_that("s2_cell class works", {
   expect_s3_class(new_s2_cell(NA_real_), "s2_cell")
   expect_true(is.na(new_s2_cell(NA_real_)))
   expect_identical(as_s2_cell(s2_cell()), s2_cell())
+  expect_identical(
+    as.list(new_s2_cell(NA_real_)),
+    list(new_s2_cell(NA_real_))
+  )
 })
 
 test_that("invalid and sentinel values work as expected", {
@@ -369,3 +373,31 @@ test_that("s2_cell() binary operators work", {
   expect_true(s2_cell_may_intersect(cell, s2_cell_parent(cell)))
   expect_identical(s2_cell_may_intersect(s2_cell_sentinel(), s2_cell_sentinel()), NA)
 })
+
+test_that("s2_cell_common_ancestor_level() works", {
+  cell <- s2_cell_parent(s2_cell("4b5f6a7856889a33"), 10)
+  children <- s2_cell_child(cell, 0:4)
+  expect_identical(
+    s2_cell_common_ancestor_level(children, cell),
+    c(rep(10L, 4), NA),
+  )
+
+  expect_identical(s2_cell_common_ancestor_level_agg(s2_cell()), NA_integer_)
+  expect_identical(
+    s2_cell_common_ancestor_level_agg(
+      as_s2_cell(as_s2_geography(c("POINT (0 0)", "POINT (180 0)")))
+    ),
+    -1L
+  )
+
+  expect_identical(
+    s2_cell_common_ancestor_level_agg(children, na.rm = TRUE),
+    10L
+  )
+
+  expect_identical(
+    s2_cell_common_ancestor_level_agg(children, na.rm = FALSE),
+    NA_integer_
+  )
+})
+

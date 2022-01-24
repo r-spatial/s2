@@ -69,6 +69,50 @@ cpp_s2_bounds_rect <- function(geog) {
     .Call(`_s2_cpp_s2_bounds_rect`, geog)
 }
 
+cpp_s2_cell_union_normalize <- function(cellUnionVector) {
+    .Call(`_s2_cpp_s2_cell_union_normalize`, cellUnionVector)
+}
+
+cpp_s2_cell_union_is_na <- function(cellUnionVector) {
+    .Call(`_s2_cpp_s2_cell_union_is_na`, cellUnionVector)
+}
+
+cpp_s2_cell_union_contains <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_contains`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_contains_cell <- function(cellUnionVector, cellIdVector) {
+    .Call(`_s2_cpp_s2_cell_union_contains_cell`, cellUnionVector, cellIdVector)
+}
+
+cpp_s2_cell_union_intersects <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_intersects`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_intersection <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_intersection`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_union <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_union`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_cell_union_difference <- function(cellUnionVector1, cellUnionVector2) {
+    .Call(`_s2_cpp_s2_cell_union_difference`, cellUnionVector1, cellUnionVector2)
+}
+
+cpp_s2_geography_from_cell_union <- function(cellUnionVector) {
+    .Call(`_s2_cpp_s2_geography_from_cell_union`, cellUnionVector)
+}
+
+cpp_s2_covering_cell_ids <- function(geog, min_level, max_level, max_cells, buffer, interior) {
+    .Call(`_s2_cpp_s2_covering_cell_ids`, geog, min_level, max_level, max_cells, buffer, interior)
+}
+
+cpp_s2_covering_cell_ids_agg <- function(geog, min_level, max_level, max_cells, buffer, interior, naRm) {
+    .Call(`_s2_cpp_s2_covering_cell_ids_agg`, geog, min_level, max_level, max_cells, buffer, interior, naRm)
+}
+
 cpp_s2_cell_sentinel <- function() {
     .Call(`_s2_cpp_s2_cell_sentinel`)
 }
@@ -83,6 +127,10 @@ cpp_s2_cell_from_lnglat <- function(lnglat) {
 
 cpp_s2_cell_to_lnglat <- function(cellId) {
     .Call(`_s2_cpp_s2_cell_to_lnglat`, cellId)
+}
+
+cpp_s2_cell_to_cell_union <- function(cellId) {
+    .Call(`_s2_cpp_s2_cell_to_cell_union`, cellId)
 }
 
 cpp_s2_cell_is_na <- function(cellIdVector) {
@@ -195,6 +243,14 @@ cpp_s2_cell_distance <- function(cellIdVector1, cellIdVector2) {
 
 cpp_s2_cell_max_distance <- function(cellIdVector1, cellIdVector2) {
     .Call(`_s2_cpp_s2_cell_max_distance`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_common_ancestor_level <- function(cellIdVector1, cellIdVector2) {
+    .Call(`_s2_cpp_s2_cell_common_ancestor_level`, cellIdVector1, cellIdVector2)
+}
+
+cpp_s2_cell_common_ancestor_level_agg <- function(cellId) {
+    .Call(`_s2_cpp_s2_cell_common_ancestor_level_agg`, cellId)
 }
 
 cpp_s2_geog_point <- function(x, y) {

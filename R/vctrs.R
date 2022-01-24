@@ -46,3 +46,15 @@ vec_restore.s2_cell <- function(x, ...) {
 vec_ptype_abbr.s2_cell <- function(x, ...) {
   "s2cell"
 }
+
+vec_proxy.s2_cell_union <- function(x, ...) {
+  unclass(x)
+}
+
+vec_restore.s2_cell_union <- function(x, ...) {
+  new_s2_cell_union(x)
+}
+
+vec_ptype_abbr.s2_cell_union <- function(x, ...) {
+  "s2cellunion"
+}
