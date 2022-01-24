@@ -461,6 +461,63 @@ List cpp_s2_centroid(List geog) {
 }
 
 // [[Rcpp::export]]
+List cpp_s2_point_on_surface(List geog) {
+  class Op: public UnaryGeographyOperator<List, SEXP> {
+  public:
+    S2RegionCoverer coverer;
+
+    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      if (feature->IsEmpty()) {
+        return XPtr<Geography>(new PointGeography());
+      }
+      else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
+        // Create Interior Covering of Polygon
+        S2CellUnion cellUnion;
+        cellUnion = coverer.GetInteriorCovering(*feature->Polygon());
+
+        // Take center of cell with smallest level (biggest)
+        int min_level = 31;
+        S2Point pt;
+        for (const S2CellId& id : cellUnion) {
+          if (id.level() < min_level) {
+            // Already normalized
+            // https://github.com/r-spatial/s2/blob/a323a74774d0526f1165e334a3d76a9da38316b9/src/s2/s2cell_id.h#L128
+            pt = id.ToPoint();
+            min_level = id.level();
+          }
+        }
+
+        return XPtr<Geography>(new PointGeography(pt));
+      }
+      // For point, return point closest to centroid
+      else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
+        S2Point centroid = feature->Centroid();
+        const std::vector<S2Point>* pts = feature->Point();
+
+        S1Angle nearest_dist = S1Angle::Infinity();
+        S1Angle dist;
+        S2Point closest_pt;
+        for (const S2Point& pt : *pts) {
+          dist = S1Angle(pt, centroid);
+          if (dist < nearest_dist) {
+            nearest_dist = dist;
+            closest_pt = pt;
+          }
+        }
+
+        return XPtr<Geography>(new PointGeography(closest_pt));
+      }
+      else {
+        stop("POLYLINE/COLLECTION type not supported in s2_point_on_surface()");
+      }
+    }
+  };
+
+  Op op;
+  return op.processVector(geog);
+}
+
+// [[Rcpp::export]]
 List cpp_s2_boundary(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {

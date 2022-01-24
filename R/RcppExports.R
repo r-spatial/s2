@@ -393,6 +393,10 @@ cpp_s2_centroid <- function(geog) {
     .Call(`_s2_cpp_s2_centroid`, geog)
 }
 
+cpp_s2_point_on_surface <- function(geog) {
+    .Call(`_s2_cpp_s2_point_on_surface`, geog)
+}
+
 cpp_s2_boundary <- function(geog) {
     .Call(`_s2_cpp_s2_boundary`, geog)
 }

@@ -1192,6 +1192,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_point_on_surface
+List cpp_s2_point_on_surface(List geog);
+RcppExport SEXP _s2_cpp_s2_point_on_surface(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_point_on_surface(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_boundary
 List cpp_s2_boundary(List geog);
 RcppExport SEXP _s2_cpp_s2_boundary(SEXP geogSEXP) {
@@ -1390,6 +1401,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_closest_point", (DL_FUNC) &_s2_cpp_s2_closest_point, 2},
     {"_s2_cpp_s2_minimum_clearance_line_between", (DL_FUNC) &_s2_cpp_s2_minimum_clearance_line_between, 2},
     {"_s2_cpp_s2_centroid", (DL_FUNC) &_s2_cpp_s2_centroid, 1},
+    {"_s2_cpp_s2_point_on_surface", (DL_FUNC) &_s2_cpp_s2_point_on_surface, 1},
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},
     {"_s2_cpp_s2_rebuild", (DL_FUNC) &_s2_cpp_s2_rebuild, 2},
     {"_s2_cpp_s2_unary_union", (DL_FUNC) &_s2_cpp_s2_unary_union, 2},
