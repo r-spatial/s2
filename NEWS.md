@@ -5,6 +5,13 @@
 - Fix for s2 build on 32-bit openssl (#143, #147)
 - Added `max_distance` argument to `s2_closest_edges()`, making
   distance-constrained k-nearest neighbours possible (#125, #156, #162).
+- Added a spherical `s2_point_on_surface()` implementation for polygons
+  (@kylebutts, #152, #161)
+- Added a `s2_cell_union()` vector class to represent cell coverings and
+  operators to generate them from an s2 geography vector (e.g.,
+  `s2_covering_cell_ids()`). Cell unions are useful as compact representations
+  of spherical geometry and can be used like a bounding box to determine
+  a possible intersection with one or more geographies (#85, #164).
 
 # s2 1.0.7
 
