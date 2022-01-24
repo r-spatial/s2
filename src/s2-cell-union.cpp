@@ -199,6 +199,16 @@ List cpp_s2_cell_union_normalize(List cellUnionVector) {
 }
 
 // [[Rcpp::export]]
+LogicalVector cpp_s2_cell_union_is_na(List cellUnionVector) {
+  LogicalVector out(cellUnionVector.size());
+  for (R_xlen_t i = 0; i < cellUnionVector.size(); i++) {
+    SEXP item = cellUnionVector[i];
+    out[i] = item == R_NilValue;
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
 LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVector2) {
   class Op: public BinaryS2CellUnionOperator<LogicalVector, int> {
     int processCell(const S2CellUnion& cellUnion1, const S2CellUnion& cellUnion2, R_xlen_t i) {

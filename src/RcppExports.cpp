@@ -209,6 +209,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_union_is_na
+LogicalVector cpp_s2_cell_union_is_na(List cellUnionVector);
+RcppExport SEXP _s2_cpp_s2_cell_union_is_na(SEXP cellUnionVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector(cellUnionVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_is_na(cellUnionVector));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_union_contains
 LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVector2);
 RcppExport SEXP _s2_cpp_s2_cell_union_contains(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
@@ -1471,6 +1482,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
     {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},
+    {"_s2_cpp_s2_cell_union_is_na", (DL_FUNC) &_s2_cpp_s2_cell_union_is_na, 1},
     {"_s2_cpp_s2_cell_union_contains", (DL_FUNC) &_s2_cpp_s2_cell_union_contains, 2},
     {"_s2_cpp_s2_cell_union_contains_cell", (DL_FUNC) &_s2_cpp_s2_cell_union_contains_cell, 2},
     {"_s2_cpp_s2_cell_union_intersects", (DL_FUNC) &_s2_cpp_s2_cell_union_intersects, 2},

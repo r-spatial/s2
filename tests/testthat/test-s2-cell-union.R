@@ -8,6 +8,20 @@ test_that("s2_cell_union() class works", {
   expect_output(expect_identical(str(x), x), "s2_cell_union")
   expect_output(expect_identical(print(x), x), "s2_cell_union")
   expect_identical(unlist(x), s2_cell())
+
+  expect_identical(is.na(new_s2_cell_union(list(NULL))), TRUE)
+})
+
+test_that("s2_cell_union can be roundtripped through character", {
+  expect_identical(
+    as_s2_cell_union(c("3442c;345d5", NA)),
+    s2_cell_union(list(s2_cell(c("3442c", "345d5")), NULL))
+  )
+
+  expect_identical(
+    as.character(s2_cell_union(list(c("3442c", "345d5"), NULL))),
+    c("3442c;345d5", NA)
+  )
 })
 
 test_that("as_s2_cell_union() for s2_cell() works", {

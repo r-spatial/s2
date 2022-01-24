@@ -6,6 +6,7 @@
 \alias{as_s2_cell_union}
 \alias{as_s2_cell_union.s2_cell_union}
 \alias{as_s2_cell_union.s2_cell}
+\alias{as_s2_cell_union.character}
 \title{Create S2 Cell Union vectors}
 \usage{
 s2_cell_union(x = list())
@@ -17,6 +18,8 @@ as_s2_cell_union(x, ...)
 \method{as_s2_cell_union}{s2_cell_union}(x, ...)
 
 \method{as_s2_cell_union}{s2_cell}(x, ...)
+
+\method{as_s2_cell_union}{character}(x, ...)
 }
 \arguments{
 \item{x}{A \code{list()} of \code{\link[=s2_cell]{s2_cell()}} vectors.}

@@ -40,9 +40,46 @@ as_s2_cell_union.s2_cell <- function(x, ...) {
   cpp_s2_cell_to_cell_union(x)
 }
 
+#' @rdname s2_cell_union
+#' @export
+as_s2_cell_union.character <- function(x, ...) {
+  split <- strsplit(x, "\\s*;\\s*")
+  split[is.na(x)] <- list(NULL)
+  s2_cell_union(split)
+}
+
 new_s2_cell_union <- function(x) {
   stopifnot(typeof(x) == "list")
   structure(x, class = c("s2_cell_union", "wk_vctr"))
+}
+
+#' @export
+is.na.s2_cell_union <- function(x, ...) {
+  cpp_s2_cell_union_is_na(x)
+}
+
+#' @export
+format.s2_cell_union <- function(x, ...) {
+  formatted <- vapply(
+    unclass(x),
+    function(e) paste0(as.character(e), collapse = ";"),
+    character(1)
+  )
+
+  formatted[is.na(x)] <- "<NA>"
+  formatted
+}
+
+#' @export
+as.character.s2_cell_union <- function(x, ...) {
+  formatted <- vapply(
+    unclass(x),
+    function(e) paste0(as.character(e), collapse = ";"),
+    character(1)
+  )
+
+  formatted[is.na(x)] <- NA_character_
+  formatted
 }
 
 #' @export
