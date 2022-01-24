@@ -137,3 +137,27 @@ s2_covering_cell_ids <- function(x, min_level = 0, max_level = 30,
     interior
   )
 }
+
+#' @rdname s2_cell_union_normalize
+#' @export
+s2_covering_cell_ids_agg <- function(x, min_level = 0, max_level = 30,
+                                     max_cells = 8, buffer = 0,
+                                     interior = FALSE,
+                                     radius = s2_earth_radius_meters(),
+                                     na.rm = FALSE) {
+  distance <- as.numeric(buffer / radius)
+  stopifnot(length(distance) == 1)
+  if (is.na(distance)) {
+    return(new_s2_cell_union(list(NULL)))
+  }
+
+  cpp_s2_covering_cell_ids_agg(
+    as_s2_geography(x),
+    min_level,
+    max_level,
+    max_cells,
+    distance,
+    interior,
+    na.rm
+  )
+}

@@ -5,6 +5,7 @@
 #include "s2/s2cell_union.h"
 #include "s2/s2region_coverer.h"
 #include "s2/s2shape_index_buffered_region.h"
+#include "s2/s2region_union.h"
 
 #include "geography-operator.h"
 #include "point-geography.h"
@@ -340,6 +341,47 @@ List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
 
   Op op(buffer, coverer, interior);
   List out = op.processVector(geog);
+  out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+  return out;
+}
+
+
+// [[Rcpp::export]]
+List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
+                                  int max_cells, double buffer, bool interior, bool naRm) {
+  S2RegionCoverer coverer;
+  coverer.mutable_options()->set_min_level(min_level);
+  coverer.mutable_options()->set_max_level(max_level);
+  coverer.mutable_options()->set_max_cells(max_cells);
+  S1ChordAngle bufferAngle = S1ChordAngle::Radians(buffer);
+
+  S2RegionUnion regionUnion;
+
+  SEXP item;
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    item = geog[i];
+    if (item == R_NilValue && !naRm) {
+      List out = List::create(R_NilValue);
+      out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
+      return out;
+    }
+
+    if (item != R_NilValue) {
+      Rcpp::XPtr<Geography> feature(item);
+      auto region = absl::make_unique<S2ShapeIndexBufferedRegion>();
+      region->Init(feature->ShapeIndex(), bufferAngle);
+      regionUnion.Add(std::move(region));
+    }
+  }
+
+  S2CellUnion covering;
+  if (interior) {
+    covering = coverer.GetInteriorCovering(regionUnion);
+  } else {
+    covering = coverer.GetCovering(regionUnion);
+  }
+
+  List out = List::create(cell_id_vector_from_cell_union(covering));
   out.attr("class") = CharacterVector::create("s2_cell_union", "wk_vctr");
   return out;
 }

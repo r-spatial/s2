@@ -169,3 +169,22 @@ test_that("s2_covering_cell_ids() works", {
   )
   expect_identical(s2_covering_cell_ids(NA_character_), new_s2_cell_union(list(NULL)))
 })
+
+test_that("s2_covering_cell_ids_agg() works", {
+  geog <- s2_data_countries(c("France", "Germany"))
+  coverings <- s2_covering_cell_ids(geog)
+  coverings_agg <- s2_covering_cell_ids_agg(geog)
+  expect_length(unlist(coverings_agg), 8)
+
+  coverings_interior_agg <- s2_covering_cell_ids_agg(geog, interior = TRUE)
+  expect_length(unlist(coverings_interior_agg), 8)
+
+  expect_identical(
+    s2_covering_cell_ids_agg(NA_character_, na.rm = FALSE),
+    new_s2_cell_union(list(NULL))
+  )
+  expect_identical(
+    s2_covering_cell_ids_agg(NA_character_, na.rm = TRUE),
+    new_s2_cell_union(list(s2_cell()))
+  )
+})

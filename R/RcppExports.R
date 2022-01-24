@@ -105,6 +105,10 @@ cpp_s2_covering_cell_ids <- function(geog, min_level, max_level, max_cells, buff
     .Call(`_s2_cpp_s2_covering_cell_ids`, geog, min_level, max_level, max_cells, buffer, interior)
 }
 
+cpp_s2_covering_cell_ids_agg <- function(geog, min_level, max_level, max_cells, buffer, interior, naRm) {
+    .Call(`_s2_cpp_s2_covering_cell_ids_agg`, geog, min_level, max_level, max_cells, buffer, interior, naRm)
+}
+
 cpp_s2_cell_sentinel <- function() {
     .Call(`_s2_cpp_s2_cell_sentinel`)
 }

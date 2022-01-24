@@ -308,6 +308,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_covering_cell_ids_agg
+List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level, int max_cells, double buffer, bool interior, bool naRm);
+RcppExport SEXP _s2_cpp_s2_covering_cell_ids_agg(SEXP geogSEXP, SEXP min_levelSEXP, SEXP max_levelSEXP, SEXP max_cellsSEXP, SEXP bufferSEXP, SEXP interiorSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< int >::type min_level(min_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_level(max_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_cells(max_cellsSEXP);
+    Rcpp::traits::input_parameter< double >::type buffer(bufferSEXP);
+    Rcpp::traits::input_parameter< bool >::type interior(interiorSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_covering_cell_ids_agg(geog, min_level, max_level, max_cells, buffer, interior, naRm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_sentinel
 NumericVector cpp_s2_cell_sentinel();
 RcppExport SEXP _s2_cpp_s2_cell_sentinel() {
@@ -1439,6 +1456,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_union_difference", (DL_FUNC) &_s2_cpp_s2_cell_union_difference, 2},
     {"_s2_cpp_s2_geography_from_cell_union", (DL_FUNC) &_s2_cpp_s2_geography_from_cell_union, 1},
     {"_s2_cpp_s2_covering_cell_ids", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids, 6},
+    {"_s2_cpp_s2_covering_cell_ids_agg", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids_agg, 7},
     {"_s2_cpp_s2_cell_sentinel", (DL_FUNC) &_s2_cpp_s2_cell_sentinel, 0},
     {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},

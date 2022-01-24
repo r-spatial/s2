@@ -8,6 +8,7 @@
 \alias{s2_cell_union_union}
 \alias{s2_cell_union_difference}
 \alias{s2_covering_cell_ids}
+\alias{s2_covering_cell_ids_agg}
 \title{S2 cell union operators}
 \usage{
 s2_cell_union_normalize(x)
@@ -30,6 +31,17 @@ s2_covering_cell_ids(
   buffer = 0,
   interior = FALSE,
   radius = s2_earth_radius_meters()
+)
+
+s2_covering_cell_ids_agg(
+  x,
+  min_level = 0,
+  max_level = 30,
+  max_cells = 8,
+  buffer = 0,
+  interior = FALSE,
+  radius = s2_earth_radius_meters(),
+  na.rm = FALSE
 )
 }
 \arguments{
