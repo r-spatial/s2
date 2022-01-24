@@ -11,7 +11,7 @@
   operators to generate them from an s2 geography vector (e.g.,
   `s2_covering_cell_ids()`). Cell unions are useful as compact representations
   of spherical geometry and can be used like a bounding box to determine
-  a possible intersection with one or more geographies (#85, #164).
+  a possible intersection with one or more geographies (#85, #94, #164).
 
 # s2 1.0.7
 
