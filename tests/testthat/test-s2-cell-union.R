@@ -198,6 +198,10 @@ test_that("s2_covering_cell_ids_agg() works", {
     new_s2_cell_union(list(NULL))
   )
   expect_identical(
+    s2_covering_cell_ids_agg(character(), radius = NA_real_),
+    new_s2_cell_union(list(NULL))
+  )
+  expect_identical(
     s2_covering_cell_ids_agg(NA_character_, na.rm = TRUE),
     new_s2_cell_union(list(s2_cell()))
   )

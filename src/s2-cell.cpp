@@ -788,7 +788,7 @@ int cpp_s2_cell_common_ancestor_level_agg(NumericVector cellId) {
   R_xlen_t size = cellId.size();
 
   if (size == 0) {
-    return -1;
+    return NA_INTEGER;
   }
 
   double* ptrDouble = REAL(cellId);
@@ -798,7 +798,7 @@ int cpp_s2_cell_common_ancestor_level_agg(NumericVector cellId) {
 
   for (R_xlen_t i = 1; i < size; i++) {
     if ((i % 1000) == 0) {
-      Rcpp::checkUserInterrupt();
+      Rcpp::checkUserInterrupt(); // # nocov
     }
 
     int commonLevel = cellIdCommon.GetCommonAncestorLevel(S2CellId(ptrCellId[i]));

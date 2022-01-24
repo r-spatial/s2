@@ -382,6 +382,14 @@ test_that("s2_cell_common_ancestor_level() works", {
     c(rep(10L, 4), NA),
   )
 
+  expect_identical(s2_cell_common_ancestor_level_agg(s2_cell()), NA_integer_)
+  expect_identical(
+    s2_cell_common_ancestor_level_agg(
+      as_s2_cell(as_s2_geography(c("POINT (0 0)", "POINT (180 0)")))
+    ),
+    -1L
+  )
+
   expect_identical(
     s2_cell_common_ancestor_level_agg(children, na.rm = TRUE),
     10L
