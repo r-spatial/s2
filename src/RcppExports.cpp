@@ -1436,15 +1436,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_s2_convex_hull_agg
-List cpp_s2_convex_hull_agg(List geog, List s2options);
-RcppExport SEXP _s2_cpp_s2_convex_hull_agg(SEXP geogSEXP, SEXP s2optionsSEXP) {
+// cpp_s2_convex_hull
+List cpp_s2_convex_hull(List geog);
+RcppExport SEXP _s2_cpp_s2_convex_hull(SEXP geogSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
-    Rcpp::traits::input_parameter< List >::type s2options(s2optionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_s2_convex_hull_agg(geog, s2options));
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_convex_hull(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_convex_hull_agg
+List cpp_s2_convex_hull_agg(List geog, bool naRm);
+RcppExport SEXP _s2_cpp_s2_convex_hull_agg(SEXP geogSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_convex_hull_agg(geog, naRm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1593,6 +1604,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_unary_union", (DL_FUNC) &_s2_cpp_s2_unary_union, 2},
     {"_s2_cpp_s2_interpolate_normalized", (DL_FUNC) &_s2_cpp_s2_interpolate_normalized, 2},
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
+    {"_s2_cpp_s2_convex_hull", (DL_FUNC) &_s2_cpp_s2_convex_hull, 1},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
     {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
     {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},

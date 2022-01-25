@@ -635,6 +635,15 @@ test_that("s2_interpolate() and s2_interpolate_normalized() work", {
   )
 })
 
+test_that("s2_convex_hull() works", {
+  expect_equal(
+    s2_area(s2_convex_hull(
+      c("GEOMETRYCOLLECTION(POINT(3.6 43.2), POINT (0 0), POINT(3.61 43.21))", NA)
+    )),
+    s2_area(c("POLYGON ((0 0, 3.61 43.21, 3.6 43.2, 0 0))", NA))
+  )
+})
+
 
 test_that("s2_convex_hull_agg() works", {
   expect_equal(
@@ -661,8 +670,26 @@ test_that("s2_convex_hull_agg() works", {
     )
   )
 
-  expect_error(
-    s2_convex_hull_agg(c("GEOMETRYCOLLECTION(POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2)), POINT (3.6 43.2))")),
-    "GeometryCollection is not supported"
+  expect_equal(
+    s2_area(s2_convex_hull_agg(
+      "GEOMETRYCOLLECTION(POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2)),
+       POINT (3.6 43.2))"
+    )),
+    s2_area(s2_convex_hull_agg(
+      c(
+        "POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2))",
+        "POINT (3.6 43.2)"
+      )
+    ))
+  )
+
+  expect_identical(
+    s2_convex_hull_agg(c("POINT (0 0)", NA), na.rm = FALSE),
+    as_s2_geography(NA_character_)
+  )
+
+  expect_equal(
+    s2_area(s2_convex_hull_agg(c("POINT (0 0)", NA), na.rm = TRUE)),
+    0
   )
 })

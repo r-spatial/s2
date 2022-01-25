@@ -121,6 +121,10 @@ public:
     return shapeIds;
   }
 
+  const std::vector<std::unique_ptr<Geography> >* CollectionFeatures() {
+    return &(this->features);
+  }
+
   void Export(WKGeometryHandler* handler, uint32_t partId) {
     WKGeometryMeta meta(WKGeometryType::GeometryCollection, false, false, false);
     meta.hasSize = true;

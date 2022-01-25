@@ -52,7 +52,7 @@
 #'
 #' # s2_point_on_surface guarantees a point on surface
 #' # Note: this is not the same as st_point_on_surface
-#' s2_centroid("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0)"")
+#' s2_centroid("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))")
 #' s2_point_on_surface("POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))")
 #'
 #' # returns the unweighted centroid of the entire input
@@ -104,9 +104,7 @@
 #'   c(
 #'     "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))",
 #'     "POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"
-#'   ),
-#'   # 32 bit platforms may need to set snap rounding
-#'   s2_options(snap = s2_snap_level(30))
+#'   )
 #' )
 #'
 #' # use s2_union_agg() to aggregate geographies in a vector
@@ -215,6 +213,12 @@ s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
 
 #' @rdname s2_boundary
 #' @export
+s2_convex_hull <- function(x) {
+  new_s2_xptr(cpp_s2_convex_hull(as_s2_geography(x)), "s2_geography")
+}
+
+#' @rdname s2_boundary
+#' @export
 s2_centroid_agg <- function(x, na.rm = FALSE) {
   new_s2_xptr(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm), "s2_geography")
 }
@@ -239,8 +243,8 @@ s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
 
 #' @rdname s2_boundary
 #' @export
-s2_convex_hull_agg <- function(x, options = s2_options() ) {
-  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), options), "s2_geography")
+s2_convex_hull_agg <- function(x, na.rm = FALSE) {
+  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), na.rm), "s2_geography")
 }
 
 #' Linear referencing
