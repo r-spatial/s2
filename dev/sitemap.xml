@@ -37,6 +37,12 @@
     <loc>https://r-spatial.github.io/s2/reference/s2_cell_is_valid.html</loc>
   </url>
   <url>
+    <loc>https://r-spatial.github.io/s2/reference/s2_cell_union.html</loc>
+  </url>
+  <url>
+    <loc>https://r-spatial.github.io/s2/reference/s2_cell_union_normalize.html</loc>
+  </url>
+  <url>
     <loc>https://r-spatial.github.io/s2/reference/s2_closest_feature.html</loc>
   </url>
   <url>
