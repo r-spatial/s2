@@ -198,6 +198,144 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_cell_union_normalize
+List cpp_s2_cell_union_normalize(List cellUnionVector);
+RcppExport SEXP _s2_cpp_s2_cell_union_normalize(SEXP cellUnionVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector(cellUnionVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_normalize(cellUnionVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_is_na
+LogicalVector cpp_s2_cell_union_is_na(List cellUnionVector);
+RcppExport SEXP _s2_cpp_s2_cell_union_is_na(SEXP cellUnionVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector(cellUnionVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_is_na(cellUnionVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_contains
+LogicalVector cpp_s2_cell_union_contains(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_contains(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_contains(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_contains_cell
+LogicalVector cpp_s2_cell_union_contains_cell(List cellUnionVector, NumericVector cellIdVector);
+RcppExport SEXP _s2_cpp_s2_cell_union_contains_cell(SEXP cellUnionVectorSEXP, SEXP cellIdVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector(cellUnionVectorSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector(cellIdVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_contains_cell(cellUnionVector, cellIdVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_intersects
+LogicalVector cpp_s2_cell_union_intersects(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_intersects(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_intersects(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_intersection
+List cpp_s2_cell_union_intersection(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_intersection(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_intersection(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_union
+List cpp_s2_cell_union_union(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_union(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_union(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_union_difference
+List cpp_s2_cell_union_difference(List cellUnionVector1, List cellUnionVector2);
+RcppExport SEXP _s2_cpp_s2_cell_union_difference(SEXP cellUnionVector1SEXP, SEXP cellUnionVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector1(cellUnionVector1SEXP);
+    Rcpp::traits::input_parameter< List >::type cellUnionVector2(cellUnionVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_union_difference(cellUnionVector1, cellUnionVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_geography_from_cell_union
+List cpp_s2_geography_from_cell_union(List cellUnionVector);
+RcppExport SEXP _s2_cpp_s2_geography_from_cell_union(SEXP cellUnionVectorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type cellUnionVector(cellUnionVectorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_geography_from_cell_union(cellUnionVector));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_covering_cell_ids
+List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level, int max_cells, NumericVector buffer, bool interior);
+RcppExport SEXP _s2_cpp_s2_covering_cell_ids(SEXP geogSEXP, SEXP min_levelSEXP, SEXP max_levelSEXP, SEXP max_cellsSEXP, SEXP bufferSEXP, SEXP interiorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< int >::type min_level(min_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_level(max_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_cells(max_cellsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type buffer(bufferSEXP);
+    Rcpp::traits::input_parameter< bool >::type interior(interiorSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_covering_cell_ids(geog, min_level, max_level, max_cells, buffer, interior));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_covering_cell_ids_agg
+List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level, int max_cells, double buffer, bool interior, bool naRm);
+RcppExport SEXP _s2_cpp_s2_covering_cell_ids_agg(SEXP geogSEXP, SEXP min_levelSEXP, SEXP max_levelSEXP, SEXP max_cellsSEXP, SEXP bufferSEXP, SEXP interiorSEXP, SEXP naRmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    Rcpp::traits::input_parameter< int >::type min_level(min_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_level(max_levelSEXP);
+    Rcpp::traits::input_parameter< int >::type max_cells(max_cellsSEXP);
+    Rcpp::traits::input_parameter< double >::type buffer(bufferSEXP);
+    Rcpp::traits::input_parameter< bool >::type interior(interiorSEXP);
+    Rcpp::traits::input_parameter< bool >::type naRm(naRmSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_covering_cell_ids_agg(geog, min_level, max_level, max_cells, buffer, interior, naRm));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_cell_sentinel
 NumericVector cpp_s2_cell_sentinel();
 RcppExport SEXP _s2_cpp_s2_cell_sentinel() {
@@ -238,6 +376,17 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_lnglat(cellId));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_to_cell_union
+List cpp_s2_cell_to_cell_union(NumericVector cellId);
+RcppExport SEXP _s2_cpp_s2_cell_to_cell_union(SEXP cellIdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_to_cell_union(cellId));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -562,6 +711,29 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector1(cellIdVector1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type cellIdVector2(cellIdVector2SEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_max_distance(cellIdVector1, cellIdVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_common_ancestor_level
+IntegerVector cpp_s2_cell_common_ancestor_level(NumericVector cellIdVector1, NumericVector cellIdVector2);
+RcppExport SEXP _s2_cpp_s2_cell_common_ancestor_level(SEXP cellIdVector1SEXP, SEXP cellIdVector2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector1(cellIdVector1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cellIdVector2(cellIdVector2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_common_ancestor_level(cellIdVector1, cellIdVector2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_cell_common_ancestor_level_agg
+int cpp_s2_cell_common_ancestor_level_agg(NumericVector cellId);
+RcppExport SEXP _s2_cpp_s2_cell_common_ancestor_level_agg(SEXP cellIdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type cellId(cellIdSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_cell_common_ancestor_level_agg(cellId));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1192,6 +1364,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_point_on_surface
+List cpp_s2_point_on_surface(List geog);
+RcppExport SEXP _s2_cpp_s2_point_on_surface(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_point_on_surface(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_boundary
 List cpp_s2_boundary(List geog);
 RcppExport SEXP _s2_cpp_s2_boundary(SEXP geogSEXP) {
@@ -1320,10 +1503,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
+    {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},
+    {"_s2_cpp_s2_cell_union_is_na", (DL_FUNC) &_s2_cpp_s2_cell_union_is_na, 1},
+    {"_s2_cpp_s2_cell_union_contains", (DL_FUNC) &_s2_cpp_s2_cell_union_contains, 2},
+    {"_s2_cpp_s2_cell_union_contains_cell", (DL_FUNC) &_s2_cpp_s2_cell_union_contains_cell, 2},
+    {"_s2_cpp_s2_cell_union_intersects", (DL_FUNC) &_s2_cpp_s2_cell_union_intersects, 2},
+    {"_s2_cpp_s2_cell_union_intersection", (DL_FUNC) &_s2_cpp_s2_cell_union_intersection, 2},
+    {"_s2_cpp_s2_cell_union_union", (DL_FUNC) &_s2_cpp_s2_cell_union_union, 2},
+    {"_s2_cpp_s2_cell_union_difference", (DL_FUNC) &_s2_cpp_s2_cell_union_difference, 2},
+    {"_s2_cpp_s2_geography_from_cell_union", (DL_FUNC) &_s2_cpp_s2_geography_from_cell_union, 1},
+    {"_s2_cpp_s2_covering_cell_ids", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids, 6},
+    {"_s2_cpp_s2_covering_cell_ids_agg", (DL_FUNC) &_s2_cpp_s2_covering_cell_ids_agg, 7},
     {"_s2_cpp_s2_cell_sentinel", (DL_FUNC) &_s2_cpp_s2_cell_sentinel, 0},
     {"_s2_cpp_s2_cell_from_string", (DL_FUNC) &_s2_cpp_s2_cell_from_string, 1},
     {"_s2_cpp_s2_cell_from_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_from_lnglat, 1},
     {"_s2_cpp_s2_cell_to_lnglat", (DL_FUNC) &_s2_cpp_s2_cell_to_lnglat, 1},
+    {"_s2_cpp_s2_cell_to_cell_union", (DL_FUNC) &_s2_cpp_s2_cell_to_cell_union, 1},
     {"_s2_cpp_s2_cell_is_na", (DL_FUNC) &_s2_cpp_s2_cell_is_na, 1},
     {"_s2_cpp_s2_cell_sort", (DL_FUNC) &_s2_cpp_s2_cell_sort, 2},
     {"_s2_cpp_s2_cell_range", (DL_FUNC) &_s2_cpp_s2_cell_range, 2},
@@ -1352,6 +1547,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_may_intersect", (DL_FUNC) &_s2_cpp_s2_cell_may_intersect, 2},
     {"_s2_cpp_s2_cell_distance", (DL_FUNC) &_s2_cpp_s2_cell_distance, 2},
     {"_s2_cpp_s2_cell_max_distance", (DL_FUNC) &_s2_cpp_s2_cell_max_distance, 2},
+    {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
+    {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_cpp_s2_geog_point", (DL_FUNC) &_s2_cpp_s2_geog_point, 2},
     {"_s2_cpp_s2_make_line", (DL_FUNC) &_s2_cpp_s2_make_line, 3},
     {"_s2_cpp_s2_make_polygon", (DL_FUNC) &_s2_cpp_s2_make_polygon, 6},
@@ -1401,6 +1598,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_closest_point", (DL_FUNC) &_s2_cpp_s2_closest_point, 2},
     {"_s2_cpp_s2_minimum_clearance_line_between", (DL_FUNC) &_s2_cpp_s2_minimum_clearance_line_between, 2},
     {"_s2_cpp_s2_centroid", (DL_FUNC) &_s2_cpp_s2_centroid, 1},
+    {"_s2_cpp_s2_point_on_surface", (DL_FUNC) &_s2_cpp_s2_point_on_surface, 1},
     {"_s2_cpp_s2_boundary", (DL_FUNC) &_s2_cpp_s2_boundary, 1},
     {"_s2_cpp_s2_rebuild", (DL_FUNC) &_s2_cpp_s2_rebuild, 2},
     {"_s2_cpp_s2_unary_union", (DL_FUNC) &_s2_cpp_s2_unary_union, 2},

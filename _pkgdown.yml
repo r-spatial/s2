@@ -71,6 +71,13 @@ reference:
   contents:
   - s2_interpolate
 
+- title: S2 Cell Utilities
+  contents:
+  - s2_cell_union
+  - s2_cell_union_normalize
+  - s2_cell
+  - s2_cell_is_valid
+
 - title: Utility Functions
   contents:
   - s2_earth_radius_meters
@@ -84,6 +91,4 @@ reference:
 - title: Low-level Details
   desc: Interact with spherical geometry at a low level
   contents:
-  - s2_cell
-  - s2_cell_is_valid
   - s2_unprojection_filter

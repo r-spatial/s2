@@ -97,6 +97,7 @@ as_s2_cell.s2_point <- function(x, ...) {
 #' @rdname s2_cell
 #' @export
 new_s2_cell <- function(x) {
+  stopifnot(is.double(x))
   structure(x, class = c("s2_cell", "wk_vctr"))
 }
 
@@ -108,6 +109,11 @@ as.character.s2_cell <- function(x, ...) {
 #' @export
 format.s2_cell <- function(x, ...) {
   format(as.character(x), quote = FALSE, ...)
+}
+
+#' @export
+as.list.s2_cell <- function(x, ...) {
+  lapply(NextMethod(), new_s2_cell)
 }
 
 #' @export
@@ -185,6 +191,7 @@ Summary.s2_cell <- function(x, ..., na.rm = FALSE) {
 #' @param level An integer between 0 and 30, inclusive.
 #' @param k An integer between 1 and 4
 #' @param radius The radius to use (e.g., [s2_earth_radius_meters()])
+#' @param na.rm Remove NAs prior to computing aggregate?
 #' @export
 #'
 s2_cell_is_valid <- function(x) {
@@ -312,4 +319,21 @@ s2_cell_max_distance <- function(x, y, radius = s2_earth_radius_meters()) {
 #' @export
 s2_cell_may_intersect <- function(x, y) {
   cpp_s2_cell_may_intersect(x, y)
+}
+
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_common_ancestor_level <- function(x, y) {
+  cpp_s2_cell_common_ancestor_level(x, y)
+}
+
+#' @rdname s2_cell_is_valid
+#' @export
+s2_cell_common_ancestor_level_agg <- function(x, na.rm = FALSE) {
+  x_na <- is.na(x)
+  if (any(x_na) && !na.rm) {
+    return(NA_integer_)
+  }
+
+  cpp_s2_cell_common_ancestor_level_agg(x[!x_na])
 }
