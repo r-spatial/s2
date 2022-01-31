@@ -89,6 +89,7 @@ ABSL_LIBS = absl/base/internal/cycleclock.o \
 
 S2LIBS = $(ABSL_LIBS) \
      s2-capi/capi-tessellator.o \
+     s2-capi/s2_c_common.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \
