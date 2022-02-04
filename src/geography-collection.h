@@ -13,6 +13,12 @@ public:
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
+#ifdef S2_R_USE_C_API
+  std::unique_ptr<S2Geography> NewGeography() {
+    return nullptr;
+  }
+#endif
+
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_COLLECTION;
   }

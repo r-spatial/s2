@@ -3,6 +3,7 @@
 extern "C" {
 #endif
 
+typedef struct s2_geography_t s2_geography_t;
 typedef struct s2_projection_t s2_projection_t;
 typedef struct s2_tessellator_t s2_tessellator_t;
 

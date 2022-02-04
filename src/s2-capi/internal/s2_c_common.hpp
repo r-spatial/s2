@@ -22,6 +22,8 @@ public:
 class S2Geography {
 public:
 
+    virtual ~S2Geography() {}
+
     // The number of S2Shape objects needed to represent this S2Geography
     virtual int num_shapes() = 0;
 

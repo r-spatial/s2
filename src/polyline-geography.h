@@ -14,6 +14,12 @@ public:
   PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
+#ifdef S2_R_USE_C_API
+  std::unique_ptr<S2Geography> NewGeography() {
+    return nullptr;
+  }
+#endif
+
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_POLYLINE;
   }
@@ -97,7 +103,7 @@ public:
   }
 
   S2LatLngRect GetRectBound() {
-	S2LatLngRect rect; 
+	S2LatLngRect rect;
 	if (this->polylines.size())
 		rect = this->polylines[0]->GetRectBound();
     for (size_t i = 1; i < this->polylines.size(); i++) {

@@ -19,6 +19,12 @@ public:
   }
   PointGeography(std::vector<S2Point> points): points(points) {}
 
+#ifdef S2_R_USE_C_API
+  std::unique_ptr<S2Geography> NewGeography() {
+    return nullptr;
+  }
+#endif
+
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_POINT;
   }
@@ -87,7 +93,7 @@ public:
   }
 
   S2LatLngRect GetRectBound() {
-	S2LatLngRect rect; 
+	S2LatLngRect rect;
     for (size_t i = 0; i < this->points.size(); i++) {
         rect.AddPoint(this->points[i]); // depends on order
     }
