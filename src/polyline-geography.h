@@ -16,7 +16,13 @@ public:
 
 #ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
-    return nullptr;
+    std::vector<std::unique_ptr<S2Polyline>> polylines_cpy;
+
+    for (const auto& polyline : polylines) {
+      polylines_cpy.push_back(std::unique_ptr<S2Polyline>(polyline->Clone()));
+    }
+
+    return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_cpy));
   }
 #endif
 

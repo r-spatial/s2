@@ -21,7 +21,7 @@ public:
 
 #ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
-    return nullptr;
+    return absl::make_unique<S2GeographyOwningPoint>(points);
   }
 #endif
 
