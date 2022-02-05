@@ -11,6 +11,46 @@ public:
     S2CAPIError(std::string what): std::runtime_error(what.c_str()) {}
 };
 
+class S2Status {
+public:
+    S2Status(): code_(0) {
+        memset(message_, 0, sizeof(message_));
+    }
+
+    bool ok() {
+        return code_ != 0;
+    }
+
+    void set_error(const std::string& message) {
+        code_ = -1;
+        int copy_size = std::min<int>(message.size(), sizeof(message_) - 1);
+        memcpy(message_, message.data(), copy_size);
+    }
+
+    void set_error(const char* fmt, ...) {
+        memset(message_, 0, sizeof(message_));
+        va_list args;
+        va_start(args, fmt);
+        vsnprintf(message_, sizeof(message_) - 1, fmt, args);
+        va_end(args);
+    }
+
+    const char* message() {
+        if (ok()) {
+            return "";
+        } else {
+            return message_;
+        }
+    }
+
+private:
+    int code_;
+    char message_[8096];
+};
+
+// capi typedef start
+typedef struct s2_status_t s2_status_t;
+// capi typedef end
 
 // An S2Geography is an abstraction of S2 types that is designed to closely match
 // the scope of a GEOS Geometry. Its methods are limited to those needed to

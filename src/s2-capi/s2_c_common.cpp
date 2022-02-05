@@ -13,6 +13,24 @@
 
 #include "internal/s2_c_common.hpp"
 
+extern "C" {
+// capi func start
+s2_status_t* s2_status_create();
+void s2_status_destroy(s2_status_t* status);
+// capi func end
+}
+
+s2_status_t* s2_status_create() {
+    return reinterpret_cast<s2_status_t*>(new S2Status());
+}
+
+void s2_status_destroy(s2_status_t* status) {
+    if (status != nullptr) {
+        S2Status* status_cpp = reinterpret_cast<S2Status*>(status);
+        delete status_cpp;
+    }
+}
+
 
 void S2Geography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) {
     MutableS2ShapeIndex index;
