@@ -15,7 +15,8 @@
 #include <Rcpp.h>
 
 #ifdef S2_R_USE_C_API
-#include "s2-capi/internal/s2_c_common.hpp"
+#include "s2-geography/s2-geography.hpp"
+using namespace s2geography;
 #endif
 
 class Geography {

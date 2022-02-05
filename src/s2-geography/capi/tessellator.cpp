@@ -9,10 +9,7 @@ typedef struct s2_projection_t s2_projection_t;
 typedef struct s2_tessellator_t s2_tessellator_t;
 // capi typedef end
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
 // capi func start
 s2_projection_t* s2_projection_create_plate_carree(double scale);
 s2_projection_t* s2_projection_create_mercator(double max_x);
@@ -30,10 +27,7 @@ int s2_tessellator_s2_points_size(s2_tessellator_t* tessellator);
 int s2_tessellator_r2_point(s2_tessellator_t* tessellator, int i, double* coord);
 int s2_tessellator_s2_point(s2_tessellator_t* tessellator, int i, double* coord);
 // capi func end
-
-#ifdef __cplusplus
 }
-#endif
 
 s2_projection_t* s2_projection_create_plate_carree(double scale) {
     return (s2_projection_t*) new S2::PlateCarreeProjection(scale);

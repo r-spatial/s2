@@ -103,8 +103,10 @@ OBJECTS = $(ABSL_LIBS) \
      s2-xptr.o \
      wk-impl.o \
      wk-c-utils.o \
-     s2-capi/capi-tessellator.o \
-     s2-capi/s2_c_common.o \
+     s2-geography/capi/tessellator.o \
+     s2-geography/capi/status.o \
+     s2-geography/accessors.o \
+     s2-geography/geography.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \

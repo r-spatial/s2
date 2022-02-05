@@ -3,7 +3,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include "wk-v1.h"
-#include "s2-capi/s2_c.h"
+#include "s2-geography/s2-geography_c.h"
 
 // Expose projections as external pointers so that they can theoretically be generated
 // by other packages.

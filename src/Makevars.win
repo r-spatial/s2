@@ -88,8 +88,10 @@ ABSL_LIBS = absl/base/internal/cycleclock.o \
     absl/types/bad_variant_access.o
 
 S2LIBS = $(ABSL_LIBS) \
-     s2-capi/capi-tessellator.o \
-     s2-capi/s2_c_common.o \
+     s2-geography/capi/tessellator.o \
+     s2-geography/capi/status.o \
+     s2-geography/accessors.o \
+     s2-geography/geography.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \
