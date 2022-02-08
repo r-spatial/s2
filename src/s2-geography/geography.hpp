@@ -47,11 +47,6 @@ public:
     // return a small number of cells that can be used to compute a possible
     // intersection quickly.
     virtual void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
-
-    // Most operations should use the abstract Shape, Region, or GetCellUnionBound()
-    // methods to implement operators. Occasionally it is necessary or more efficient
-    // to compute on the underlying data type.
-    const void* data() const { return nullptr; }
 };
 
 
@@ -67,6 +62,10 @@ public:
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
     void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+
+    const std::vector<S2Point>& Points() const {
+        return points_;
+    }
 
 private:
     std::vector<S2Point> points_;
@@ -85,6 +84,10 @@ public:
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
     void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+
+    const std::vector<std::unique_ptr<S2Polyline>>& Polylines() const {
+        return polylines_;
+    }
 
 private:
     std::vector<std::unique_ptr<S2Polyline>> polylines_;
@@ -105,6 +108,10 @@ public:
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
     void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+
+    const std::unique_ptr<S2Polygon>& Polygon() const {
+        return polygon_;
+    }
 
 private:
     std::unique_ptr<S2Polygon> polygon_;
@@ -127,6 +134,10 @@ public:
     int num_shapes() const;
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
+
+    const std::vector<std::unique_ptr<S2Geography>>& Features() const {
+        return features_;
+    }
 
 private:
     std::vector<std::unique_ptr<S2Geography>> features_;
