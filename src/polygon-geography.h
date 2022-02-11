@@ -16,11 +16,9 @@ public:
   PolygonGeography(std::unique_ptr<S2Polygon> polygon):
     polygon(std::move(polygon)) {}
 
-#ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
     return absl::make_unique<S2GeographyOwningPolygon>(std::unique_ptr<S2Polygon>(polygon->Clone()));
   }
-#endif
 
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_POLYGON;

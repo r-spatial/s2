@@ -14,7 +14,6 @@ public:
   PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
-#ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
     std::vector<std::unique_ptr<S2Polyline>> polylines_cpy;
 
@@ -24,7 +23,6 @@ public:
 
     return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_cpy));
   }
-#endif
 
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_POLYLINE;

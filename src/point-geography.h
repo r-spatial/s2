@@ -19,11 +19,9 @@ public:
   }
   PointGeography(std::vector<S2Point> points): points(points) {}
 
-#ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
     return absl::make_unique<S2GeographyOwningPoint>(points);
   }
-#endif
 
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_POINT;

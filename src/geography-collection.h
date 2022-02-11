@@ -13,7 +13,6 @@ public:
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
-#ifdef S2_R_USE_C_API
   std::unique_ptr<S2Geography> NewGeography() {
     std::vector<std::unique_ptr<S2Geography>> features_cpy;
     features_cpy.reserve(features.size());
@@ -24,7 +23,6 @@ public:
 
     return absl::make_unique<S2GeographyCollection>(std::move(features_cpy));
   }
-#endif
 
   Geography::Type GeographyType() {
     return Geography::Type::GEOGRAPHY_COLLECTION;
