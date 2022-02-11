@@ -15,7 +15,7 @@
 #include <Rcpp.h>
 
 #include "s2-geography/s2-geography.hpp"
-using namespace s2geography;
+
 
 class Geography {
 public:
@@ -54,7 +54,7 @@ public:
   virtual S2Point Centroid() = 0;
   virtual std::unique_ptr<Geography> Boundary() = 0;
 
-  virtual std::unique_ptr<S2Geography> NewGeography() = 0;
+  virtual std::unique_ptr<s2geography::S2Geography> NewGeography() = 0;
 
   // every type will build the index differently based on
   // the underlying data, and this can (should?) be done

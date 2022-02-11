@@ -14,14 +14,14 @@ public:
   PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
     polylines(std::move(polylines)) {}
 
-  std::unique_ptr<S2Geography> NewGeography() {
+  std::unique_ptr<s2geography::S2Geography> NewGeography() {
     std::vector<std::unique_ptr<S2Polyline>> polylines_cpy;
 
     for (const auto& polyline : polylines) {
       polylines_cpy.push_back(std::unique_ptr<S2Polyline>(polyline->Clone()));
     }
 
-    return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_cpy));
+    return absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polylines_cpy));
   }
 
   Geography::Type GeographyType() {

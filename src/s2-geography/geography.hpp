@@ -123,7 +123,7 @@ private:
 class S2GeographyCollection: public S2Geography {
 public:
     S2GeographyCollection(std::vector<std::unique_ptr<S2Geography>> features):
-        features_(std::move(features)), num_shapes_(features_.size()),
+        features_(std::move(features)),
         total_shapes_(0) {
         for (const auto& feature: features_) {
             num_shapes_.push_back(feature->num_shapes());

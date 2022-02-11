@@ -81,6 +81,10 @@ test_that("s2_num_points works", {
   expect_identical(s2_num_points("POINT EMPTY"), 0L)
   expect_identical(s2_num_points("LINESTRING (0 0, 1 1)"), 2L)
   expect_identical(s2_num_points("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), 4L)
+  expect_identical(
+    s2_num_points("GEOMETRYCOLLECTION (POINT (0 1), LINESTRING (0 0, 1 1))"),
+    3L
+  )
 })
 
 test_that("s2_is_empty works", {
@@ -103,6 +107,11 @@ test_that("s2_area works", {
   # make sure the radius is squared!
   expect_true(
     abs(s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 180 / pi) - 100) < 0.27
+  )
+
+  expect_identical(
+    s2_area("POLYGON ((0 0, 90 0, 0 90, 0 0))"),
+    s2_area("GEOMETRYCOLLECTION(POLYGON ((0 0, 90 0, 0 90, 0 0)))")
   )
 })
 
@@ -134,8 +143,8 @@ test_that("s2_x and s2_y works", {
   expect_identical(s2_y(NA_character_), NA_real_)
   expect_equal(s2_x("POINT (-64 45)"), -64)
   expect_equal(s2_y("POINT (-64 45)"), 45)
-  expect_identical(s2_x("POINT EMPTY"), NA_real_)
-  expect_identical(s2_y("POINT EMPTY"), NA_real_)
+  expect_identical(s2_x("POINT EMPTY"), NaN)
+  expect_identical(s2_y("POINT EMPTY"), NaN)
   expect_error(s2_x("LINESTRING EMPTY"), "Can't compute")
   expect_error(s2_y("LINESTRING EMPTY"), "Can't compute")
   expect_error(s2_x("POLYGON EMPTY"), "Can't compute")

@@ -13,15 +13,15 @@ public:
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
     features(std::move(features)) {}
 
-  std::unique_ptr<S2Geography> NewGeography() {
-    std::vector<std::unique_ptr<S2Geography>> features_cpy;
+  std::unique_ptr<s2geography::S2Geography> NewGeography() {
+    std::vector<std::unique_ptr<s2geography::S2Geography>> features_cpy;
     features_cpy.reserve(features.size());
 
     for (const auto& feature : features) {
       features_cpy.push_back(feature->NewGeography());
     }
 
-    return absl::make_unique<S2GeographyCollection>(std::move(features_cpy));
+    return absl::make_unique<s2geography::S2GeographyCollection>(std::move(features_cpy));
   }
 
   Geography::Type GeographyType() {

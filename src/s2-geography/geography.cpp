@@ -85,7 +85,7 @@ int S2GeographyCollection::num_shapes() const { return total_shapes_; }
 
 std::unique_ptr<S2Shape> S2GeographyCollection::Shape(int id) const {
     int sum_shapes_ = 0;
-    for (int i = 0; i < total_shapes_; i++) {
+    for (int i = 0; i < features_.size(); i++) {
         sum_shapes_ += num_shapes_[i];
         if (id < sum_shapes_) {
             return features_[i]->Shape(id - sum_shapes_ + num_shapes_[i]);

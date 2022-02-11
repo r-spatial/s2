@@ -5,11 +5,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#include "s2-geography/accessors.hpp"
+
 // [[Rcpp::export]]
 LogicalVector cpp_s2_is_collection(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->IsCollection();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_is_collection(*geog);
     }
   };
 
@@ -53,7 +56,8 @@ CharacterVector cpp_s2_is_valid_reason(List geog) {
 IntegerVector cpp_s2_dimension(List geog) {
   class Op: public UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Dimension();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_dimension(*geog);
     }
   };
 
@@ -65,7 +69,8 @@ IntegerVector cpp_s2_dimension(List geog) {
 IntegerVector cpp_s2_num_points(List geog) {
   class Op: public UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->NumPoints();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_num_points(*geog);
     }
   };
 
@@ -77,7 +82,8 @@ IntegerVector cpp_s2_num_points(List geog) {
 LogicalVector cpp_s2_is_empty(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->IsEmpty();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_is_empty(*geog);
     }
   };
 
@@ -89,7 +95,8 @@ LogicalVector cpp_s2_is_empty(List geog) {
 NumericVector cpp_s2_area(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Area();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_area(*geog);
     }
   };
 
@@ -101,7 +108,8 @@ NumericVector cpp_s2_area(List geog) {
 NumericVector cpp_s2_length(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Length();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_length(*geog);
     }
   };
 
@@ -113,7 +121,8 @@ NumericVector cpp_s2_length(List geog) {
 NumericVector cpp_s2_perimeter(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Perimeter();
+      auto geog = feature->NewGeography();
+      return s2geography::s2_perimeter(*geog);
     }
   };
 
@@ -125,7 +134,12 @@ NumericVector cpp_s2_perimeter(List geog) {
 NumericVector cpp_s2_x(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->X();
+      auto geog = feature->NewGeography();
+      if (s2geography::s2_dimension(*geog) != 0) {
+        Rcpp::stop("Can't compute X value of a non-point geography");
+      }
+
+      return s2geography::s2_x(*geog);
     }
   };
 
@@ -137,7 +151,12 @@ NumericVector cpp_s2_x(List geog) {
 NumericVector cpp_s2_y(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Y();
+      auto geog = feature->NewGeography();
+      if (s2geography::s2_dimension(*geog) != 0) {
+        Rcpp::stop("Can't compute Y value of a non-point geography");
+      }
+
+      return s2geography::s2_y(*geog);
     }
   };
 

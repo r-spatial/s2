@@ -64,7 +64,7 @@ int s2_num_points(const S2Geography& geog) {
             num_points += shape->num_edges();
             break;
         case 1:
-            num_points += shape->num_edges() - shape->num_chains();
+            num_points += shape->num_edges() + shape->num_chains();
             break;
         }
     }
@@ -91,11 +91,20 @@ double s2_area(const S2Geography& geog) {
     auto polygon_geog_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
     if (polygon_geog_ptr != nullptr) {
         return polygon_geog_ptr->Polygon()->GetArea();
-    } else {
-        // if custom subclasses are ever a thing, we can go through the builder
-        // to build a polygon
-        throw S2GeographyException("s2_area() not implemented for custom S2Geography()");
     }
+
+    auto collection_geog_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
+    if (collection_geog_ptr != nullptr) {
+        double area = 0;
+        for (auto& feature: collection_geog_ptr->Features()) {
+            area += s2_area(*feature);
+        }
+        return area;
+    }
+
+    // if custom subclasses are ever a thing, we can go through the builder
+    // to build a polygon
+    throw S2GeographyException("s2_area() not implemented for custom S2Geography()");
 }
 
 double s2_length(const S2Geography& geog) {
@@ -137,7 +146,8 @@ double s2_x(const S2Geography& geog) {
     for (int i = 0; i < geog.num_shapes(); i++) {
         std::unique_ptr<S2Shape> shape = geog.Shape(i);
         if (shape->dimension() == 0 && shape->num_edges() == 1 && std::isnan(out)) {
-            out = shape->edge(0).v0.x();
+            S2LatLng pt(shape->edge(0).v0);
+            out = pt.lng().degrees();
         } else if (shape->dimension() == 0 && shape->num_edges() == 1) {
             return NAN;
         }
@@ -151,7 +161,8 @@ double s2_y(const S2Geography& geog) {
     for (int i = 0; i < geog.num_shapes(); i++) {
         std::unique_ptr<S2Shape> shape = geog.Shape(i);
         if (shape->dimension() == 0 && shape->num_edges() == 1 && std::isnan(out)) {
-            out = shape->edge(0).v0.y();
+            S2LatLng pt(shape->edge(0).v0);
+            out = pt.lat().degrees();
         } else if (shape->dimension() == 0 && shape->num_edges() == 1) {
             return NAN;
         }
