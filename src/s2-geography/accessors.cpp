@@ -4,6 +4,19 @@
 
 namespace s2geography {
 
+bool s2_is_collection(const S2GeographyOwningPolygon& geog) {
+    int num_outer_loops = 0;
+    for (int i = 0; i < geog.Polygon()->num_loops(); i++) {
+        S2Loop* loop = geog.Polygon()->loop(i);
+        num_outer_loops += loop->depth() == 0;
+        if (num_outer_loops > 1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool s2_is_collection(const S2Geography& geog) {
     int dimension = s2_dimension(geog);
     if (dimension == 0) {
@@ -25,16 +38,7 @@ bool s2_is_collection(const S2Geography& geog) {
 
     auto polygon_geog_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
     if (polygon_geog_ptr != nullptr) {
-        int num_outer_loops = 0;
-        for (int i = 0; i < polygon_geog_ptr->Polygon()->num_loops(); i++) {
-            S2Loop* loop = polygon_geog_ptr->Polygon()->loop(i);
-            num_outer_loops += loop->depth() == 0;
-            if (num_outer_loops > 1) {
-                return true;
-            }
-        }
-
-        return false;
+        return s2_is_collection(*polygon_geog_ptr);
     } else {
         // if custom subclasses are ever a thing, we can go through the builder
         // to build a polygon
@@ -83,6 +87,18 @@ bool s2_is_empty(const S2Geography& geog) {
     return true;
 }
 
+double s2_area(const S2GeographyOwningPolygon& geog) {
+    return geog.Polygon()->GetArea();
+}
+
+double s2_area(const S2GeographyCollection& geog) {
+    double area = 0;
+    for (auto& feature: geog.Features()) {
+        area += s2_area(*feature);
+    }
+    return area;
+}
+
 double s2_area(const S2Geography& geog) {
     if (s2_dimension(geog) != 2) {
         return 0;
@@ -90,16 +106,12 @@ double s2_area(const S2Geography& geog) {
 
     auto polygon_geog_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
     if (polygon_geog_ptr != nullptr) {
-        return polygon_geog_ptr->Polygon()->GetArea();
+        return s2_area(*polygon_geog_ptr);
     }
 
     auto collection_geog_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
     if (collection_geog_ptr != nullptr) {
-        double area = 0;
-        for (auto& feature: collection_geog_ptr->Features()) {
-            area += s2_area(*feature);
-        }
-        return area;
+       return s2_area(*collection_geog_ptr);
     }
 
     // if custom subclasses are ever a thing, we can go through the builder
