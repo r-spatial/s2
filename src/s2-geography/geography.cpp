@@ -34,7 +34,9 @@ std::unique_ptr<S2Region> S2GeographyOwningPoint::Region() const {
         region->Add(absl::make_unique<S2PointRegion>(point));
     }
 
-    return region;
+    // because Rtools for R 3.6 on Windows complains about a direct
+    // return region
+    return std::unique_ptr<S2Region>(region.release());
 }
 
 void S2GeographyOwningPoint::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
@@ -59,7 +61,9 @@ std::unique_ptr<S2Region> S2GeographyOwningPolyline::Region() const {
     for (const auto& polyline: polylines_) {
         region->Add(std::unique_ptr<S2Region>(polyline->Clone()));
     }
-    return region;
+    // because Rtools for R 3.6 on Windows complains about a direct
+    // return region
+    return std::unique_ptr<S2Region>(region.release());
 }
 
 void S2GeographyOwningPolyline::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
@@ -100,5 +104,7 @@ std::unique_ptr<S2Region> S2GeographyCollection::Region() const {
     for (const auto& feature: features_) {
         region->Add(feature->Region());
     }
-    return region;
+    // because Rtools for R 3.6 on Windows complains about a direct
+    // return region
+    return std::unique_ptr<S2Region>(region.release());
 }
