@@ -5,7 +5,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "s2-geography/accessors.hpp"
+#include "s2-geography/s2-geography.hpp"
 
 // [[Rcpp::export]]
 LogicalVector cpp_s2_is_collection(List geog) {
@@ -170,27 +170,9 @@ NumericVector cpp_s2_project_normalized(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      if (feature1->IsCollection() || feature2->IsCollection()) {
-        throw GeographyOperatorException("`x` and `y` must both be simple geographies");
-      }
-
-      if (feature1->IsEmpty() || feature2->IsEmpty()) {
-        return NA_REAL;
-      }
-
-      if (feature1->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
-        if (feature2->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
-          S2Point point = feature2->Point()->at(0);
-          int next_vertex;
-          S2Point point_on_line = feature1->Polyline()->at(0)->Project(point, &next_vertex);
-          return feature1->Polyline()->at(0)->UnInterpolate(point_on_line, next_vertex);
-        } else {
-          throw GeographyOperatorException("`y` must be a point geography");
-        }
-      } else {
-        throw GeographyOperatorException("`x` must be a polyline geography");
-      }
-      return NA_REAL;
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      return s2geography::s2_project_normalized(*geog1, *geog2);
     }
   };
 

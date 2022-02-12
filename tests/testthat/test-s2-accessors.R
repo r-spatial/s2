@@ -169,17 +169,17 @@ test_that("s2_project() and s2_project_normalized() work", {
     c(0, 0.25, 0.75, 1, NA_real_, NA_real_)
   )
 
-  expect_error(
+  expect_identical(
     s2_project_normalized("POINT (0 1)", "POINT (0 1)"),
-    "must be a polyline"
+    NaN
   )
-  expect_error(
+  expect_identical(
     s2_project_normalized("LINESTRING (0 1, 1 1)", "LINESTRING (0 1, 1 1)"),
-    "must be a point"
+    NaN
   )
-  expect_error(
+  expect_identical(
     s2_project_normalized("LINESTRING (0 1, 1 1)", "MULTIPOINT (0 1, 1 1)"),
-    "must both be simple geographies"
+    NaN
   )
 })
 
