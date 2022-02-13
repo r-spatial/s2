@@ -145,4 +145,50 @@ private:
     int total_shapes_;
 };
 
+
+// An S2Geography with a MutableS2ShapeIndex as the underlying data.
+// These are used as inputs for operations that are implemented in S2
+// using the S2ShapeIndex (e.g., boolean operations). If an S2Geography
+// instance will be used repeatedly, it will be faster to construct
+// one S2GeographyShapeIndex and use it repeatedly. This class does not
+// own any S2Geography objects that are added do it and thus is only
+// valid for the scope of those objects.
+class S2GeographyShapeIndex: public S2Geography {
+public:
+    S2GeographyShapeIndex() {}
+
+    explicit S2GeographyShapeIndex(const S2Geography& geog) {
+        Add(geog);
+    }
+
+    // Add a S2Geography to the index, returning the last shape_id
+    // that was added to the index or -1 if no shapes were added
+    // to the index. Shape ids are assigned sequentially and the first
+    // shape_id that was added can be obtained by subtracting
+    // geog.num_shapes().
+    int Add(const S2Geography& geog) {
+        int id = -1;
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            id = shape_index_.Add(geog.Shape(i));
+        }
+        return id;
+    }
+
+    int num_shapes() const;
+    std::unique_ptr<S2Shape> Shape(int id) const;
+    std::unique_ptr<S2Region> Region() const;
+
+    const S2ShapeIndex& ShapeIndex() const {
+        return shape_index_;
+    }
+
+    S2ShapeIndex& MutableShapeIndex() {
+        return shape_index_;
+    }
+
+private:
+    MutableS2ShapeIndex shape_index_;
+};
+
+
 }

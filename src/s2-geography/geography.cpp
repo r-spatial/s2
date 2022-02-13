@@ -15,6 +15,28 @@
 using namespace s2geography;
 
 
+// This class is a shim to allow a class to return a std::unique_ptr<S2Shape>(),
+// which is required by MutableS2ShapeIndex::Add(), without copying the underlying
+// data. S2Shape instances do not typically own their data (e.g., S2Polygon::Shape),
+// so this does not change the general relationship (that anything returned by
+// S2Geography::Shape() is only valid within the scope of the S2Geography).
+class S2ShapeWrapper: public S2Shape {
+public:
+    S2ShapeWrapper(S2Shape* shape): shape_(shape) {}
+    int num_edges() const { return shape_->num_edges();}
+    Edge edge(int edge_id) const { return shape_->edge(edge_id); }
+    int dimension() const { return shape_->dimension(); }
+    ReferencePoint GetReferencePoint() const { return shape_->GetReferencePoint(); }
+    int num_chains() const { return shape_->num_chains(); }
+    Chain chain(int chain_id) const { return shape_->chain(chain_id); }
+    Edge chain_edge(int chain_id, int offset) const { return shape_->chain_edge(chain_id, offset); }
+    ChainPosition chain_position(int edge_id) const { return shape_->chain_position(edge_id); }
+
+private:
+    S2Shape* shape_;
+};
+
+
 void S2Geography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
     MutableS2ShapeIndex index;
     for (int i = 0; i < num_shapes(); i++) {
@@ -104,6 +126,20 @@ std::unique_ptr<S2Region> S2GeographyCollection::Region() const {
     for (const auto& feature: features_) {
         region->Add(feature->Region());
     }
+    // because Rtools for R 3.6 on Windows complains about a direct
+    // return region
+    return std::unique_ptr<S2Region>(region.release());
+}
+
+int S2GeographyShapeIndex::num_shapes() const { return shape_index_.num_shape_ids(); }
+
+std::unique_ptr<S2Shape> S2GeographyShapeIndex::Shape(int id) const {
+    S2Shape* shape = shape_index_.shape(id);
+    return std::unique_ptr<S2Shape>(new S2ShapeWrapper(shape));
+}
+
+std::unique_ptr<S2Region> S2GeographyShapeIndex::Region() const {
+    auto region = absl::make_unique<S2ShapeIndexRegion<MutableS2ShapeIndex>>(&shape_index_);
     // because Rtools for R 3.6 on Windows complains about a direct
     // return region
     return std::unique_ptr<S2Region>(region.release());

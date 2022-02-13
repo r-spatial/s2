@@ -91,6 +91,7 @@ S2LIBS = $(ABSL_LIBS) \
      s2-geography/capi/tessellator.o \
      s2-geography/capi/status.o \
      s2-geography/linear-referencing.o \
+     s2-geography/distance.o \
      s2-geography/accessors.o \
      s2-geography/geography.o \
      s2/base/stringprintf.o \

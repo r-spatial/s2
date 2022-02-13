@@ -1,7 +1,5 @@
 
 #include "geography-operator.h"
-#include "s2/s2closest_edge_query.h"
-#include "s2/s2furthest_edge_query.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -187,13 +185,13 @@ NumericVector cpp_s2_distance(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
 
-      const auto& result = query.FindClosestEdge(&target);
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      S1ChordAngle angle = result.distance();
-      double distance = angle.ToAngle().radians();
+      double distance = s2geography::s2_distance(index1, index2);
 
       if (distance == R_PosInf) {
         return NA_REAL;
@@ -214,13 +212,13 @@ NumericVector cpp_s2_max_distance(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      S2FurthestEdgeQuery query(feature1->ShapeIndex());
-      S2FurthestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
 
-      const auto& result = query.FindFurthestEdge(&target);
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      S1ChordAngle angle = result.distance();
-      double distance = angle.ToAngle().radians();
+      double distance = s2geography::s2_max_distance(index1, index2);
 
       // returns -1 if one of the indexes is empty
       // NA is more consistent with the BigQuery
