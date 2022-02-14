@@ -19,6 +19,11 @@ bool s2_is_collection(const S2GeographyOwningPolygon& geog) {
 
 bool s2_is_collection(const S2Geography& geog) {
     int dimension = s2_dimension(geog);
+
+    if (dimension == -1) {
+        return false;
+    }
+
     if (dimension == 0) {
         return s2_num_points(geog) > 1;
     }
@@ -181,6 +186,68 @@ double s2_y(const S2Geography& geog) {
     }
 
     return out;
+}
+
+
+S2Point s2_centroid(const S2Geography& geog) {
+    int dimension = s2_dimension(geog);
+    if (dimension <= 0) {
+        return S2Point(NAN, NAN, NAN);
+    }
+
+
+}
+
+std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
+    int dimension = s2_dimension(geog);
+
+    if (dimension == 1) {
+        std::vector<S2Point> endpoints;
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            if (shape->dimension() > 1) {
+                continue;
+            }
+
+            for (int j = 0; j < shape->num_chains(); j++) {
+                S2Shape::Chain chain = shape->chain(j);
+                if (chain.length > 0) {
+                    endpoints.push_back(shape->edge(chain.start).v0);
+                    endpoints.push_back(shape->edge(chain.start + chain.length - 1).v1);
+                }
+            }
+        }
+
+        return absl::make_unique<S2GeographyOwningPoint>(std::move(endpoints));
+    }
+
+    if (dimension == 2) {
+        std::vector<std::unique_ptr<S2Polyline>> polylines;
+
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            if (shape->dimension() != 2) {
+                throw S2GeographyException("Can't extract boundary from heterogeneous collection");
+            }
+
+            for (int j = 0; j < shape->num_chains(); j++) {
+                std::vector<S2Point> points;
+                S2Shape::Chain chain = shape->chain(j);
+
+                points.push_back(shape->edge(chain.start).v0);
+                for (int k = 0; k < chain.length; k++) {
+                    points.push_back(shape->edge(chain.start + k).v1);
+                }
+
+                auto polyline = absl::make_unique<S2Polyline>(std::move(points));
+                polylines.push_back(std::move(polyline));
+            }
+        }
+
+        return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines));
+    }
+
+    return absl::make_unique<S2GeographyCollection>();
 }
 
 }

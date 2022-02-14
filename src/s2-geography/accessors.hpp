@@ -15,4 +15,7 @@ double s2_perimeter(const S2Geography& geog);
 double s2_x(const S2Geography& geog);
 double s2_y(const S2Geography& geog);
 
+S2Point s2_centroid(const S2Geography& geog);
+std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog);
+
 }

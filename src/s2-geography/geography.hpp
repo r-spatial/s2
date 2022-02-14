@@ -122,6 +122,8 @@ private:
 // can be used to represent a simple features GEOMETRYCOLLECTION.
 class S2GeographyCollection: public S2Geography {
 public:
+    S2GeographyCollection(): total_shapes_(0) {}
+
     S2GeographyCollection(std::vector<std::unique_ptr<S2Geography>> features):
         features_(std::move(features)),
         total_shapes_(0) {

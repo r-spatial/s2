@@ -22,6 +22,7 @@
 #include "polyline-geography.h"
 #include "polygon-geography.h"
 #include "geography-collection.h"
+#include "geography-shim.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -521,7 +522,9 @@ List cpp_s2_point_on_surface(List geog) {
 List cpp_s2_boundary(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      std::unique_ptr<Geography> ptr = feature->Boundary();
+      auto geog = feature->NewGeography();
+      std::unique_ptr<s2geography::S2Geography> result = s2geography::s2_boundary(*geog);
+      std::unique_ptr<Geography> ptr = MakeOldGeography(*result);
       return XPtr<Geography>(ptr.release());
     }
   };
