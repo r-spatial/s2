@@ -209,6 +209,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
                 continue;
             }
 
+            endpoints.reserve(endpoints.size() + shape->num_chains() * 2);
             for (int j = 0; j < shape->num_chains(); j++) {
                 S2Shape::Chain chain = shape->chain(j);
                 if (chain.length > 0) {
@@ -223,6 +224,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
 
     if (dimension == 2) {
         std::vector<std::unique_ptr<S2Polyline>> polylines;
+        polylines.reserve(geog.num_shapes());
 
         for (int i = 0; i < geog.num_shapes(); i++) {
             auto shape = geog.Shape(i);
@@ -231,16 +233,18 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
             }
 
             for (int j = 0; j < shape->num_chains(); j++) {
-                std::vector<S2Point> points;
                 S2Shape::Chain chain = shape->chain(j);
+                if (chain.length > 0) {
+                    std::vector<S2Point> points(chain.length + 1);
 
-                points.push_back(shape->edge(chain.start).v0);
-                for (int k = 0; k < chain.length; k++) {
-                    points.push_back(shape->edge(chain.start + k).v1);
+                    points[0] = shape->edge(chain.start).v0;
+                    for (int k = 0; k < chain.length; k++) {
+                        points[k + 1] = shape->edge(chain.start + k).v1;
+                    }
+
+                    auto polyline = absl::make_unique<S2Polyline>(std::move(points));
+                    polylines.push_back(std::move(polyline));
                 }
-
-                auto polyline = absl::make_unique<S2Polyline>(std::move(points));
-                polylines.push_back(std::move(polyline));
             }
         }
 
