@@ -190,12 +190,7 @@ double s2_y(const S2Geography& geog) {
 
 
 S2Point s2_centroid(const S2Geography& geog) {
-    int dimension = s2_dimension(geog);
-    if (dimension <= 0) {
-        return S2Point(NAN, NAN, NAN);
-    }
-
-
+    throw S2GeographyException("Not implemented: s2_centroid()");
 }
 
 std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
