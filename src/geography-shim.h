@@ -8,7 +8,8 @@
 std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog) {
     auto point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(&geog);
     if (point != nullptr) {
-        return absl::make_unique<PointGeography>(point->Points());
+        auto ptr = absl::make_unique<PointGeography>(point->Points());
+        return std::unique_ptr<Geography>(ptr.get());
     }
 
     auto polyline = dynamic_cast<const s2geography::S2GeographyOwningPolyline*>(&geog);
@@ -18,12 +19,14 @@ std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog
             polylines.push_back(std::unique_ptr<S2Polyline>(poly->Clone()));
         }
 
-        return absl::make_unique<PolylineGeography>(std::move(polylines));
+        auto ptr = absl::make_unique<PolylineGeography>(std::move(polylines));
+        return std::unique_ptr<Geography>(ptr.get());
     }
 
     auto polygon = dynamic_cast<const s2geography::S2GeographyOwningPolygon*>(&geog);
     if (polygon != nullptr) {
-        return absl::make_unique<PolygonGeography>(std::unique_ptr<S2Polygon>(polygon->Polygon()->Clone()));
+        auto ptr =  absl::make_unique<PolygonGeography>(std::unique_ptr<S2Polygon>(polygon->Polygon()->Clone()));
+        return std::unique_ptr<Geography>(ptr.get());
     }
 
     auto collection = dynamic_cast<const s2geography::S2GeographyCollection*>(&geog);
@@ -32,7 +35,8 @@ std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog
         for (auto& feat: collection->Features()) {
             features.push_back(MakeOldGeography(*feat));
         }
-        return absl::make_unique<GeographyCollection>(std::move(features));
+        auto ptr = absl::make_unique<GeographyCollection>(std::move(features));
+        return std::unique_ptr<Geography>(ptr.get());
     }
 
     throw s2geography::S2GeographyException("Unsupported S2Geography subclass");
