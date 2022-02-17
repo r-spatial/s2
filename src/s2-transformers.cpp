@@ -361,57 +361,21 @@ List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
-std::vector<S2Point> findClosestPoints(S2ShapeIndex* index1, S2ShapeIndex* index2) {
-      // see http://s2geometry.io/devguide/s2closestedgequery.html section on Modeling Accuracy:
-
-      // Find the edge from index2 that is closest to index1
-      S2ClosestEdgeQuery query1(index1);
-      query1.mutable_options()->set_include_interiors(false);
-      S2ClosestEdgeQuery::ShapeIndexTarget target1(index2);
-      auto result1 = query1.FindClosestEdge(&target1);
-
-      if (result1.edge_id() == -1) {
-        return std::vector<S2Point>();
-      }
-
-      // Get the edge from index1 (edge1) that is closest to index2.
-      S2Shape::Edge edge1 = query1.GetEdge(result1);
-
-      // Now find the edge from index2 (edge2) that is closest to edge1.
-      S2ClosestEdgeQuery query2(index2);
-      query2.mutable_options()->set_include_interiors(false);
-      S2ClosestEdgeQuery::EdgeTarget target2(edge1.v0, edge1.v1);
-      auto result2 = query2.FindClosestEdge(&target2);
-
-      // what if result2 has no edges?
-      if (result2.is_interior()) {
-        stop("S2ClosestEdgeQuery result is interior!");
-      }
-      S2Shape::Edge edge2 = query2.GetEdge(result2);
-
-      // Find the closest point pair on edge1 and edge2.
-      std::pair<S2Point, S2Point> closest = S2::GetEdgePairClosestPoints(
-        edge1.v0, edge1.v1,
-        edge2.v0, edge2.v1
-      );
-
-      std::vector<S2Point> pts(2);
-      pts[0] = closest.first;
-      pts[1] = closest.second;
-      return pts;
-}
-
 // [[Rcpp::export]]
 List cpp_s2_closest_point(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      std::vector<S2Point> pts = findClosestPoints(feature1->ShapeIndex(), feature2->ShapeIndex());
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      if (pts.size() == 0) {
+      S2Point pt = s2geography::s2_closest_point(index1, index2);
+      if (pt.Norm2() == 0) {
         return XPtr<Geography>(new PointGeography());
       } else {
-        return XPtr<Geography>(new PointGeography(pts[0]));
+        return XPtr<Geography>(new PointGeography(pt));
       }
     }
   };
@@ -425,15 +389,32 @@ List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      std::vector<S2Point> pts = findClosestPoints(feature1->ShapeIndex(), feature2->ShapeIndex());
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      if (pts.size() == 0) {
+      std::pair<S2Point, S2Point> pts = s2geography::s2_minimum_clearance_line_between(
+        index1,
+        index2
+      );
+
+      if (pts.first.Norm2() == 0) {
         return XPtr<Geography>(new PolylineGeography());
-      } else if (pts[0] == pts[1]) {
-        return XPtr<Geography>(new PointGeography(pts));
+      }
+
+      std::vector<S2Point> vertices(2);
+      vertices[0] = pts.first;
+      vertices[1] = pts.second;
+
+      if (pts.first == pts.second) {
+        return XPtr<Geography>(new PointGeography(vertices));
       } else {
+        std::vector<S2Point> vertices(2);
+        vertices[0] = pts.first;
+        vertices[1] = pts.second;
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
-        polyline->Init(pts);
+        polyline->Init(vertices);
         std::vector<std::unique_ptr<S2Polyline>> polylines(1);
         polylines[0] = std::move(polyline);
         return XPtr<Geography>(new PolylineGeography(std::move(polylines)));
