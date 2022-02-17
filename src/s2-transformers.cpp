@@ -448,7 +448,8 @@ List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
 List cpp_s2_centroid(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      S2Point centroid = feature->Centroid();
+      auto geog = feature->NewGeography();
+      S2Point centroid = s2geography::s2_centroid(*geog);
       if (centroid.Norm2() == 0) {
         return XPtr<Geography>(new PointGeography());
       } else {

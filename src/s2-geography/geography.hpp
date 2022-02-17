@@ -27,7 +27,23 @@ public:
 
     virtual ~S2Geography() {}
 
-    virtual int dimension() const { return -1; }
+    // Returns 0, 1, or 2 if all Shape()s that are returned will have
+    // the same dimension (i.e., they are all points, all lines, or
+    // all polygons).
+    virtual int dimension() const {
+        if (num_shapes() == 0) {
+            return -1;
+        }
+
+        int dim = Shape(0)->dimension();
+        for (int i = 2; i < num_shapes(); i++) {
+            if (dim != Shape(i)->dimension()) {
+                return -1;
+            }
+        }
+
+        return dim;
+     }
 
     // The number of S2Shape objects needed to represent this S2Geography
     virtual int num_shapes() const = 0;
@@ -138,7 +154,6 @@ public:
         }
     }
 
-    int dimension() const { return -1; }
     int num_shapes() const;
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;

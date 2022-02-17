@@ -1,4 +1,6 @@
 
+#include "s2/s2centroids.h"
+
 #include "geography.hpp"
 #include "accessors.hpp"
 
@@ -194,7 +196,51 @@ double s2_y(const S2Geography& geog) {
 
 
 S2Point s2_centroid(const S2Geography& geog) {
-    throw S2GeographyException("Not implemented: s2_centroid()");
+    S2Point centroid(0, 0, 0);
+
+    if (geog.dimension() == 0) {
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            for (int j = 0; j < shape->num_edges(); j++) {
+                centroid += shape->edge(j).v0;
+            }
+        }
+
+        return centroid.Normalize();
+    }
+
+    if (geog.dimension() == 1) {
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            for (int j = 0; j < shape->num_edges(); j++) {
+                S2Shape::Edge e = shape->edge(j);
+                centroid += S2::TrueCentroid(e.v0, e.v1);
+            }
+        }
+
+        return centroid.Normalize();
+    }
+
+    if (geog.dimension() == 2) {
+        auto polygon_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        if (polygon_ptr == nullptr) {
+            throw S2GeographyException("Can't compute s2_centroid() on custom polygon geography");
+        }
+
+        centroid = polygon_ptr->Polygon()->GetCentroid();
+        return centroid.Normalize();
+    }
+
+    auto collection_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
+    if (collection_ptr == nullptr) {
+        throw S2GeographyException("Can't compute s2_centroid() on custom collection geography");
+    }
+
+    for (auto& feat: collection_ptr->Features()) {
+        centroid += s2_centroid(*feat);
+    }
+
+    return centroid.Normalize();
 }
 
 std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
@@ -204,7 +250,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
         std::vector<S2Point> endpoints;
         for (int i = 0; i < geog.num_shapes(); i++) {
             auto shape = geog.Shape(i);
-            if (shape->dimension() > 1) {
+            if (shape->dimension() < 1) {
                 continue;
             }
 
