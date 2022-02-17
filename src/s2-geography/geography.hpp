@@ -27,6 +27,8 @@ public:
 
     virtual ~S2Geography() {}
 
+    virtual int dimension() const { return -1; }
+
     // The number of S2Shape objects needed to represent this S2Geography
     virtual int num_shapes() const = 0;
 
@@ -58,6 +60,7 @@ public:
     S2GeographyOwningPoint(S2Point point): points_(1) { points_.push_back(point); }
     S2GeographyOwningPoint(std::vector<S2Point> points): points_(std::move(points)) {}
 
+    int dimension() const { return 0; }
     int num_shapes() const { return 1; }
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
@@ -80,6 +83,7 @@ public:
     S2GeographyOwningPolyline(std::vector<std::unique_ptr<S2Polyline>> polylines):
         polylines_(std::move(polylines)) {}
 
+    int dimension() const { return 1; }
     int num_shapes() const;
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
@@ -104,6 +108,7 @@ public:
     S2GeographyOwningPolygon(std::unique_ptr<S2Polygon> polygon):
         polygon_(std::move(polygon)) {}
 
+    int dimension() const { return 2; }
     int num_shapes() const { return 1; }
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
@@ -133,6 +138,7 @@ public:
         }
     }
 
+    int dimension() const { return -1; }
     int num_shapes() const;
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;

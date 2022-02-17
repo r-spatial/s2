@@ -52,7 +52,11 @@ bool s2_is_collection(const S2Geography& geog) {
 }
 
 int s2_dimension(const S2Geography& geog) {
-    int dimension = -1;
+    int dimension = geog.dimension();
+    if (dimension != -1) {
+        return dimension;
+    }
+
     for (int i = 0; i < geog.num_shapes(); i++) {
         std::unique_ptr<S2Shape> shape = geog.Shape(i);
         if (shape->dimension() > dimension) {
