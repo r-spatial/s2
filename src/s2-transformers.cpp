@@ -316,7 +316,8 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      S2Point centroid = feature->Centroid();
+      auto geog = feature->NewGeography();
+      S2Point centroid = s2geography::s2_centroid(*geog);
       if (centroid.Norm2() > 0) {
         cumCentroid += centroid.Normalize();
       }
