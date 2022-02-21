@@ -74,45 +74,6 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   }
 }
 
-std::unique_ptr<Geography> doBooleanOperation(S2ShapeIndex* index1, S2ShapeIndex* index2,
-                                              S2BooleanOperation::OpType opType,
-                                              S2BooleanOperation::Options options,
-                                              GeographyOperationOptions::LayerOptions layerOptions) {
-
-  // create the data structures that will contain the output
-  std::vector<S2Point> points;
-  std::vector<std::unique_ptr<S2Polyline>> polylines;
-  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
-
-  s2builderutil::LayerVector layers(3);
-  layers[0] = absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions);
-  layers[1] = absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions);
-  layers[2] = absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions);
-
-  // do the boolean operation
-  S2BooleanOperation booleanOp(
-    opType,
-    // normalizing the closed set here is required for line intersections
-    // to work as expected
-    s2builderutil::NormalizeClosedSet(std::move(layers)),
-    options
-  );
-
-  // build and check for errors
-  S2Error error;
-  if (!booleanOp.Build(*index1, *index2, &error)) {
-    stop(error.text());
-  }
-
-  // construct output
-  return geographyFromLayers(
-    std::move(points),
-    std::move(polylines),
-    std::move(polygon),
-    layerOptions.dimensions
-  );
-}
-
 std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
                                             S2Builder::Options options,
                                             GeographyOperationOptions::LayerOptions layerOptions) {
@@ -222,8 +183,9 @@ List cpp_s2_sym_difference(List geog1, List geog2, List s2options) {
 // [[Rcpp::export]]
 List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
+  s2geography::S2GeographyShapeIndex index;
+  std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
-  MutableS2ShapeIndex index;
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     item = geog[i];
@@ -233,19 +195,21 @@ List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      feature->BuildShapeIndex(&index);
+      auto geog = feature->NewGeography();
+      index.Add(*geog);
+      geographies.push_back(std::move(geog));
     }
   }
 
-  MutableS2ShapeIndex emptyIndex;
-  std::unique_ptr<Geography> geography = doBooleanOperation(
-    &index,
-    &emptyIndex,
+  s2geography::S2GeographyShapeIndex emptyIndex;
+  std::unique_ptr<s2geography::S2Geography> geog_out = s2geography::s2_boolean_operation(
+    index,
+    emptyIndex,
     S2BooleanOperation::OpType::UNION,
-    options.booleanOperationOptions(),
-    options.layerOptions()
+    options.geographyOptions()
   );
 
+  auto geography = MakeOldGeography(*geog_out);
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
@@ -553,6 +517,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
       GeographyOperationOptions options(s2options);
       this->options = options.booleanOperationOptions();
       this->layerOptions = options.layerOptions();
+      this->geographyOptions = options.geographyOptions();
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
@@ -570,17 +535,20 @@ List cpp_s2_unary_union(List geog, List s2options) {
       }
 
       if (simpleUnionOK) {
-        MutableS2ShapeIndex emptyIndex;
+        auto geog = feature->NewGeography();
+        s2geography::S2GeographyShapeIndex index(*geog);
+        s2geography::S2GeographyShapeIndex emptyIndex;
 
-        std::unique_ptr<Geography> ptr = doBooleanOperation(
-          feature->ShapeIndex(),
-          &emptyIndex,
+        std::unique_ptr<s2geography::S2Geography> geog_out = s2geography::s2_boolean_operation(
+          index,
+          emptyIndex,
           S2BooleanOperation::OpType::UNION,
-          this->options,
-          this->layerOptions
+          this->geographyOptions
         );
 
-        return XPtr<Geography>(ptr.release());
+        auto geography = MakeOldGeography(*geog_out);
+
+        return XPtr<Geography>(geography.release());
       } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
         // If we've made it here we have an invalid polygon on our hands. A geography with
         // invalid loops won't work with the S2BooleanOperation we will use to accumulate
@@ -647,6 +615,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
   private:
     S2BooleanOperation::Options options;
     GeographyOperationOptions::LayerOptions layerOptions;
+    s2geography::S2GeographyOptions geographyOptions;
   };
 
   Op op(s2options);
