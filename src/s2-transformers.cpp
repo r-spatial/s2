@@ -172,26 +172,27 @@ public:
   BooleanOperationOp(S2BooleanOperation::OpType opType, List s2options):
     opType(opType) {
       GeographyOperationOptions options(s2options);
-      this->options = options.booleanOperationOptions();
-      this->layerOptions = options.layerOptions();
+      this->geography_options = options.geographyOptions();
     }
 
   SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-    std::unique_ptr<Geography> geography = doBooleanOperation(
-      feature1->ShapeIndex(),
-      feature2->ShapeIndex(),
-      this->opType,
-      this->options,
-      this->layerOptions
-    );
+    auto geog1 = feature1->NewGeography();
+    auto geog2 = feature2->NewGeography();
+    s2geography::S2GeographyShapeIndex index1(*geog1);
+    s2geography::S2GeographyShapeIndex index2(*geog2);
 
+    std::unique_ptr<s2geography::S2Geography> geog_out = s2geography::s2_boolean_operation(
+      index1, index2,
+      this->opType,
+      this->geography_options);
+
+    std::unique_ptr<Geography> geography = MakeOldGeography(*geog_out);
     return Rcpp::XPtr<Geography>(geography.release());
   }
 
 private:
   S2BooleanOperation::OpType opType;
-  S2BooleanOperation::Options options;
-  GeographyOperationOptions::LayerOptions layerOptions;
+  s2geography::S2GeographyOptions geography_options;
 };
 
 // [[Rcpp::export]]

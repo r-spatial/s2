@@ -5,3 +5,4 @@
 #include "accessors.hpp"
 #include "linear-referencing.hpp"
 #include "distance.hpp"
+#include "build.hpp"

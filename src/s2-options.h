@@ -10,6 +10,8 @@
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
 
+#include "s2-geography/s2-geography.hpp"
+
 // This class wraps several concepts in the S2BooleanOperation,
 // and S2Layer, parameterized such that these can be specified from R
 class GeographyOperationOptions {
@@ -190,6 +192,31 @@ public:
       options.set_polyline_model(getPolylineModel(this->polylineModel));
     }
     this->setSnapFunction<S2BooleanOperation::Options>(options);
+
+    return options;
+  }
+
+  // options for new S2GeographyOptions API
+  s2geography::S2GeographyOptions geographyOptions() {
+    s2geography::S2GeographyOptions options;
+    options.boolean_operation = booleanOperationOptions();
+
+    LayerOptions layer_options = layerOptions();
+    options.point_layer = layer_options.pointLayerOptions;
+    options.polyline_layer = layer_options.polylineLayerOptions;
+    options.polygon_layer = layer_options.polygonLayerOptions;
+
+    if (!(layer_options.dimensions & Dimension::POINT)) {
+      options.point_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+    }
+
+    if (!(layer_options.dimensions & Dimension::POLYLINE)) {
+      options.polyline_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+    }
+
+    if (!(layer_options.dimensions & Dimension::POLYGON)) {
+      options.polygon_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+    }
 
     return options;
   }
