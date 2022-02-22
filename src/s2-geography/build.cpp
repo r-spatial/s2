@@ -158,4 +158,57 @@ std::unique_ptr<S2Geography> s2_symmetric_difference(const S2GeographyShapeIndex
     options);
 }
 
+std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
+                                        const S2GeographyOptions& options) {
+  // create the builder
+  S2Builder builder(options.builder);
+
+  // create the data structures that will contain the output
+  std::vector<S2Point> points;
+  std::vector<std::unique_ptr<S2Polyline>> polylines;
+  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
+
+  // add shapes to the layer with the appropriate dimension
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, options.point_layer)
+  );
+  for (S2Shape* shape : geog.ShapeIndex()) {
+    if (shape->dimension() == 0) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, options.polyline_layer)
+  );
+  for (S2Shape* shape : geog.ShapeIndex()) {
+    if (shape->dimension() == 1) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  builder.StartLayer(
+    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), options.polygon_layer)
+  );
+  for (S2Shape* shape : geog.ShapeIndex()) {
+    if (shape->dimension() == 2) {
+      builder.AddShape(*shape);
+    }
+  }
+
+  // build the output
+  S2Error error;
+  if (!builder.Build(&error)) {
+    throw S2GeographyException(error.text());
+  }
+
+  // construct output
+  return s2_geography_from_layers(
+    std::move(points),
+    std::move(polylines),
+    std::move(polygon),
+    options
+  );
+}
+
 }

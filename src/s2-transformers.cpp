@@ -487,22 +487,23 @@ List cpp_s2_rebuild(List geog, List s2options) {
   public:
     Op(List s2options) {
       GeographyOperationOptions options(s2options);
-      this->options = options.builderOptions();
-      this->layerOptions = options.layerOptions();
+      this->options = options.geographyOptions();
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      std::unique_ptr<Geography> ptr = rebuildGeography(
-        feature->ShapeIndex(),
-        this->options,
-        this->layerOptions
+      auto geog = feature->NewGeography();
+      s2geography::S2GeographyShapeIndex index(*geog);
+      std::unique_ptr<s2geography::S2Geography> ptr = s2geography::s2_rebuild(
+        index,
+        this->options
       );
-      return XPtr<Geography>(ptr.release());
+
+      auto geography = MakeOldGeography(*ptr);
+      return XPtr<Geography>(geography.release());
     }
 
   private:
-    S2Builder::Options options;
-    GeographyOperationOptions::LayerOptions layerOptions;
+    s2geography::S2GeographyOptions options;
   };
 
   Op op(s2options);

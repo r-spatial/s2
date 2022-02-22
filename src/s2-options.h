@@ -200,6 +200,7 @@ public:
   s2geography::S2GeographyOptions geographyOptions() {
     s2geography::S2GeographyOptions options;
     options.boolean_operation = booleanOperationOptions();
+    options.builder = builderOptions();
 
     LayerOptions layer_options = layerOptions();
     options.point_layer = layer_options.pointLayerOptions;

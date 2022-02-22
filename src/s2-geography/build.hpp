@@ -23,6 +23,7 @@ public:
           polygon_layer_action(OUTPUT_ACTION_INCLUDE) {}
 
     S2BooleanOperation::Options boolean_operation;
+    S2Builder::Options builder;
 
     s2builderutil::S2PointVectorLayer::Options point_layer;
     s2builderutil::S2PolylineVectorLayer::Options polyline_layer;
@@ -52,5 +53,8 @@ std::unique_ptr<S2Geography> s2_difference(const S2GeographyShapeIndex& geog1,
 std::unique_ptr<S2Geography> s2_symmetric_difference(const S2GeographyShapeIndex& geog1,
                                                      const S2GeographyShapeIndex& geog2,
                                                      const S2GeographyOptions& options);
+
+std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
+                                        const S2GeographyOptions& options);
 
 }
