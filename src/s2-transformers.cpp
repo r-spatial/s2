@@ -303,7 +303,9 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
 
-  MutableS2ShapeIndex index;
+  s2geography::S2GeographyShapeIndex index;
+  std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
+
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     item = geog[i];
@@ -313,16 +315,18 @@ List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      feature->BuildShapeIndex(&index);
+      auto geog = feature->NewGeography();
+      index.Add(*geog);
+      geographies.push_back(std::move(geog));
     }
   }
 
-  std::unique_ptr<Geography> geography = rebuildGeography(
-    &index,
-    options.builderOptions(),
-    options.layerOptions()
+  auto geog_out = s2geography::s2_rebuild(
+    index,
+    options.geographyOptions()
   );
 
+  auto geography = MakeOldGeography(*geog_out);
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
