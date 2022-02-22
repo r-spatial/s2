@@ -205,7 +205,7 @@ public:
         return shape_index_;
     }
 
-    S2ShapeIndex& MutableShapeIndex() {
+    MutableS2ShapeIndex& MutableShapeIndex() {
         return shape_index_;
     }
 

@@ -74,59 +74,6 @@ std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
   }
 }
 
-std::unique_ptr<Geography> rebuildGeography(S2ShapeIndex* index,
-                                            S2Builder::Options options,
-                                            GeographyOperationOptions::LayerOptions layerOptions) {
-  // create the builder
-  S2Builder builder(options);
-
-  // create the data structures that will contain the output
-  std::vector<S2Point> points;
-  std::vector<std::unique_ptr<S2Polyline>> polylines;
-  std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
-
-  // add shapes to the layer with the appropriate dimension
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, layerOptions.pointLayerOptions)
-  );
-  for (S2Shape* shape : *index) {
-    if (shape->dimension() == 0) {
-      builder.AddShape(*shape);
-    }
-  }
-
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, layerOptions.polylineLayerOptions)
-  );
-  for (S2Shape* shape : *index) {
-    if (shape->dimension() == 1) {
-      builder.AddShape(*shape);
-    }
-  }
-
-  builder.StartLayer(
-    absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), layerOptions.polygonLayerOptions)
-  );
-  for (S2Shape* shape : *index) {
-    if (shape->dimension() == 2) {
-      builder.AddShape(*shape);
-    }
-  }
-
-  // build the output
-  S2Error error;
-  if (!builder.Build(&error)) {
-    throw GeographyOperatorException(error.text());
-  }
-
-  // construct output
-  return geographyFromLayers(
-    std::move(points),
-    std::move(polylines),
-    std::move(polygon),
-    layerOptions.dimensions
-  );
-}
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
@@ -259,12 +206,13 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
     }
   }
 
-  std::unique_ptr<Geography> geography = rebuildGeography(
-    accumulatedIndex.get(),
-    options.builderOptions(),
-    options.layerOptions()
-  );
-
+  s2geography::S2GeographyShapeIndex geog_index;
+  auto shapes = accumulatedIndex->ReleaseAll();
+  for (auto& shape : shapes) {
+    geog_index.MutableShapeIndex().Add(std::move(shape));
+  }
+  auto geog_out = s2geography::s2_rebuild(geog_index, options.geographyOptions());
+  auto geography = MakeOldGeography(*geog_out);
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
