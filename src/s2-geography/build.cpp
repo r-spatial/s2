@@ -11,12 +11,6 @@
 
 namespace s2geography {
 
-enum BuilderOutputDimension {
-    OUTPUT_DIMENSION_POINT = 1,
-    OUTPUT_DIMENSION_POLYLINE = 2,
-    OUTPUT_DIMENSION_POLYGON = 4
-};
-
 std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> points,
                                                       std::vector<std::unique_ptr<S2Polyline>> polylines,
                                                       std::unique_ptr<S2Polygon> polygon,

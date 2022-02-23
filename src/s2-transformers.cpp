@@ -27,53 +27,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-std::unique_ptr<Geography> geographyFromLayers(std::vector<S2Point> points,
-                                               std::vector<std::unique_ptr<S2Polyline>> polylines,
-                                               std::unique_ptr<S2Polygon> polygon,
-                                               int dimensions) {
-  // count non-empty dimensions
-  bool has_polygon = (dimensions & GeographyOperationOptions::Dimension::POLYGON) &&
-    !polygon->is_empty();
-  bool has_polyline = (dimensions & GeographyOperationOptions::Dimension::POLYLINE) &&
-    (polylines.size() > 0);
-  bool has_points = (dimensions & GeographyOperationOptions::Dimension::POINT) &&
-    (points.size() > 0);
-  int nonEmptyDimensions = has_polygon + has_polyline + has_points;
-
-  // return empty output
-  if (nonEmptyDimensions == 0) {
-    return absl::make_unique<GeographyCollection>();
-  }
-
-  // return mixed dimension output
-  if (nonEmptyDimensions > 1) {
-    std::vector<std::unique_ptr<Geography>> features;
-
-    if (has_points) {
-      features.push_back(absl::make_unique<PointGeography>(std::move(points)));
-    }
-
-    if (has_polyline) {
-      features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
-    }
-
-    if (has_polygon) {
-      features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
-    }
-
-    return absl::make_unique<GeographyCollection>(std::move(features));
-  }
-
-  // return single dimension output
-  if (has_polygon) {
-    return absl::make_unique<PolygonGeography>(std::move(polygon));
-  } else if (has_polyline) {
-    return absl::make_unique<PolylineGeography>(std::move(polylines));
-  } else {
-    return absl::make_unique<PointGeography>(std::move(points));
-  }
-}
-
 
 class BooleanOperationOp: public BinaryGeographyOperator<List, SEXP> {
 public:
