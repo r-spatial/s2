@@ -3,6 +3,7 @@
 
 #include "geography.hpp"
 #include "accessors.hpp"
+#include "aggregator.hpp"
 
 namespace s2geography {
 
@@ -297,6 +298,26 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
     }
 
     return absl::make_unique<S2GeographyCollection>();
+}
+
+
+void S2CentroidAggregator::Add(const S2Geography& geog) {
+        S2Point centroid = s2_centroid(geog);
+        if (centroid.Norm2() > 0) {
+            centroid_ += centroid.Normalize();
+        }
+    }
+
+void S2CentroidAggregator::Merge(const S2CentroidAggregator& other) {
+    centroid_ += other.centroid_;
+}
+
+S2Point S2CentroidAggregator::Finalize() {
+    if (centroid_.Norm2() > 0) {
+        return centroid_.Normalize();
+    } else {
+        return centroid_;
+    }
 }
 
 }

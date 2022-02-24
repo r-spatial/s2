@@ -171,7 +171,7 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
 
 // [[Rcpp::export]]
 List cpp_s2_centroid_agg(List geog, bool naRm) {
-  S2Point cumCentroid;
+  s2geography::S2CentroidAggregator agg;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -182,19 +182,17 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      auto geog = feature->NewGeography();
-      S2Point centroid = s2geography::s2_centroid(*geog);
-      if (centroid.Norm2() > 0) {
-        cumCentroid += centroid.Normalize();
-      }
+      agg.Add(*feature->NewGeography());
     }
   }
 
+  S2Point centroid = agg.Finalize();
+
   List output(1);
-  if (cumCentroid.Norm2() == 0) {
+  if (centroid.Norm2() == 0) {
     output[0] = Rcpp::XPtr<Geography>(new PointGeography());
   } else {
-    output[0] = Rcpp::XPtr<Geography>(new PointGeography(cumCentroid.Normalize()));
+    output[0] = Rcpp::XPtr<Geography>(new PointGeography(centroid));
   }
 
   return output;
