@@ -120,8 +120,11 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
   );
 }
 
-std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
-                                        const S2GeographyOptions& options) {
+std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
+                                        const S2GeographyOptions& options,
+                                        S2GeographyOptions::OutputAction point_layer_action,
+                                        S2GeographyOptions::OutputAction polyline_layer_action,
+                                        S2GeographyOptions::OutputAction polygon_layer_action) {
   // create the builder
   S2Builder builder(options.builder);
 
@@ -134,7 +137,8 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PointVectorLayer>(&points, options.point_layer)
   );
-  for (S2Shape* shape : geog.ShapeIndex()) {
+  for (int i = 0; i < geog.num_shapes(); i++) {
+    auto shape = geog.Shape(i);
     if (shape->dimension() == 0) {
       builder.AddShape(*shape);
     }
@@ -143,7 +147,8 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolylineVectorLayer>(&polylines, options.polyline_layer)
   );
-  for (S2Shape* shape : geog.ShapeIndex()) {
+  for (int i = 0; i < geog.num_shapes(); i++) {
+    auto shape = geog.Shape(i);
     if (shape->dimension() == 1) {
       builder.AddShape(*shape);
     }
@@ -152,7 +157,8 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
   builder.StartLayer(
     absl::make_unique<s2builderutil::S2PolygonLayer>(polygon.get(), options.polygon_layer)
   );
-  for (S2Shape* shape : geog.ShapeIndex()) {
+  for (int i = 0; i < geog.num_shapes(); i++) {
+    auto shape = geog.Shape(i);
     if (shape->dimension() == 2) {
       builder.AddShape(*shape);
     }
@@ -173,6 +179,57 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
     options.polyline_layer_action,
     options.polygon_layer_action
   );
+}
+
+std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
+                                        const S2GeographyOptions& options) {
+  return s2_rebuild(
+    geog,
+    options,
+    options.point_layer_action,
+    options.polyline_layer_action,
+    options.polygon_layer_action);
+}
+
+std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog,
+                                                       const S2GeographyOptions& options) {
+  std::unique_ptr<S2Geography> geog_out = s2_rebuild(
+    geog,
+    options,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
+
+  return std::unique_ptr<S2GeographyOwningPoint>(
+    dynamic_cast<S2GeographyOwningPoint*>(geog_out.release()));
+}
+
+
+std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog,
+                                                          const S2GeographyOptions& options) {
+  std::unique_ptr<S2Geography> geog_out = s2_rebuild(
+    geog,
+    options,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
+
+  return std::unique_ptr<S2GeographyOwningPolyline>(
+    dynamic_cast<S2GeographyOwningPolyline*>(geog_out.release()));
+}
+
+
+std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog,
+                                                         const S2GeographyOptions& options) {
+  std::unique_ptr<S2Geography> geog_out = s2_rebuild(
+    geog,
+    options,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
+    S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE);
+
+  return std::unique_ptr<S2GeographyOwningPolygon>(
+    dynamic_cast<S2GeographyOwningPolygon*>(geog_out.release()));
 }
 
 }

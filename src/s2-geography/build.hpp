@@ -39,7 +39,16 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
                                                   S2BooleanOperation::OpType op_type,
                                                   const S2GeographyOptions& options);
 
-std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
+std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
                                         const S2GeographyOptions& options);
+
+std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog,
+                                                       const S2GeographyOptions& options);
+
+std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog,
+                                                             const S2GeographyOptions& options);
+
+std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog,
+                                                           const S2GeographyOptions& options);
 
 }
