@@ -48,4 +48,18 @@ std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& 
 
 std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog);
 
+class S2RebuildAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+public:
+    S2RebuildAggregator(const S2GeographyOptions& options): options_(options) {}
+
+    void Add(const S2Geography& geog);
+    void FinishBatch();
+    void Merge(const S2RebuildAggregator& other);
+    std::unique_ptr<S2Geography> Finalize();
+
+private:
+    S2GeographyOptions options_;
+    S2GeographyShapeIndex index_;
+};
+
 }

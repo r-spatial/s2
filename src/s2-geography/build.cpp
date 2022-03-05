@@ -229,4 +229,21 @@ std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& ge
     dynamic_cast<S2GeographyOwningPolygon*>(geog_out.release()));
 }
 
+
+void S2RebuildAggregator::Add(const S2Geography& geog) {
+  index_.Add(geog);
+}
+
+void S2RebuildAggregator::FinishBatch() {
+  throw S2GeographyException("Not implemented <S2RebuildAggregator::FinishBatch>");
+}
+
+void S2RebuildAggregator::Merge(const S2RebuildAggregator& other) {
+  throw S2GeographyException("Not implemented <S2RebuildAggregator::Merge>");
+}
+
+std::unique_ptr<S2Geography> S2RebuildAggregator::Finalize() {
+  return s2_rebuild(index_, options_);
+}
+
 }
