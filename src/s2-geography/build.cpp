@@ -246,4 +246,21 @@ std::unique_ptr<S2Geography> S2RebuildAggregator::Finalize() {
   return s2_rebuild(index_, options_);
 }
 
+void S2CoverageUnionAggregator::Add(const S2Geography& geog) {
+  index_.Add(geog);
+}
+
+void S2CoverageUnionAggregator::FinishBatch() {
+  throw S2GeographyException("Not implemented <S2CoverageUnionAggregator::FinishBatch>");
+}
+
+void S2CoverageUnionAggregator::Merge(const S2CoverageUnionAggregator& other) {
+  throw S2GeographyException("Not implemented <S2CoverageUnionAggregator::Merge>");
+}
+
+std::unique_ptr<S2Geography> S2CoverageUnionAggregator::Finalize() {
+  S2GeographyShapeIndex empty_index_;
+  return s2_boolean_operation(index_, empty_index_, S2BooleanOperation::OpType::UNION, options_);
+}
+
 }

@@ -62,4 +62,18 @@ private:
     S2GeographyShapeIndex index_;
 };
 
+class S2CoverageUnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+public:
+    S2CoverageUnionAggregator(const S2GeographyOptions& options): options_(options) {}
+
+    void Add(const S2Geography& geog);
+    void FinishBatch();
+    void Merge(const S2CoverageUnionAggregator& other);
+    std::unique_ptr<S2Geography> Finalize();
+
+private:
+    S2GeographyOptions options_;
+    S2GeographyShapeIndex index_;
+};
+
 }

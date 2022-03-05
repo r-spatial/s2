@@ -83,7 +83,7 @@ List cpp_s2_sym_difference(List geog1, List geog2, List s2options) {
 // [[Rcpp::export]]
 List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
-  s2geography::S2GeographyShapeIndex index;
+  s2geography::S2CoverageUnionAggregator agg(options.geographyOptions());
   std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
   SEXP item;
@@ -96,18 +96,12 @@ List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
       auto geog = feature->NewGeography();
-      index.Add(*geog);
+      agg.Add(*geog);
       geographies.push_back(std::move(geog));
     }
   }
 
-  s2geography::S2GeographyShapeIndex emptyIndex;
-  std::unique_ptr<s2geography::S2Geography> geog_out = s2geography::s2_boolean_operation(
-    index,
-    emptyIndex,
-    S2BooleanOperation::OpType::UNION,
-    options.geographyOptions()
-  );
+  std::unique_ptr<s2geography::S2Geography> geog_out = agg.Finalize();
 
   auto geography = MakeOldGeography(*geog_out);
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
