@@ -116,42 +116,6 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
   );
 }
 
-std::unique_ptr<S2Geography> s2_intersection(const S2GeographyShapeIndex& geog1,
-                                             const S2GeographyShapeIndex& geog2,
-                                             const S2GeographyOptions& options) {
-  return s2_boolean_operation(
-    geog1, geog2,
-    S2BooleanOperation::OpType::INTERSECTION,
-    options);
-}
-
-std::unique_ptr<S2Geography> s2_union(const S2GeographyShapeIndex& geog1,
-                                      const S2GeographyShapeIndex& geog2,
-                                      const S2GeographyOptions& options) {
-  return s2_boolean_operation(
-    geog1, geog2,
-    S2BooleanOperation::OpType::UNION,
-    options);
-}
-
-std::unique_ptr<S2Geography> s2_difference(const S2GeographyShapeIndex& geog1,
-                                           const S2GeographyShapeIndex& geog2,
-                                           const S2GeographyOptions& options) {
-  return s2_boolean_operation(
-    geog1, geog2,
-    S2BooleanOperation::OpType::DIFFERENCE,
-    options);
-}
-
-std::unique_ptr<S2Geography> s2_symmetric_difference(const S2GeographyShapeIndex& geog1,
-                                                     const S2GeographyShapeIndex& geog2,
-                                                     const S2GeographyOptions& options) {
-  return s2_boolean_operation(
-    geog1, geog2,
-    S2BooleanOperation::OpType::SYMMETRIC_DIFFERENCE,
-    options);
-}
-
 std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
                                         const S2GeographyOptions& options) {
   // create the builder

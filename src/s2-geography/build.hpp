@@ -6,6 +6,7 @@
 #include "s2/s2builderutil_s2point_vector_layer.h"
 
 #include "geography.hpp"
+#include "aggregator.hpp"
 
 namespace s2geography {
 
@@ -37,22 +38,6 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
                                                   const S2GeographyShapeIndex& geog2,
                                                   S2BooleanOperation::OpType op_type,
                                                   const S2GeographyOptions& options);
-
-std::unique_ptr<S2Geography> s2_intersection(const S2GeographyShapeIndex& geog1,
-                                             const S2GeographyShapeIndex& geog2,
-                                             const S2GeographyOptions& options);
-
-std::unique_ptr<S2Geography> s2_union(const S2GeographyShapeIndex& geog1,
-                                      const S2GeographyShapeIndex& geog2,
-                                      const S2GeographyOptions& options);
-
-std::unique_ptr<S2Geography> s2_difference(const S2GeographyShapeIndex& geog1,
-                                           const S2GeographyShapeIndex& geog2,
-                                           const S2GeographyOptions& options);
-
-std::unique_ptr<S2Geography> s2_symmetric_difference(const S2GeographyShapeIndex& geog1,
-                                                     const S2GeographyShapeIndex& geog2,
-                                                     const S2GeographyOptions& options);
 
 std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
                                         const S2GeographyOptions& options);
