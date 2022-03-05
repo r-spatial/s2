@@ -14,32 +14,34 @@ namespace s2geography {
 std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> points,
                                                       std::vector<std::unique_ptr<S2Polyline>> polylines,
                                                       std::unique_ptr<S2Polygon> polygon,
-                                                      const S2GeographyOptions& options) {
+                                                      S2GeographyOptions::OutputAction point_layer_action,
+                                                      S2GeographyOptions::OutputAction polyline_layer_action,
+                                                      S2GeographyOptions::OutputAction polygon_layer_action) {
   // count non-empty dimensions
   bool has_polygon = !polygon->is_empty();
   bool has_polylines = polylines.size() > 0;
   bool has_points = points.size() > 0;
 
   // use the requstested dimensions to produce the right kind of EMTPY
-  bool include_polygon = options.polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
-  bool include_polylines = options.polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
-  bool include_points = options.point_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
+  bool include_polygon = polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
+  bool include_polylines = polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
+  bool include_points = point_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
 
-  if (has_polygon && options.polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
+  if (has_polygon && polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
       throw S2GeographyException("Output contained unexpected polygon");
-  } else if (has_polygon && options.polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
+  } else if (has_polygon && polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_polygon = false;
   }
 
-  if (has_polylines && options.polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
+  if (has_polylines && polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
       throw S2GeographyException("Output contained unexpected polylines");
-  } else if (has_polylines && options.polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
+  } else if (has_polylines && polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_polylines = false;
   }
 
-  if (has_points && options.point_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
+  if (has_points && point_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
       throw S2GeographyException("Output contained unexpected points");
-  } else if (has_points && options.point_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
+  } else if (has_points && point_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_points = false;
   }
 
@@ -112,7 +114,9 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
     std::move(points),
     std::move(polylines),
     std::move(polygon),
-    options
+    options.point_layer_action,
+    options.polyline_layer_action,
+    options.polygon_layer_action
   );
 }
 
@@ -165,7 +169,9 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2GeographyShapeIndex& geog,
     std::move(points),
     std::move(polylines),
     std::move(polygon),
-    options
+    options.point_layer_action,
+    options.polyline_layer_action,
+    options.polygon_layer_action
   );
 }
 
