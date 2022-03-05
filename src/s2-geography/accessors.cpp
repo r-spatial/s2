@@ -4,6 +4,7 @@
 #include "geography.hpp"
 #include "accessors.hpp"
 #include "aggregator.hpp"
+#include "build.hpp"
 
 namespace s2geography {
 
@@ -48,9 +49,8 @@ bool s2_is_collection(const S2Geography& geog) {
     if (polygon_geog_ptr != nullptr) {
         return s2_is_collection(*polygon_geog_ptr);
     } else {
-        // if custom subclasses are ever a thing, we can go through the builder
-        // to build a polygon
-        throw S2GeographyException("s2_area() not implemented for custom S2Geography()");
+        std::unique_ptr<S2GeographyOwningPolygon> built = s2_build_polygon(geog);
+        return s2_is_collection(*built);
     }
 }
 
@@ -126,9 +126,8 @@ double s2_area(const S2Geography& geog) {
        return s2_area(*collection_geog_ptr);
     }
 
-    // if custom subclasses are ever a thing, we can go through the builder
-    // to build a polygon
-    throw S2GeographyException("s2_area() not implemented for custom S2Geography()");
+    std::unique_ptr<S2GeographyOwningPolygon> built = s2_build_polygon(geog);
+    return s2_area(*built);
 }
 
 double s2_length(const S2Geography& geog) {
@@ -224,11 +223,13 @@ S2Point s2_centroid(const S2Geography& geog) {
 
     if (geog.dimension() == 2) {
         auto polygon_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
-        if (polygon_ptr == nullptr) {
-            throw S2GeographyException("Can't compute s2_centroid() on custom polygon geography");
+        if (polygon_ptr != nullptr) {
+            centroid = polygon_ptr->Polygon()->GetCentroid();
+        } else {
+            std::unique_ptr<S2GeographyOwningPolygon> built = s2_build_polygon(geog);
+            centroid = built->Polygon()->GetCentroid();
         }
 
-        centroid = polygon_ptr->Polygon()->GetCentroid();
         return centroid.Normalize();
     }
 

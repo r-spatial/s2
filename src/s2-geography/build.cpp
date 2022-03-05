@@ -191,11 +191,10 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
     options.polygon_layer_action);
 }
 
-std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog,
-                                                       const S2GeographyOptions& options) {
+std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
-    options,
+    S2GeographyOptions(),
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
@@ -205,11 +204,10 @@ std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog,
 }
 
 
-std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog,
-                                                          const S2GeographyOptions& options) {
+std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
-    options,
+    S2GeographyOptions(),
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
@@ -219,11 +217,10 @@ std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& 
 }
 
 
-std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog,
-                                                         const S2GeographyOptions& options) {
+std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
-    options,
+    S2GeographyOptions(),
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE);
