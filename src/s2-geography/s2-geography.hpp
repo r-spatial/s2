@@ -6,3 +6,4 @@
 #include "linear-referencing.hpp"
 #include "distance.hpp"
 #include "build.hpp"
+#include "coverings.hpp"
