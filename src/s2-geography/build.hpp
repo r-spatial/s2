@@ -51,10 +51,7 @@ std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& ge
 class S2RebuildAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
 public:
     S2RebuildAggregator(const S2GeographyOptions& options): options_(options) {}
-
     void Add(const S2Geography& geog);
-    void FinishBatch();
-    void Merge(const S2RebuildAggregator& other);
     std::unique_ptr<S2Geography> Finalize();
 
 private:
@@ -67,13 +64,31 @@ public:
     S2CoverageUnionAggregator(const S2GeographyOptions& options): options_(options) {}
 
     void Add(const S2Geography& geog);
-    void FinishBatch();
-    void Merge(const S2CoverageUnionAggregator& other);
     std::unique_ptr<S2Geography> Finalize();
 
 private:
     S2GeographyOptions options_;
     S2GeographyShapeIndex index_;
+};
+
+class S2UnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+public:
+    S2UnionAggregator(const S2GeographyOptions& options): options_(options) {}
+    void Add(const S2Geography& geog);
+    std::unique_ptr<S2Geography> Finalize();
+
+private:
+    class Node {
+    public:
+        S2GeographyShapeIndex index1;
+        S2GeographyShapeIndex index2;
+        std::vector<std::unique_ptr<S2Geography>> data;
+        std::unique_ptr<S2Geography> Merge(const S2GeographyOptions& options);
+    };
+
+    S2GeographyOptions options_;
+    Node root_;
+    std::vector<std::unique_ptr<Node>> other_;
 };
 
 }

@@ -234,14 +234,6 @@ void S2RebuildAggregator::Add(const S2Geography& geog) {
   index_.Add(geog);
 }
 
-void S2RebuildAggregator::FinishBatch() {
-  throw S2GeographyException("Not implemented <S2RebuildAggregator::FinishBatch>");
-}
-
-void S2RebuildAggregator::Merge(const S2RebuildAggregator& other) {
-  throw S2GeographyException("Not implemented <S2RebuildAggregator::Merge>");
-}
-
 std::unique_ptr<S2Geography> S2RebuildAggregator::Finalize() {
   return s2_rebuild(index_, options_);
 }
@@ -250,17 +242,64 @@ void S2CoverageUnionAggregator::Add(const S2Geography& geog) {
   index_.Add(geog);
 }
 
-void S2CoverageUnionAggregator::FinishBatch() {
-  throw S2GeographyException("Not implemented <S2CoverageUnionAggregator::FinishBatch>");
-}
-
-void S2CoverageUnionAggregator::Merge(const S2CoverageUnionAggregator& other) {
-  throw S2GeographyException("Not implemented <S2CoverageUnionAggregator::Merge>");
-}
-
 std::unique_ptr<S2Geography> S2CoverageUnionAggregator::Finalize() {
   S2GeographyShapeIndex empty_index_;
   return s2_boolean_operation(index_, empty_index_, S2BooleanOperation::OpType::UNION, options_);
+}
+
+void S2UnionAggregator::Add(const S2Geography& geog) {
+  if (geog.dimension() == 0 || geog.dimension() == 1) {
+    root_.index1.Add(geog);
+    return;
+  }
+
+  if (other_.size() == 0) {
+    other_.push_back(absl::make_unique<Node>());
+    other_.back()->index1.Add(geog);
+    return;
+  }
+
+  Node* last = other_.back().get();
+  if (last->index1.num_shapes() == 0) {
+    last->index1.Add(geog);
+  } else if (last->index2.num_shapes() == 0) {
+    last->index2.Add(geog);
+  } else {
+    other_.push_back(absl::make_unique<Node>());
+    other_.back()->index1.Add(geog);
+  }
+}
+
+std::unique_ptr<S2Geography> S2UnionAggregator::Node::Merge(const S2GeographyOptions& options) {
+  return s2_boolean_operation(
+    index1,
+    index2,
+    S2BooleanOperation::OpType::UNION,
+    options);
+}
+
+std::unique_ptr<S2Geography> S2UnionAggregator::Finalize() {
+  while (other_.size() > 1) {
+    for (size_t i = other_.size() - 1; i >= 1; i = i - 2) {
+      // merge other_[i] with other_[i - 1]
+      std::unique_ptr<S2Geography> merged = other_[i]->Merge(options_);
+      std::unique_ptr<S2Geography> merged_prev = other_[i - 1]->Merge(options_);
+      other_.erase(other_.begin() + i - 1, other_.begin() + i);
+      other_.push_back(absl::make_unique<Node>());
+      other_.back()->index1.Add(*merged);
+      other_.back()->index2.Add(*merged_prev);
+      other_.back()->data.push_back(std::move(merged));
+      other_.back()->data.push_back(std::move(merged_prev));
+    }
+  }
+
+  if (other_.size() == 0) {
+    return root_.Merge(options_);
+  } else {
+    std::unique_ptr<S2Geography> merged = other_[0]->Merge(options_);
+    root_.index2.Add(*merged);
+    return root_.Merge(options_);
+  }
 }
 
 }
