@@ -279,15 +279,25 @@ std::unique_ptr<S2Geography> S2UnionAggregator::Node::Merge(const S2GeographyOpt
 }
 
 std::unique_ptr<S2Geography> S2UnionAggregator::Finalize() {
-  while (other_.size() > 1) {
-    for (size_t i = other_.size() - 1; i >= 1; i = i - 2) {
+  for (int j = 0; j < 100; j++) {
+    if (other_.size() <= 1) {
+      break;
+    }
+
+    for (int64_t i = static_cast<int64_t>(other_.size()) - 1; i >= 1; i = i - 2) {
       // merge other_[i] with other_[i - 1]
       std::unique_ptr<S2Geography> merged = other_[i]->Merge(options_);
       std::unique_ptr<S2Geography> merged_prev = other_[i - 1]->Merge(options_);
-      other_.erase(other_.begin() + i - 1, other_.begin() + i);
+
+      // erase the last two nodes
+      other_.erase(other_.begin() + i - 1, other_.begin() + i + 1);
+
+      // ..and replace it with a single node
       other_.push_back(absl::make_unique<Node>());
       other_.back()->index1.Add(*merged);
       other_.back()->index2.Add(*merged_prev);
+
+      // making sure to keep the underlying data alive
       other_.back()->data.push_back(std::move(merged));
       other_.back()->data.push_back(std::move(merged_prev));
     }

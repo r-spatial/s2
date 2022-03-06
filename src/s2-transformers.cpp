@@ -107,20 +107,11 @@ List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
 
-// This approach to aggregation is slow but accurate. There is probably a more efficient way
-// to accumulate geometries and/or re-use the layers vector but thus far I haven't figured
-// out a way to make that work.
 // [[Rcpp::export]]
 List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
-  GeographyOperationOptions::LayerOptions layerOptions = options.layerOptions();
-  S2BooleanOperation::Options unionOptions = options.booleanOperationOptions();
-  S2Builder::Options buillderOptions = options.builderOptions();
-
-  // using smart pointers here so that we can use swap() to
-  // use replace accumulatedIndex with index after each union
-  std::unique_ptr<MutableS2ShapeIndex> index = absl::make_unique<MutableS2ShapeIndex>();
-  std::unique_ptr<MutableS2ShapeIndex> accumulatedIndex = absl::make_unique<MutableS2ShapeIndex>();
+  s2geography::S2UnionAggregator agg(options.geographyOptions());
+  std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -131,34 +122,14 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-
-      index->Clear();
-      s2builderutil::LayerVector layers(3);
-      layers[0] = absl::make_unique<s2builderutil::IndexedS2PointVectorLayer>(index.get(), layerOptions.pointLayerOptions);
-      layers[1] = absl::make_unique<s2builderutil::IndexedS2PolylineVectorLayer>(index.get(), layerOptions.polylineLayerOptions);
-      layers[2] = absl::make_unique<s2builderutil::IndexedS2PolygonLayer>(index.get(), layerOptions.polygonLayerOptions);
-
-      S2BooleanOperation booleanOp(
-        S2BooleanOperation::OpType::UNION,
-        s2builderutil::NormalizeClosedSet(std::move(layers)),
-        unionOptions
-      );
-
-      S2Error error;
-      if (!booleanOp.Build(*accumulatedIndex, *(feature->ShapeIndex()), &error)) {
-        stop(error.text());
-      }
-
-      accumulatedIndex.swap(index);
+      auto geog = feature->NewGeography();
+      agg.Add(*geog);
+      geographies.push_back(std::move(geog));
     }
   }
 
-  s2geography::S2GeographyShapeIndex geog_index;
-  auto shapes = accumulatedIndex->ReleaseAll();
-  for (auto& shape : shapes) {
-    geog_index.MutableShapeIndex().Add(std::move(shape));
-  }
-  auto geog_out = s2geography::s2_rebuild(geog_index, options.geographyOptions());
+  std::unique_ptr<s2geography::S2Geography> geog_out = agg.Finalize();
+
   auto geography = MakeOldGeography(*geog_out);
   return List::create(Rcpp::XPtr<Geography>(geography.release()));
 }
