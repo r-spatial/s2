@@ -22,7 +22,8 @@ LogicalVector cpp_s2_is_collection(List geog) {
 LogicalVector cpp_s2_is_valid(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return !(feature->FindValidationError(&(this->error)));
+      auto geog = feature->NewGeography();
+      return !s2geography::s2_find_validation_error(*geog, &error);
     }
 
     S2Error error;
@@ -36,7 +37,8 @@ LogicalVector cpp_s2_is_valid(List geog) {
 CharacterVector cpp_s2_is_valid_reason(List geog) {
   class Op: public UnaryGeographyOperator<CharacterVector, String> {
     String processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      if (feature->FindValidationError(&(this->error))) {
+      auto geog = feature->NewGeography();
+      if (s2geography::s2_find_validation_error(*geog, &error)) {
         return this->error.text();
       } else {
         return NA_STRING;

@@ -194,6 +194,82 @@ double s2_y(const S2Geography& geog) {
     return out;
 }
 
+bool s2_find_validation_error(const S2GeographyOwningPolyline& geog, S2Error* error) {
+    for (const auto& polyline: geog.Polylines()) {
+        if (polyline->FindValidationError(error)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool s2_find_validation_error(const S2GeographyOwningPolygon& geog, S2Error* error) {
+    return geog.Polygon()->FindValidationError(error);
+}
+
+bool s2_find_validation_error(const S2GeographyCollection& geog, S2Error* error) {
+    for (const auto& feature: geog.Features()) {
+        if (s2_find_validation_error(*feature, error)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool s2_find_validation_error(const S2Geography& geog, S2Error* error) {
+    if (geog.dimension() == 0) {
+        error->Clear();
+        return false;
+    }
+
+    if (geog.dimension() == 1) {
+        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolyline*>(&geog);
+        if (poly_ptr != nullptr) {
+            return s2_find_validation_error(*poly_ptr, error);
+        } else {
+            try {
+                auto poly = s2_build_polyline(geog);
+                return s2_find_validation_error(*poly, error);
+            } catch (S2GeographyException& e) {
+                error->Init(S2Error::INTERNAL, "%s", e.what());
+                return true;
+            }
+        }
+    }
+
+    if (geog.dimension() == 2) {
+        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        if (poly_ptr != nullptr) {
+            return s2_find_validation_error(*poly_ptr, error);
+        } else {
+            try {
+                auto poly = s2_build_polygon(geog);
+                return s2_find_validation_error(*poly, error);
+            } catch (S2GeographyException& e) {
+                error->Init(S2Error::INTERNAL, "%s", e.what());
+                return true;
+            }
+        }
+    }
+
+    auto collection_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
+    if (collection_ptr != nullptr) {
+        return s2_find_validation_error(*collection_ptr, error);
+    } else {
+        try {
+            auto collection = s2_build_polygon(geog);
+            return s2_find_validation_error(*collection, error);
+        } catch (S2GeographyException& e) {
+            error->Init(S2Error::INTERNAL, "%s", e.what());
+            return true;
+        }
+    }
+
+    throw S2GeographyException("s2_find_validation() error not implemented for this geography type");
+}
+
 
 S2Point s2_centroid(const S2Geography& geog) {
     S2Point centroid(0, 0, 0);

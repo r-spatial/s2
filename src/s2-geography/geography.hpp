@@ -36,7 +36,7 @@ public:
         }
 
         int dim = Shape(0)->dimension();
-        for (int i = 2; i < num_shapes(); i++) {
+        for (int i = 1; i < num_shapes(); i++) {
             if (dim != Shape(i)->dimension()) {
                 return -1;
             }

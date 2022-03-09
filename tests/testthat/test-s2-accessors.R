@@ -29,7 +29,7 @@ test_that("s2_is_valid() works", {
         # invalid
         "LINESTRING (0 0, 0 0, 1 1)",
         "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
-        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        "GEOMETRYCOLLECTION (POINT (0 1), POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
         NA
       )
     ),
@@ -50,7 +50,7 @@ test_that("s2_is_valid_detail() works", {
         # invalid
         "LINESTRING (0 0, 0 0, 1 1)",
         "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
-        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        "GEOMETRYCOLLECTION (POINT (0 1), POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
         NA
       )
     ),
