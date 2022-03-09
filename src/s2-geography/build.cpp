@@ -8,6 +8,7 @@
 
 #include "geography.hpp"
 #include "build.hpp"
+#include "accessors.hpp"
 
 namespace s2geography {
 
@@ -118,6 +119,99 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
     options.polyline_layer_action,
     options.polygon_layer_action
   );
+}
+
+std::unique_ptr<S2GeographyOwningPolygon> s2_unary_union(const S2GeographyOwningPolygon& geog,
+                                                         const S2GeographyOptions& options) {
+  // A geography with invalid loops won't work with the S2BooleanOperation
+  // we will use to accumulate (i.e., union) valid polygons,
+  // so we need to rebuild each loop as its own polygon,
+  // splitting crossed edges along the way.
+
+  // Not exposing these options as an argument (except snap function)
+  // because a particular combiation of them is required for this to work
+  S2Builder::Options builder_options;
+  builder_options.set_split_crossing_edges(true);
+  builder_options.set_snap_function(options.boolean_operation.snap_function());
+  s2builderutil::S2PolygonLayer::Options layer_options;
+  layer_options.set_edge_type(S2Builder::EdgeType::UNDIRECTED);
+  layer_options.set_validate(false);
+
+  // Rebuild all loops as polygons using the S2Builder()
+  std::vector<std::unique_ptr<S2Polygon>> loops;
+  for (int i = 0; i < geog.Polygon()->num_loops(); i++) {
+    std::unique_ptr<S2Polygon> loop = absl::make_unique<S2Polygon>();
+    S2Builder builder(builder_options);
+    builder.StartLayer(
+      absl::make_unique<s2builderutil::S2PolygonLayer>(loop.get(), layer_options));
+    builder.AddShape(S2Loop::Shape(geog.Polygon()->loop(i)));
+    S2Error error;
+    if (!builder.Build(&error)) {
+      throw S2GeographyException(error.text());
+    }
+
+    // Check if the builder created a polygon whose boundary contained more than
+    // half the earth (and invert it if so)
+    if (loop->GetArea() > (2 * M_PI)) {
+      loop->Invert();
+    }
+
+    loops.push_back(std::move(loop));
+  }
+
+  // Accumulate the union of outer loops (but difference of inner loops)
+  std::unique_ptr<S2Polygon> accumulated_polygon = absl::make_unique<S2Polygon>();
+  for (int i = 0; i < geog.Polygon()->num_loops(); i++) {
+    std::unique_ptr<S2Polygon> polygon_result = absl::make_unique<S2Polygon>();
+
+    // Use original nesting to suggest if this loop should be unioned or diffed.
+    // For valid polygons loops are arranged such that the biggest loop is on the outside
+    // followed by holes such that the below strategy should work (since we are
+    // just iterating along the original loop structure)
+    if ((geog.Polygon()->loop(i)->depth() % 2) == 0) {
+      polygon_result->InitToUnion(accumulated_polygon.get(), loops[i].get());
+    } else {
+      polygon_result->InitToDifference(accumulated_polygon.get(), loops[i].get());
+    }
+
+    accumulated_polygon.swap(polygon_result);
+  }
+
+  return absl::make_unique<S2GeographyOwningPolygon>(std::move(accumulated_polygon));
+}
+
+std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
+                                            const S2GeographyOptions& options) {
+  // complex union only needed when a polygon is involved
+  bool simple_union_ok = s2_is_empty(geog) || s2_dimension(geog) < 2;
+
+  // valid polygons that are not part of a collection can also use a
+  // simple union (common)
+  if (geog.dimension() == 2) {
+    S2Error validation_error;
+    if (!s2_find_validation_error(geog, &validation_error)) {
+      simple_union_ok = true;
+    }
+  }
+
+  if (simple_union_ok) {
+    S2GeographyShapeIndex empty;
+    return s2_boolean_operation(geog, empty, S2BooleanOperation::OpType::UNION, options);
+  }
+
+  if (geog.dimension() == 2) {
+    // If we've made it here we have an invalid polygon on our hands.
+    auto poly_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+    if (poly_ptr != nullptr) {
+      return s2_unary_union(*poly_ptr, options);
+    } else {
+      auto poly = s2_build_polygon(geog);
+      return s2_unary_union(*poly, options);
+    }
+  }
+
+  throw S2GeographyException(
+    "s2_unary_union() for multidimensional collections not implemented");
 }
 
 std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,

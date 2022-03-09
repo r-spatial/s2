@@ -279,7 +279,7 @@ test_that("s2_union(x) errors for the case of mixed dimension collections", {
     s2_union(
       c("GEOMETRYCOLLECTION(POLYGON ((-10 -10, -10 10, 10 10, 10 -10, -10 -10)), LINESTRING (0 -20, 0 20))")
     ),
-    "Unary union for collections is not implemented"
+    "for multidimensional collections not implemented"
   )
 })
 
