@@ -114,13 +114,19 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
     return absl::make_unique<S2GeographyCollection>();
 }
 
+std::unique_ptr<S2Geography> s2_convex_hull(const S2Geography& geog) {
+    S2ConvexHullAggregator agg;
+    agg.Add(geog);
+    return agg.Finalize();
+}
+
 
 void S2CentroidAggregator::Add(const S2Geography& geog) {
-        S2Point centroid = s2_centroid(geog);
-        if (centroid.Norm2() > 0) {
-            centroid_ += centroid.Normalize();
-        }
+    S2Point centroid = s2_centroid(geog);
+    if (centroid.Norm2() > 0) {
+        centroid_ += centroid.Normalize();
     }
+}
 
 void S2CentroidAggregator::Merge(const S2CentroidAggregator& other) {
     centroid_ += other.centroid_;
@@ -132,6 +138,64 @@ S2Point S2CentroidAggregator::Finalize() {
     } else {
         return centroid_;
     }
+}
+
+void S2ConvexHullAggregator::Add(const S2Geography& geog) {
+    if (geog.dimension() == 0) {
+        auto point_ptr = dynamic_cast<const S2GeographyOwningPoint*>(&geog);
+        if (point_ptr != nullptr) {
+            for (const auto& point : point_ptr->Points()) {
+                query_.AddPoint(point);
+            }
+        } else {
+            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            Add(*keep_alive_.back());
+        }
+
+        return;
+    }
+
+    if (geog.dimension() == 1) {
+        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolyline*>(&geog);
+        if (poly_ptr != nullptr) {
+            for (const auto& polyline : poly_ptr->Polylines()) {
+                query_.AddPolyline(*polyline);
+            }
+        } else {
+            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            Add(*keep_alive_.back());
+        }
+
+        return;
+    }
+
+    if (geog.dimension() == 2) {
+        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        if (poly_ptr != nullptr) {
+            query_.AddPolygon(*poly_ptr->Polygon());
+        } else {
+            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            Add(*keep_alive_.back());
+        }
+
+        return;
+    }
+
+    auto collection_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
+    if (collection_ptr != nullptr) {
+        for (const auto& feature : collection_ptr->Features()) {
+            Add(*feature);
+        }
+    } else {
+        keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+        Add(*keep_alive_.back());
+    }
+}
+
+std::unique_ptr<S2GeographyOwningPolygon> S2ConvexHullAggregator::Finalize() {
+    auto polygon = absl::make_unique<S2Polygon>();
+    polygon->Init(query_.GetConvexHull());
+    return absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
 }
 
 }

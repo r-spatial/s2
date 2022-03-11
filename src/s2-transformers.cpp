@@ -431,46 +431,15 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
   return op.processVector(geog);
 }
 
-
-class ConvexHullGeographyQuery: public S2ConvexHullQuery {
-public:
-
-  void AddGeography(Geography* feature) {
-    if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYGON) {
-      const S2Polygon* pol = feature->Polygon();
-      this->AddPolygon(*pol);
-    } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
-      const std::vector<S2Point>* pts = feature->Point();
-      for(const auto& pt: *pts) {
-        this->AddPoint(pt);
-      }
-    } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
-      const std::vector<std::unique_ptr<S2Polyline>>* lins = feature->Polyline();
-      for(const auto& lin: *lins) {
-        this->AddPolyline(*lin);
-      }
-    } else if (feature->GeographyType() == Geography::Type::GEOGRAPHY_COLLECTION) {
-      const std::vector<std::unique_ptr<Geography>>* features = feature->CollectionFeatures();
-      for (const auto& feat: *features) {
-        this->AddGeography(feat.get());
-      }
-    }
-  }
-
-  std::unique_ptr<S2Polygon> GetConvexHullPolygon() {
-    return absl::make_unique<S2Polygon>(this->GetConvexHull());
-  }
-};
-
 // [[Rcpp::export]]
 List cpp_s2_convex_hull(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      ConvexHullGeographyQuery convexHullQuery;
-      convexHullQuery.AddGeography(feature);
-
-      std::unique_ptr<S2Polygon> outP = convexHullQuery.GetConvexHullPolygon();
-      return XPtr<Geography>(new PolygonGeography(std::move(outP)));
+      auto geog = feature->NewGeography();
+      std::unique_ptr<s2geography::S2Geography> geog_out =
+        s2geography::s2_convex_hull(*geog);
+      auto geography = MakeOldGeography(*geog_out);
+      return XPtr<Geography>(geography.release());
     }
   };
 
@@ -481,8 +450,9 @@ List cpp_s2_convex_hull(List geog) {
 
 // [[Rcpp::export]]
 List cpp_s2_convex_hull_agg(List geog, bool naRm) {
-  // create the convex hull query
-  ConvexHullGeographyQuery convexHullQuery;
+  s2geography::S2ConvexHullAggregator agg;
+  std::vector<std::unique_ptr<s2geography::S2Geography>> keep_alive_;
+
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     item = geog[i];
@@ -492,11 +462,12 @@ List cpp_s2_convex_hull_agg(List geog, bool naRm) {
 
     if (item != R_NilValue) {
       XPtr<Geography> feature(item);
-      convexHullQuery.AddGeography(feature);
+      keep_alive_.push_back(feature->NewGeography());
+      agg.Add(*keep_alive_.back());
     }
   }
 
-  std::unique_ptr<S2Polygon> outP = convexHullQuery.GetConvexHullPolygon();
-  XPtr<Geography> outG(new PolygonGeography(std::move(outP)));
+  auto geography = MakeOldGeography(*agg.Finalize());
+  XPtr<Geography> outG(geography.release());
   return List::create(outG);
 }
