@@ -1,0 +1,137 @@
+
+#include "s2/s2centroids.h"
+
+#include "accessors-geog.hpp"
+#include "geography.hpp"
+#include "build.hpp"
+#include "accessors.hpp"
+
+namespace s2geography {
+
+S2Point s2_centroid(const S2Geography& geog) {
+    S2Point centroid(0, 0, 0);
+
+    if (geog.dimension() == 0) {
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            for (int j = 0; j < shape->num_edges(); j++) {
+                centroid += shape->edge(j).v0;
+            }
+        }
+
+        return centroid.Normalize();
+    }
+
+    if (geog.dimension() == 1) {
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            for (int j = 0; j < shape->num_edges(); j++) {
+                S2Shape::Edge e = shape->edge(j);
+                centroid += S2::TrueCentroid(e.v0, e.v1);
+            }
+        }
+
+        return centroid.Normalize();
+    }
+
+    if (geog.dimension() == 2) {
+        auto polygon_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        if (polygon_ptr != nullptr) {
+            centroid = polygon_ptr->Polygon()->GetCentroid();
+        } else {
+            std::unique_ptr<S2GeographyOwningPolygon> built = s2_build_polygon(geog);
+            centroid = built->Polygon()->GetCentroid();
+        }
+
+        return centroid.Normalize();
+    }
+
+    auto collection_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
+    if (collection_ptr == nullptr) {
+        throw S2GeographyException("Can't compute s2_centroid() on custom collection geography");
+    }
+
+    for (auto& feat: collection_ptr->Features()) {
+        centroid += s2_centroid(*feat);
+    }
+
+    return centroid.Normalize();
+}
+
+std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
+    int dimension = s2_dimension(geog);
+
+    if (dimension == 1) {
+        std::vector<S2Point> endpoints;
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            if (shape->dimension() < 1) {
+                continue;
+            }
+
+            endpoints.reserve(endpoints.size() + shape->num_chains() * 2);
+            for (int j = 0; j < shape->num_chains(); j++) {
+                S2Shape::Chain chain = shape->chain(j);
+                if (chain.length > 0) {
+                    endpoints.push_back(shape->edge(chain.start).v0);
+                    endpoints.push_back(shape->edge(chain.start + chain.length - 1).v1);
+                }
+            }
+        }
+
+        return absl::make_unique<S2GeographyOwningPoint>(std::move(endpoints));
+    }
+
+    if (dimension == 2) {
+        std::vector<std::unique_ptr<S2Polyline>> polylines;
+        polylines.reserve(geog.num_shapes());
+
+        for (int i = 0; i < geog.num_shapes(); i++) {
+            auto shape = geog.Shape(i);
+            if (shape->dimension() != 2) {
+                throw S2GeographyException("Can't extract boundary from heterogeneous collection");
+            }
+
+            for (int j = 0; j < shape->num_chains(); j++) {
+                S2Shape::Chain chain = shape->chain(j);
+                if (chain.length > 0) {
+                    std::vector<S2Point> points(chain.length + 1);
+
+                    points[0] = shape->edge(chain.start).v0;
+                    for (int k = 0; k < chain.length; k++) {
+                        points[k + 1] = shape->edge(chain.start + k).v1;
+                    }
+
+                    auto polyline = absl::make_unique<S2Polyline>(std::move(points));
+                    polylines.push_back(std::move(polyline));
+                }
+            }
+        }
+
+        return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines));
+    }
+
+    return absl::make_unique<S2GeographyCollection>();
+}
+
+
+void S2CentroidAggregator::Add(const S2Geography& geog) {
+        S2Point centroid = s2_centroid(geog);
+        if (centroid.Norm2() > 0) {
+            centroid_ += centroid.Normalize();
+        }
+    }
+
+void S2CentroidAggregator::Merge(const S2CentroidAggregator& other) {
+    centroid_ += other.centroid_;
+}
+
+S2Point S2CentroidAggregator::Finalize() {
+    if (centroid_.Norm2() > 0) {
+        return centroid_.Normalize();
+    } else {
+        return centroid_;
+    }
+}
+
+}

@@ -4,6 +4,7 @@
 #include "geography.hpp"
 #include "coverings.hpp"
 #include "accessors.hpp"
+#include "accessors-geog.hpp"
 
 namespace s2geography {
 
