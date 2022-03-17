@@ -378,19 +378,24 @@ List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized) 
         return R_NilValue;
       }
 
-      if (feature->IsCollection()) {
+      auto geog = feature->NewGeography();
+
+      if (s2geography::s2_is_empty(*geog)) {
+        return XPtr<PointGeography>(new PointGeography());
+      }
+
+      if (s2geography::s2_is_collection(*geog)) {
         throw GeographyOperatorException("`x` must be a simple geography");
+      } else if (geog->dimension() != 1) {
+        throw GeographyOperatorException("`x` must be a polyline");
       }
 
-      if (feature->IsEmpty()) {
-        return R_NilValue;
-      }
+      S2Point point = s2geography::s2_interpolate_normalized(*geog, this->distanceNormalized[i]);
 
-      if (feature->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
-        S2Point point = feature->Polyline()->at(0)->Interpolate(this->distanceNormalized[i]);
-        return XPtr<PointGeography>(new PointGeography(point));
+      if (point.Norm2() == 0) {
+        return XPtr<PointGeography>(new PointGeography());
       } else {
-        throw GeographyOperatorException("`x` must be a polyline geography");
+        return XPtr<PointGeography>(new PointGeography(point));
       }
     }
   };
