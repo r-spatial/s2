@@ -1,27 +1,9 @@
 
-#include "s2/s2boolean_operation.h"
-#include "s2/s2closest_edge_query.h"
-#include "s2/s2polygon.h"
-#include "s2/s2polyline.h"
-#include "s2/s2point.h"
-#include "s2/s2error.h"
-#include "s2/s2boolean_operation.h"
-#include "s2/s2builder.h"
-#include "s2/s2builderutil_s2polygon_layer.h"
-#include "s2/s2builderutil_s2polyline_vector_layer.h"
-#include "s2/s2builderutil_s2point_vector_layer.h"
-#include "s2/s2builderutil_closed_set_normalizer.h"
-#include "s2/s2builderutil_snap_functions.h"
 #include "s2/s2shape_index_buffered_region.h"
 #include "s2/s2region_coverer.h"
-#include "s2/s2convex_hull_query.h"
 
 #include "s2-options.h"
 #include "geography-operator.h"
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
-#include "geography-collection.h"
 #include "geography-shim.h"
 
 #include <Rcpp.h>
