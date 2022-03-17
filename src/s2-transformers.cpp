@@ -419,8 +419,11 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      auto geog = feature->NewGeography();
+      s2geography::S2GeographyShapeIndex index(*geog);
+
       S2ShapeIndexBufferedRegion region;
-      region.Init(feature->ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+      region.Init(&index.ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 
       S2CellUnion cellUnion;
       cellUnion = coverer.GetCovering(region);
