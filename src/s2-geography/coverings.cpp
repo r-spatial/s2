@@ -1,5 +1,6 @@
 
 #include "s2/s2region_coverer.h"
+#include "s2/s2shape_index_buffered_region.h"
 
 #include "geography.hpp"
 #include "coverings.hpp"
@@ -55,6 +56,23 @@ S2Point s2_point_on_surface(const S2Geography& geog, S2RegionCoverer& coverer) {
     }
 
     throw S2GeographyException("s2_point_on_surface() not implemented for polyline");
+}
+
+void s2_covering(const S2Geography& geog, std::vector<S2CellId>* covering,
+                          S2RegionCoverer& coverer) {
+    coverer.GetCovering(*geog.Region(), covering);
+}
+
+void s2_interior_covering(const S2Geography& geog, std::vector<S2CellId>* covering,
+                          S2RegionCoverer& coverer) {
+    coverer.GetInteriorCovering(*geog.Region(), covering);
+}
+
+void s2_covering_buffered(const S2GeographyShapeIndex& geog, double distance_radians,
+                          std::vector<S2CellId>* covering,
+                          S2RegionCoverer& coverer) {
+    S2ShapeIndexBufferedRegion region(&geog.ShapeIndex(), S1ChordAngle::Radians(distance_radians));
+    coverer.GetCovering(region, covering);
 }
 
 }

@@ -330,8 +330,11 @@ List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
       distance(distance), coverer(coverer), interior(interior) {}
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+      auto geog = feature->NewGeography();
+      s2geography::S2GeographyShapeIndex index(*geog);
+
       S2ShapeIndexBufferedRegion region;
-      region.Init(feature->ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+      region.Init(&index.ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 
       S2CellUnion cellUnion;
       if (interior) {
@@ -366,6 +369,8 @@ List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
   S1ChordAngle bufferAngle = S1ChordAngle::Radians(buffer);
 
   S2RegionUnion regionUnion;
+  std::vector<std::unique_ptr<s2geography::S2Geography>> keep_alive;
+  std::vector<std::unique_ptr<s2geography::S2GeographyShapeIndex>> index_keep_alive;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -378,9 +383,12 @@ List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
+      keep_alive.push_back(feature->NewGeography());
+      auto index = absl::make_unique<s2geography::S2GeographyShapeIndex>(*keep_alive.back());
       auto region = absl::make_unique<S2ShapeIndexBufferedRegion>();
-      region->Init(feature->ShapeIndex(), bufferAngle);
+      region->Init(&index->ShapeIndex(), bufferAngle);
       regionUnion.Add(std::move(region));
+      index_keep_alive.push_back(std::move(index));
     }
   }
 
