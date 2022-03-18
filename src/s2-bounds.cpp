@@ -24,7 +24,7 @@ DataFrame cpp_s2_bounds_cap(List geog) {
       lat[i] = lng[i] = angle[i] = NA_REAL;
     } else {
       Rcpp::XPtr<Geography> feature(item);
-      S2Cap cap = feature->GetCapBound();
+      S2Cap cap = feature->NewGeography()->Region()->GetCapBound();
       S2LatLng center(cap.center());
       lng[i] = center.lng().degrees();
       lat[i] = center.lat().degrees();
@@ -51,7 +51,7 @@ DataFrame cpp_s2_bounds_rect(List geog) {
       lng_lo[i] = lat_lo[i] = lng_hi[i] = lat_hi[i] = NA_REAL;
     } else {
       Rcpp::XPtr<Geography> feature(item);
-      S2LatLngRect rect = feature->GetRectBound();
+      S2LatLngRect rect = feature->NewGeography()->Region()->GetRectBound();
       lng_lo[i] = rect.lng_lo().degrees();
       lat_lo[i] = rect.lat_lo().degrees();
       lng_hi[i] = rect.lng_hi().degrees();
