@@ -178,7 +178,8 @@ private:
 // valid for the scope of those objects.
 class S2GeographyShapeIndex: public S2Geography {
 public:
-    S2GeographyShapeIndex() {}
+    S2GeographyShapeIndex(MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
+        : shape_index_(options) {}
 
     explicit S2GeographyShapeIndex(const S2Geography& geog) {
         Add(geog);
@@ -201,7 +202,7 @@ public:
     std::unique_ptr<S2Shape> Shape(int id) const;
     std::unique_ptr<S2Region> Region() const;
 
-    const S2ShapeIndex& ShapeIndex() const {
+    const MutableS2ShapeIndex& ShapeIndex() const {
         return shape_index_;
     }
 

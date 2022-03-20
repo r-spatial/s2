@@ -2,6 +2,7 @@
 #pragma once
 
 #include "geography.hpp"
+#include "index.hpp"
 #include "accessors.hpp"
 #include "accessors-geog.hpp"
 #include "linear-referencing.hpp"
