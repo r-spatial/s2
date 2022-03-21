@@ -14,92 +14,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-std::unordered_map<int, R_xlen_t> buildSourcedIndex(List geog, MutableS2ShapeIndex* index) {
-  std::unordered_map<int, R_xlen_t> indexSource;
-  std::vector<int> shapeIds;
-
-  for (R_xlen_t j = 0; j < geog.size(); j++) {
-    checkUserInterrupt();
-    SEXP item2 = geog[j];
-
-    // build index and store index IDs so that shapeIds can be
-    // mapped back to the geog index
-    if (item2 == R_NilValue) {
-      Rcpp::stop("Missing `y` not allowed in binary indexed operators()");
-    } else {
-      Rcpp::XPtr<Geography> feature2(item2);
-      shapeIds = feature2->BuildShapeIndex(index);
-      for (size_t k = 0; k < shapeIds.size(); k ++) {
-        indexSource[shapeIds[k]] = j;
-      }
-    }
-  }
-
-  return indexSource;
-}
-
-std::unordered_set<R_xlen_t> findPossibleIntersections(const S2Region& region,
-                                                       const MutableS2ShapeIndex* index,
-                                                       std::unordered_map<int, R_xlen_t>& source,
-                                                       int maxRegionCells) {
-
-  std::unordered_set<R_xlen_t> mightIntersectIndices;
-  MutableS2ShapeIndex::Iterator indexIterator(index);
-
-  // generate a small covering of the region
-  S2RegionCoverer coverer;
-  coverer.mutable_options()->set_max_cells(maxRegionCells);
-  S2CellUnion covering = coverer.GetCovering(region);
-
-  // iterate over cells in the featureIndex
-  for (S2CellId featureCellId: covering) {
-    S2ShapeIndex::CellRelation relation = indexIterator.Locate(featureCellId);
-
-    if (relation == S2ShapeIndex::CellRelation::INDEXED) {
-      // we're in luck! these indexes have this cell in common
-      // add all the features it contains as possible intersectors for featureIndex
-      const S2ShapeIndexCell& cell = indexIterator.cell();
-      for (int k = 0; k < cell.num_clipped(); k++) {
-        int shapeId = cell.clipped(k).shape_id();
-        mightIntersectIndices.insert(source[shapeId]);
-      }
-
-    } else if(relation  == S2ShapeIndex::CellRelation::SUBDIVIDED) {
-      // promising! the geog2 index has a child cell of it.id()
-      // (at which indexIterator is now positioned)
-      // keep iterating until the iterator is done OR we're no longer at a child cell of
-      // it.id(). The ordering of the iterator isn't guaranteed anywhere in the documentation;
-      // however, this ordering would be consistent with that of a Normalized
-      // S2CellUnion.
-      while (!indexIterator.done() && featureCellId.contains(indexIterator.id())) {
-        // potentially many cells in the indexIterator, so let the user cancel if this is
-        // running too long
-        checkUserInterrupt();
-
-        // add all the features the child cell contains as possible intersectors for featureIndex
-        const S2ShapeIndexCell& cell = indexIterator.cell();
-        for (int k = 0; k < cell.num_clipped(); k++) {
-          int shapeId = cell.clipped(k).shape_id();
-          mightIntersectIndices.insert(source[shapeId]);
-        }
-
-        // go to the next cell in the index
-        indexIterator.Next();
-      }
-    }
-
-    // else: relation == S2ShapeIndex::CellRelation::DISJOINT (do nothing)
-  }
-
-  return mightIntersectIndices;
-}
 
 template<class VectorType, class ScalarType>
 class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, ScalarType> {
 public:
-  std::unique_ptr<MutableS2ShapeIndex> geog2Index;
-  std::unordered_map<int, R_xlen_t> geog2IndexSource;
   std::unique_ptr<s2geography::S2GeographyIndex> geog2_index;
+  std::unique_ptr<s2geography::S2GeographyIndex::Iterator> iterator;
   std::vector<std::unique_ptr<s2geography::S2Geography>> keep_alive_;
 
   // max_edges_per_cell should be between 10 and 50, with lower numbers
@@ -108,14 +28,13 @@ public:
   // of the spectrum do a reasonable job of efficient preselection, and that
   // decreasing this value does little to increase performance.
 
-  IndexedBinaryGeographyOperator() {
+  IndexedBinaryGeographyOperator(int maxEdgesPerCell = 50) {
     MutableS2ShapeIndex::Options index_options;
-    index_options.set_max_edges_per_cell(50);
-    this->geog2Index = absl::make_unique<MutableS2ShapeIndex>(index_options);
+    index_options.set_max_edges_per_cell(maxEdgesPerCell);
     geog2_index = absl::make_unique<s2geography::S2GeographyIndex>(index_options);
   }
 
-  virtual void buildIndex(List geog2, int maxEdgesPerCell = 50) {
+  virtual void buildIndex(List geog2) {
     for (R_xlen_t j = 0; j < geog2.size(); j++) {
       checkUserInterrupt();
       SEXP item2 = geog2[j];
@@ -131,7 +50,7 @@ public:
       }
     }
 
-    this->geog2IndexSource = buildSourcedIndex(geog2, this->geog2Index.get());
+    iterator = absl::make_unique<s2geography::S2GeographyIndex::Iterator>(geog2_index.get());
   }
 };
 
@@ -231,48 +150,44 @@ public:
   // reasonable approximation of a geometry, although benchmarking seems to indicate that
   // increasing this number above 4 actually decreasses performance (using a value
   // of 1 dramatically decreases performance)
-  IndexedMatrixPredicateOperator(List s2options, int maxFeatureCells = 4):
+  IndexedMatrixPredicateOperator(List s2options, int maxFeatureCells = 4,
+                                 int maxEdgesPerCell = 50):
+    IndexedBinaryGeographyOperator<List, IntegerVector>(maxEdgesPerCell),
     maxFeatureCells(maxFeatureCells) {
     GeographyOperationOptions options(s2options);
     this->options = options.booleanOperationOptions();
+    this->coverer.mutable_options()->set_max_cells(maxFeatureCells);
   }
 
-  // See IndexedBinaryGeographyOperator::buildIndex() for why 50 is the default value
-  // for maxEdgesPerCell
-  void buildIndex(List geog2, int maxEdgesPerCell = 50) {
+  void buildIndex(List geog2) {
     this->geog2  = geog2;
-    IndexedBinaryGeographyOperator<List, IntegerVector>::buildIndex(geog2, maxEdgesPerCell);
+    IndexedBinaryGeographyOperator<List, IntegerVector>::buildIndex(geog2);
   }
 
   IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
     S2ShapeIndex* index1 = feature->ShapeIndex();
     S2ShapeIndexRegion<S2ShapeIndex> region = MakeS2ShapeIndexRegion(index1);
 
-    // build a list of candidate feature indices
-    std::unordered_set<R_xlen_t> mightIntersectIndices = findPossibleIntersections(
-      region,
-      this->geog2Index.get(),
-      this->geog2IndexSource,
-      this->maxFeatureCells
-    );
+    coverer.GetCovering(region, &cell_ids);
+    const std::unordered_set<int>& might_intersect = iterator->Query(cell_ids);
 
     // loop through features from geog2 that might intersect feature
     // and build a list of indices that actually intersect (based on
     // this->actuallyIntersects(), which might perform alternative
     // comparisons)
-    std::vector<int> actuallyIntersectIndices;
-    for (R_xlen_t j: mightIntersectIndices) {
+    indices.clear();
+    for (int j: might_intersect) {
       SEXP item = this->geog2[j];
       XPtr<Geography> feature2(item);
       if (this->actuallyIntersects(index1, feature2->ShapeIndex(), i, j)) {
         // convert to R index here + 1
-        actuallyIntersectIndices.push_back(j + 1);
+        indices.push_back(j + 1);
       }
     }
 
     // return sorted integer vector
-    std::sort(actuallyIntersectIndices.begin(), actuallyIntersectIndices.end());
-    return Rcpp::IntegerVector(actuallyIntersectIndices.begin(), actuallyIntersectIndices.end());
+    std::sort(indices.begin(), indices.end());
+    return Rcpp::IntegerVector(indices.begin(), indices.end());
   };
 
   virtual bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) = 0;
@@ -281,6 +196,9 @@ public:
     List geog2;
     S2BooleanOperation::Options options;
     int maxFeatureCells;
+    S2RegionCoverer coverer;
+    std::vector<S2CellId> cell_ids;
+    std::vector<int> indices;
 };
 
 // [[Rcpp::export]]
@@ -288,16 +206,16 @@ List cpp_s2_may_intersect_matrix(List geog1, List geog2,
                                  int maxEdgesPerCell, int maxFeatureCells, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
-    Op(List s2options, int maxFeatureCells):
-      IndexedMatrixPredicateOperator(s2options, maxFeatureCells) {}
+    Op(List s2options, int maxFeatureCells, int maxEdgesPerCell):
+      IndexedMatrixPredicateOperator(s2options, maxFeatureCells, maxEdgesPerCell) {}
 
     bool actuallyIntersects(S2ShapeIndex* index1, S2ShapeIndex* index2, R_xlen_t i, R_xlen_t j) {
       return true;
     };
   };
 
-  Op op(s2options, maxFeatureCells);
-  op.buildIndex(geog2, maxEdgesPerCell);
+  Op op(s2options, maxFeatureCells, maxEdgesPerCell);
+  op.buildIndex(geog2);
   return op.processVector(geog1);
 }
 
