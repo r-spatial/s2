@@ -99,8 +99,8 @@ LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options) {
       s2geography::S2GeographyShapeIndex index1(*geog1);
       s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      return s2geography::s2_intersects(index1, index2, closedOptions) &&
-        !s2geography::s2_intersects(index1, index1, openOptions);
+      return s2geography::s2_intersects(index1, index2, this->closedOptions) &&
+        !s2geography::s2_intersects(index1, index2, this->openOptions);
     }
 
   private:
