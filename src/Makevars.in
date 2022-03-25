@@ -112,6 +112,7 @@ OBJECTS = $(ABSL_LIBS) \
      s2-geography/build.o \
      s2-geography/coverings.o \
      s2-geography/geography.o \
+     s2-geography/predicates.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \

@@ -9,3 +9,4 @@
 #include "distance.hpp"
 #include "build.hpp"
 #include "coverings.hpp"
+#include "predicates.hpp"

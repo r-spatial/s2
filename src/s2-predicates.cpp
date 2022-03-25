@@ -28,11 +28,12 @@ LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Intersects(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        options
-      );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_intersects(index1, index2, options);
     };
   };
 
@@ -47,11 +48,12 @@ LogicalVector cpp_s2_equals(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Equals(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        this->options
-      );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_equals(index1, index2, options);
     }
   };
 
@@ -65,17 +67,11 @@ LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      // by default Contains() will return true for Contains(x, EMPTY), which is
-      // not true in BigQuery or GEOS
-      if (feature2->IsEmpty()) {
-        return false;
-      } else {
-        return S2BooleanOperation::Contains(
-          *feature1->ShapeIndex(),
-          *feature2->ShapeIndex(),
-          this->options
-        );
-      }
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+      return s2geography::s2_contains(index1, index2, options);
     }
   };
 
@@ -98,16 +94,13 @@ LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options) {
     }
 
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      return S2BooleanOperation::Intersects(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        this->closedOptions
-      ) &&
-        !S2BooleanOperation::Intersects(
-          *feature1->ShapeIndex(),
-          *feature2->ShapeIndex(),
-          this->openOptions
-        );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_intersects(index1, index2, closedOptions) &&
+        !s2geography::s2_intersects(index1, index1, openOptions);
     }
 
   private:
