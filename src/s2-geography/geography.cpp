@@ -21,6 +21,7 @@ using namespace s2geography;
 // data. S2Shape instances do not typically own their data (e.g., S2Polygon::Shape),
 // so this does not change the general relationship (that anything returned by
 // S2Geography::Shape() is only valid within the scope of the S2Geography).
+// Note that this class is also available (but not exposed) in s2/s2shapeutil_coding.cc.
 class S2ShapeWrapper: public S2Shape {
 public:
     S2ShapeWrapper(S2Shape* shape): shape_(shape) {}
@@ -37,6 +38,13 @@ private:
     S2Shape* shape_;
 };
 
+// Just like the S2ShapeWrapper, the S2RegionWrapper helps reconcile the differences
+// in lifecycle expectation between S2 and S2Geography. We often need access to a
+// S2Region to generalize algorithms; however, there are some operations that need
+// ownership of the region (e.g., the S2RegionUnion). In S2Geography the assumption
+// is that anything returned by a S2Geography is only valid for the lifetime of the
+// underlying S2Geography. A different design of the algorithms implemented here might
+// well make this unnecessary.
 class S2RegionWrapper: public S2Region {
 public:
     S2RegionWrapper(S2Region* region): region_(region) {}
