@@ -10,6 +10,7 @@
 
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2shape_index_region.h"
+#include "s2/s2shapeutil_coding.h"
 
 #include "geography.hpp"
 using namespace s2geography;
@@ -23,7 +24,7 @@ using namespace s2geography;
 class S2ShapeWrapper: public S2Shape {
 public:
     S2ShapeWrapper(S2Shape* shape): shape_(shape) {}
-    int num_edges() const { return shape_->num_edges();}
+    int num_edges() const { return shape_->num_edges(); }
     Edge edge(int edge_id) const { return shape_->edge(edge_id); }
     int dimension() const { return shape_->dimension(); }
     ReferencePoint GetReferencePoint() const { return shape_->GetReferencePoint(); }
@@ -34,6 +35,23 @@ public:
 
 private:
     S2Shape* shape_;
+};
+
+class S2RegionWrapper: public S2Region {
+public:
+    S2RegionWrapper(S2Region* region): region_(region) {}
+    S2Region* Clone() const { return region_->Clone(); }
+    S2Cap GetCapBound() const { return region_->GetCapBound(); }
+    S2LatLngRect GetRectBound() const { return region_->GetRectBound(); }
+    void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const {
+        return region_->GetCellUnionBound(cell_ids);
+    }
+    bool Contains(const S2Cell& cell) const { return region_->Contains(cell); }
+    bool MayIntersect(const S2Cell& cell) const { return region_->MayIntersect(cell); }
+    bool Contains(const S2Point& p) const { return region_->Contains(p); }
+
+private:
+    S2Region* region_;
 };
 
 
@@ -81,7 +99,7 @@ std::unique_ptr<S2Shape> S2GeographyOwningPolyline::Shape(int id) const {
 std::unique_ptr<S2Region> S2GeographyOwningPolyline::Region() const {
     auto region = absl::make_unique<S2RegionUnion>();
     for (const auto& polyline: polylines_) {
-        region->Add(std::unique_ptr<S2Region>(polyline->Clone()));
+        region->Add(absl::make_unique<S2RegionWrapper>(polyline.get()));
     }
     // because Rtools for R 3.6 on Windows complains about a direct
     // return region
@@ -99,7 +117,7 @@ std::unique_ptr<S2Shape> S2GeographyOwningPolygon::Shape(int id) const {
 }
 
 std::unique_ptr<S2Region> S2GeographyOwningPolygon::Region() const {
-    return std::unique_ptr<S2Polygon>(polygon_->Clone());
+    return absl::make_unique<S2RegionWrapper>(polygon_.get());
 }
 
 void S2GeographyOwningPolygon::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
