@@ -183,39 +183,11 @@ LogicalVector cpp_s2_intersects_box(List geog,
         return false;
       }
 
-      // create polygon vertices
-      std::vector<S2Point> points(2 + 2 * detail);
-      S2LatLng vertex;
+      S2LatLngRect rect(S2LatLng::FromDegrees(ymin, xmin), S2LatLng::FromDegrees(ymax, xmax));
 
-      // south edge
-      for (int i = 0; i <= detail; i++) {
-        vertex = S2LatLng::FromDegrees(xmin + deltaDegrees * i, ymin).Normalized();
-        points[i] = vertex.ToPoint();
-      }
-
-      // north edge
-      for (int i = 0; i <= detail; i++) {
-        vertex = S2LatLng::FromDegrees(xmax - deltaDegrees * i, ymax).Normalized();
-        points[detail + 1 + i] = vertex.ToPoint();
-      }
-
-      // create polygon
-      std::unique_ptr<S2Loop> loop(new S2Loop());
-      loop->set_s2debug_override(S2Debug::DISABLE);
-      loop->Init(points);
-      loop->Normalize();
-
-      std::vector<std::unique_ptr<S2Loop>> loops(1);
-      loops[0] = std::move(loop);
-      S2Polygon polygon;
-      polygon.InitOriented(std::move(loops));
-
-      // test intersection
-      return S2BooleanOperation::Intersects(
-        polygon.index(),
-        *feature->ShapeIndex(),
-        this->options
-      );
+      auto geog = feature->NewGeography();
+      s2geography::S2GeographyShapeIndex index(*geog);
+      return s2geography::s2_intersects_box(index, rect, options, deltaDegrees);
     }
   };
 

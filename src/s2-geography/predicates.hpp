@@ -24,7 +24,7 @@ bool s2_touches(const S2GeographyShapeIndex& geog1,
                 const S2BooleanOperation::Options& options);
 
 bool s2_intersects_box(const S2GeographyShapeIndex& geog1,
-                       S2LatLngRect rect,
+                       const S2LatLngRect& rect,
                        const S2BooleanOperation::Options& options,
                        double tolerance);
 

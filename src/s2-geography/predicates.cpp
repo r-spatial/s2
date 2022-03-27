@@ -54,7 +54,7 @@ bool s2_contains(const S2GeographyShapeIndex& geog1,
 // outside of any loop.
 
 bool s2_intersects_box(const S2GeographyShapeIndex& geog1,
-                       S2LatLngRect rect,
+                       const S2LatLngRect& rect,
                        const S2BooleanOperation::Options& options,
                        double tolerance) {
     // 99% of this is making a S2Loop out of a S2LatLngRect
