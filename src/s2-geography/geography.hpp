@@ -187,9 +187,7 @@ public:
 
     // Add a S2Geography to the index, returning the last shape_id
     // that was added to the index or -1 if no shapes were added
-    // to the index. Shape ids are assigned sequentially and the first
-    // shape_id that was added can be obtained by subtracting
-    // geog.num_shapes().
+    // to the index.
     int Add(const S2Geography& geog) {
         int id = -1;
         for (int i = 0; i < geog.num_shapes(); i++) {
@@ -203,10 +201,6 @@ public:
     std::unique_ptr<S2Region> Region() const;
 
     const MutableS2ShapeIndex& ShapeIndex() const {
-        return shape_index_;
-    }
-
-    MutableS2ShapeIndex& MutableShapeIndex() {
         return shape_index_;
     }
 
