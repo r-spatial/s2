@@ -43,24 +43,13 @@ public:
         Iterator(const S2GeographyIndex* index):
             index_(index), iterator_(&index_->ShapeIndex()) {}
 
-        const std::unordered_set<int>& Query(const std::vector<S2CellId>& covering,
-                                             bool reset = true) {
-            if (reset) {
-                might_intersect_indices_.clear();
-            }
-
+        void Query(const std::vector<S2CellId>& covering, std::unordered_set<int>* indices) {
             for (const S2CellId& query_cell: covering) {
-                Query(query_cell, false);
+                Query(query_cell, indices);
             }
-
-            return might_intersect_indices_;
         }
 
-        const std::unordered_set<int>& Query(const S2CellId& cell_id, bool reset = true) {
-            if (reset) {
-                might_intersect_indices_.clear();
-            }
-
+        void Query(const S2CellId& cell_id, std::unordered_set<int>* indices) {
             S2ShapeIndex::CellRelation relation = iterator_.Locate(cell_id);
 
             if (relation == S2ShapeIndex::CellRelation::INDEXED) {
@@ -69,7 +58,7 @@ public:
                 const S2ShapeIndexCell& index_cell = iterator_.cell();
                 for (int k = 0; k < index_cell.num_clipped(); k++) {
                     int shape_id = index_cell.clipped(k).shape_id();
-                    might_intersect_indices_.insert(index_->value(shape_id));
+                    indices->insert(index_->value(shape_id));
                 }
             } else if(relation  == S2ShapeIndex::CellRelation::SUBDIVIDED) {
                 // Promising! the index has a child cell of iterator_.id()
@@ -83,7 +72,7 @@ public:
                     const S2ShapeIndexCell& index_cell = iterator_.cell();
                     for (int k = 0; k < index_cell.num_clipped(); k++) {
                         int shape_id = index_cell.clipped(k).shape_id();
-                        might_intersect_indices_.insert(index_->value(shape_id));
+                        indices->insert(index_->value(shape_id));
                     }
 
                     // go to the next cell in the index
@@ -92,14 +81,11 @@ public:
             }
 
             // else: relation == S2ShapeIndex::CellRelation::DISJOINT (do nothing)
-
-            return might_intersect_indices_;
         }
 
     private:
         const S2GeographyIndex* index_;
         MutableS2ShapeIndex::Iterator iterator_;
-        std::unordered_set<int> might_intersect_indices_;
     };
 
 private:

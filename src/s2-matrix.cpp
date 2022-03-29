@@ -167,7 +167,8 @@ public:
   IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
     auto geog1 = feature->NewGeography();
     coverer.GetCovering(*geog1->Region(), &cell_ids);
-    const std::unordered_set<int>& might_intersect = iterator->Query(cell_ids);
+    indices_unsorted.clear();
+    iterator->Query(cell_ids, &indices_unsorted);
 
     s2geography::S2GeographyShapeIndex index1(*geog1);
 
@@ -176,7 +177,7 @@ public:
     // this->actuallyIntersects(), which might perform alternative
     // comparisons)
     indices.clear();
-    for (int j: might_intersect) {
+    for (int j: indices_unsorted) {
       SEXP item = this->geog2[j];
       XPtr<Geography> feature2(item);
       auto geog2 = feature2->NewGeography();
@@ -203,6 +204,7 @@ public:
     int maxFeatureCells;
     S2RegionCoverer coverer;
     std::vector<S2CellId> cell_ids;
+    std::unordered_set<int> indices_unsorted;
     std::vector<int> indices;
 };
 
