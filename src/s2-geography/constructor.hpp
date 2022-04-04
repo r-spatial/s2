@@ -55,7 +55,9 @@ public:
                 "PointConstructor input must be empty, point, multipoint, or collection");
         }
 
-        points_.reserve(points_.size() + size);
+        if (size > 0) {
+            points_.reserve(points_.size() + size);
+        }
     }
 
     void coords(const double* coord, int64_t n, int32_t coord_size) {
@@ -95,7 +97,9 @@ public:
             is_linestring_ = false;
         } else if (geometry_type == util::GeometryType::LINESTRING ||
                    size == 0) {
-            points_.reserve(size);
+            if (size > 0) {
+                points_.reserve(size);
+            }
             is_linestring_ = true;
         } else {
             throw S2GeographyException(

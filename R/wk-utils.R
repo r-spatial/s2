@@ -65,6 +65,17 @@ s2_projection_filter <- function(handler, projection = s2_projection_plate_carre
   )
 }
 
+s2_geography_writer <- function(oriented = FALSE, check = TRUE) {
+  wk::new_wk_handler(
+    .Call(
+      c_s2_geography_writer_new,
+      as.logical(oriented)[1],
+      as.logical(check)[1]
+    ),
+    "s2_geography_writer"
+  )
+}
+
 #' @rdname s2_unprojection_filter
 #' @export
 s2_projection_plate_carree <- function() {

@@ -56,7 +56,7 @@ int builder_vector_start(const wk_vector_meta_t* meta, void* handler_data) {
 SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
-
+  return R_NilValue;
   WK_METHOD_CPP_END
 }
 
@@ -64,6 +64,7 @@ int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* 
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
   data->builder->start_feature();
+  return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
 
@@ -80,6 +81,7 @@ int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* ha
   WK_METHOD_CPP_START
   std::unique_ptr<s2geography::S2Geography> feat = data->builder->finish_feature();
   // Append external pointer to feature
+  return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
 
@@ -168,7 +170,7 @@ void delete_collection_constructor(SEXP xptr) {
     }
 }
 
-extern "C" SEXP s2_c_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
+extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
   CPP_START
 
   auto builder = new s2geography::CollectionConstructor();
