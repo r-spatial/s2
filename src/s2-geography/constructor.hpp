@@ -72,7 +72,7 @@ public:
     std::unique_ptr<S2Geography> finish() {
         auto result = absl::make_unique<S2GeographyOwningPoint>(std::move(points_));
         points_.clear();
-        return result;
+        return std::unique_ptr<S2Geography>(result.release());
     }
 
 private:
@@ -115,7 +115,7 @@ public:
     std::unique_ptr<S2Geography> finish() {
         auto result = absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_));
         polylines_.clear();
-        return result;
+        return std::unique_ptr<S2Geography>(result.release());
     }
 
 private:
@@ -163,7 +163,8 @@ public:
         }
 
         loops_.clear();
-        return absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
+        auto result = absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
+        return std::unique_ptr<S2Geography>(result.release());
     }
 
 private:
@@ -235,7 +236,7 @@ public:
     std::unique_ptr<S2Geography> finish() {
         auto result = absl::make_unique<S2GeographyCollection>(std::move(features_));
         features_.clear();
-        return result;
+        return std::unique_ptr<S2Geography>(result.release());
     }
 
     void start_feature() {
