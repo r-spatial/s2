@@ -30,7 +30,7 @@ public:
 
     virtual void coords(const double* coord, int64_t n, int32_t coord_size) {
         for (int64_t i = 0; i < n; i++) {
-            S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size], coord[i * coord_size + 1]);
+            S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1], coord[i * coord_size]);
             points_.push_back(pt.ToPoint());
         }
     }
@@ -179,7 +179,8 @@ private:
 class CollectionConstructor: public Constructor {
 public:
     CollectionConstructor(const PolygonConstructor::Options& options = PolygonConstructor::Options()):
-        options_(options), level_(0), polygon_constructor_(options) {}
+        options_(options), level_(0), polygon_constructor_(options),
+        collection_constructor_(nullptr) {}
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         level_++;
@@ -193,25 +194,26 @@ public:
         case util::GeometryType::POINT:
         case util::GeometryType::MULTIPOINT:
             active_constructor_ = &point_constructor_;
+            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::LINESTRING:
         case util::GeometryType::MULTILINESTRING:
             active_constructor_ = &polyline_constructor_;
+            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::POLYGON:
         case util::GeometryType::MULTIPOLYGON:
             active_constructor_ = &polygon_constructor_;
+            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::GEOMETRYCOLLECTION:
-            collection_constructor_ = absl::make_unique<CollectionConstructor>();
-            active_constructor_ = collection_constructor_.get();
+            this->collection_constructor_ = absl::make_unique<CollectionConstructor>(options_);
+            this->active_constructor_ = this->collection_constructor_.get();
+            // don't call geom_start()!
             break;
         default:
             throw S2GeographyException("CollectionConstructor: unsupported geometry type");
         }
-
-        active_constructor_->geom_start(geometry_type, size);
-
     }
 
     void ring_start(int32_t size) {
@@ -227,11 +229,13 @@ public:
     }
 
     void geom_end() {
-        active_constructor_->geom_end();
+        if (active_constructor_ != collection_constructor_.get()) {
+            active_constructor_->geom_end();
+        }
+
         level_--;
         if (level_ == 0) {
-            auto feature = absl::make_unique<S2GeographyCollection>(std::move(features_));
-            features_.clear();
+            auto feature = active_constructor_->finish();
             features_.push_back(std::move(feature));
             active_constructor_ = nullptr;
         }

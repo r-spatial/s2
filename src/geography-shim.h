@@ -1,11 +1,14 @@
 
+#ifndef S2_GEOGRAPHY_SHIM_H_INCLUDED
+#define S2_GEOGRAPHY_SHIM_H_INCLUDED
+
 #include "point-geography.h"
 #include "polyline-geography.h"
 #include "polygon-geography.h"
 #include "geography-collection.h"
 #include "s2-geography/s2-geography.hpp"
 
-std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog) {
+static inline std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog) {
     auto point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(&geog);
     if (point != nullptr) {
         return absl::make_unique<PointGeography>(point->Points());
@@ -37,3 +40,5 @@ std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog
 
     throw s2geography::S2GeographyException("Unsupported S2Geography subclass");
 }
+
+#endif

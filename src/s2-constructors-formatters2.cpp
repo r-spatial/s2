@@ -5,6 +5,7 @@
 
 #include "wk-v1.h"
 #include "s2-geography/constructor.hpp"
+#include "geography-shim.h"
 
 
 #define CPP_START                         \
@@ -45,19 +46,74 @@
 
 typedef struct {
     s2geography::CollectionConstructor* builder;
+    SEXP result;
+    R_xlen_t feat_id;
     int coord_size;
     char cpp_exception_error[8096];
 } builder_handler_t;
 
+
+// TODO: Both of these allocate in a way that could longjmp and possibly leak memory
+static inline void builder_result_append(builder_handler_t* data, SEXP value) {
+    R_xlen_t current_size = Rf_xlength(data->result);
+    if (data->feat_id >= current_size) {
+        SEXP new_result = PROTECT(Rf_allocVector(VECSXP, current_size * 2 + 1));
+        for (R_xlen_t i = 0; i < current_size; i++) {
+            SET_VECTOR_ELT(new_result, i, VECTOR_ELT(data->result, i));
+        }
+        R_ReleaseObject(data->result);
+        data->result = new_result;
+        R_PreserveObject(data->result);
+        UNPROTECT(1);
+    }
+
+    SET_VECTOR_ELT(data->result, data->feat_id, value);
+    data->feat_id++;
+}
+
+static inline void builder_result_finalize(builder_handler_t* data) {
+    R_xlen_t current_size = Rf_xlength(data->result);
+    if (data->feat_id != current_size) {
+        SEXP new_result = PROTECT(Rf_allocVector(VECSXP, data->feat_id));
+        for (R_xlen_t i = 0; i < data->feat_id; i++) {
+            SET_VECTOR_ELT(new_result, i, VECTOR_ELT(data->result, i));
+        }
+        R_ReleaseObject(data->result);
+        data->result = new_result;
+        R_PreserveObject(data->result);
+        UNPROTECT(1);
+    }
+}
+
 int builder_vector_start(const wk_vector_meta_t* meta, void* handler_data) {
+  builder_handler_t* data = (builder_handler_t*) handler_data;
+
+  if (data->result != R_NilValue) {
+      Rf_error("Destination vector was already allocated"); // # nocov
+  }
+
+  if (meta->size == WK_VECTOR_SIZE_UNKNOWN) {
+      data->result = PROTECT(Rf_allocVector(VECSXP, 1024));
+  } else {
+      data->result = PROTECT(Rf_allocVector(VECSXP, meta->size));
+  }
+  R_PreserveObject(data->result);
+  UNPROTECT(1);
+
+  data->feat_id = 0;
+
   return WK_CONTINUE;
 }
 
 SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
-  WK_METHOD_CPP_START
-  return R_NilValue;
-  WK_METHOD_CPP_END
+  builder_result_finalize(data);
+  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
+  SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
+  SET_STRING_ELT(cls, 1, Rf_mkChar("s2_xptr"));
+  Rf_setAttrib(data->result, R_ClassSymbol, cls);
+  UNPROTECT(1);
+  return data->result;
 }
 
 int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
@@ -80,7 +136,8 @@ int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* ha
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
   std::unique_ptr<s2geography::S2Geography> feat = data->builder->finish_feature();
-  // Append external pointer to feature
+  auto geog = MakeOldGeography(*feat);
+  builder_result_append(data, Rcpp::XPtr<Geography>(geog.release()));
   return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
@@ -156,6 +213,14 @@ int builder_error(const char* message, void* handler_data) {
   return WK_ABORT;
 }
 
+void builder_deinitialize(void* handler_data) {
+  builder_handler_t* data = (builder_handler_t*) handler_data;
+  if (data->result != R_NilValue) {
+    R_ReleaseObject(data->result);
+    data->result = R_NilValue;
+  }
+}
+
 void builder_finalize(void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   if (data != nullptr) {
@@ -196,6 +261,7 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
 
   handler->error = &builder_error;
 
+  handler->deinitialize = &builder_deinitialize;
   handler->finalizer = &builder_finalize;
 
   builder_handler_t* data = (builder_handler_t*) malloc(sizeof(builder_handler_t));
@@ -206,6 +272,7 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
 
   data->coord_size = 2;
   data->builder = builder;
+  data->result = R_NilValue;
   memset(data->cpp_exception_error, 0, 8096);
 
   handler->handler_data = data;

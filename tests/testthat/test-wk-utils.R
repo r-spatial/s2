@@ -184,3 +184,12 @@ test_that("mercator projection works", {
     wk::xy(c(0, 20037508), 0)
   )
 })
+
+test_that("the s2_geography_writer() works", {
+  wk::wk_debug(wk::wkt("POLYGON ((0 0, 0 1, 1 0, 0 0))"), s2_geography_writer())
+
+  wk::wk_debug(
+    wk::wkt("GEOMETRYCOLLECTION(POLYGON ((0 0, 0 1, 1 0, 0 0)))"),
+    s2_geography_writer()
+  )
+})
