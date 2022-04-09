@@ -104,6 +104,8 @@ private:
 
 class PolylineConstructor: public Constructor {
 public:
+    PolylineConstructor(const Options& options): options_(options), is_linestring_(false) {}
+
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         if (geometry_type == util::GeometryType::MULTILINESTRING ||
             geometry_type == util::GeometryType::GEOMETRYCOLLECTION) {
@@ -122,7 +124,16 @@ public:
 
     void geom_end() {
         if (is_linestring_) {
-            auto polyline = absl::make_unique<S2Polyline>(std::move(points_));
+            auto polyline = absl::make_unique<S2Polyline>();
+            polyline->Init(std::move(points_));
+
+            if (options_.check()) {
+                polyline->FindValidationError(&error_);
+                if (!error_.ok()) {
+                    throw S2GeographyException(error_.text());
+                }
+            }
+
             polylines_.push_back(std::move(polyline));
             points_.clear();
             is_linestring_ = false;
@@ -136,8 +147,10 @@ public:
     }
 
 private:
+    Options options_;
     bool is_linestring_;
     std::vector<std::unique_ptr<S2Polyline>> polylines_;
+    S2Error error_;
 };
 
 class PolygonConstructor: public Constructor {
@@ -145,14 +158,35 @@ public:
     PolygonConstructor(const Options& options): options_(options) {}
 
     void ring_start(int32_t size) {
-        loops_.clear();
+        points_.clear();
         if (size > 0) {
-            loops_.reserve(size);
+            points_.reserve(size);
         }
     }
 
     void ring_end() {
-        auto loop = absl::make_unique<S2Loop>(std::move(points_));
+        if (points_.size() == 0) {
+            return;
+        }
+
+        // S2Loop is open instead of closed
+        points_.pop_back();
+        auto loop = absl::make_unique<S2Loop>();
+        loop->set_s2debug_override(S2Debug::DISABLE);
+        loop->Init(std::move(points_));
+
+        if (!options_.oriented()) {
+            loop->Normalize();
+        }
+
+        if (options_.check() && !loop->IsValid()) {
+            std::stringstream err;
+            err << "Loop " << (loops_.size()) << " is not valid: ";
+            loop->FindValidationError(&error_);
+            err << error_.text();
+            throw S2GeographyException(err.str());
+        }
+
         loops_.push_back(std::move(loop));
         points_.clear();
     }
@@ -161,12 +195,20 @@ public:
         auto polygon = absl::make_unique<S2Polygon>();
         polygon->set_s2debug_override(S2Debug::DISABLE);
         if (options_.oriented()) {
-            polygon->InitOriented(std::move(loops_));
+            polygon->InitNested(std::move(loops_));
         } else {
             polygon->InitNested(std::move(loops_));
         }
 
         loops_.clear();
+
+        if (options_.check()) {
+            polygon->FindValidationError(&error_);
+            if (!error_.ok()) {
+                throw S2GeographyException(error_.text());
+            }
+        }
+
         auto result = absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
         return std::unique_ptr<S2Geography>(result.release());
     }
@@ -174,12 +216,15 @@ public:
 private:
     std::vector<std::unique_ptr<S2Loop>> loops_;
     Options options_;
+    S2Error error_;
 };
 
 class CollectionConstructor: public Constructor {
 public:
     CollectionConstructor(const Options& options = Options()):
-        options_(options), polygon_constructor_(options),
+        options_(options),
+        polyline_constructor_(options),
+        polygon_constructor_(options),
         collection_constructor_(nullptr),
         level_(0) {}
 
@@ -235,12 +280,14 @@ public:
     virtual void geom_end() {
         level_--;
 
+        if (level_ >= 1) {
+            active_constructor_->geom_end();
+        }
+
         if (level_ == 1) {
             auto feature = active_constructor_->finish();
             features_.push_back(std::move(feature));
             active_constructor_ = nullptr;
-        } else if (level_ > 1) {
-            active_constructor_->geom_end();
         }
     }
 
