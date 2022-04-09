@@ -45,7 +45,7 @@
 
 
 typedef struct {
-    s2geography::CollectionConstructor* builder;
+    s2geography::VectorConstructor* builder;
     SEXP result;
     R_xlen_t feat_id;
     int coord_size;
@@ -228,8 +228,8 @@ void builder_finalize(void* handler_data) {
   }
 }
 
-void delete_collection_constructor(SEXP xptr) {
-    auto ptr = reinterpret_cast<s2geography::CollectionConstructor*>(R_ExternalPtrAddr(xptr));
+void delete_vector_constructor(SEXP xptr) {
+    auto ptr = reinterpret_cast<s2geography::VectorConstructor*>(R_ExternalPtrAddr(xptr));
     if (ptr != nullptr) {
         delete ptr;
     }
@@ -238,9 +238,9 @@ void delete_collection_constructor(SEXP xptr) {
 extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
   CPP_START
 
-  auto builder = new s2geography::CollectionConstructor();
+  auto builder = new s2geography::VectorConstructor();
   SEXP builder_xptr = PROTECT(R_MakeExternalPtr(builder, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(builder_xptr, &delete_collection_constructor);
+  R_RegisterCFinalizer(builder_xptr, &delete_vector_constructor);
 
   wk_handler_t* handler = wk_handler_create();
 

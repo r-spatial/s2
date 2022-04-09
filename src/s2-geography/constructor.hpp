@@ -23,6 +23,19 @@ enum GeometryType {
 class Constructor {
 public:
 
+    class Options {
+    public:
+        Options() : oriented_(false), check_(true) {}
+        bool oriented() { return oriented_; }
+        void set_oriented(bool oriented) { oriented_ = oriented; }
+        bool check() { return check_; }
+        void set_check(bool check) { check_ = check; }
+
+    private:
+        bool oriented_;
+        bool check_;
+    };
+
     virtual ~Constructor() {}
 
     virtual void geom_start(util::GeometryType geometry_type, int64_t size) {}
@@ -129,19 +142,6 @@ private:
 
 class PolygonConstructor: public Constructor {
 public:
-    class Options {
-    public:
-        Options() : oriented_(false), check_(true) {}
-        bool oriented() { return oriented_; }
-        void set_oriented(bool oriented) { oriented_ = oriented; }
-        bool check() { return check_; }
-        void set_check(bool check) { check_ = check; }
-
-    private:
-        bool oriented_;
-        bool check_;
-    };
-
     PolygonConstructor(const Options& options): options_(options) {}
 
     void ring_start(int32_t size) {
@@ -178,12 +178,18 @@ private:
 
 class CollectionConstructor: public Constructor {
 public:
-    CollectionConstructor(const PolygonConstructor::Options& options = PolygonConstructor::Options()):
-        options_(options), level_(0), polygon_constructor_(options),
-        collection_constructor_(nullptr) {}
+    CollectionConstructor(const Options& options = Options()):
+        options_(options), polygon_constructor_(options),
+        collection_constructor_(nullptr),
+        level_(0) {}
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         level_++;
+
+        if (level_ == 1 && geometry_type == util::GeometryType::GEOMETRYCOLLECTION) {
+            active_constructor_ = nullptr;
+            return;
+        }
 
         if (active_constructor_ != nullptr) {
             active_constructor_->geom_start(geometry_type, size);
@@ -194,26 +200,24 @@ public:
         case util::GeometryType::POINT:
         case util::GeometryType::MULTIPOINT:
             active_constructor_ = &point_constructor_;
-            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::LINESTRING:
         case util::GeometryType::MULTILINESTRING:
             active_constructor_ = &polyline_constructor_;
-            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::POLYGON:
         case util::GeometryType::MULTIPOLYGON:
             active_constructor_ = &polygon_constructor_;
-            active_constructor_->geom_start(geometry_type, size);
             break;
         case util::GeometryType::GEOMETRYCOLLECTION:
             this->collection_constructor_ = absl::make_unique<CollectionConstructor>(options_);
             this->active_constructor_ = this->collection_constructor_.get();
-            // don't call geom_start()!
             break;
         default:
             throw S2GeographyException("CollectionConstructor: unsupported geometry type");
         }
+
+        active_constructor_->geom_start(geometry_type, size);
     }
 
     void ring_start(int32_t size) {
@@ -228,16 +232,15 @@ public:
         active_constructor_->ring_end();
     }
 
-    void geom_end() {
-        if (active_constructor_ != collection_constructor_.get()) {
-            active_constructor_->geom_end();
-        }
-
+    virtual void geom_end() {
         level_--;
-        if (level_ == 0) {
+
+        if (level_ == 1) {
             auto feature = active_constructor_->finish();
             features_.push_back(std::move(feature));
             active_constructor_ = nullptr;
+        } else if (level_ > 1) {
+            active_constructor_->geom_end();
         }
     }
 
@@ -247,12 +250,34 @@ public:
         return std::unique_ptr<S2Geography>(result.release());
     }
 
+private:
+    Options options_;
+    PointConstructor point_constructor_;
+    PolylineConstructor polyline_constructor_;
+    PolygonConstructor polygon_constructor_;
+    std::unique_ptr<CollectionConstructor> collection_constructor_;
+
+
+protected:
+    Constructor* active_constructor_;
+    int level_;
+    std::vector<std::unique_ptr<S2Geography>> features_;
+};
+
+class VectorConstructor: public CollectionConstructor {
+public:
+    VectorConstructor(const Options& options = Options()): CollectionConstructor(options) {}
+
     void start_feature() {
-        level_ = 0;
         active_constructor_ = nullptr;
+        level_ = 0;
+        features_.clear();
+        geom_start(util::GeometryType::GEOMETRYCOLLECTION, 1);
     }
 
     std::unique_ptr<S2Geography> finish_feature() {
+        geom_end();
+
         if (features_.empty()) {
             return absl::make_unique<S2GeographyCollection>();
         } else {
@@ -261,17 +286,6 @@ public:
             return feature;
         }
     }
-
-private:
-    PolygonConstructor::Options options_;
-    int level_;
-    PointConstructor point_constructor_;
-    PolylineConstructor polyline_constructor_;
-    PolygonConstructor polygon_constructor_;
-    std::unique_ptr<CollectionConstructor> collection_constructor_;
-    Constructor* active_constructor_;
-
-    std::vector<std::unique_ptr<S2Geography>> features_;
 };
 
 }
