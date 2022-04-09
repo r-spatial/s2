@@ -79,7 +79,7 @@ public:
                 continue;
             }
 
-            S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size], coord[i * coord_size + 1]);
+            S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1], coord[i * coord_size]);
             points_.push_back(pt.ToPoint());
         }
     }

@@ -186,6 +186,19 @@ test_that("mercator projection works", {
 })
 
 test_that("the s2_geography_writer() works", {
+  for (name in names(geoarrow::geoarrow_example_wkt["multipolygon"])) {
+    cat(paste0(name, "\n"))
+    geog <- wk::wk_handle(
+      geoarrow::geoarrow_example_wkt[[name]],
+      s2_geography_writer()
+    )
+
+    expect_equal(
+      wk::wk_coords(as_wkt(geog))[c("x", "y")],
+      wk::wk_coords(geoarrow::geoarrow_example_wkt[[name]])[c("x", "y")]
+    )
+  }
+
   wk::wk_debug(wk::wkt("POLYGON ((0 0, 0 1, 1 0, 0 0))"), s2_geography_writer())
 
   wk::wk_debug(

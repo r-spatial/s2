@@ -126,10 +126,8 @@ int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* 
 
 int builder_feature_null(void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
-  WK_METHOD_CPP_START
-  // Append NULL
+  builder_result_append(data, R_NilValue);
   return WK_ABORT_FEATURE;
-  WK_METHOD_CPP_END_INT
 }
 
 int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
