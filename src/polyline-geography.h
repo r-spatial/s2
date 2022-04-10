@@ -185,7 +185,7 @@ public:
       // export empty linestring
       WKGeometryMeta meta(WKGeometryType::LineString, false, false, false);
       meta.hasSize = true;
-      meta.size = this->polylines[0]->num_vertices();
+      meta.size = 0;
       handler->nextGeometryStart(meta, partId);
       handler->nextGeometryEnd(meta, partId);
     }
