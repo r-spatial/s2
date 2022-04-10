@@ -104,26 +104,24 @@ private:
 
 class PolylineConstructor: public Constructor {
 public:
-    PolylineConstructor(const Options& options): options_(options), is_linestring_(false) {}
+    PolylineConstructor(const Options& options): options_(options) {}
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
-        if (geometry_type == util::GeometryType::MULTILINESTRING ||
-            geometry_type == util::GeometryType::GEOMETRYCOLLECTION) {
-            is_linestring_ = false;
-        } else if (geometry_type == util::GeometryType::LINESTRING ||
-                   size == 0) {
-            if (size > 0) {
-                points_.reserve(size);
-            }
-            is_linestring_ = true;
-        } else {
+        if (size != 0 &&
+            geometry_type != util::GeometryType::LINESTRING &&
+            geometry_type != util::GeometryType::MULTILINESTRING &&
+            geometry_type != util::GeometryType::GEOMETRYCOLLECTION) {
             throw S2GeographyException(
                 "PolylineConstructor input must be empty, linestring, multilinestring, or collection");
+        }
+
+        if (size > 0 && geometry_type == util::GeometryType::LINESTRING) {
+            points_.reserve(size);
         }
     }
 
     void geom_end() {
-        if (is_linestring_) {
+        if (points_.size() > 0) {
             auto polyline = absl::make_unique<S2Polyline>();
             polyline->Init(std::move(points_));
 
@@ -136,19 +134,24 @@ public:
 
             polylines_.push_back(std::move(polyline));
             points_.clear();
-            is_linestring_ = false;
         }
     }
 
     std::unique_ptr<S2Geography> finish() {
-        auto result = absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_));
-        polylines_.clear();
+        std::unique_ptr<S2GeographyOwningPolyline> result;
+
+        if (polylines_.size() > 0) {
+            result = absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_));
+            polylines_.clear();
+        } else {
+            result = absl::make_unique<S2GeographyOwningPolyline>();
+        }
+
         return std::unique_ptr<S2Geography>(result.release());
     }
 
 private:
     Options options_;
-    bool is_linestring_;
     std::vector<std::unique_ptr<S2Polyline>> polylines_;
     S2Error error_;
 };
@@ -230,7 +233,6 @@ public:
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         level_++;
-
         if (level_ == 1 && geometry_type == util::GeometryType::GEOMETRYCOLLECTION) {
             active_constructor_ = nullptr;
             return;
@@ -284,7 +286,7 @@ public:
             active_constructor_->geom_end();
         }
 
-        if (level_ == 1) {
+        if (level_ == 0) {
             auto feature = active_constructor_->finish();
             features_.push_back(std::move(feature));
             active_constructor_ = nullptr;
@@ -329,6 +331,10 @@ public:
             return absl::make_unique<S2GeographyCollection>();
         } else {
             std::unique_ptr<S2Geography> feature = std::move(features_.back());
+            if (feature.get() == nullptr) {
+                throw S2GeographyException("finish_feature() generated nullptr");
+            }
+
             features_.pop_back();
             return feature;
         }
