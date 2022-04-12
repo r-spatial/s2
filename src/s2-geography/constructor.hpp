@@ -36,7 +36,11 @@ public:
         bool check_;
     };
 
+    Constructor(const Options& options): options_(options) {}
+
     virtual ~Constructor() {}
+
+    Options* mutable_options() { return &options_; }
 
     virtual void geom_start(util::GeometryType geometry_type, int64_t size) {}
     virtual void ring_start(int32_t size) {}
@@ -54,10 +58,13 @@ public:
 
 protected:
     std::vector<S2Point> points_;
+    Options options_;
 };
 
 class PointConstructor: public Constructor {
 public:
+
+    PointConstructor(): Constructor(Options()) {}
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         if (size != 0 &&
@@ -104,7 +111,7 @@ private:
 
 class PolylineConstructor: public Constructor {
 public:
-    PolylineConstructor(const Options& options): options_(options) {}
+    PolylineConstructor(const Options& options): Constructor(options) {}
 
     void geom_start(util::GeometryType geometry_type, int64_t size) {
         if (size != 0 &&
@@ -125,11 +132,9 @@ public:
             auto polyline = absl::make_unique<S2Polyline>();
             polyline->Init(std::move(points_));
 
-            if (options_.check()) {
+            if (options_.check() && !polyline->IsValid()) {
                 polyline->FindValidationError(&error_);
-                if (!error_.ok()) {
-                    throw S2GeographyException(error_.text());
-                }
+                throw S2GeographyException(error_.text());
             }
 
             polylines_.push_back(std::move(polyline));
@@ -151,14 +156,13 @@ public:
     }
 
 private:
-    Options options_;
     std::vector<std::unique_ptr<S2Polyline>> polylines_;
     S2Error error_;
 };
 
 class PolygonConstructor: public Constructor {
 public:
-    PolygonConstructor(const Options& options): options_(options) {}
+    PolygonConstructor(const Options& options): Constructor(options) {}
 
     void ring_start(int32_t size) {
         points_.clear();
@@ -198,18 +202,16 @@ public:
         auto polygon = absl::make_unique<S2Polygon>();
         polygon->set_s2debug_override(S2Debug::DISABLE);
         if (options_.oriented()) {
-            polygon->InitNested(std::move(loops_));
+            polygon->InitOriented(std::move(loops_));
         } else {
             polygon->InitNested(std::move(loops_));
         }
 
         loops_.clear();
 
-        if (options_.check()) {
+        if (options_.check() && !polygon->IsValid()) {
             polygon->FindValidationError(&error_);
-            if (!error_.ok()) {
-                throw S2GeographyException(error_.text());
-            }
+            throw S2GeographyException(error_.text());
         }
 
         auto result = absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
@@ -218,14 +220,13 @@ public:
 
 private:
     std::vector<std::unique_ptr<S2Loop>> loops_;
-    Options options_;
     S2Error error_;
 };
 
 class CollectionConstructor: public Constructor {
 public:
-    CollectionConstructor(const Options& options = Options()):
-        options_(options),
+    CollectionConstructor(const Options& options):
+        Constructor(options),
         polyline_constructor_(options),
         polygon_constructor_(options),
         collection_constructor_(nullptr),
@@ -300,7 +301,6 @@ public:
     }
 
 private:
-    Options options_;
     PointConstructor point_constructor_;
     PolylineConstructor polyline_constructor_;
     PolygonConstructor polygon_constructor_;
@@ -315,7 +315,7 @@ protected:
 
 class VectorConstructor: public CollectionConstructor {
 public:
-    VectorConstructor(const Options& options = Options()): CollectionConstructor(options) {}
+    VectorConstructor(const Options& options): CollectionConstructor(options) {}
 
     void start_feature() {
         active_constructor_ = nullptr;

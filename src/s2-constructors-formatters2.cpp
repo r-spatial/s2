@@ -236,7 +236,14 @@ void delete_vector_constructor(SEXP xptr) {
 extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
   CPP_START
 
-  auto builder = new s2geography::VectorConstructor();
+  int oriented = LOGICAL(oriented_sexp)[0];
+  int check = LOGICAL(check_sexp)[0];
+
+  s2geography::Constructor::Options options;
+  options.set_oriented(oriented);
+  options.set_check(check);
+
+  auto builder = new s2geography::VectorConstructor(options);
   SEXP builder_xptr = PROTECT(R_MakeExternalPtr(builder, R_NilValue, R_NilValue));
   R_RegisterCFinalizer(builder_xptr, &delete_vector_constructor);
 

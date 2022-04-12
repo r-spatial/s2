@@ -102,14 +102,16 @@ s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L,
 #' @export
 s2_geog_from_text <- function(wkt_string, oriented = FALSE, check = TRUE) {
   attributes(wkt_string) <- NULL
-  wk::validate_wk_wkt(wk::new_wk_wkt(wkt_string))
-  new_s2_xptr(
-    s2_geography_from_wkt(
-      wkt_string,
-      oriented = oriented,
-      check = check
-    ),
-    "s2_geography"
+
+  if (check) {
+    wkt <- wk::wkt(wkt_string, geodesic = TRUE)
+  } else {
+    wkt <- wk::new_wk_wkt(wkt_string, geodesic = TRUE)
+  }
+
+  wk::wk_handle(
+    wkt,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
