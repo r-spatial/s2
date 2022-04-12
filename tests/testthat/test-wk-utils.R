@@ -186,8 +186,8 @@ test_that("mercator projection works", {
 })
 
 test_that("the s2_geography_writer() works", {
-  for (name in names(geoarrow::geoarrow_example_wkt)) {
-    cat(paste0(name, "\n"))
+  # nc has some rings that get reordered by this operation
+  for (name in setdiff(names(s2_data_example_wkt), "nc")) {
     geog <- wk::wk_handle(
       geoarrow::geoarrow_example_wkt[[name]],
       s2_geography_writer()

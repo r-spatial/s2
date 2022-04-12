@@ -279,14 +279,14 @@ public:
         active_constructor_->ring_end();
     }
 
-    virtual void geom_end() {
+    void geom_end() {
         level_--;
 
         if (level_ >= 1) {
             active_constructor_->geom_end();
         }
 
-        if (level_ == 0) {
+        if (level_ == 1) {
             auto feature = active_constructor_->finish();
             features_.push_back(std::move(feature));
             active_constructor_ = nullptr;
