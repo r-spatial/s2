@@ -92,7 +92,6 @@ OBJECTS = $(ABSL_LIBS) \
      s2-cell.o \
      s2-cell-union.o \
      s2-constructors-formatters.o \
-     s2-constructors-formatters2.o \
      s2-predicates.o \
      s2-transformers.o \
      init.o \

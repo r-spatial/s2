@@ -70,15 +70,19 @@
 #' s2_as_binary(geog)
 #'
 s2_geog_point <- function(longitude, latitude) {
-  recycled <- recycle_common(longitude, latitude)
-  new_s2_xptr(cpp_s2_geog_point(recycled[[1]], recycled[[2]]), "s2_geography")
+  wk::wk_handle(wk::xy(longitude, latitude), s2_geography_writer())
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_make_line <- function(longitude, latitude, feature_id = 1L) {
-  recycled <- recycle_common(longitude, latitude, feature_id)
-  new_s2_xptr(cpp_s2_make_line(recycled[[1]], recycled[[2]], featureId = recycled[[3]]), "s2_geography")
+  wk::wk_handle(
+    wk::xy(longitude, latitude),
+    wk::wk_linestring_filter(
+      s2_geography_writer(),
+      feature_id = as.integer(feature_id)
+    )
+  )
 }
 
 #' @rdname s2_geog_point

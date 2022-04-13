@@ -48,7 +48,7 @@ as_s2_geography.s2_geography <- function(x, ...) {
 #' @export
 as_s2_geography.s2_lnglat <- function(x, ...) {
   df <- data_frame_from_s2_lnglat(x)
-  new_s2_xptr(cpp_s2_geog_point(df[[1]], df[[2]]), "s2_geography")
+  s2_geog_point(df[[1]], df[[2]])
 }
 
 #' @rdname as_s2_geography
