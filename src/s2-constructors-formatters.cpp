@@ -4,7 +4,7 @@
 #include <Rinternals.h>
 
 #include "wk-v1.h"
-#include "s2-geography/constructor.hpp"
+#include "s2-geography/s2-geography.hpp"
 #include "geography-shim.h"
 
 
