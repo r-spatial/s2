@@ -1,5 +1,5 @@
 
-# pragma once
+#pragma once
 
 #include "geography.h"
 
@@ -48,7 +48,7 @@ public:
     virtual void coords(const double* coord, int64_t n, int32_t coord_size) {
         for (int64_t i = 0; i < n; i++) {
             S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1], coord[i * coord_size]);
-            points_.push_back(pt.ToPoint());
+            points_.push_back(pt.Normalized().ToPoint());
         }
     }
 
