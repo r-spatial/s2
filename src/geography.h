@@ -30,30 +30,6 @@ public:
 
   Geography(): hasIndex(false) {}
 
-  // accessors need to be methods, since their calculation
-  // depends on the geometry type
-  virtual Type GeographyType() {
-    return Type::GEOGRAPHY_EMPTY;
-  }
-
-  virtual bool FindValidationError(S2Error* error) = 0;
-
-  // returns true for a multi-
-  // or geometrycollection type
-  virtual bool IsCollection() = 0;
-  // Returns 0 for point, 1 for line, 2 for polygon
-  virtual int Dimension() = 0;
-  // Returns the number of points in the input
-  virtual int NumPoints() = 0;
-  virtual bool IsEmpty() = 0;
-  virtual double Area() = 0;
-  virtual double Length() = 0;
-  virtual double Perimeter() = 0;
-  virtual double X() = 0;
-  virtual double Y() = 0;
-  virtual S2Point Centroid() = 0;
-  virtual std::unique_ptr<Geography> Boundary() = 0;
-
   virtual std::unique_ptr<s2geography::S2Geography> NewGeography() = 0;
 
   // every type will build the index differently based on
@@ -68,25 +44,6 @@ public:
 
   virtual ~Geography() {}
 
-  // Most calculations will use the ShapeIndex, but sometimes access to the
-  // underlying point, line, or polygon is useful to keep this class from
-  // becoming bloated with the entire s2 API.
-  virtual const std::vector<S2Point>* Point() {
-    return nullptr;
-  }
-
-  virtual const std::vector<std::unique_ptr<S2Polyline>>* Polyline() {
-    return nullptr;
-  }
-
-  virtual const S2Polygon* Polygon() {
-    return nullptr;
-  }
-
-  virtual const std::vector<std::unique_ptr<Geography>>* CollectionFeatures() {
-    return nullptr;
-  }
-
   // other calculations use ShapeIndex
   virtual S2ShapeIndex* ShapeIndex() {
     if (!this->hasIndex) {
@@ -95,19 +52,6 @@ public:
     }
 
     return &this->shape_index_;
-  }
-
-  virtual S2ShapeIndexRegion<S2ShapeIndex> ShapeIndexRegion() {
-	  S2ShapeIndex *ix = this->ShapeIndex();
-	  return MakeS2ShapeIndexRegion(ix);
-  }
-
-  virtual S2Cap GetCapBound() {
-	  return this->ShapeIndexRegion().GetCapBound();
-  }
-
-  virtual S2LatLngRect GetRectBound() {
-	  return this->ShapeIndexRegion().GetRectBound();
   }
 
 protected:

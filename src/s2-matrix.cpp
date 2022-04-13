@@ -514,17 +514,12 @@ List cpp_s2_contains_matrix_brute_force(List geog1, List geog2, List s2options) 
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      // by default Contains() will return true for Contains(x, EMPTY), which is
-      // not true in BigQuery or GEOS
-      if (feature2->IsEmpty()) {
-        return false;
-      } else {
-        return S2BooleanOperation::Contains(
-          *feature1->ShapeIndex(),
-          *feature2->ShapeIndex(),
-          this->options
-        );
-      }
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_contains(index1, index2, options);
     };
   };
 
@@ -540,18 +535,12 @@ List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
       // note reversed index2, index1
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      // by default Contains() will return true for Contains(x, EMPTY), which is
-      // not true in BigQuery or GEOS
-      if (feature1->IsEmpty()) {
-        return false;
-      } else {
-        return S2BooleanOperation::Contains(
-          *feature2->ShapeIndex(),
-          *feature1->ShapeIndex(),
-          this->options
-        );
-      }
+      return s2geography::s2_contains(index2, index1, options);
     };
   };
 
@@ -566,11 +555,12 @@ List cpp_s2_intersects_matrix_brute_force(List geog1, List geog2, List s2options
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Intersects(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        this->options
-      );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_intersects(index1, index2, options);
     }
   };
 
@@ -585,11 +575,12 @@ List cpp_s2_disjoint_matrix_brute_force(List geog1, List geog2, List s2options) 
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      return !S2BooleanOperation::Intersects(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        this->options
-      );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return !s2geography::s2_intersects(index1, index2, options);
     }
   };
 
@@ -604,11 +595,12 @@ List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      return S2BooleanOperation::Equals(
-        *feature1->ShapeIndex(),
-        *feature2->ShapeIndex(),
-        this->options
-      );
+      auto geog1 = feature1->NewGeography();
+      auto geog2 = feature2->NewGeography();
+      s2geography::S2GeographyShapeIndex index1(*geog1);
+      s2geography::S2GeographyShapeIndex index2(*geog2);
+
+      return s2geography::s2_equals(index1, index2, options);
     }
   };
 
