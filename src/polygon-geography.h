@@ -82,23 +82,24 @@ public:
   }
 
   std::unique_ptr<Geography> Boundary() {
-    PolylineGeography::Builder builder;
-    std::vector<std::vector<int>> flatIndices = this->flatLoopIndices();
+    // PolylineGeography::Builder builder;
+    // std::vector<std::vector<int>> flatIndices = this->flatLoopIndices();
 
-    // export multilinestring
-    WKGeometryMeta meta(WKGeometryType::MultiLineString, false, false, false);
-    meta.hasSize = true;
-    meta.size = this->polygon->num_loops();
+    // // export multilinestring
+    // WKGeometryMeta meta(WKGeometryType::MultiLineString, false, false, false);
+    // meta.hasSize = true;
+    // meta.size = this->polygon->num_loops();
 
-    builder.nextGeometryStart(meta, WKReader::PART_ID_NONE);
-    int loopId = 0;
-    for (size_t i = 0; i < flatIndices.size(); i++) {
-      this->exportLoops(&builder, meta, flatIndices[i], loopId);
-      loopId += flatIndices[i].size();
-    }
-    builder.nextGeometryEnd(meta, WKReader::PART_ID_NONE);
+    // builder.nextGeometryStart(meta, WKReader::PART_ID_NONE);
+    // int loopId = 0;
+    // for (size_t i = 0; i < flatIndices.size(); i++) {
+    //   this->exportLoops(&builder, meta, flatIndices[i], loopId);
+    //   loopId += flatIndices[i].size();
+    // }
+    // builder.nextGeometryEnd(meta, WKReader::PART_ID_NONE);
 
-    return builder.build();
+    // return builder.build();
+    throw std::runtime_error("inbetween implementations...");
   }
 
   std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
@@ -149,73 +150,6 @@ public:
       handler->nextGeometryEnd(meta, partId);
     }
   }
-
-  class Builder: public GeographyBuilder {
-  public:
-    Builder(bool oriented, bool check):
-      oriented(oriented), check(check) {}
-
-    void nextLinearRingStart(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
-      // skip the last vertex (WKB rings are theoretically closed)
-      if (size > 0) {
-        this->vertices = std::vector<S2Point>(size - 1);
-      } else {
-        this->vertices = std::vector<S2Point>();
-      }
-    }
-
-    void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-      if (coordId < this->vertices.size()) {
-        vertices[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint();
-      }
-    }
-
-    void nextLinearRingEnd(const WKGeometryMeta& meta, uint32_t size, uint32_t ringId) {
-      std::unique_ptr<S2Loop> loop = absl::make_unique<S2Loop>();
-      loop->set_s2debug_override(S2Debug::DISABLE);
-      loop->Init(vertices);
-
-      if (!oriented) {
-        loop->Normalize();
-      }
-
-      if (this->check && !loop->IsValid()) {
-        std::stringstream err;
-        err << "Loop " << (this->loops.size()) << " is not valid: ";
-        S2Error error;
-        loop->FindValidationError(&error);
-        err << error.text();
-        throw WKParseException(err.str());
-      }
-
-      this->loops.push_back(std::move(loop));
-    }
-
-    std::unique_ptr<Geography> build() {
-      std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
-      polygon->set_s2debug_override(S2Debug::DISABLE);
-      if (this->loops.size() > 0 && oriented) {
-        polygon->InitOriented(std::move(this->loops));
-      } else if (this->loops.size() > 0) {
-        polygon->InitNested(std::move(this->loops));
-      }
-
-      // make sure polygon is valid
-      if (this->check && !polygon->IsValid()) {
-        S2Error error;
-        polygon->FindValidationError(&error);
-        throw WKParseException(error.text());
-      }
-
-      return absl::make_unique<PolygonGeography>(std::move(polygon));
-    }
-
-  private:
-    bool oriented;
-    bool check;
-    std::vector<S2Point> vertices;
-    std::vector<std::unique_ptr<S2Loop>> loops;
-  };
 
 private:
   std::unique_ptr<S2Polygon> polygon;

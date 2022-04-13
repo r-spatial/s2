@@ -253,14 +253,6 @@ cpp_s2_cell_common_ancestor_level_agg <- function(cellId) {
     .Call(`_s2_cpp_s2_cell_common_ancestor_level_agg`, cellId)
 }
 
-s2_geography_from_wkb <- function(wkb, oriented, check) {
-    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented, check)
-}
-
-s2_geography_from_wkt <- function(wkt, oriented, check) {
-    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented, check)
-}
-
 s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
 }

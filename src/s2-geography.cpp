@@ -10,63 +10,11 @@
 #include "wk/geometry-formatter.hpp"
 
 #include "geography.h"
-#include "wk-geography.h"
-#include "point-geography.h"
-#include "polyline-geography.h"
 #include "polygon-geography.h"
-#include "geography-collection.h"
+#include "wk-geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
-
-
-// [[Rcpp::export]]
-List s2_geography_from_wkb(List wkb, bool oriented, bool check) {
-  WKRawVectorListProvider provider(wkb);
-  WKGeographyWriter writer(wkb.size());
-  writer.setOriented(oriented);
-  writer.setCheck(check);
-
-  WKBReader reader(provider);
-  reader.setHandler(&writer);
-
-  while (reader.hasNextFeature()) {
-    checkUserInterrupt();
-    reader.iterateFeature();
-  }
-
-  if (writer.problemId.size() > 0) {
-    Environment s2NS = Environment::namespace_env("s2");
-    Function stopProblems = s2NS["stop_problems_create"];
-    stopProblems(writer.problemId, writer.problems);
-  }
-
-  return writer.output;
-}
-
-// [[Rcpp::export]]
-List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check) {
-  WKCharacterVectorProvider provider(wkt);
-  WKGeographyWriter writer(wkt.size());
-  writer.setOriented(oriented);
-  writer.setCheck(check);
-
-  WKTReader reader(provider);
-  reader.setHandler(&writer);
-
-  while (reader.hasNextFeature()) {
-    checkUserInterrupt();
-    reader.iterateFeature();
-  }
-
-  if (writer.problemId.size() > 0) {
-    Environment s2NS = Environment::namespace_env("s2");
-    Function stopProblems = s2NS["stop_problems_create"];
-    stopProblems(writer.problemId, writer.problems);
-  }
-
-  return writer.output;
-}
 
 // [[Rcpp::export]]
 List s2_geography_full(LogicalVector x) { // create single geography with full polygon

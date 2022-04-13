@@ -115,11 +115,4 @@ protected:
   bool hasIndex;
 };
 
-
-class GeographyBuilder: public WKGeometryHandler {
-public:
-  virtual std::unique_ptr<Geography> build() = 0;
-  virtual ~GeographyBuilder() {}
-};
-
 #endif

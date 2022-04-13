@@ -191,33 +191,6 @@ public:
     }
   }
 
-  class Builder: public GeographyBuilder {
-  public:
-    void nextGeometryStart(const WKGeometryMeta& meta, uint32_t partId) {
-      if (meta.geometryType == WKGeometryType::LineString) {
-        points = std::vector<S2Point>(meta.size);
-      }
-    }
-
-    void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-      points[coordId] = S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint();
-    }
-
-    void nextGeometryEnd(const WKGeometryMeta& meta, uint32_t partId) {
-      if (meta.geometryType == WKGeometryType::LineString) {
-        polylines.push_back(absl::make_unique<S2Polyline>(std::move(points)));
-      }
-    }
-
-    std::unique_ptr<Geography> build() {
-      return absl::make_unique<PolylineGeography>(std::move(this->polylines));
-    }
-
-    private:
-      std::vector<S2Point> points;
-      std::vector<std::unique_ptr<S2Polyline>> polylines;
-  };
-
 private:
   std::vector<std::unique_ptr<S2Polyline>> polylines;
 };

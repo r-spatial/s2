@@ -737,32 +737,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_geography_from_wkb
-List s2_geography_from_wkb(List wkb, bool oriented, bool check);
-RcppExport SEXP _s2_s2_geography_from_wkb(SEXP wkbSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type wkb(wkbSEXP);
-    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkb(wkb, oriented, check));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_geography_from_wkt
-List s2_geography_from_wkt(CharacterVector wkt, bool oriented, bool check);
-RcppExport SEXP _s2_s2_geography_from_wkt(SEXP wktSEXP, SEXP orientedSEXP, SEXP checkSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type wkt(wktSEXP);
-    Rcpp::traits::input_parameter< bool >::type oriented(orientedSEXP);
-    Rcpp::traits::input_parameter< bool >::type check(checkSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_from_wkt(wkt, oriented, check));
-    return rcpp_result_gen;
-END_RCPP
-}
 // s2_geography_full
 List s2_geography_full(LogicalVector x);
 RcppExport SEXP _s2_s2_geography_full(SEXP xSEXP) {
@@ -1509,8 +1483,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_max_distance", (DL_FUNC) &_s2_cpp_s2_cell_max_distance, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
-    {"_s2_s2_geography_from_wkb", (DL_FUNC) &_s2_s2_geography_from_wkb, 3},
-    {"_s2_s2_geography_from_wkt", (DL_FUNC) &_s2_s2_geography_from_wkt, 3},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
     {"_s2_s2_geography_to_wkt", (DL_FUNC) &_s2_s2_geography_to_wkt, 3},
     {"_s2_s2_geography_to_wkb", (DL_FUNC) &_s2_s2_geography_to_wkb, 2},

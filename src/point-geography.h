@@ -160,24 +160,6 @@ public:
     }
   }
 
-  class Builder: public GeographyBuilder {
-  public:
-    void nextCoordinate(const WKGeometryMeta& meta, const WKCoord& coord, uint32_t coordId) {
-      // Coordinates with nan in S2 are unpredictable; censor to EMPTY. Empty
-      // points coming from WKB are always nan, nan.
-      if (!std::isnan(coord.x) && !std::isnan(coord.y)) {
-        points.push_back(S2LatLng::FromDegrees(coord.y, coord.x).Normalized().ToPoint());
-      }
-    }
-
-    std::unique_ptr<Geography> build() {
-      return absl::make_unique<PointGeography>(std::move(this->points));
-    }
-
-    private:
-      std::vector<S2Point> points;
-  };
-
 private:
   std::vector<S2Point> points;
 };
