@@ -2,8 +2,6 @@
 #ifndef POINT_GEOGRAPHY_H
 #define POINT_GEOGRAPHY_H
 
-#include <cmath>
-
 #include "s2/s2latlng_rect.h"
 
 #include "geography.h"

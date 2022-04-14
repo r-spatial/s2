@@ -189,13 +189,13 @@ test_that("the s2_geography_writer() works", {
   # nc has some rings that get reordered by this operation
   for (name in setdiff(names(s2_data_example_wkt), "nc")) {
     geog <- wk::wk_handle(
-      geoarrow::geoarrow_example_wkt[[name]],
+      s2_data_example_wkt[[name]],
       s2_geography_writer()
     )
 
     expect_equal(
       wk::wk_coords(as_wkt(geog))[c("x", "y")],
-      wk::wk_coords(geoarrow::geoarrow_example_wkt[[name]])[c("x", "y")]
+      wk::wk_coords(s2_data_example_wkt[[name]])[c("x", "y")]
     )
   }
 })

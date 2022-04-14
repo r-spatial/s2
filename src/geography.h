@@ -3,14 +3,6 @@
 #define GEOGRAPHY_H
 
 #include <memory>
-#include "s2/s2latlng.h"
-#include "s2/s2polyline.h"
-#include "s2/s2polygon.h"
-#include "s2/s2shape_index.h"
-#include "s2/s2shape_index_region.h"
-#include "s2/mutable_s2shape_index.h"
-#include "s2/s2point_vector_shape.h"
-#include "s2/s2cap.h"
 #include "wk/geometry-handler.hpp"
 #include <Rcpp.h>
 

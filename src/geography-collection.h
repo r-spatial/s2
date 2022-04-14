@@ -2,7 +2,6 @@
 #ifndef GEOGRAPHY_COLLECTION_H
 #define GEOGRAPHY_COLLECTION_H
 
-#include <algorithm>
 #include "geography.h"
 
 // This class handles collections of other Geography
