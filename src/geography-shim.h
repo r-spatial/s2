@@ -2,10 +2,7 @@
 #ifndef S2_GEOGRAPHY_SHIM_H_INCLUDED
 #define S2_GEOGRAPHY_SHIM_H_INCLUDED
 
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
-#include "geography-collection.h"
+#include "geography.h"
 #include "s2-geography/s2-geography.hpp"
 
 static inline std::unique_ptr<Geography> MakeOldGeography(const s2geography::S2Geography& geog) {

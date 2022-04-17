@@ -127,11 +127,20 @@ s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE, check = TRUE) {
 #' @rdname s2_geog_point
 #' @export
 s2_as_text <- function(x, precision = 16, trim = TRUE) {
-  s2_geography_to_wkt(as_s2_geography(x), precision = precision, trim = trim)
+  wkt <- wk::wk_handle(
+    as_s2_geography(x),
+    wk::wkt_writer(precision = precision, trim = trim)
+  )
+
+  attributes(wkt) <- NULL
+  wkt
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_as_binary <- function(x, endian = wk::wk_platform_endian()) {
-  structure(s2_geography_to_wkb(as_s2_geography(x), endian = endian), class = "blob")
+  structure(
+    wk::wk_handle(as_s2_geography(x), wk::wkb_writer(endian = endian)),
+    class = "blob"
+  )
 }

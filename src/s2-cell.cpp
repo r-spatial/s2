@@ -9,9 +9,7 @@
 #include "s2/s2cell.h"
 #include "s2/s2latlng.h"
 
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
+#include "geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

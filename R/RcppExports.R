@@ -257,18 +257,6 @@ s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
 }
 
-s2_geography_to_wkt <- function(s2_geography, precision, trim) {
-    .Call(`_s2_s2_geography_to_wkt`, s2_geography, precision, trim)
-}
-
-s2_geography_to_wkb <- function(s2_geography, endian) {
-    .Call(`_s2_s2_geography_to_wkb`, s2_geography, endian)
-}
-
-s2_geography_format <- function(s2_geography, maxCoords, precision, trim) {
-    .Call(`_s2_s2_geography_format`, s2_geography, maxCoords, precision, trim)
-}
-
 s2_lnglat_from_numeric <- function(lng, lat) {
     .Call(`_s2_s2_lnglat_from_numeric`, lng, lat)
 }

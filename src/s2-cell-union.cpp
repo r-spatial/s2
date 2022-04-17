@@ -8,9 +8,6 @@
 #include "s2/s2region_union.h"
 
 #include "geography-operator.h"
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

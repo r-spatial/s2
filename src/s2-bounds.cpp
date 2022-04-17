@@ -4,10 +4,6 @@
 
 #include "s2-options.h"
 #include "geography-operator.h"
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
-#include "geography-collection.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;

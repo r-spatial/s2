@@ -406,18 +406,12 @@ int handle_loop_shell(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_i
 
   HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
 
-  for (int i = 0; i < loop->num_vertices(); i++) {
+  for (int i = 0; i <= loop->num_vertices(); i++) {
     S2LatLng pt(loop->vertex(i));
     coord[0] = pt.lng().degrees();
     coord[1] = pt.lat().degrees();
     HANDLE_OR_RETURN(handler->coord(meta, coord, i, handler->handler_data));
   }
-
-  // close the loop
-  S2LatLng pt(loop->vertex(0));
-  coord[0] = pt.lng().degrees();
-  coord[1] = pt.lat().degrees();
-  HANDLE_OR_RETURN(handler->coord(meta, coord, loop->num_vertices(), handler->handler_data));
 
   HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
   return WK_CONTINUE;
@@ -433,18 +427,19 @@ int handle_loop_hole(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id
 
   HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
 
+  uint32_t coord_id = 0;
   for (int i = loop->num_vertices() - 1; i >= 0; i--) {
     S2LatLng pt(loop->vertex(i));
     coord[0] = pt.lng().degrees();
     coord[1] = pt.lat().degrees();
-    HANDLE_OR_RETURN(handler->coord(meta, coord, i, handler->handler_data));
+    HANDLE_OR_RETURN(handler->coord(meta, coord, coord_id, handler->handler_data));
+    coord_id++;
   }
 
-  // close the loop
-  S2LatLng pt(loop->vertex(0));
+  S2LatLng pt(loop->vertex(loop->num_vertices() - 1));
   coord[0] = pt.lng().degrees();
   coord[1] = pt.lat().degrees();
-  HANDLE_OR_RETURN(handler->coord(meta, coord, loop->num_vertices(), handler->handler_data));
+  HANDLE_OR_RETURN(handler->coord(meta, coord, coord_id, handler->handler_data));
 
   HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
   return WK_CONTINUE;

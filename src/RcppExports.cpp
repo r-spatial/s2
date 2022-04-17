@@ -748,45 +748,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_geography_to_wkt
-CharacterVector s2_geography_to_wkt(List s2_geography, int precision, bool trim);
-RcppExport SEXP _s2_s2_geography_to_wkt(SEXP s2_geographySEXP, SEXP precisionSEXP, SEXP trimSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
-    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< bool >::type trim(trimSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_to_wkt(s2_geography, precision, trim));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_geography_to_wkb
-List s2_geography_to_wkb(List s2_geography, int endian);
-RcppExport SEXP _s2_s2_geography_to_wkb(SEXP s2_geographySEXP, SEXP endianSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
-    Rcpp::traits::input_parameter< int >::type endian(endianSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_to_wkb(s2_geography, endian));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_geography_format
-CharacterVector s2_geography_format(List s2_geography, int maxCoords, int precision, bool trim);
-RcppExport SEXP _s2_s2_geography_format(SEXP s2_geographySEXP, SEXP maxCoordsSEXP, SEXP precisionSEXP, SEXP trimSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_geography(s2_geographySEXP);
-    Rcpp::traits::input_parameter< int >::type maxCoords(maxCoordsSEXP);
-    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< bool >::type trim(trimSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_geography_format(s2_geography, maxCoords, precision, trim));
-    return rcpp_result_gen;
-END_RCPP
-}
 // s2_lnglat_from_numeric
 List s2_lnglat_from_numeric(NumericVector lng, NumericVector lat);
 RcppExport SEXP _s2_s2_lnglat_from_numeric(SEXP lngSEXP, SEXP latSEXP) {
@@ -1485,9 +1446,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
-    {"_s2_s2_geography_to_wkt", (DL_FUNC) &_s2_s2_geography_to_wkt, 3},
-    {"_s2_s2_geography_to_wkb", (DL_FUNC) &_s2_s2_geography_to_wkb, 2},
-    {"_s2_s2_geography_format", (DL_FUNC) &_s2_s2_geography_format, 4},
     {"_s2_s2_lnglat_from_numeric", (DL_FUNC) &_s2_s2_lnglat_from_numeric, 2},
     {"_s2_s2_lnglat_from_s2_point", (DL_FUNC) &_s2_s2_lnglat_from_s2_point, 1},
     {"_s2_data_frame_from_s2_lnglat", (DL_FUNC) &_s2_data_frame_from_s2_lnglat, 1},
