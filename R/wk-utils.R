@@ -65,6 +65,12 @@ s2_projection_filter <- function(handler, projection = s2_projection_plate_carre
   )
 }
 
+#' @importFrom wk wk_handle
+#' @export
+wk_handle.s2_geography <- function(geog, handler, ...)  {
+  .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
+}
+
 s2_geography_writer <- function(oriented = FALSE, check = TRUE) {
   wk::new_wk_handler(
     .Call(

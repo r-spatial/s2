@@ -291,3 +291,347 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
 
   CPP_END
 }
+
+#define HANDLE_OR_RETURN(expr)                                 \
+    result = expr;                                             \
+    if (result != WK_CONTINUE) return result
+
+#define HANDLE_CONTINUE_OR_BREAK(expr)                         \
+    result = expr;                                             \
+    if (result == WK_ABORT_FEATURE) continue; else if (result == WK_ABORT) break
+
+
+int handle_points(const s2geography::S2GeographyOwningPoint& geog, wk_handler_t* handler,
+                  uint32_t part_id = WK_PART_ID_NONE) {
+  int result;
+
+  wk_meta_t meta;
+  WK_META_RESET(meta, WK_MULTIPOINT);
+  meta.size = geog.Points().size();
+
+  wk_meta_t meta_child;
+  WK_META_RESET(meta_child, WK_POINT);
+  meta_child.size = 1;
+  double coord[2];
+
+  if (meta.size == 0) {
+    meta_child.size = 0;
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else if (meta.size == 1) {
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+    S2LatLng pt(geog.Points()[0]);
+    coord[0] = pt.lng().degrees();
+    coord[1] = pt.lat().degrees();
+    HANDLE_OR_RETURN(handler->coord(&meta_child, coord, 0, handler->handler_data));
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else {
+    HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
+
+    for (size_t i = 0; i < geog.Points().size(); i++) {
+      HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
+      S2LatLng pt(geog.Points()[i]);
+      coord[0] = pt.lng().degrees();
+      coord[1] = pt.lat().degrees();
+      HANDLE_OR_RETURN(handler->coord(&meta_child, coord, 0, handler->handler_data));
+      HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
+    }
+
+    HANDLE_OR_RETURN(handler->geometry_end(&meta, part_id, handler->handler_data));
+  }
+
+  return WK_CONTINUE;
+}
+
+int handle_polylines(const s2geography::S2GeographyOwningPolyline& geog, wk_handler_t* handler,
+                     uint32_t part_id = WK_PART_ID_NONE) {
+  int result;
+
+  wk_meta_t meta;
+  WK_META_RESET(meta, WK_MULTILINESTRING);
+  meta.size = geog.Polylines().size();
+
+  wk_meta_t meta_child;
+  WK_META_RESET(meta_child, WK_LINESTRING);
+  double coord[2];
+
+  if (meta.size == 0) {
+    meta_child.size = 0;
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else if (meta.size == 1) {
+    const S2Polyline& poly = *geog.Polylines()[0];
+    meta_child.size = poly.num_vertices();
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+
+    for (int j = 0; j < poly.num_vertices(); j++) {
+      S2LatLng pt(poly.vertex(j));
+      coord[0] = pt.lng().degrees();
+      coord[1] = pt.lat().degrees();
+      HANDLE_OR_RETURN(handler->coord(&meta_child, coord, j, handler->handler_data));
+    }
+
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else {
+    HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
+
+    for (size_t i = 0; i < geog.Polylines().size(); i++) {
+      const S2Polyline& poly = *geog.Polylines()[i];
+      meta_child.size = poly.num_vertices();
+      HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
+
+      for (int j = 0; j < poly.num_vertices(); j++) {
+        S2LatLng pt(poly.vertex(j));
+        coord[0] = pt.lng().degrees();
+        coord[1] = pt.lat().degrees();
+        HANDLE_OR_RETURN(handler->coord(&meta_child, coord, j, handler->handler_data));
+      }
+
+      HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
+    }
+
+    HANDLE_OR_RETURN(handler->geometry_end(&meta, part_id, handler->handler_data));
+  }
+
+  return WK_CONTINUE;
+}
+
+int handle_loop_shell(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
+  int result;
+  double coord[2];
+
+  if (loop->num_vertices() == 0) {
+    return handler->error("Unexpected S2Loop with 0 vertices", handler->handler_data);
+  }
+
+  HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
+
+  for (int i = 0; i < loop->num_vertices(); i++) {
+    S2LatLng pt(loop->vertex(i));
+    coord[0] = pt.lng().degrees();
+    coord[1] = pt.lat().degrees();
+    HANDLE_OR_RETURN(handler->coord(meta, coord, i, handler->handler_data));
+  }
+
+  // close the loop
+  S2LatLng pt(loop->vertex(0));
+  coord[0] = pt.lng().degrees();
+  coord[1] = pt.lat().degrees();
+  HANDLE_OR_RETURN(handler->coord(meta, coord, loop->num_vertices(), handler->handler_data));
+
+  HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
+  return WK_CONTINUE;
+}
+
+int handle_loop_hole(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
+  int result;
+  double coord[2];
+
+  if (loop->num_vertices() == 0) {
+    return handler->error("Unexpected S2Loop with 0 vertices", handler->handler_data);
+  }
+
+  HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
+
+  for (int i = loop->num_vertices() - 1; i >= 0; i--) {
+    S2LatLng pt(loop->vertex(i));
+    coord[0] = pt.lng().degrees();
+    coord[1] = pt.lat().degrees();
+    HANDLE_OR_RETURN(handler->coord(meta, coord, i, handler->handler_data));
+  }
+
+  // close the loop
+  S2LatLng pt(loop->vertex(0));
+  coord[0] = pt.lng().degrees();
+  coord[1] = pt.lat().degrees();
+  HANDLE_OR_RETURN(handler->coord(meta, coord, loop->num_vertices(), handler->handler_data));
+
+  HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
+  return WK_CONTINUE;
+}
+
+int handle_shell(const S2Polygon& poly, const wk_meta_t* meta, int loop_start, wk_handler_t* handler) {
+  int result;
+  const S2Loop* loop0 = poly.loop(loop_start);
+  HANDLE_OR_RETURN(handle_loop_shell(loop0, meta, 0, handler));
+
+  uint32_t loop_id = 1;
+  for (int j = loop_start + 1; j <= poly.GetLastDescendant(loop_start); j++) {
+    const S2Loop* loop = poly.loop(j);
+    if (loop->depth() == (loop0->depth() + 1)) {
+      HANDLE_OR_RETURN(handle_loop_hole(loop, meta, loop_id, handler));
+      loop_id++;
+    }
+  }
+
+  return WK_CONTINUE;
+}
+
+int handle_polygon(const s2geography::S2GeographyOwningPolygon& geog, wk_handler_t* handler,
+                   uint32_t part_id = WK_PART_ID_NONE) {
+  const S2Polygon& poly = *geog.Polygon();
+
+  // find the outer shells (loop depth = 0, 2, 4, etc.)
+  std::vector<int> outer_shell_loop_ids;
+  std::vector<int> outer_shell_loop_sizes;
+
+  outer_shell_loop_ids.reserve(poly.num_loops());
+  for (int i = 0; i < poly.num_loops(); i++) {
+    if ((poly.loop(i)->depth() % 2) == 0) {
+      outer_shell_loop_ids.push_back(i);
+    }
+  }
+
+  // count the number of rings in each
+  outer_shell_loop_sizes.reserve(outer_shell_loop_ids.size());
+  for (const auto loop_start : outer_shell_loop_ids) {
+    const S2Loop* loop0 = poly.loop(loop_start);
+    int num_loops = 1;
+
+    for (int j = loop_start + 1; j <= poly.GetLastDescendant(loop_start); j++) {
+      const S2Loop* loop = poly.loop(j);
+      num_loops += loop->depth() == (loop0->depth() + 1);
+    }
+
+    outer_shell_loop_sizes.push_back(num_loops);
+  }
+
+  int result;
+
+  wk_meta_t meta;
+  WK_META_RESET(meta, WK_MULTIPOLYGON);
+  meta.size = outer_shell_loop_ids.size();
+
+  wk_meta_t meta_child;
+  WK_META_RESET(meta_child, WK_POLYGON);
+
+  if (meta.size == 0) {
+    meta_child.size = 0;
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else if (meta.size == 1) {
+    meta_child.size = outer_shell_loop_sizes[0];
+    HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
+    HANDLE_OR_RETURN(handle_shell(poly, &meta_child, outer_shell_loop_ids[0], handler));
+    HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
+  } else {
+    HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
+
+    for (size_t i = 0; i < outer_shell_loop_sizes.size(); i++) {
+      meta_child.size = outer_shell_loop_sizes[i];
+      HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
+      HANDLE_OR_RETURN(handle_shell(poly, &meta_child, outer_shell_loop_ids[i], handler));
+      HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
+    }
+
+    HANDLE_OR_RETURN(handler->geometry_end(&meta, part_id, handler->handler_data));
+  }
+
+  return WK_CONTINUE;
+}
+
+int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler_t* handler,
+                      uint32_t part_id = WK_PART_ID_NONE) {
+  int result;
+
+  wk_meta_t meta;
+  WK_META_RESET(meta, WK_GEOMETRYCOLLECTION);
+  meta.size = geog.Features().size();
+
+  HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
+  for (size_t i = 0; i < geog.Features().size(); i++) {
+    const s2geography::S2Geography* child_ptr = geog.Features()[i].get();
+
+    auto child_point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(child_ptr);
+    if (child_point != nullptr) {
+      HANDLE_OR_RETURN(handle_points(*child_point, handler, i));
+      continue;
+    }
+
+    auto child_polyline = dynamic_cast<const s2geography::S2GeographyOwningPolyline*>(child_ptr);
+    if (child_polyline != nullptr) {
+      HANDLE_OR_RETURN(handle_polylines(*child_polyline, handler, i));
+      continue;
+    }
+
+    auto child_polygon = dynamic_cast<const s2geography::S2GeographyOwningPolygon*>(child_ptr);
+    if (child_polygon != nullptr) {
+      HANDLE_OR_RETURN(handle_polygon(*child_polygon, handler, i));
+      continue;
+    }
+
+    auto child_collection = dynamic_cast<const s2geography::S2GeographyCollection*>(child_ptr);
+    if (child_collection != nullptr) {
+      HANDLE_OR_RETURN(handle_collection(*child_collection, handler, i));
+      continue;
+    }
+
+    return handler->error("Unsupported S2Geography subclass", handler->handler_data);
+  }
+  HANDLE_OR_RETURN(handler->geometry_end(&meta, part_id, handler->handler_data));
+
+  return WK_CONTINUE;
+}
+
+SEXP handle_geography(SEXP data, wk_handler_t* handler) {
+  R_xlen_t n_features = Rf_xlength(data);
+
+    wk_vector_meta_t vector_meta;
+    WK_VECTOR_META_RESET(vector_meta, WK_GEOMETRY);
+    vector_meta.size = n_features;
+    vector_meta.flags |= WK_FLAG_DIMS_UNKNOWN;
+
+    if (handler->vector_start(&vector_meta, handler->handler_data) == WK_CONTINUE) {
+      int result;
+      SEXP item;
+
+      for (R_xlen_t i = 0; i < n_features; i++) {
+        item = VECTOR_ELT(data, i);
+
+        HANDLE_CONTINUE_OR_BREAK(handler->feature_start(&vector_meta, i, handler->handler_data));
+
+        if (item == R_NilValue) {
+          HANDLE_CONTINUE_OR_BREAK(handler->null_feature(handler->handler_data));
+        } else {
+          auto item_ptr = reinterpret_cast<Geography*>(R_ExternalPtrAddr(item));
+          auto geog = item_ptr->NewGeography();
+          const s2geography::S2Geography* geog_ptr = geog.get();
+
+          auto child_point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(geog_ptr);
+          if (child_point != nullptr) {
+            HANDLE_CONTINUE_OR_BREAK(handle_points(*child_point, handler));
+          } else {
+            auto child_polyline = dynamic_cast<const s2geography::S2GeographyOwningPolyline*>(geog_ptr);
+            if (child_polyline != nullptr) {
+              HANDLE_CONTINUE_OR_BREAK(handle_polylines(*child_polyline, handler));
+            } else {
+              auto child_polygon = dynamic_cast<const s2geography::S2GeographyOwningPolygon*>(geog_ptr);
+              if (child_polygon != nullptr) {
+                HANDLE_CONTINUE_OR_BREAK(handle_polygon(*child_polygon, handler));
+              } else {
+                auto child_collection = dynamic_cast<const s2geography::S2GeographyCollection*>(geog_ptr);
+                if (child_collection != nullptr) {
+                  HANDLE_CONTINUE_OR_BREAK(handle_collection(*child_collection, handler));
+                } else {
+                  HANDLE_CONTINUE_OR_BREAK(
+                    handler->error("Unsupported S2Geography subclass", handler->handler_data));
+                }
+              }
+            }
+          }
+        }
+
+        if (handler->feature_end(&vector_meta, i, handler->handler_data) == WK_ABORT) {
+          break;
+        }
+      }
+    }
+
+    SEXP result = PROTECT(handler->vector_end(&vector_meta, handler->handler_data));
+    UNPROTECT(1);
+    return result;
+}
+
+extern "C" SEXP c_s2_handle_geography(SEXP data, SEXP handler_xptr) {
+    return wk_handler_run_xptr(&handle_geography, data, handler_xptr);
+}

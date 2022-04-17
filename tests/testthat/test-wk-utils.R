@@ -185,6 +185,22 @@ test_that("mercator projection works", {
   )
 })
 
+test_that("wk_handle() for s2_geography works", {
+  for (name in names(s2_data_example_wkt)) {
+    geog <- wk::wk_handle(
+      s2_data_example_wkt[[name]],
+      s2_geography_writer()
+    )
+
+    geog2 <- wk::wk_handle(
+      geog,
+      s2_geography_writer(check = TRUE, oriented = TRUE)
+    )
+
+    expect_equal(wk::wk_coords(geog), wk::wk_coords(geog2))
+  }
+})
+
 test_that("the s2_geography_writer() works", {
   # nc has some rings that get reordered by this operation
   for (name in setdiff(names(s2_data_example_wkt), "nc")) {
