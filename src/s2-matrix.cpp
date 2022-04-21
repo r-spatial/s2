@@ -18,8 +18,8 @@ using namespace Rcpp;
 template<class VectorType, class ScalarType>
 class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, ScalarType> {
 public:
-  std::unique_ptr<s2geography::S2GeographyIndex> geog2_index;
-  std::unique_ptr<s2geography::S2GeographyIndex::Iterator> iterator;
+  std::unique_ptr<s2geography::GeographyIndex> geog2_index;
+  std::unique_ptr<s2geography::GeographyIndex::Iterator> iterator;
 
   // max_edges_per_cell should be between 10 and 50, with lower numbers
   // leading to more memory usage (but potentially faster query times). Benchmarking
@@ -30,7 +30,7 @@ public:
   IndexedBinaryGeographyOperator(int maxEdgesPerCell = 50) {
     MutableS2ShapeIndex::Options index_options;
     index_options.set_max_edges_per_cell(maxEdgesPerCell);
-    geog2_index = absl::make_unique<s2geography::S2GeographyIndex>(index_options);
+    geog2_index = absl::make_unique<s2geography::GeographyIndex>(index_options);
   }
 
   virtual void buildIndex(List geog2) {
@@ -48,7 +48,7 @@ public:
       }
     }
 
-    iterator = absl::make_unique<s2geography::S2GeographyIndex::Iterator>(geog2_index.get());
+    iterator = absl::make_unique<s2geography::GeographyIndex::Iterator>(geog2_index.get());
   }
 };
 

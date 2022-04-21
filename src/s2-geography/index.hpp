@@ -9,12 +9,12 @@ namespace s2geography {
 
 // Unlike the ShapeIndexGeography, whose function is to index a single S2Geography
 // or index multiple S2Geography objects as if they were a single S2Geography,
-// the S2GeographyIndex exists to index a vector of S2Geography objects (like a
+// the GeographyIndex exists to index a vector of S2Geography objects (like a
 // GEOSSTRTree index), providing (hopefully) rapid access to possibly intersecting
 // features.
-class S2GeographyIndex {
+class GeographyIndex {
 public:
-    S2GeographyIndex(MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
+    GeographyIndex(MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
         : index_(options) {}
 
     void Add(const S2Geography& geog, int value) {
@@ -40,7 +40,7 @@ public:
 
     class Iterator {
     public:
-        Iterator(const S2GeographyIndex* index):
+        Iterator(const GeographyIndex* index):
             index_(index), iterator_(&index_->ShapeIndex()) {}
 
         void Query(const std::vector<S2CellId>& covering, std::unordered_set<int>* indices) {
@@ -84,7 +84,7 @@ public:
         }
 
     private:
-        const S2GeographyIndex* index_;
+        const GeographyIndex* index_;
         MutableS2ShapeIndex::Iterator iterator_;
     };
 
