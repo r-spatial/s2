@@ -72,11 +72,11 @@ void S2Geography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
     MakeS2ShapeIndexRegion<MutableS2ShapeIndex>(&index).GetCellUnionBound(cell_ids);
 }
 
-std::unique_ptr<S2Shape> S2GeographyOwningPoint::Shape(int id) const {
+std::unique_ptr<S2Shape> PointGeography::Shape(int id) const {
     return absl::make_unique<S2PointVectorShape>(points_);
 }
 
-std::unique_ptr<S2Region> S2GeographyOwningPoint::Region() const {
+std::unique_ptr<S2Region> PointGeography::Region() const {
     auto region = absl::make_unique<S2RegionUnion>();
     for (const S2Point& point: points_) {
         region->Add(absl::make_unique<S2PointRegion>(point));
@@ -87,7 +87,7 @@ std::unique_ptr<S2Region> S2GeographyOwningPoint::Region() const {
     return std::unique_ptr<S2Region>(region.release());
 }
 
-void S2GeographyOwningPoint::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
+void PointGeography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
     if (points_.size() < 10) {
         for (const S2Point& point: points_) {
             cell_ids->push_back(S2CellId(point));

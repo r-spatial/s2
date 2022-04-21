@@ -79,7 +79,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
             }
         }
 
-        return absl::make_unique<S2GeographyOwningPoint>(std::move(endpoints));
+        return absl::make_unique<PointGeography>(std::move(endpoints));
     }
 
     if (dimension == 2) {
@@ -142,7 +142,7 @@ S2Point S2CentroidAggregator::Finalize() {
 
 void S2ConvexHullAggregator::Add(const S2Geography& geog) {
     if (geog.dimension() == 0) {
-        auto point_ptr = dynamic_cast<const S2GeographyOwningPoint*>(&geog);
+        auto point_ptr = dynamic_cast<const PointGeography*>(&geog);
         if (point_ptr != nullptr) {
             for (const auto& point : point_ptr->Points()) {
                 query_.AddPoint(point);

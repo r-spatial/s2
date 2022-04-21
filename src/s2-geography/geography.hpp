@@ -70,11 +70,11 @@ public:
 
 // An S2Geography representing zero or more points using a std::vector<S2Point>
 // as the underlying representation.
-class S2GeographyOwningPoint: public S2Geography {
+class PointGeography: public S2Geography {
 public:
-    S2GeographyOwningPoint() {}
-    S2GeographyOwningPoint(S2Point point) { points_.push_back(point); }
-    S2GeographyOwningPoint(std::vector<S2Point> points): points_(std::move(points)) {}
+    PointGeography() {}
+    PointGeography(S2Point point) { points_.push_back(point); }
+    PointGeography(std::vector<S2Point> points): points_(std::move(points)) {}
 
     int dimension() const { return 0; }
     int num_shapes() const { return 1; }

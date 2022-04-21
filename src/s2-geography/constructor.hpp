@@ -94,7 +94,7 @@ public:
     }
 
     std::unique_ptr<S2Geography> finish() {
-        auto result = absl::make_unique<S2GeographyOwningPoint>(std::move(points_));
+        auto result = absl::make_unique<PointGeography>(std::move(points_));
         points_.clear();
         return std::unique_ptr<S2Geography>(result.release());
     }

@@ -54,7 +54,7 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
     std::vector<std::unique_ptr<S2Geography>> features;
 
     if (has_points) {
-      features.push_back(absl::make_unique<S2GeographyOwningPoint>(std::move(points)));
+      features.push_back(absl::make_unique<PointGeography>(std::move(points)));
     }
 
     if (has_polylines) {
@@ -74,7 +74,7 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
   } else if (has_polylines || (included_dimensions == 1 && include_polylines)) {
     return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines));
   } else if (has_points || (included_dimensions == 1 && include_points)) {
-    return absl::make_unique<S2GeographyOwningPoint>(std::move(points));
+    return absl::make_unique<PointGeography>(std::move(points));
   } else {
     return absl::make_unique<S2GeographyCollection>();
   }
@@ -285,7 +285,7 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
     options.polygon_layer_action);
 }
 
-std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog) {
+std::unique_ptr<PointGeography> s2_build_point(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
     S2GeographyOptions(),
@@ -293,8 +293,8 @@ std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog) 
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
 
-  return std::unique_ptr<S2GeographyOwningPoint>(
-    dynamic_cast<S2GeographyOwningPoint*>(geog_out.release()));
+  return std::unique_ptr<PointGeography>(
+    dynamic_cast<PointGeography*>(geog_out.release()));
 }
 
 

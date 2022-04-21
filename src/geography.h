@@ -41,15 +41,15 @@ public:
   }
 
   static std::unique_ptr<Geography> MakePoint() {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>());
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>());
   }
 
   static std::unique_ptr<Geography> MakePoint(S2Point point) {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>(point));
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>(point));
   }
 
   static std::unique_ptr<Geography> MakePoint(std::vector<S2Point> points) {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>(std::move(points)));
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>(std::move(points)));
   }
 
   static std::unique_ptr<Geography> MakePolyline() {

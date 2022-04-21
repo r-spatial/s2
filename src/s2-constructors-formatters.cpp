@@ -300,7 +300,7 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
     if (result == WK_ABORT_FEATURE) continue; else if (result == WK_ABORT) break
 
 
-int handle_points(const s2geography::S2GeographyOwningPoint& geog, wk_handler_t* handler,
+int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler,
                   uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -536,7 +536,7 @@ int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler
   for (size_t i = 0; i < geog.Features().size(); i++) {
     const s2geography::S2Geography* child_ptr = geog.Features()[i].get();
 
-    auto child_point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(child_ptr);
+    auto child_point = dynamic_cast<const s2geography::PointGeography*>(child_ptr);
     if (child_point != nullptr) {
       HANDLE_OR_RETURN(handle_points(*child_point, handler, i));
       continue;
@@ -590,7 +590,7 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
           auto item_ptr = reinterpret_cast<Geography*>(R_ExternalPtrAddr(item));
           const s2geography::S2Geography* geog_ptr = &item_ptr->Geog();
 
-          auto child_point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(geog_ptr);
+          auto child_point = dynamic_cast<const s2geography::PointGeography*>(geog_ptr);
           if (child_point != nullptr) {
             HANDLE_CONTINUE_OR_BREAK(handle_points(*child_point, handler));
           } else {

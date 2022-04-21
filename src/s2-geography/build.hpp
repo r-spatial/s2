@@ -45,7 +45,7 @@ std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
 std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
                                         const S2GeographyOptions& options);
 
-std::unique_ptr<S2GeographyOwningPoint> s2_build_point(const S2Geography& geog);
+std::unique_ptr<PointGeography> s2_build_point(const S2Geography& geog);
 
 std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog);
 
