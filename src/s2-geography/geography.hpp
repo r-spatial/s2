@@ -73,7 +73,7 @@ public:
 class S2GeographyOwningPoint: public S2Geography {
 public:
     S2GeographyOwningPoint() {}
-    S2GeographyOwningPoint(S2Point point): points_(1) { points_.push_back(point); }
+    S2GeographyOwningPoint(S2Point point) { points_.push_back(point); }
     S2GeographyOwningPoint(std::vector<S2Point> points): points_(std::move(points)) {}
 
     int dimension() const { return 0; }
