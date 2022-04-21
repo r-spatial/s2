@@ -34,12 +34,12 @@ public:
     OutputAction polygon_layer_action;
 };
 
-std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& geog1,
-                                                  const S2GeographyShapeIndex& geog2,
+std::unique_ptr<S2Geography> s2_boolean_operation(const ShapeIndexGeography& geog1,
+                                                  const ShapeIndexGeography& geog2,
                                                   S2BooleanOperation::OpType op_type,
                                                   const S2GeographyOptions& options);
 
-std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
+std::unique_ptr<S2Geography> s2_unary_union(const ShapeIndexGeography& geog,
                                             const S2GeographyOptions& options);
 
 std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
@@ -47,9 +47,9 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
 
 std::unique_ptr<PointGeography> s2_build_point(const S2Geography& geog);
 
-std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog);
+std::unique_ptr<PolylineGeography> s2_build_polyline(const S2Geography& geog);
 
-std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog);
+std::unique_ptr<PolygonGeography> s2_build_polygon(const S2Geography& geog);
 
 class S2RebuildAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
 public:
@@ -59,7 +59,7 @@ public:
 
 private:
     S2GeographyOptions options_;
-    S2GeographyShapeIndex index_;
+    ShapeIndexGeography index_;
 };
 
 class S2CoverageUnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
@@ -71,7 +71,7 @@ public:
 
 private:
     S2GeographyOptions options_;
-    S2GeographyShapeIndex index_;
+    ShapeIndexGeography index_;
 };
 
 class S2UnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
@@ -83,8 +83,8 @@ public:
 private:
     class Node {
     public:
-        S2GeographyShapeIndex index1;
-        S2GeographyShapeIndex index2;
+        ShapeIndexGeography index1;
+        ShapeIndexGeography index2;
         std::vector<std::unique_ptr<S2Geography>> data;
         std::unique_ptr<S2Geography> Merge(const S2GeographyOptions& options);
     };

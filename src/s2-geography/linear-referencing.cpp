@@ -6,7 +6,7 @@
 
 namespace s2geography {
 
-double s2_project_normalized(const S2GeographyOwningPolyline& geog1,
+double s2_project_normalized(const PolylineGeography& geog1,
                              const S2Point& point) {
     if (geog1.Polylines().size() != 1 || point.Norm2() == 0) {
         return NAN;
@@ -34,7 +34,7 @@ double s2_project_normalized(const S2Geography& geog1, const S2Geography& geog2)
         }
     }
 
-    auto geog1_poly_ptr = dynamic_cast<const S2GeographyOwningPolyline*>(&geog1);
+    auto geog1_poly_ptr = dynamic_cast<const PolylineGeography*>(&geog1);
     if (geog1_poly_ptr != nullptr) {
         return s2_project_normalized(*geog1_poly_ptr, point);
     }
@@ -43,13 +43,13 @@ double s2_project_normalized(const S2Geography& geog1, const S2Geography& geog2)
     return s2_project_normalized(*geog_poly, geog2);
 }
 
-S2Point s2_interpolate_normalized(const S2GeographyOwningPolyline& geog, double distance_norm) {
+S2Point s2_interpolate_normalized(const PolylineGeography& geog, double distance_norm) {
     if (s2_is_empty(geog)) {
         return S2Point();
     } else if (geog.Polylines().size() == 1) {
         return geog.Polylines()[0]->Interpolate(distance_norm);
     } else {
-        throw S2GeographyException("`geog` must contain 0 or 1 polyines");
+        throw Exception("`geog` must contain 0 or 1 polyines");
     }
 }
 
@@ -59,10 +59,10 @@ S2Point s2_interpolate_normalized(const S2Geography& geog, double distance_norm)
     }
 
     if (geog.dimension() != 1 || geog.num_shapes() > 1) {
-        throw S2GeographyException("`geog` must be a single polyline");
+        throw Exception("`geog` must be a single polyline");
     }
 
-    auto geog_poly_ptr = dynamic_cast<const S2GeographyOwningPolyline*>(&geog);
+    auto geog_poly_ptr = dynamic_cast<const PolylineGeography*>(&geog);
     if (geog_poly_ptr != nullptr) {
         return s2_interpolate_normalized(*geog_poly_ptr, distance_norm);
     }

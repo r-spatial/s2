@@ -73,7 +73,7 @@ public:
             geometry_type != util::GeometryType::POINT &&
             geometry_type != util::GeometryType::MULTIPOINT &&
             geometry_type != util::GeometryType::GEOMETRYCOLLECTION) {
-            throw S2GeographyException(
+            throw Exception(
                 "PointConstructor input must be empty, point, multipoint, or collection");
         }
 
@@ -120,7 +120,7 @@ public:
             geometry_type != util::GeometryType::LINESTRING &&
             geometry_type != util::GeometryType::MULTILINESTRING &&
             geometry_type != util::GeometryType::GEOMETRYCOLLECTION) {
-            throw S2GeographyException(
+            throw Exception(
                 "PolylineConstructor input must be empty, linestring, multilinestring, or collection");
         }
 
@@ -136,7 +136,7 @@ public:
 
             if (options_.check() && !polyline->IsValid()) {
                 polyline->FindValidationError(&error_);
-                throw S2GeographyException(error_.text());
+                throw Exception(error_.text());
             }
 
             polylines_.push_back(std::move(polyline));
@@ -145,13 +145,13 @@ public:
     }
 
     std::unique_ptr<S2Geography> finish() {
-        std::unique_ptr<S2GeographyOwningPolyline> result;
+        std::unique_ptr<PolylineGeography> result;
 
         if (polylines_.size() > 0) {
-            result = absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines_));
+            result = absl::make_unique<PolylineGeography>(std::move(polylines_));
             polylines_.clear();
         } else {
-            result = absl::make_unique<S2GeographyOwningPolyline>();
+            result = absl::make_unique<PolylineGeography>();
         }
 
         return std::unique_ptr<S2Geography>(result.release());
@@ -193,7 +193,7 @@ public:
             err << "Loop " << (loops_.size()) << " is not valid: ";
             loop->FindValidationError(&error_);
             err << error_.text();
-            throw S2GeographyException(err.str());
+            throw Exception(err.str());
         }
 
         loops_.push_back(std::move(loop));
@@ -213,10 +213,10 @@ public:
 
         if (options_.check() && !polygon->IsValid()) {
             polygon->FindValidationError(&error_);
-            throw S2GeographyException(error_.text());
+            throw Exception(error_.text());
         }
 
-        auto result = absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
+        auto result = absl::make_unique<PolygonGeography>(std::move(polygon));
         return std::unique_ptr<S2Geography>(result.release());
     }
 
@@ -264,7 +264,7 @@ public:
             this->active_constructor_ = this->collection_constructor_.get();
             break;
         default:
-            throw S2GeographyException("CollectionConstructor: unsupported geometry type");
+            throw Exception("CollectionConstructor: unsupported geometry type");
         }
 
         active_constructor_->geom_start(geometry_type, size);
@@ -334,7 +334,7 @@ public:
         } else {
             std::unique_ptr<S2Geography> feature = std::move(features_.back());
             if (feature.get() == nullptr) {
-                throw S2GeographyException("finish_feature() generated nullptr");
+                throw Exception("finish_feature() generated nullptr");
             }
 
             features_.pop_back();

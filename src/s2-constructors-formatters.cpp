@@ -342,7 +342,7 @@ int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler
   return WK_CONTINUE;
 }
 
-int handle_polylines(const s2geography::S2GeographyOwningPolyline& geog, wk_handler_t* handler,
+int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* handler,
                      uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -461,7 +461,7 @@ int handle_shell(const S2Polygon& poly, const wk_meta_t* meta, int loop_start, w
   return WK_CONTINUE;
 }
 
-int handle_polygon(const s2geography::S2GeographyOwningPolygon& geog, wk_handler_t* handler,
+int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* handler,
                    uint32_t part_id = WK_PART_ID_NONE) {
   const S2Polygon& poly = *geog.Polygon();
 
@@ -542,13 +542,13 @@ int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler
       continue;
     }
 
-    auto child_polyline = dynamic_cast<const s2geography::S2GeographyOwningPolyline*>(child_ptr);
+    auto child_polyline = dynamic_cast<const s2geography::PolylineGeography*>(child_ptr);
     if (child_polyline != nullptr) {
       HANDLE_OR_RETURN(handle_polylines(*child_polyline, handler, i));
       continue;
     }
 
-    auto child_polygon = dynamic_cast<const s2geography::S2GeographyOwningPolygon*>(child_ptr);
+    auto child_polygon = dynamic_cast<const s2geography::PolygonGeography*>(child_ptr);
     if (child_polygon != nullptr) {
       HANDLE_OR_RETURN(handle_polygon(*child_polygon, handler, i));
       continue;
@@ -594,11 +594,11 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
           if (child_point != nullptr) {
             HANDLE_CONTINUE_OR_BREAK(handle_points(*child_point, handler));
           } else {
-            auto child_polyline = dynamic_cast<const s2geography::S2GeographyOwningPolyline*>(geog_ptr);
+            auto child_polyline = dynamic_cast<const s2geography::PolylineGeography*>(geog_ptr);
             if (child_polyline != nullptr) {
               HANDLE_CONTINUE_OR_BREAK(handle_polylines(*child_polyline, handler));
             } else {
-              auto child_polygon = dynamic_cast<const s2geography::S2GeographyOwningPolygon*>(geog_ptr);
+              auto child_polygon = dynamic_cast<const s2geography::PolygonGeography*>(geog_ptr);
               if (child_polygon != nullptr) {
                 HANDLE_CONTINUE_OR_BREAK(handle_polygon(*child_polygon, handler));
               } else {

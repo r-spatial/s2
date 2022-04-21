@@ -29,19 +29,19 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
   bool include_points = point_layer_action == S2GeographyOptions::OUTPUT_ACTION_INCLUDE;
 
   if (has_polygon && polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
-      throw S2GeographyException("Output contained unexpected polygon");
+      throw Exception("Output contained unexpected polygon");
   } else if (has_polygon && polygon_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_polygon = false;
   }
 
   if (has_polylines && polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
-      throw S2GeographyException("Output contained unexpected polylines");
+      throw Exception("Output contained unexpected polylines");
   } else if (has_polylines && polyline_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_polylines = false;
   }
 
   if (has_points && point_layer_action == S2GeographyOptions::OUTPUT_ACTION_ERROR) {
-      throw S2GeographyException("Output contained unexpected points");
+      throw Exception("Output contained unexpected points");
   } else if (has_points && point_layer_action == S2GeographyOptions::OUTPUT_ACTION_IGNORE) {
       has_points = false;
   }
@@ -58,11 +58,11 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
     }
 
     if (has_polylines) {
-      features.push_back(absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines)));
+      features.push_back(absl::make_unique<PolylineGeography>(std::move(polylines)));
     }
 
     if (has_polygon) {
-      features.push_back(absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon)));
+      features.push_back(absl::make_unique<PolygonGeography>(std::move(polygon)));
     }
 
     return absl::make_unique<S2GeographyCollection>(std::move(features));
@@ -70,9 +70,9 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
 
   // return single dimension output
   if (has_polygon || (included_dimensions == 1 && include_polygon)) {
-    return absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
+    return absl::make_unique<PolygonGeography>(std::move(polygon));
   } else if (has_polylines || (included_dimensions == 1 && include_polylines)) {
-    return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines));
+    return absl::make_unique<PolylineGeography>(std::move(polylines));
   } else if (has_points || (included_dimensions == 1 && include_points)) {
     return absl::make_unique<PointGeography>(std::move(points));
   } else {
@@ -80,8 +80,8 @@ std::unique_ptr<S2Geography> s2_geography_from_layers(std::vector<S2Point> point
   }
 }
 
-std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& geog1,
-                                                  const S2GeographyShapeIndex& geog2,
+std::unique_ptr<S2Geography> s2_boolean_operation(const ShapeIndexGeography& geog1,
+                                                  const ShapeIndexGeography& geog2,
                                                   S2BooleanOperation::OpType op_type,
                                                   const S2GeographyOptions& options) {
 
@@ -107,7 +107,7 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
   // do the boolean operation, build layers, and check for errors
   S2Error error;
   if (!op.Build(geog1.ShapeIndex(), geog2.ShapeIndex(), &error)) {
-    throw S2GeographyException(error.text());
+    throw Exception(error.text());
   }
 
   // construct output
@@ -121,7 +121,7 @@ std::unique_ptr<S2Geography> s2_boolean_operation(const S2GeographyShapeIndex& g
   );
 }
 
-std::unique_ptr<S2GeographyOwningPolygon> s2_unary_union(const S2GeographyOwningPolygon& geog,
+std::unique_ptr<PolygonGeography> s2_unary_union(const PolygonGeography& geog,
                                                          const S2GeographyOptions& options) {
   // A geography with invalid loops won't work with the S2BooleanOperation
   // we will use to accumulate (i.e., union) valid polygons,
@@ -147,7 +147,7 @@ std::unique_ptr<S2GeographyOwningPolygon> s2_unary_union(const S2GeographyOwning
     builder.AddShape(S2Loop::Shape(geog.Polygon()->loop(i)));
     S2Error error;
     if (!builder.Build(&error)) {
-      throw S2GeographyException(error.text());
+      throw Exception(error.text());
     }
 
     // Check if the builder created a polygon whose boundary contained more than
@@ -177,10 +177,10 @@ std::unique_ptr<S2GeographyOwningPolygon> s2_unary_union(const S2GeographyOwning
     accumulated_polygon.swap(polygon_result);
   }
 
-  return absl::make_unique<S2GeographyOwningPolygon>(std::move(accumulated_polygon));
+  return absl::make_unique<PolygonGeography>(std::move(accumulated_polygon));
 }
 
-std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
+std::unique_ptr<S2Geography> s2_unary_union(const ShapeIndexGeography& geog,
                                             const S2GeographyOptions& options) {
   // complex union only needed when a polygon is involved
   bool simple_union_ok = s2_is_empty(geog) || s2_dimension(geog) < 2;
@@ -195,13 +195,13 @@ std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
   }
 
   if (simple_union_ok) {
-    S2GeographyShapeIndex empty;
+    ShapeIndexGeography empty;
     return s2_boolean_operation(geog, empty, S2BooleanOperation::OpType::UNION, options);
   }
 
   if (geog.dimension() == 2) {
     // If we've made it here we have an invalid polygon on our hands.
-    auto poly_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+    auto poly_ptr = dynamic_cast<const PolygonGeography*>(&geog);
     if (poly_ptr != nullptr) {
       return s2_unary_union(*poly_ptr, options);
     } else {
@@ -210,7 +210,7 @@ std::unique_ptr<S2Geography> s2_unary_union(const S2GeographyShapeIndex& geog,
     }
   }
 
-  throw S2GeographyException(
+  throw Exception(
     "s2_unary_union() for multidimensional collections not implemented");
 }
 
@@ -261,7 +261,7 @@ std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
   // build the output
   S2Error error;
   if (!builder.Build(&error)) {
-    throw S2GeographyException(error.text());
+    throw Exception(error.text());
   }
 
   // construct output
@@ -298,7 +298,7 @@ std::unique_ptr<PointGeography> s2_build_point(const S2Geography& geog) {
 }
 
 
-std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& geog) {
+std::unique_ptr<PolylineGeography> s2_build_polyline(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
     S2GeographyOptions(),
@@ -306,12 +306,12 @@ std::unique_ptr<S2GeographyOwningPolyline> s2_build_polyline(const S2Geography& 
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR);
 
-  return std::unique_ptr<S2GeographyOwningPolyline>(
-    dynamic_cast<S2GeographyOwningPolyline*>(geog_out.release()));
+  return std::unique_ptr<PolylineGeography>(
+    dynamic_cast<PolylineGeography*>(geog_out.release()));
 }
 
 
-std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& geog) {
+std::unique_ptr<PolygonGeography> s2_build_polygon(const S2Geography& geog) {
   std::unique_ptr<S2Geography> geog_out = s2_rebuild(
     geog,
     S2GeographyOptions(),
@@ -319,8 +319,8 @@ std::unique_ptr<S2GeographyOwningPolygon> s2_build_polygon(const S2Geography& ge
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_ERROR,
     S2GeographyOptions::OutputAction::OUTPUT_ACTION_INCLUDE);
 
-  return std::unique_ptr<S2GeographyOwningPolygon>(
-    dynamic_cast<S2GeographyOwningPolygon*>(geog_out.release()));
+  return std::unique_ptr<PolygonGeography>(
+    dynamic_cast<PolygonGeography*>(geog_out.release()));
 }
 
 
@@ -337,7 +337,7 @@ void S2CoverageUnionAggregator::Add(const S2Geography& geog) {
 }
 
 std::unique_ptr<S2Geography> S2CoverageUnionAggregator::Finalize() {
-  S2GeographyShapeIndex empty_index_;
+  ShapeIndexGeography empty_index_;
   return s2_boolean_operation(index_, empty_index_, S2BooleanOperation::OpType::UNION, options_);
 }
 

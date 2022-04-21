@@ -7,7 +7,7 @@
 
 namespace s2geography {
 
-double s2_distance(const S2GeographyShapeIndex& geog1, const S2GeographyShapeIndex& geog2) {
+double s2_distance(const ShapeIndexGeography& geog1, const ShapeIndexGeography& geog2) {
     S2ClosestEdgeQuery query(&geog1.ShapeIndex());
     S2ClosestEdgeQuery::ShapeIndexTarget target(&geog2.ShapeIndex());
 
@@ -17,7 +17,7 @@ double s2_distance(const S2GeographyShapeIndex& geog1, const S2GeographyShapeInd
     return angle.ToAngle().radians();
 }
 
-double s2_max_distance(const S2GeographyShapeIndex& geog1, const S2GeographyShapeIndex& geog2) {
+double s2_max_distance(const ShapeIndexGeography& geog1, const ShapeIndexGeography& geog2) {
     S2FurthestEdgeQuery query(&geog1.ShapeIndex());
     S2FurthestEdgeQuery::ShapeIndexTarget target(&geog2.ShapeIndex());
 
@@ -27,12 +27,12 @@ double s2_max_distance(const S2GeographyShapeIndex& geog1, const S2GeographyShap
     return angle.ToAngle().radians();
 }
 
-S2Point s2_closest_point(const S2GeographyShapeIndex& geog1, const S2GeographyShapeIndex& geog2) {
+S2Point s2_closest_point(const ShapeIndexGeography& geog1, const ShapeIndexGeography& geog2) {
     return s2_minimum_clearance_line_between(geog1, geog2).first;
 }
 
 std::pair<S2Point, S2Point> s2_minimum_clearance_line_between(
-    const S2GeographyShapeIndex& geog1, const S2GeographyShapeIndex& geog2) {
+    const ShapeIndexGeography& geog1, const ShapeIndexGeography& geog2) {
     S2ClosestEdgeQuery query1(&geog1.ShapeIndex());
     query1.mutable_options()->set_include_interiors(false);
     S2ClosestEdgeQuery::ShapeIndexTarget target(&geog2.ShapeIndex());
@@ -54,7 +54,7 @@ std::pair<S2Point, S2Point> s2_minimum_clearance_line_between(
 
     // what if result2 has no edges?
     if (result2.is_interior()) {
-        throw S2GeographyException("S2ClosestEdgeQuery result is interior!");
+        throw Exception("S2ClosestEdgeQuery result is interior!");
     }
 
     S2Shape::Edge edge2 = query2.GetEdge(result2);

@@ -10,9 +10,9 @@
 
 namespace s2geography {
 
-class S2GeographyException: public std::runtime_error {
+class Exception: public std::runtime_error {
 public:
-    S2GeographyException(std::string what): std::runtime_error(what.c_str()) {}
+    Exception(std::string what): std::runtime_error(what.c_str()) {}
 };
 
 // An S2Geography is an abstraction of S2 types that is designed to closely match
@@ -93,13 +93,13 @@ private:
 
 // An S2Geography representing zero or more polylines using the S2Polyline class
 // as the underlying representation.
-class S2GeographyOwningPolyline: public S2Geography {
+class PolylineGeography: public S2Geography {
 public:
-    S2GeographyOwningPolyline() {}
-    S2GeographyOwningPolyline(std::unique_ptr<S2Polyline> polyline) {
+    PolylineGeography() {}
+    PolylineGeography(std::unique_ptr<S2Polyline> polyline) {
         polylines_.push_back(std::move(polyline));
     }
-    S2GeographyOwningPolyline(std::vector<std::unique_ptr<S2Polyline>> polylines):
+    PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
         polylines_(std::move(polylines)) {}
 
     int dimension() const { return 1; }
@@ -121,10 +121,10 @@ private:
 // as the underlying representation. Note that a single S2Polygon (from the S2
 // perspective) can represent zero or more polygons (from the simple features
 // perspective).
-class S2GeographyOwningPolygon: public S2Geography {
+class PolygonGeography: public S2Geography {
 public:
-    S2GeographyOwningPolygon() {}
-    S2GeographyOwningPolygon(std::unique_ptr<S2Polygon> polygon):
+    PolygonGeography() {}
+    PolygonGeography(std::unique_ptr<S2Polygon> polygon):
         polygon_(std::move(polygon)) {}
 
     int dimension() const { return 2; }
@@ -176,15 +176,15 @@ private:
 // These are used as inputs for operations that are implemented in S2
 // using the S2ShapeIndex (e.g., boolean operations). If an S2Geography
 // instance will be used repeatedly, it will be faster to construct
-// one S2GeographyShapeIndex and use it repeatedly. This class does not
+// one ShapeIndexGeography and use it repeatedly. This class does not
 // own any S2Geography objects that are added do it and thus is only
 // valid for the scope of those objects.
-class S2GeographyShapeIndex: public S2Geography {
+class ShapeIndexGeography: public S2Geography {
 public:
-    S2GeographyShapeIndex(MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
+    ShapeIndexGeography(MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
         : shape_index_(options) {}
 
-    explicit S2GeographyShapeIndex(const S2Geography& geog) {
+    explicit ShapeIndexGeography(const S2Geography& geog) {
         Add(geog);
     }
 

@@ -22,10 +22,10 @@ private:
     S2Point centroid_;
 };
 
-class S2ConvexHullAggregator: public S2Aggregator<std::unique_ptr<S2GeographyOwningPolygon>> {
+class S2ConvexHullAggregator: public S2Aggregator<std::unique_ptr<PolygonGeography>> {
 public:
     void Add(const S2Geography& geog);
-    std::unique_ptr<S2GeographyOwningPolygon> Finalize();
+    std::unique_ptr<PolygonGeography> Finalize();
 
 private:
     S2ConvexHullQuery query_;

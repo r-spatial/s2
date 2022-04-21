@@ -98,13 +98,13 @@ void PointGeography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
 }
 
 
-int S2GeographyOwningPolyline::num_shapes() const { return polylines_.size(); }
+int PolylineGeography::num_shapes() const { return polylines_.size(); }
 
-std::unique_ptr<S2Shape> S2GeographyOwningPolyline::Shape(int id) const {
+std::unique_ptr<S2Shape> PolylineGeography::Shape(int id) const {
     return absl::make_unique<S2Polyline::Shape>(polylines_[id].get());
 }
 
-std::unique_ptr<S2Region> S2GeographyOwningPolyline::Region() const {
+std::unique_ptr<S2Region> PolylineGeography::Region() const {
     auto region = absl::make_unique<S2RegionUnion>();
     for (const auto& polyline: polylines_) {
         region->Add(absl::make_unique<S2RegionWrapper>(polyline.get()));
@@ -114,21 +114,21 @@ std::unique_ptr<S2Region> S2GeographyOwningPolyline::Region() const {
     return std::unique_ptr<S2Region>(region.release());
 }
 
-void S2GeographyOwningPolyline::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
+void PolylineGeography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
     for (const auto& polyline: polylines_) {
         polyline->GetCellUnionBound(cell_ids);
     }
 }
 
-std::unique_ptr<S2Shape> S2GeographyOwningPolygon::Shape(int id) const {
+std::unique_ptr<S2Shape> PolygonGeography::Shape(int id) const {
     return absl::make_unique<S2Polygon::Shape>(polygon_.get());
 }
 
-std::unique_ptr<S2Region> S2GeographyOwningPolygon::Region() const {
+std::unique_ptr<S2Region> PolygonGeography::Region() const {
     return absl::make_unique<S2RegionWrapper>(polygon_.get());
 }
 
-void S2GeographyOwningPolygon::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
+void PolygonGeography::GetCellUnionBound(std::vector<S2CellId>* cell_ids) const {
     polygon_->GetCellUnionBound(cell_ids);
 }
 
@@ -144,7 +144,7 @@ std::unique_ptr<S2Shape> S2GeographyCollection::Shape(int id) const {
         }
     }
 
-    throw S2GeographyException("shape id out of bounds");
+    throw Exception("shape id out of bounds");
 }
 
 std::unique_ptr<S2Region> S2GeographyCollection::Region() const {
@@ -157,14 +157,14 @@ std::unique_ptr<S2Region> S2GeographyCollection::Region() const {
     return std::unique_ptr<S2Region>(region.release());
 }
 
-int S2GeographyShapeIndex::num_shapes() const { return shape_index_.num_shape_ids(); }
+int ShapeIndexGeography::num_shapes() const { return shape_index_.num_shape_ids(); }
 
-std::unique_ptr<S2Shape> S2GeographyShapeIndex::Shape(int id) const {
+std::unique_ptr<S2Shape> ShapeIndexGeography::Shape(int id) const {
     S2Shape* shape = shape_index_.shape(id);
     return std::unique_ptr<S2Shape>(new S2ShapeWrapper(shape));
 }
 
-std::unique_ptr<S2Region> S2GeographyShapeIndex::Region() const {
+std::unique_ptr<S2Region> ShapeIndexGeography::Region() const {
     auto region = absl::make_unique<S2ShapeIndexRegion<MutableS2ShapeIndex>>(&shape_index_);
     // because Rtools for R 3.6 on Windows complains about a direct
     // return region

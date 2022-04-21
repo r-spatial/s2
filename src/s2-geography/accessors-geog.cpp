@@ -35,11 +35,11 @@ S2Point s2_centroid(const S2Geography& geog) {
     }
 
     if (geog.dimension() == 2) {
-        auto polygon_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        auto polygon_ptr = dynamic_cast<const PolygonGeography*>(&geog);
         if (polygon_ptr != nullptr) {
             centroid = polygon_ptr->Polygon()->GetCentroid();
         } else {
-            std::unique_ptr<S2GeographyOwningPolygon> built = s2_build_polygon(geog);
+            std::unique_ptr<PolygonGeography> built = s2_build_polygon(geog);
             centroid = built->Polygon()->GetCentroid();
         }
 
@@ -48,7 +48,7 @@ S2Point s2_centroid(const S2Geography& geog) {
 
     auto collection_ptr = dynamic_cast<const S2GeographyCollection*>(&geog);
     if (collection_ptr == nullptr) {
-        throw S2GeographyException("Can't compute s2_centroid() on custom collection geography");
+        throw Exception("Can't compute s2_centroid() on custom collection geography");
     }
 
     for (auto& feat: collection_ptr->Features()) {
@@ -89,7 +89,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
         for (int i = 0; i < geog.num_shapes(); i++) {
             auto shape = geog.Shape(i);
             if (shape->dimension() != 2) {
-                throw S2GeographyException("Can't extract boundary from heterogeneous collection");
+                throw Exception("Can't extract boundary from heterogeneous collection");
             }
 
             for (int j = 0; j < shape->num_chains(); j++) {
@@ -108,7 +108,7 @@ std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog) {
             }
         }
 
-        return absl::make_unique<S2GeographyOwningPolyline>(std::move(polylines));
+        return absl::make_unique<PolylineGeography>(std::move(polylines));
     }
 
     return absl::make_unique<S2GeographyCollection>();
@@ -156,7 +156,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
     }
 
     if (geog.dimension() == 1) {
-        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolyline*>(&geog);
+        auto poly_ptr = dynamic_cast<const PolylineGeography*>(&geog);
         if (poly_ptr != nullptr) {
             for (const auto& polyline : poly_ptr->Polylines()) {
                 query_.AddPolyline(*polyline);
@@ -170,7 +170,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
     }
 
     if (geog.dimension() == 2) {
-        auto poly_ptr = dynamic_cast<const S2GeographyOwningPolygon*>(&geog);
+        auto poly_ptr = dynamic_cast<const PolygonGeography*>(&geog);
         if (poly_ptr != nullptr) {
             query_.AddPolygon(*poly_ptr->Polygon());
         } else {
@@ -192,10 +192,10 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
     }
 }
 
-std::unique_ptr<S2GeographyOwningPolygon> S2ConvexHullAggregator::Finalize() {
+std::unique_ptr<PolygonGeography> S2ConvexHullAggregator::Finalize() {
     auto polygon = absl::make_unique<S2Polygon>();
     polygon->Init(query_.GetConvexHull());
-    return absl::make_unique<S2GeographyOwningPolygon>(std::move(polygon));
+    return absl::make_unique<PolygonGeography>(std::move(polygon));
 }
 
 }

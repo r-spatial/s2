@@ -8,8 +8,8 @@
 
 namespace s2geography {
 
-bool s2_intersects(const S2GeographyShapeIndex& geog1,
-                   const S2GeographyShapeIndex& geog2,
+bool s2_intersects(const ShapeIndexGeography& geog1,
+                   const ShapeIndexGeography& geog2,
                    const S2BooleanOperation::Options& options) {
     return S2BooleanOperation::Intersects(
         geog1.ShapeIndex(),
@@ -17,8 +17,8 @@ bool s2_intersects(const S2GeographyShapeIndex& geog1,
         options);
 }
 
-bool s2_equals(const S2GeographyShapeIndex& geog1,
-               const S2GeographyShapeIndex& geog2,
+bool s2_equals(const ShapeIndexGeography& geog1,
+               const ShapeIndexGeography& geog2,
                const S2BooleanOperation::Options& options) {
     return S2BooleanOperation::Equals(
         geog1.ShapeIndex(),
@@ -26,8 +26,8 @@ bool s2_equals(const S2GeographyShapeIndex& geog1,
         options);
 }
 
-bool s2_contains(const S2GeographyShapeIndex& geog1,
-                 const S2GeographyShapeIndex& geog2,
+bool s2_contains(const ShapeIndexGeography& geog1,
+                 const ShapeIndexGeography& geog2,
                  const S2BooleanOperation::Options& options) {
     if (s2_is_empty(geog2)) {
         return false;
@@ -53,7 +53,7 @@ bool s2_contains(const S2GeographyShapeIndex& geog1,
 // ...it isn't implemented here because the options creation should be done
 // outside of any loop.
 
-bool s2_intersects_box(const S2GeographyShapeIndex& geog1,
+bool s2_intersects_box(const ShapeIndexGeography& geog1,
                        const S2LatLngRect& rect,
                        const S2BooleanOperation::Options& options,
                        double tolerance) {

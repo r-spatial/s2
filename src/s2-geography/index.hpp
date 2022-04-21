@@ -7,7 +7,7 @@
 
 namespace s2geography {
 
-// Unlike the S2GeographyShapeIndex, whose function is to index a single S2Geography
+// Unlike the ShapeIndexGeography, whose function is to index a single S2Geography
 // or index multiple S2Geography objects as if they were a single S2Geography,
 // the S2GeographyIndex exists to index a vector of S2Geography objects (like a
 // GEOSSTRTree index), providing (hopefully) rapid access to possibly intersecting

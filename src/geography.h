@@ -17,9 +17,9 @@ public:
     return *geog_;
   }
 
-  const s2geography::S2GeographyShapeIndex& Index() {
+  const s2geography::ShapeIndexGeography& Index() {
     if (!index_) {
-      this->index_ = absl::make_unique<s2geography::S2GeographyShapeIndex>(*geog_);
+      this->index_ = absl::make_unique<s2geography::ShapeIndexGeography>(*geog_);
     }
 
     return *index_;
@@ -53,23 +53,23 @@ public:
   }
 
   static std::unique_ptr<Geography> MakePolyline() {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>());
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>());
   }
 
   static std::unique_ptr<Geography> MakePolyline(std::unique_ptr<S2Polyline> polyline) {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polyline)));
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>(std::move(polyline)));
   }
 
   static std::unique_ptr<Geography> MakePolyline(std::vector<std::unique_ptr<S2Polyline>> polylines) {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polylines)));
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>(std::move(polylines)));
   }
 
   static std::unique_ptr<Geography> MakePolygon() {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolygon>());
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolygonGeography>());
   }
 
   static std::unique_ptr<Geography> MakePolygon(std::unique_ptr<S2Polygon> polygon) {
-    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolygon>(std::move(polygon)));
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolygonGeography>(std::move(polygon)));
   }
 
   static std::unique_ptr<Geography> MakeCollection() {
@@ -82,7 +82,7 @@ public:
 
 private:
   std::unique_ptr<s2geography::S2Geography> geog_;
-  std::unique_ptr<s2geography::S2GeographyShapeIndex> index_;
+  std::unique_ptr<s2geography::ShapeIndexGeography> index_;
 
   static void finalize_xptr(SEXP xptr) {
     Geography* geog = reinterpret_cast<Geography*>(R_ExternalPtrAddr(xptr));

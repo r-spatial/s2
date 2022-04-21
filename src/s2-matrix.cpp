@@ -184,8 +184,8 @@ public:
     return Rcpp::IntegerVector(indices.begin(), indices.end());
   };
 
-  virtual bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+  virtual bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) = 0;
 
   protected:
@@ -206,8 +206,8 @@ List cpp_s2_may_intersect_matrix(List geog1, List geog2,
     Op(List s2options, int maxFeatureCells, int maxEdgesPerCell):
       IndexedMatrixPredicateOperator(s2options, maxFeatureCells, maxEdgesPerCell) {}
 
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       return true;
     };
@@ -223,8 +223,8 @@ List cpp_s2_contains_matrix(List geog1, List geog2, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
     Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       return s2geography::s2_contains(index1, index2, this->options);
     };
@@ -240,8 +240,8 @@ List cpp_s2_within_matrix(List geog1, List geog2, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
     Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       // note reversed index2, index1
       return s2geography::s2_contains(index2, index1, this->options);
@@ -258,8 +258,8 @@ List cpp_s2_intersects_matrix(List geog1, List geog2, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
     Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       return s2geography::s2_intersects(index1, index2, this->options);
     };
@@ -275,8 +275,8 @@ List cpp_s2_equals_matrix(List geog1, List geog2, List s2options) {
   class Op: public IndexedMatrixPredicateOperator {
   public:
     Op(List s2options): IndexedMatrixPredicateOperator(s2options) {}
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       return s2geography::s2_equals(index1, index2, this->options);
     };
@@ -301,8 +301,8 @@ List cpp_s2_touches_matrix(List geog1, List geog2, List s2options) {
       this->openOptions.set_polyline_model(S2BooleanOperation::PolylineModel::OPEN);
     }
 
-    bool actuallyIntersects(const s2geography::S2GeographyShapeIndex& index1,
-                                  const s2geography::S2GeographyShapeIndex& index2,
+    bool actuallyIntersects(const s2geography::ShapeIndexGeography& index1,
+                                  const s2geography::ShapeIndexGeography& index2,
                                   R_xlen_t i, R_xlen_t j) {
       return s2geography::s2_intersects(index1, index2, this->closedOptions) &&
         !s2geography::s2_intersects(index1, index2, this->openOptions);
