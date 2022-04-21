@@ -4,7 +4,6 @@
 
 #include "s2-options.h"
 #include "geography-operator.h"
-#include "geography-shim.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -19,18 +18,12 @@ public:
     }
 
   SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-    auto geog1 = feature1->NewGeography();
-    auto geog2 = feature2->NewGeography();
-    s2geography::S2GeographyShapeIndex index1(*geog1);
-    s2geography::S2GeographyShapeIndex index2(*geog2);
-
     std::unique_ptr<s2geography::S2Geography> geog_out = s2geography::s2_boolean_operation(
-      index1, index2,
+      feature1->Index(), feature2->Index(),
       this->opType,
       this->geography_options);
 
-    std::unique_ptr<Geography> geography = MakeOldGeography(*geog_out);
-    return Rcpp::XPtr<Geography>(geography.release());
+    return Geography::MakeXPtr(std::move(geog_out));
   }
 
 private:
@@ -66,7 +59,6 @@ List cpp_s2_sym_difference(List geog1, List geog2, List s2options) {
 List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
   s2geography::S2CoverageUnionAggregator agg(options.geographyOptions());
-  std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -77,23 +69,18 @@ List cpp_s2_coverage_union_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      auto geog = feature->NewGeography();
-      agg.Add(*geog);
-      geographies.push_back(std::move(geog));
+      agg.Add(feature->Geog());
     }
   }
 
   std::unique_ptr<s2geography::S2Geography> geog_out = agg.Finalize();
-
-  auto geography = MakeOldGeography(*geog_out);
-  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+  return List::create(Geography::MakeXPtr(std::move(geog_out)));
 }
 
 // [[Rcpp::export]]
 List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
   s2geography::S2UnionAggregator agg(options.geographyOptions());
-  std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -104,16 +91,12 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      auto geog = feature->NewGeography();
-      agg.Add(*geog);
-      geographies.push_back(std::move(geog));
+      agg.Add(feature->Geog());
     }
   }
 
   std::unique_ptr<s2geography::S2Geography> geog_out = agg.Finalize();
-
-  auto geography = MakeOldGeography(*geog_out);
-  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+  return List::create(Geography::MakeXPtr(std::move(geog_out)));
 }
 
 // [[Rcpp::export]]
@@ -129,7 +112,7 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      agg.Add(*feature->NewGeography());
+      agg.Add(feature->Geog());
     }
   }
 
@@ -137,9 +120,9 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 
   List output(1);
   if (centroid.Norm2() == 0) {
-    output[0] = Rcpp::XPtr<Geography>(new PointGeography());
+    output[0] = Geography::MakeXPtr(Geography::MakePoint());
   } else {
-    output[0] = Rcpp::XPtr<Geography>(new PointGeography(centroid));
+    output[0] = Geography::MakeXPtr(Geography::MakePoint(centroid));
   }
 
   return output;
@@ -161,16 +144,12 @@ List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
 
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
-      auto geog = feature->NewGeography();
-      agg.Add(*geog);
-      geographies.push_back(std::move(geog));
+      agg.Add(feature->Geog());
     }
   }
 
   auto geog_out = agg.Finalize();
-
-  auto geography = MakeOldGeography(*geog_out);
-  return List::create(Rcpp::XPtr<Geography>(geography.release()));
+  return List::create(Geography::MakeXPtr(std::move(geog_out)));
 }
 
 // [[Rcpp::export]]
@@ -178,16 +157,11 @@ List cpp_s2_closest_point(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      S2Point pt = s2geography::s2_closest_point(index1, index2);
+      S2Point pt = s2geography::s2_closest_point(feature1->Index(), feature2->Index());
       if (pt.Norm2() == 0) {
-        return XPtr<Geography>(new PointGeography());
+        return Geography::MakeXPtr(Geography::MakePoint());
       } else {
-        return XPtr<Geography>(new PointGeography(pt));
+        return Geography::MakeXPtr(Geography::MakePoint(pt));
       }
     }
   };
@@ -201,18 +175,13 @@ List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
   class Op: public BinaryGeographyOperator<List, SEXP> {
 
     SEXP processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
       std::pair<S2Point, S2Point> pts = s2geography::s2_minimum_clearance_line_between(
-        index1,
-        index2
+        feature1->Index(),
+        feature2->Index()
       );
 
       if (pts.first.Norm2() == 0) {
-        return XPtr<Geography>(new PolylineGeography());
+        return Geography::MakeXPtr(Geography::MakePoint());
       }
 
       std::vector<S2Point> vertices(2);
@@ -220,16 +189,14 @@ List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
       vertices[1] = pts.second;
 
       if (pts.first == pts.second) {
-        return XPtr<Geography>(new PointGeography(vertices));
+        return Geography::MakeXPtr(Geography::MakePoint(std::move(vertices)));
       } else {
         std::vector<S2Point> vertices(2);
         vertices[0] = pts.first;
         vertices[1] = pts.second;
         std::unique_ptr<S2Polyline> polyline = absl::make_unique<S2Polyline>();
         polyline->Init(vertices);
-        std::vector<std::unique_ptr<S2Polyline>> polylines(1);
-        polylines[0] = std::move(polyline);
-        return XPtr<Geography>(new PolylineGeography(std::move(polylines)));
+        return Geography::MakeXPtr(Geography::MakePolyline(std::move(polyline)));
       }
     }
   };
@@ -242,12 +209,11 @@ List cpp_s2_minimum_clearance_line_between(List geog1, List geog2) {
 List cpp_s2_centroid(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      S2Point centroid = s2geography::s2_centroid(*geog);
+      S2Point centroid = s2geography::s2_centroid(feature->Geog());
       if (centroid.Norm2() == 0) {
-        return XPtr<Geography>(new PointGeography());
+        return Geography::MakeXPtr(Geography::MakePoint());
       } else {
-        return XPtr<Geography>(new PointGeography(centroid.Normalize()));
+        return Geography::MakeXPtr(Geography::MakePoint(centroid.Normalize()));
       }
     }
   };
@@ -263,12 +229,11 @@ List cpp_s2_point_on_surface(List geog) {
     S2RegionCoverer coverer;
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      S2Point result = s2geography::s2_point_on_surface(*geog, coverer);
+      S2Point result = s2geography::s2_point_on_surface(feature->Geog(), coverer);
       if (result.Norm2() == 0) {
-        return XPtr<Geography>(new PointGeography());
+        return Geography::MakeXPtr(Geography::MakePoint());
       } else {
-        return XPtr<Geography>(new PointGeography(result));
+        return Geography::MakeXPtr(Geography::MakePoint(result));
       }
     }
   };
@@ -281,10 +246,8 @@ List cpp_s2_point_on_surface(List geog) {
 List cpp_s2_boundary(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      std::unique_ptr<s2geography::S2Geography> result = s2geography::s2_boundary(*geog);
-      std::unique_ptr<Geography> ptr = MakeOldGeography(*result);
-      return XPtr<Geography>(ptr.release());
+      std::unique_ptr<s2geography::S2Geography> result = s2geography::s2_boundary(feature->Geog());
+      return Geography::MakeXPtr(std::move(result));
     }
   };
 
@@ -302,15 +265,12 @@ List cpp_s2_rebuild(List geog, List s2options) {
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      s2geography::S2GeographyShapeIndex index(*geog);
       std::unique_ptr<s2geography::S2Geography> ptr = s2geography::s2_rebuild(
-        index,
+        feature->Geog(),
         this->options
       );
 
-      auto geography = MakeOldGeography(*ptr);
-      return XPtr<Geography>(geography.release());
+      return Geography::MakeXPtr(std::move(ptr));
     }
 
   private:
@@ -331,12 +291,9 @@ List cpp_s2_unary_union(List geog, List s2options) {
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      s2geography::S2GeographyShapeIndex index(*geog);
       std::unique_ptr<s2geography::S2Geography> geog_out =
-        s2geography::s2_unary_union(index, this->geographyOptions);
-      auto geography = MakeOldGeography(*geog_out);
-      return XPtr<Geography>(geography.release());
+        s2geography::s2_unary_union(feature->Index(), this->geographyOptions);
+      return Geography::MakeXPtr(std::move(geog_out));
     }
 
   private:
@@ -360,24 +317,22 @@ List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized) 
         return R_NilValue;
       }
 
-      auto geog = feature->NewGeography();
-
-      if (s2geography::s2_is_empty(*geog)) {
-        return XPtr<PointGeography>(new PointGeography());
+      if (s2geography::s2_is_empty(feature->Geog())) {
+        return Geography::MakeXPtr(Geography::MakePoint());
       }
 
-      if (s2geography::s2_is_collection(*geog)) {
+      if (s2geography::s2_is_collection(feature->Geog())) {
         throw GeographyOperatorException("`x` must be a simple geography");
-      } else if (geog->dimension() != 1) {
+      } else if (feature->Geog().dimension() != 1) {
         throw GeographyOperatorException("`x` must be a polyline");
       }
 
-      S2Point point = s2geography::s2_interpolate_normalized(*geog, this->distanceNormalized[i]);
+      S2Point point = s2geography::s2_interpolate_normalized(feature->Geog(), this->distanceNormalized[i]);
 
       if (point.Norm2() == 0) {
-        return XPtr<PointGeography>(new PointGeography());
+        return Geography::MakeXPtr(Geography::MakePoint());
       } else {
-        return XPtr<PointGeography>(new PointGeography(point));
+        return Geography::MakeXPtr(Geography::MakePoint(point));
       }
     }
   };
@@ -401,11 +356,8 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
     }
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
-      s2geography::S2GeographyShapeIndex index(*geog);
-
       S2ShapeIndexBufferedRegion region;
-      region.Init(&index.ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+      region.Init(&feature->Index().ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 
       S2CellUnion cellUnion;
       cellUnion = coverer.GetCovering(region);
@@ -413,7 +365,7 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
       polygon->InitToCellUnionBorder(cellUnion);
 
-      return XPtr<PolygonGeography>(new PolygonGeography(std::move(polygon)));
+      return Geography::MakeXPtr(Geography::MakePolygon(std::move(polygon)));
     }
   };
 
@@ -425,11 +377,9 @@ List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int mi
 List cpp_s2_convex_hull(List geog) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      auto geog = feature->NewGeography();
       std::unique_ptr<s2geography::S2Geography> geog_out =
-        s2geography::s2_convex_hull(*geog);
-      auto geography = MakeOldGeography(*geog_out);
-      return XPtr<Geography>(geography.release());
+        s2geography::s2_convex_hull(feature->Geog());
+      return Geography::MakeXPtr(std::move(geog_out));
     }
   };
 
@@ -441,7 +391,6 @@ List cpp_s2_convex_hull(List geog) {
 // [[Rcpp::export]]
 List cpp_s2_convex_hull_agg(List geog, bool naRm) {
   s2geography::S2ConvexHullAggregator agg;
-  std::vector<std::unique_ptr<s2geography::S2Geography>> keep_alive_;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -452,12 +401,9 @@ List cpp_s2_convex_hull_agg(List geog, bool naRm) {
 
     if (item != R_NilValue) {
       XPtr<Geography> feature(item);
-      keep_alive_.push_back(feature->NewGeography());
-      agg.Add(*keep_alive_.back());
+      agg.Add(feature->Geog());
     }
   }
 
-  auto geography = MakeOldGeography(*agg.Finalize());
-  XPtr<Geography> outG(geography.release());
-  return List::create(outG);
+  return List::create(Geography::MakeXPtr(agg.Finalize()));
 }

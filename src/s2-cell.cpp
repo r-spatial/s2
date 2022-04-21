@@ -354,7 +354,7 @@ List cpp_s2_cell_center(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
-        return XPtr<PointGeography>(new PointGeography(cellId.ToPoint()));
+        return Geography::MakeXPtr(Geography::MakePoint(cellId.ToPoint()));
       } else {
         return R_NilValue;
       }
@@ -372,7 +372,8 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
-        return XPtr<PolygonGeography>(new PolygonGeography(absl::make_unique<S2Polygon>(S2Cell(cellId))));
+        auto poly = absl::make_unique<S2Polygon>(S2Cell(cellId));
+        return Geography::MakeXPtr(Geography::MakePolygon(std::move(poly)));
       } else {
         return R_NilValue;
       }
@@ -390,7 +391,7 @@ List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid() && (this->k[i] >= 0)) {
-        return XPtr<PointGeography>(new PointGeography(S2Cell(cellId).GetVertex(this->k[i])));
+        return Geography::MakeXPtr(Geography::MakePoint(S2Cell(cellId).GetVertex(this->k[i])));
       } else {
         return R_NilValue;
       }

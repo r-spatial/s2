@@ -28,12 +28,7 @@ LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_intersects(index1, index2, options);
+      return s2geography::s2_intersects(feature1->Index(), feature2->Index(), options);
     };
   };
 
@@ -48,12 +43,7 @@ LogicalVector cpp_s2_equals(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_equals(index1, index2, options);
+      return s2geography::s2_equals(feature1->Index(), feature2->Index(), options);
     }
   };
 
@@ -67,11 +57,7 @@ LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options) {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-      return s2geography::s2_contains(index1, index2, options);
+      return s2geography::s2_contains(feature1->Index(), feature2->Index(), options);
     }
   };
 
@@ -94,13 +80,8 @@ LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options) {
     }
 
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_intersects(index1, index2, this->closedOptions) &&
-        !s2geography::s2_intersects(index1, index2, this->openOptions);
+      return s2geography::s2_intersects(feature1->Index(), feature2->Index(), this->closedOptions) &&
+        !s2geography::s2_intersects(feature1->Index(), feature2->Index(), this->openOptions);
     }
 
   private:
@@ -124,8 +105,8 @@ LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
     Op(NumericVector distance): distance(distance) {}
 
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      S2ClosestEdgeQuery query(&feature1->Index().ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature2->Index().ShapeIndex());
       return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance[i]));
     }
   };
@@ -185,9 +166,7 @@ LogicalVector cpp_s2_intersects_box(List geog,
 
       S2LatLngRect rect(S2LatLng::FromDegrees(ymin, xmin), S2LatLng::FromDegrees(ymax, xmax));
 
-      auto geog = feature->NewGeography();
-      s2geography::S2GeographyShapeIndex index(*geog);
-      return s2geography::s2_intersects_box(index, rect, options, deltaDegrees);
+      return s2geography::s2_intersects_box(feature->Index(), rect, options, deltaDegrees);
     }
   };
 

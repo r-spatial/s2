@@ -2,149 +2,94 @@
 #ifndef GEOGRAPHY_H
 #define GEOGRAPHY_H
 
-#include <memory>
-#include <Rcpp.h>
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
 
 #include "s2-geography/s2-geography.hpp"
 
-
 class Geography {
 public:
-  Geography(): hasIndex(false) {}
+  Geography(std::unique_ptr<s2geography::S2Geography> geog):
+    geog_(std::move(geog)), index_(nullptr) {}
 
-  virtual std::unique_ptr<s2geography::S2Geography> NewGeography() = 0;
+  const s2geography::S2Geography& Geog() const {
+    return *geog_;
+  }
 
-  // every type will build the index differently based on
-  // the underlying data, and this can (should?) be done
-  // lazily. Returns a vector of shape IDs so the caller
-  // can keep track of which shape came from which feature.
-  virtual std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) = 0;
-
-  virtual ~Geography() {}
-
-  // other calculations use ShapeIndex
-  virtual S2ShapeIndex* ShapeIndex() {
-    if (!this->hasIndex) {
-      this->BuildShapeIndex(&this->shape_index_);
-      this->hasIndex = true;
+  const s2geography::S2GeographyShapeIndex& Index() {
+    if (!index_) {
+      this->index_ = absl::make_unique<s2geography::S2GeographyShapeIndex>(*geog_);
     }
 
-    return &this->shape_index_;
+    return *index_;
   }
 
-protected:
-  MutableS2ShapeIndex shape_index_;
-  bool hasIndex;
-};
-
-class PointGeography: public Geography {
-public:
-  PointGeography(): points(0) {}
-  PointGeography(S2Point point): points(1) {
-    this->points[0] = point;
-  }
-  PointGeography(std::vector<S2Point> points): points(points) {}
-
-  std::unique_ptr<s2geography::S2Geography> NewGeography() {
-    return absl::make_unique<s2geography::S2GeographyOwningPoint>(points);
+  static SEXP MakeXPtr(std::unique_ptr<s2geography::S2Geography> geog) {
+    SEXP xptr = PROTECT(R_MakeExternalPtr(new Geography(std::move(geog)), R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(xptr, &finalize_xptr);
+    UNPROTECT(1);
+    return xptr;
   }
 
-  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
-    std::vector<int> shapeIds(1);
-    std::vector<S2Point> pointsCopy(this->points);
+  static SEXP MakeXPtr(std::unique_ptr<Geography> geog) {
+    std::unique_ptr<Geography> geog_owning = std::move(geog);
+    SEXP xptr = PROTECT(R_MakeExternalPtr(geog_owning.release(), R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(xptr, &finalize_xptr);
+    UNPROTECT(1);
+    return xptr;
+  }
 
-    shapeIds[0] = index->Add(std::unique_ptr<S2PointVectorShape>(
-      new S2PointVectorShape(std::move(pointsCopy)))
-    );
-    return shapeIds;
+  static std::unique_ptr<Geography> MakePoint() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>());
+  }
+
+  static std::unique_ptr<Geography> MakePoint(S2Point point) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>(point));
+  }
+
+  static std::unique_ptr<Geography> MakePoint(std::vector<S2Point> points) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPoint>(std::move(points)));
+  }
+
+  static std::unique_ptr<Geography> MakePolyline() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>());
+  }
+
+  static std::unique_ptr<Geography> MakePolyline(std::unique_ptr<S2Polyline> polyline) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polyline)));
+  }
+
+  static std::unique_ptr<Geography> MakePolyline(std::vector<std::unique_ptr<S2Polyline>> polylines) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polylines)));
+  }
+
+  static std::unique_ptr<Geography> MakePolygon() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolygon>());
+  }
+
+  static std::unique_ptr<Geography> MakePolygon(std::unique_ptr<S2Polygon> polygon) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyOwningPolygon>(std::move(polygon)));
+  }
+
+  static std::unique_ptr<Geography> MakeCollection() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyCollection>());
+  }
+
+  static std::unique_ptr<Geography> MakeCollection(std::vector<std::unique_ptr<s2geography::S2Geography>> features) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyCollection>(std::move(features)));
   }
 
 private:
-  std::vector<S2Point> points;
-};
+  std::unique_ptr<s2geography::S2Geography> geog_;
+  std::unique_ptr<s2geography::S2GeographyShapeIndex> index_;
 
-class PolylineGeography: public Geography {
-public:
-  PolylineGeography(): polylines(0) {}
-  PolylineGeography(std::vector<std::unique_ptr<S2Polyline>> polylines):
-    polylines(std::move(polylines)) {}
-
-  std::unique_ptr<s2geography::S2Geography> NewGeography() {
-    std::vector<std::unique_ptr<S2Polyline>> polylines_cpy;
-
-    for (const auto& polyline : polylines) {
-      polylines_cpy.push_back(std::unique_ptr<S2Polyline>(polyline->Clone()));
+  static void finalize_xptr(SEXP xptr) {
+    Geography* geog = reinterpret_cast<Geography*>(R_ExternalPtrAddr(xptr));
+    if (geog != nullptr) {
+      delete geog;
     }
-
-    return absl::make_unique<s2geography::S2GeographyOwningPolyline>(std::move(polylines_cpy));
   }
-
-  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
-    std::vector<int> shapeIds(this->polylines.size());
-    for (size_t i = 0; i < this->polylines.size(); i++) {
-      std::unique_ptr<S2Polyline::Shape> shape = absl::make_unique<S2Polyline::Shape>();
-      shape->Init(this->polylines[i].get());
-      shapeIds[i] = index->Add(std::move(shape));
-    }
-    return shapeIds;
-  }
-
-private:
-  std::vector<std::unique_ptr<S2Polyline>> polylines;
-};
-
-class PolygonGeography: public Geography {
-public:
-  PolygonGeography() {}
-  PolygonGeography(std::unique_ptr<S2Polygon> polygon):
-    polygon(std::move(polygon)) {}
-
-  std::unique_ptr<s2geography::S2Geography> NewGeography() {
-    return absl::make_unique<s2geography::S2GeographyOwningPolygon>(std::unique_ptr<S2Polygon>(polygon->Clone()));
-  }
-
-  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
-    std::vector<int> shapeIds(1);
-    std::unique_ptr<S2Polygon::Shape> shape = absl::make_unique<S2Polygon::Shape>();
-    shape->Init(this->polygon.get());
-    shapeIds[0] = index->Add(std::move(shape));
-    return shapeIds;
-  }
-
-private:
-  std::unique_ptr<S2Polygon> polygon;
-};
-
-class GeographyCollection: public Geography {
-public:
-  GeographyCollection(): features(0) {}
-  GeographyCollection(std::vector<std::unique_ptr<Geography>> features):
-    features(std::move(features)) {}
-
-  std::unique_ptr<s2geography::S2Geography> NewGeography() {
-    std::vector<std::unique_ptr<s2geography::S2Geography>> features_cpy;
-    features_cpy.reserve(features.size());
-
-    for (const auto& feature : features) {
-      features_cpy.push_back(feature->NewGeography());
-    }
-
-    return absl::make_unique<s2geography::S2GeographyCollection>(std::move(features_cpy));
-  }
-
-  std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) {
-    std::vector<int> shapeIds;
-    for (size_t i = 0; i < this->features.size(); i++) {
-      std::vector<int> newShapeIds = this->features[i]->BuildShapeIndex(index);
-      for (size_t j = 0; j < newShapeIds.size(); j++) {
-        shapeIds.push_back(newShapeIds[j]);
-      }
-    }
-    return shapeIds;
-  }
-
-private:
-  std::vector<std::unique_ptr<Geography>> features;
 };
 
 #endif

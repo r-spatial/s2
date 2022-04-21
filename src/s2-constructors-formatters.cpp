@@ -5,7 +5,7 @@
 
 #include "wk-v1.h"
 #include "s2-geography/s2-geography.hpp"
-#include "geography-shim.h"
+#include "geography.h"
 
 
 #define CPP_START                         \
@@ -134,8 +134,7 @@ int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* ha
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
   std::unique_ptr<s2geography::S2Geography> feat = data->builder->finish_feature();
-  auto geog = MakeOldGeography(*feat);
-  builder_result_append(data, Rcpp::XPtr<Geography>(geog.release()));
+  builder_result_append(data, Geography::MakeXPtr(std::move(feat)));
   return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
@@ -589,8 +588,7 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
           HANDLE_CONTINUE_OR_BREAK(handler->null_feature(handler->handler_data));
         } else {
           auto item_ptr = reinterpret_cast<Geography*>(R_ExternalPtrAddr(item));
-          auto geog = item_ptr->NewGeography();
-          const s2geography::S2Geography* geog_ptr = geog.get();
+          const s2geography::S2Geography* geog_ptr = &item_ptr->Geog();
 
           auto child_point = dynamic_cast<const s2geography::S2GeographyOwningPoint*>(geog_ptr);
           if (child_point != nullptr) {

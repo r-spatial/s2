@@ -96,6 +96,9 @@ private:
 class S2GeographyOwningPolyline: public S2Geography {
 public:
     S2GeographyOwningPolyline() {}
+    S2GeographyOwningPolyline(std::unique_ptr<S2Polyline> polyline) {
+        polylines_.push_back(std::move(polyline));
+    }
     S2GeographyOwningPolyline(std::vector<std::unique_ptr<S2Polyline>> polylines):
         polylines_(std::move(polylines)) {}
 

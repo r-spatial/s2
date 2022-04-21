@@ -1,9 +1,6 @@
 
 #include "s2/s2latlng.h"
 #include "s2/s2point.h"
-#include "wk/rcpp-io.hpp"
-#include "wk/wkb-reader.hpp"
-#include "wk/wkb-writer.hpp"
 
 #include <Rcpp.h>
 using namespace Rcpp;

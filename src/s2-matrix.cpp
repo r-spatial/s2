@@ -20,7 +20,6 @@ class IndexedBinaryGeographyOperator: public UnaryGeographyOperator<VectorType, 
 public:
   std::unique_ptr<s2geography::S2GeographyIndex> geog2_index;
   std::unique_ptr<s2geography::S2GeographyIndex::Iterator> iterator;
-  std::vector<std::unique_ptr<s2geography::S2Geography>> keep_alive_;
 
   // max_edges_per_cell should be between 10 and 50, with lower numbers
   // leading to more memory usage (but potentially faster query times). Benchmarking
@@ -45,8 +44,7 @@ public:
         Rcpp::stop("Missing `y` not allowed in binary indexed operators()");
       } else {
         Rcpp::XPtr<Geography> feature2(item2);
-        keep_alive_.push_back(std::move(feature2->NewGeography()));
-        geog2_index->Add(*keep_alive_.back(), j);
+        geog2_index->Add(feature2->Geog(), j);
       }
     }
 
@@ -62,9 +60,8 @@ IntegerVector cpp_s2_closest_feature(List geog1, List geog2) {
   class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-      s2geography::S2GeographyShapeIndex index(*feature->NewGeography());
       S2ClosestEdgeQuery query(&geog2_index->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(&index.ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature->Index().ShapeIndex());
       const auto& result = query.FindClosestEdge(&target);
       if (result.is_empty()) {
         return NA_INTEGER;
@@ -86,9 +83,8 @@ IntegerVector cpp_s2_farthest_feature(List geog1, List geog2) {
   class Op: public IndexedBinaryGeographyOperator<IntegerVector, int> {
   public:
     int processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-      s2geography::S2GeographyShapeIndex index(*feature->NewGeography());
       S2FurthestEdgeQuery query(&geog2_index->ShapeIndex());
-      S2FurthestEdgeQuery::ShapeIndexTarget target(&index.ShapeIndex());
+      S2FurthestEdgeQuery::ShapeIndexTarget target(&feature->Index().ShapeIndex());
       const auto& result = query.FindFurthestEdge(&target);
       if (result.is_empty()) {
         return NA_INTEGER;
@@ -111,11 +107,10 @@ List cpp_s2_closest_edges(List geog1, List geog2, int n, double min_distance,
   class Op: public IndexedBinaryGeographyOperator<List, IntegerVector> {
   public:
     IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-      s2geography::S2GeographyShapeIndex index(*feature->NewGeography());
       S2ClosestEdgeQuery query(&geog2_index->ShapeIndex());
       query.mutable_options()->set_max_results(n);
       query.mutable_options()->set_max_distance(S1ChordAngle::Radians(max_distance));
-      S2ClosestEdgeQuery::ShapeIndexTarget target(&index.ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature->Index().ShapeIndex());
       const auto& result = query.FindClosestEdges(&target);
 
       // this code searches edges, which may come from the same feature
@@ -165,12 +160,9 @@ public:
   }
 
   IntegerVector processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) {
-    auto geog1 = feature->NewGeography();
-    coverer.GetCovering(*geog1->Region(), &cell_ids);
+    coverer.GetCovering(*feature->Geog().Region(), &cell_ids);
     indices_unsorted.clear();
     iterator->Query(cell_ids, &indices_unsorted);
-
-    s2geography::S2GeographyShapeIndex index1(*geog1);
 
     // loop through features from geog2 that might intersect feature
     // and build a list of indices that actually intersect (based on
@@ -180,10 +172,8 @@ public:
     for (int j: indices_unsorted) {
       SEXP item = this->geog2[j];
       XPtr<Geography> feature2(item);
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index2(*geog2);
 
-      if (this->actuallyIntersects(index1, index2, i, j)) {
+      if (this->actuallyIntersects(feature->Index(), feature2->Index(), i, j)) {
         // convert to R index here + 1
         indices.push_back(j + 1);
       }
@@ -398,8 +388,8 @@ List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance) {
     Op(double distance): distance(distance) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      S2ClosestEdgeQuery query(feature2->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature1->ShapeIndex());
+      S2ClosestEdgeQuery query(&feature2->Index().ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
       return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
     };
   };
@@ -457,8 +447,8 @@ NumericMatrix cpp_s2_distance_matrix(List geog1, List geog2) {
 
     double processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                           R_xlen_t i, R_xlen_t j) {
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      S2ClosestEdgeQuery query(&feature1->Index().ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature2->Index().ShapeIndex());
       const auto& result = query.FindClosestEdge(&target);
 
       S1ChordAngle angle = result.distance();
@@ -482,8 +472,8 @@ NumericMatrix cpp_s2_max_distance_matrix(List geog1, List geog2) {
 
     double processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                           R_xlen_t i, R_xlen_t j) {
-      S2FurthestEdgeQuery query(feature1->ShapeIndex());
-      S2FurthestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
+      S2FurthestEdgeQuery query(&feature1->Index().ShapeIndex());
+      S2FurthestEdgeQuery::ShapeIndexTarget target(&feature2->Index().ShapeIndex());
       const auto& result = query.FindFurthestEdge(&target);
 
       S1ChordAngle angle = result.distance();
@@ -514,12 +504,7 @@ List cpp_s2_contains_matrix_brute_force(List geog1, List geog2, List s2options) 
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_contains(index1, index2, options);
+      return s2geography::s2_contains(feature1->Index(), feature2->Index(), options);
     };
   };
 
@@ -535,12 +520,7 @@ List cpp_s2_within_matrix_brute_force(List geog1, List geog2, List s2options) {
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
       // note reversed index2, index1
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_contains(index2, index1, options);
+      return s2geography::s2_contains(feature2->Index(), feature1->Index(), options);
     };
   };
 
@@ -555,12 +535,7 @@ List cpp_s2_intersects_matrix_brute_force(List geog1, List geog2, List s2options
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_intersects(index1, index2, options);
+      return s2geography::s2_intersects(feature1->Index(), feature2->Index(), options);
     }
   };
 
@@ -575,12 +550,7 @@ List cpp_s2_disjoint_matrix_brute_force(List geog1, List geog2, List s2options) 
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return !s2geography::s2_intersects(index1, index2, options);
+      return !s2geography::s2_intersects(feature1->Index(), feature2->Index(), options);
     }
   };
 
@@ -595,12 +565,7 @@ List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
     Op(List s2options): BruteForceMatrixPredicateOperator(s2options) {}
     bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
                         R_xlen_t i, R_xlen_t j) {
-      auto geog1 = feature1->NewGeography();
-      auto geog2 = feature2->NewGeography();
-      s2geography::S2GeographyShapeIndex index1(*geog1);
-      s2geography::S2GeographyShapeIndex index2(*geog2);
-
-      return s2geography::s2_equals(index1, index2, options);
+      return s2geography::s2_equals(feature1->Index(), feature2->Index(), options);
     }
   };
 
