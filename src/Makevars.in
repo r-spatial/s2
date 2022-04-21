@@ -103,8 +103,7 @@ OBJECTS = $(ABSL_LIBS) \
      s2-xptr.o \
      wk-impl.o \
      wk-c-utils.o \
-     s2-geography/capi/tessellator.o \
-     s2-geography/capi/status.o \
+     tessellator.o \
      s2-geography/accessors.o \
      s2-geography/accessors-geog.o \
      s2-geography/linear-referencing.o \
