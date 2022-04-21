@@ -39,7 +39,7 @@ double s2_project_normalized(const S2Geography& geog1, const S2Geography& geog2)
         return s2_project_normalized(*geog1_poly_ptr, point);
     }
 
-    std::unique_ptr<S2Geography> geog_poly = s2_rebuild(geog1, S2GeographyOptions());
+    std::unique_ptr<S2Geography> geog_poly = s2_rebuild(geog1, GlobalOptions());
     return s2_project_normalized(*geog_poly, geog2);
 }
 
@@ -67,7 +67,7 @@ S2Point s2_interpolate_normalized(const S2Geography& geog, double distance_norm)
         return s2_interpolate_normalized(*geog_poly_ptr, distance_norm);
     }
 
-    std::unique_ptr<S2Geography> geog_poly = s2_rebuild(geog, S2GeographyOptions());
+    std::unique_ptr<S2Geography> geog_poly = s2_rebuild(geog, GlobalOptions());
     return s2_interpolate_normalized(*geog_poly, distance_norm);
 }
 

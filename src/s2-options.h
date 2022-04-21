@@ -196,9 +196,9 @@ public:
     return options;
   }
 
-  // options for new S2GeographyOptions API
-  s2geography::S2GeographyOptions geographyOptions() {
-    s2geography::S2GeographyOptions options;
+  // options for new GlobalOptions API
+  s2geography::GlobalOptions geographyOptions() {
+    s2geography::GlobalOptions options;
     options.boolean_operation = booleanOperationOptions();
     options.builder = builderOptions();
 
@@ -208,15 +208,15 @@ public:
     options.polygon_layer = layer_options.polygonLayerOptions;
 
     if (!(layer_options.dimensions & Dimension::POINT)) {
-      options.point_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+      options.point_layer_action = s2geography::GlobalOptions::OUTPUT_ACTION_IGNORE;
     }
 
     if (!(layer_options.dimensions & Dimension::POLYLINE)) {
-      options.polyline_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+      options.polyline_layer_action = s2geography::GlobalOptions::OUTPUT_ACTION_IGNORE;
     }
 
     if (!(layer_options.dimensions & Dimension::POLYGON)) {
-      options.polygon_layer_action = s2geography::S2GeographyOptions::OUTPUT_ACTION_IGNORE;
+      options.polygon_layer_action = s2geography::GlobalOptions::OUTPUT_ACTION_IGNORE;
     }
 
     return options;

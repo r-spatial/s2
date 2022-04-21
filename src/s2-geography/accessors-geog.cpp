@@ -121,18 +121,18 @@ std::unique_ptr<S2Geography> s2_convex_hull(const S2Geography& geog) {
 }
 
 
-void S2CentroidAggregator::Add(const S2Geography& geog) {
+void CentroidAggregator::Add(const S2Geography& geog) {
     S2Point centroid = s2_centroid(geog);
     if (centroid.Norm2() > 0) {
         centroid_ += centroid.Normalize();
     }
 }
 
-void S2CentroidAggregator::Merge(const S2CentroidAggregator& other) {
+void CentroidAggregator::Merge(const CentroidAggregator& other) {
     centroid_ += other.centroid_;
 }
 
-S2Point S2CentroidAggregator::Finalize() {
+S2Point CentroidAggregator::Finalize() {
     if (centroid_.Norm2() > 0) {
         return centroid_.Normalize();
     } else {
@@ -148,7 +148,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
                 query_.AddPoint(point);
             }
         } else {
-            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            keep_alive_.push_back(s2_rebuild(geog, GlobalOptions()));
             Add(*keep_alive_.back());
         }
 
@@ -162,7 +162,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
                 query_.AddPolyline(*polyline);
             }
         } else {
-            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            keep_alive_.push_back(s2_rebuild(geog, GlobalOptions()));
             Add(*keep_alive_.back());
         }
 
@@ -174,7 +174,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
         if (poly_ptr != nullptr) {
             query_.AddPolygon(*poly_ptr->Polygon());
         } else {
-            keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+            keep_alive_.push_back(s2_rebuild(geog, GlobalOptions()));
             Add(*keep_alive_.back());
         }
 
@@ -187,7 +187,7 @@ void S2ConvexHullAggregator::Add(const S2Geography& geog) {
             Add(*feature);
         }
     } else {
-        keep_alive_.push_back(s2_rebuild(geog, S2GeographyOptions()));
+        keep_alive_.push_back(s2_rebuild(geog, GlobalOptions()));
         Add(*keep_alive_.back());
     }
 }

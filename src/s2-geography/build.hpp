@@ -10,7 +10,7 @@
 
 namespace s2geography {
 
-class S2GeographyOptions {
+class GlobalOptions {
 public:
     enum OutputAction {
         OUTPUT_ACTION_INCLUDE,
@@ -18,7 +18,7 @@ public:
         OUTPUT_ACTION_ERROR
     };
 
-    S2GeographyOptions()
+    GlobalOptions()
         : point_layer_action(OUTPUT_ACTION_INCLUDE),
           polyline_layer_action(OUTPUT_ACTION_INCLUDE),
           polygon_layer_action(OUTPUT_ACTION_INCLUDE) {}
@@ -37,13 +37,13 @@ public:
 std::unique_ptr<S2Geography> s2_boolean_operation(const ShapeIndexGeography& geog1,
                                                   const ShapeIndexGeography& geog2,
                                                   S2BooleanOperation::OpType op_type,
-                                                  const S2GeographyOptions& options);
+                                                  const GlobalOptions& options);
 
 std::unique_ptr<S2Geography> s2_unary_union(const ShapeIndexGeography& geog,
-                                            const S2GeographyOptions& options);
+                                            const GlobalOptions& options);
 
 std::unique_ptr<S2Geography> s2_rebuild(const S2Geography& geog,
-                                        const S2GeographyOptions& options);
+                                        const GlobalOptions& options);
 
 std::unique_ptr<PointGeography> s2_build_point(const S2Geography& geog);
 
@@ -51,32 +51,32 @@ std::unique_ptr<PolylineGeography> s2_build_polyline(const S2Geography& geog);
 
 std::unique_ptr<PolygonGeography> s2_build_polygon(const S2Geography& geog);
 
-class S2RebuildAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+class RebuildAggregator: public Aggregator<std::unique_ptr<S2Geography>> {
 public:
-    S2RebuildAggregator(const S2GeographyOptions& options): options_(options) {}
+    RebuildAggregator(const GlobalOptions& options): options_(options) {}
     void Add(const S2Geography& geog);
     std::unique_ptr<S2Geography> Finalize();
 
 private:
-    S2GeographyOptions options_;
+    GlobalOptions options_;
     ShapeIndexGeography index_;
 };
 
-class S2CoverageUnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+class S2CoverageUnionAggregator: public Aggregator<std::unique_ptr<S2Geography>> {
 public:
-    S2CoverageUnionAggregator(const S2GeographyOptions& options): options_(options) {}
+    S2CoverageUnionAggregator(const GlobalOptions& options): options_(options) {}
 
     void Add(const S2Geography& geog);
     std::unique_ptr<S2Geography> Finalize();
 
 private:
-    S2GeographyOptions options_;
+    GlobalOptions options_;
     ShapeIndexGeography index_;
 };
 
-class S2UnionAggregator: public S2Aggregator<std::unique_ptr<S2Geography>> {
+class S2UnionAggregator: public Aggregator<std::unique_ptr<S2Geography>> {
 public:
-    S2UnionAggregator(const S2GeographyOptions& options): options_(options) {}
+    S2UnionAggregator(const GlobalOptions& options): options_(options) {}
     void Add(const S2Geography& geog);
     std::unique_ptr<S2Geography> Finalize();
 
@@ -86,10 +86,10 @@ private:
         ShapeIndexGeography index1;
         ShapeIndexGeography index2;
         std::vector<std::unique_ptr<S2Geography>> data;
-        std::unique_ptr<S2Geography> Merge(const S2GeographyOptions& options);
+        std::unique_ptr<S2Geography> Merge(const GlobalOptions& options);
     };
 
-    S2GeographyOptions options_;
+    GlobalOptions options_;
     Node root_;
     std::vector<std::unique_ptr<Node>> other_;
 };

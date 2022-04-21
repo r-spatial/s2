@@ -12,17 +12,17 @@ S2Point s2_centroid(const S2Geography& geog);
 std::unique_ptr<S2Geography> s2_boundary(const S2Geography& geog);
 std::unique_ptr<S2Geography> s2_convex_hull(const S2Geography& geog);
 
-class S2CentroidAggregator: public S2Aggregator<S2Point> {
+class CentroidAggregator: public Aggregator<S2Point> {
 public:
     void Add(const S2Geography& geog);
-    void Merge(const S2CentroidAggregator& other);
+    void Merge(const CentroidAggregator& other);
     S2Point Finalize();
 
 private:
     S2Point centroid_;
 };
 
-class S2ConvexHullAggregator: public S2Aggregator<std::unique_ptr<PolygonGeography>> {
+class S2ConvexHullAggregator: public Aggregator<std::unique_ptr<PolygonGeography>> {
 public:
     void Add(const S2Geography& geog);
     std::unique_ptr<PolygonGeography> Finalize();

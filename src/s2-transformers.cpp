@@ -28,7 +28,7 @@ public:
 
 private:
   S2BooleanOperation::OpType opType;
-  s2geography::S2GeographyOptions geography_options;
+  s2geography::GlobalOptions geography_options;
 };
 
 // [[Rcpp::export]]
@@ -101,7 +101,7 @@ List cpp_s2_union_agg(List geog, List s2options, bool naRm) {
 
 // [[Rcpp::export]]
 List cpp_s2_centroid_agg(List geog, bool naRm) {
-  s2geography::S2CentroidAggregator agg;
+  s2geography::CentroidAggregator agg;
 
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
@@ -132,7 +132,7 @@ List cpp_s2_centroid_agg(List geog, bool naRm) {
 List cpp_s2_rebuild_agg(List geog, List s2options, bool naRm) {
   GeographyOperationOptions options(s2options);
 
-  s2geography::S2RebuildAggregator agg(options.geographyOptions());
+  s2geography::RebuildAggregator agg(options.geographyOptions());
   std::vector<std::unique_ptr<s2geography::S2Geography>> geographies;
 
   SEXP item;
@@ -274,7 +274,7 @@ List cpp_s2_rebuild(List geog, List s2options) {
     }
 
   private:
-    s2geography::S2GeographyOptions options;
+    s2geography::GlobalOptions options;
   };
 
   Op op(s2options);
@@ -299,7 +299,7 @@ List cpp_s2_unary_union(List geog, List s2options) {
   private:
     S2BooleanOperation::Options options;
     GeographyOperationOptions::LayerOptions layerOptions;
-    s2geography::S2GeographyOptions geographyOptions;
+    s2geography::GlobalOptions geographyOptions;
   };
 
   Op op(s2options);

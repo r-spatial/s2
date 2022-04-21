@@ -1,7 +1,6 @@
 
 #include "geography.hpp"
 #include "accessors.hpp"
-#include "aggregator.hpp"
 #include "build.hpp"
 
 namespace s2geography {
