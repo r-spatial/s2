@@ -75,6 +75,8 @@
   tessellate_tol <span class="op">=</span> <span class="cn">Inf</span>
 <span class="op">)</span>
 
+<span class="fu">s2_geography_writer</span><span class="op">(</span>oriented <span class="op">=</span> <span class="cn">FALSE</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
 <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>
 
 <span class="fu">s2_projection_mercator</span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -90,6 +92,12 @@
 <dt>tessellate_tol</dt>
 <dd><p>An angle in radians. Points will not be added
 if a line segment is within this distance of a point.</p></dd>
+<dt>oriented</dt>
+<dd><p>TRUE if polygon ring directions are known to be correct
+(i.e., exterior rings are defined counter clockwise and interior
+rings are defined clockwise).</p></dd>
+<dt>check</dt>
+<dd><p>Use <code>check = FALSE</code> to skip error on invalid geometries</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
