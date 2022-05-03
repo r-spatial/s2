@@ -29,7 +29,7 @@ using s2_make_polygon(), rings can be open or closed."><meta name="robots" conte
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -140,12 +140,12 @@ digits after the decimal place.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># create point geographies using coordinate values:</span></span>
 <span class="r-in"><span class="fu">s2_geog_point</span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">45</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;POINT (-64 45)&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create line geographies using coordinate values:</span></span>
 <span class="r-in"><span class="fu">s2_make_line</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">71</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;LINESTRING (-64 45, 8 71)&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (-64 45, 8 71)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># optionally, separate features using feature_id:</span></span>
 <span class="r-in"><span class="fu">s2_make_line</span><span class="op">(</span></span>
@@ -153,13 +153,13 @@ digits after the decimal place.</p></dd>
 <span class="r-in">  feature_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[2]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;LINESTRING (-64 45, 8 71)&gt;  &lt;LINESTRING (-27 0, -27 45)&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (-64 45, 8 71)  LINESTRING (-27 0, -27 45)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create polygon geographies using coordinate values:</span></span>
 <span class="r-in"><span class="co"># (rings can be open or closed)</span></span>
 <span class="r-in"><span class="fu">s2_make_polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">45</span>, <span class="fl">8</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">64</span>, <span class="fl">71</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;POLYGON ((-45 64, 8 71, 0 90, -45 64))&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-45 64, 8 71, 0 90, -45 64))</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># optionally, separate rings and/or features using</span></span>
 <span class="r-in"><span class="co"># ring_id and/or feature_id</span></span>
@@ -170,20 +170,20 @@ digits after the decimal place.</p></dd>
 <span class="r-in">  ring_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[2]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;POLYGON ((20 35, 10 30, 10 10, 30 5, 45 20...&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] &lt;POLYGON ((40 40, 20 45, 45 30, 40 40))&gt;       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((20 35, 10 30, 10 10, 30 5, 45 20...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((40 40, 20 45, 45 30, 40 40))       </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># import and export well-known text</span></span>
 <span class="r-in"><span class="op">(</span><span class="va">geog</span> <span class="op">&lt;-</span> <span class="fu">s2_geog_from_text</span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;POINT (-64 45)&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"><span class="fu">s2_as_text</span><span class="op">(</span><span class="va">geog</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "POINT (-64 45)"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># import and export well-known binary</span></span>
 <span class="r-in"><span class="op">(</span><span class="va">geog</span> <span class="op">&lt;-</span> <span class="fu">s2_geog_from_wkb</span><span class="op">(</span><span class="fu">wk</span><span class="fu">::</span><span class="fu"><a href="https://paleolimbot.github.io/wk/reference/wkb.html" class="external-link">as_wkb</a></span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;POINT (-64 45)&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"><span class="fu">s2_as_binary</span><span class="op">(</span><span class="va">geog</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 01 01 00 00 00 00 00 00 00 00 00 50 c0 00 00 00 00 00 80 46 40</span>
@@ -205,7 +205,7 @@ digits after the decimal place.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
