@@ -38,7 +38,7 @@ test_that("s2_geography vectors can be created from s2_lnglat  and s2_point", {
 
 test_that("s2_geography vectors can be created from WKB and WKT", {
   wkb_point <- wk::as_wkb(wk::wkt("POINT (-64 45)", geodesic = TRUE))
-  expect_output(print(as_s2_geography(wkb_point)), "<POINT \\(-64 45\\)>")
+  expect_output(print(as_s2_geography(wkb_point)), "POINT \\(-64 45\\)")
   expect_error(
     as_s2_geography(wk::as_wkb("LINESTRING (0 0, 1 1)")),
     "Cartesian wkb\\(\\)"
@@ -51,7 +51,7 @@ test_that("s2_geography vectors can be created from WKB and WKT", {
   expect_silent(as_s2_geography(wk::as_wkb("MULTIPOINT (0 1)")))
 
   wkt_point <- wk::as_wkt(wk::wkt("POINT (-64 45)", geodesic = TRUE))
-  expect_output(print(as_s2_geography(wkt_point)), "<POINT \\(-64 45\\)>")
+  expect_output(print(as_s2_geography(wkt_point)), "POINT \\(-64 45\\)")
   expect_error(
     as_s2_geography(wk::wkt("LINESTRING (0 0, 1 1)")),
     "Cartesian wkt\\(\\)"
@@ -64,8 +64,8 @@ test_that("s2_geography vectors can be created from WKB and WKT", {
   expect_silent(as_s2_geography(wk::wkt("MULTIPOINT (0 1)")))
 
   # also test other classes commonly used to signify WKB or WKT
-  expect_output(print(as_s2_geography(structure(wkb_point, class = "WKB")), "<POINT \\(-64 45\\)>"))
-  expect_output(print(as_s2_geography(structure(wkb_point, class = "blob")), "<POINT \\(-64 45\\)>"))
+  expect_output(print(as_s2_geography(structure(wkb_point, class = "WKB")), "POINT \\(-64 45\\)"))
+  expect_output(print(as_s2_geography(structure(wkb_point, class = "blob")), "POINT \\(-64 45\\)"))
 })
 
 test_that("s2_geography can be exported to WKB/WKT", {
@@ -82,34 +82,34 @@ test_that("s2_geography can be exported to WKB/WKT", {
 })
 
 test_that("s2_geography vectors can be created from wkt", {
-  expect_output(print(as_s2_geography("POINT (-64 45)")), "<POINT \\(-64 45\\)>")
-  expect_output(print(as_s2_geography("POINT EMPTY")), "<POINT EMPTY>")
+  expect_output(print(as_s2_geography("POINT (-64 45)")), "POINT \\(-64 45\\)")
+  expect_output(print(as_s2_geography("POINT EMPTY")), "POINT EMPTY")
   expect_output(
     print(as_s2_geography("MULTIPOINT ((-64 45), (30 10))")),
-    "<MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)>"
+    "MULTIPOINT \\(\\(-64 45\\), \\(30 10\\)\\)"
   )
 
   expect_output(
     print(as_s2_geography("LINESTRING (-64 45, 0 0)")),
-    "<LINESTRING \\(-64 45, 0 0\\)>"
+    "LINESTRING \\(-64 45, 0 0\\)"
   )
   expect_output(
     print(as_s2_geography("LINESTRING EMPTY")),
-    "<LINESTRING EMPTY>"
+    "LINESTRING EMPTY"
   )
   expect_output(
     print(as_s2_geography("MULTILINESTRING ((-64 45, 0 0), (0 1, 2 3))")),
-    "<MULTILINESTRING \\(\\(-64 45, 0 0), \\(0 1, 2 3\\)\\)>"
+    "MULTILINESTRING \\(\\(-64 45, 0 0), \\(0 1, 2 3\\)\\)"
   )
 
-  expect_output(print(as_s2_geography("POLYGON EMPTY"), "<POLYGON EMPTY>"))
+  expect_output(print(as_s2_geography("POLYGON EMPTY"), "POLYGON EMPTY"))
   expect_output(
     print(as_s2_geography("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")),
-    "<POLYGON \\(\\(0 0, 10 0, 10 10"
+    "POLYGON \\(\\(0 0, 10 0, 10 10"
   )
   expect_output(
     print(as_s2_geography("MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)))")),
-    "<POLYGON \\(\\(0 0, 10 0, 10 10"
+    "POLYGON \\(\\(0 0, 10 0, 10 10"
   )
   expect_output(
     print(
@@ -118,12 +118,12 @@ test_that("s2_geography vectors can be created from wkt", {
         ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20))
       )")
     ),
-    "<MULTIPOLYGON"
+    "MULTIPOLYGON"
   )
 
   expect_output(
     print(as_s2_geography("GEOMETRYCOLLECTION (POINT (-64 45))")),
-    "<GEOMETRYCOLLECTION \\(POINT \\(-64 45\\)\\)>"
+    "GEOMETRYCOLLECTION \\(POINT \\(-64 45\\)\\)"
   )
 
   expect_output(
@@ -147,7 +147,7 @@ test_that("s2_geography vectors can be created from wkt", {
     )
   )
 
-  expect_output(print(as_s2_geography("GEOMETRYCOLLECTION EMPTY")), "<GEOMETRYCOLLECTION EMPTY>")
+  expect_output(print(as_s2_geography("GEOMETRYCOLLECTION EMPTY")), "GEOMETRYCOLLECTION EMPTY")
 })
 
 test_that("empty points are empty when imported from WKB", {
@@ -168,7 +168,7 @@ test_that("nested ring depths are correctly exported", {
       )"),
       max_coords = 100
     ),
-    "\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25, 30 20"
+    "\\(20 35, 10 30, 10 10, 30 5, 45 20, 20 35\\), \\(30 20, 20 15, 20 25"
   )
 
   # polygon with a hole in a hole!
@@ -178,13 +178,13 @@ test_that("nested ring depths are correctly exported", {
         ((40 40, 20 45, 45 30, 40 40)),
         (
           (20 35, 10 30, 10 10, 30 5, 45 20, 20 35),
-          (30 20, 20 15, 20 25, 30 20),
-          (27 21, 21 21, 21 16, 27 21)
-        )
+          (30 20, 20 15, 20 25, 30 20)
+        ),
+        ((27 21, 21 21, 21 16, 27 21))
       )"),
       max_coords = 100
     ),
-    "30 20, 20 15, 20 25, 30 20\\), \\(27 21, 21 21, 21 16, 27 21"
+    "\\(\\(27 21, 21 21, 21 16, 27 21\\)\\)\\)"
   )
 })
 

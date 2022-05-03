@@ -48,7 +48,7 @@ as_s2_geography.s2_geography <- function(x, ...) {
 #' @export
 as_s2_geography.s2_lnglat <- function(x, ...) {
   df <- data_frame_from_s2_lnglat(x)
-  new_s2_xptr(cpp_s2_geog_point(df[[1]], df[[2]]), "s2_geography")
+  s2_geog_point(df[[1]], df[[2]])
 }
 
 #' @rdname as_s2_geography
@@ -76,28 +76,22 @@ as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
     }
   }
 
-  new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check),
-    "s2_geography"
+  wk::wk_handle(
+    x,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.WKB <- function(x, ..., oriented = FALSE, check = TRUE) {
-  new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check),
-    "s2_geography"
-  )
+  s2_geog_from_wkb(x, oriented = oriented, check = check)
 }
 
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.blob <- function(x, ..., oriented = FALSE, check = TRUE) {
-  new_s2_xptr(
-    s2_geography_from_wkb(x, oriented = oriented, check = check),
-    "s2_geography"
-  )
+  s2_geog_from_wkb(x, oriented = oriented, check = check)
 }
 
 #' @rdname as_s2_geography
@@ -119,19 +113,16 @@ as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE) {
     }
   }
 
-  new_s2_xptr(
-    s2_geography_from_wkt(x, oriented = oriented, check = check),
-    "s2_geography"
+  wk::wk_handle(
+    x,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
 #' @rdname as_s2_geography
 #' @export
 as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE) {
-  new_s2_xptr(
-    s2_geography_from_wkt(x, oriented = oriented, check = check),
-    "s2_geography"
-  )
+  s2_geog_from_text(x, oriented = oriented, check = check)
 }
 
 #' @rdname as_s2_geography
@@ -145,22 +136,20 @@ as_s2_geography.logical <- function(x, ...) {
 #' @rdname as_s2_geography
 #' @export
 as_wkb.s2_geography <- function(x, ...) {
-  wk::new_wk_wkb(
-    s2_geography_to_wkb(x, wk::wk_platform_endian()),
-    crs = wk::wk_crs_longlat("WGS84"),
-    geodesic = TRUE
-  )
+  wkb <- wk::wk_handle(x, wk::wkb_writer())
+  wk::wk_is_geodesic(wkb) <- TRUE
+  wk::wk_crs(wkb) <- wk::wk_crs_longlat()
+  wkb
 }
 
 #' @importFrom wk as_wkt
 #' @rdname as_s2_geography
 #' @export
 as_wkt.s2_geography <- function(x, ...) {
-  wk::new_wk_wkt(
-    s2_geography_to_wkt(x, precision = 16, trim = TRUE),
-    crs = wk::wk_crs_longlat(),
-    geodesic = TRUE
-  )
+  wkt <- wk::wk_handle(x, wk::wkt_writer())
+  wk::wk_is_geodesic(wkt) <- TRUE
+  wk::wk_crs(wkt) <- wk::wk_crs_longlat()
+  wkt
 }
 
 
@@ -180,7 +169,7 @@ as_wkt.s2_geography <- function(x, ...) {
 
 #' @export
 format.s2_geography <- function(x, ..., max_coords = 5, precision = 9, trim = TRUE) {
-  paste0("<", s2_geography_format(x, max_coords, precision, trim), ">")
+  wk::wk_format(x, precision = precision, max_coords = max_coords, trim = trim)
 }
 
 # this is what gets called by the RStudio viewer, for which

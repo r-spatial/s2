@@ -1,15 +1,15 @@
 
 #include "geography-operator.h"
-#include "s2/s2closest_edge_query.h"
-#include "s2/s2furthest_edge_query.h"
 #include <Rcpp.h>
 using namespace Rcpp;
+
+#include "s2-geography/s2-geography.hpp"
 
 // [[Rcpp::export]]
 LogicalVector cpp_s2_is_collection(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->IsCollection();
+      return s2geography::s2_is_collection(feature->Geog());
     }
   };
 
@@ -21,7 +21,7 @@ LogicalVector cpp_s2_is_collection(List geog) {
 LogicalVector cpp_s2_is_valid(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return !(feature->FindValidationError(&(this->error)));
+      return !s2geography::s2_find_validation_error(feature->Geog(), &error);
     }
 
     S2Error error;
@@ -35,7 +35,7 @@ LogicalVector cpp_s2_is_valid(List geog) {
 CharacterVector cpp_s2_is_valid_reason(List geog) {
   class Op: public UnaryGeographyOperator<CharacterVector, String> {
     String processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      if (feature->FindValidationError(&(this->error))) {
+      if (s2geography::s2_find_validation_error(feature->Geog(), &error)) {
         return this->error.text();
       } else {
         return NA_STRING;
@@ -53,7 +53,7 @@ CharacterVector cpp_s2_is_valid_reason(List geog) {
 IntegerVector cpp_s2_dimension(List geog) {
   class Op: public UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Dimension();
+      return s2geography::s2_dimension(feature->Geog());
     }
   };
 
@@ -65,7 +65,7 @@ IntegerVector cpp_s2_dimension(List geog) {
 IntegerVector cpp_s2_num_points(List geog) {
   class Op: public UnaryGeographyOperator<IntegerVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->NumPoints();
+      return s2geography::s2_num_points(feature->Geog());
     }
   };
 
@@ -77,7 +77,7 @@ IntegerVector cpp_s2_num_points(List geog) {
 LogicalVector cpp_s2_is_empty(List geog) {
   class Op: public UnaryGeographyOperator<LogicalVector, int> {
     int processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->IsEmpty();
+      return s2geography::s2_is_empty(feature->Geog());
     }
   };
 
@@ -89,7 +89,7 @@ LogicalVector cpp_s2_is_empty(List geog) {
 NumericVector cpp_s2_area(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Area();
+      return s2geography::s2_area(feature->Geog());
     }
   };
 
@@ -101,7 +101,7 @@ NumericVector cpp_s2_area(List geog) {
 NumericVector cpp_s2_length(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Length();
+      return s2geography::s2_length(feature->Geog());
     }
   };
 
@@ -113,7 +113,7 @@ NumericVector cpp_s2_length(List geog) {
 NumericVector cpp_s2_perimeter(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Perimeter();
+      return s2geography::s2_perimeter(feature->Geog());
     }
   };
 
@@ -125,7 +125,11 @@ NumericVector cpp_s2_perimeter(List geog) {
 NumericVector cpp_s2_x(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->X();
+      if (s2geography::s2_dimension(feature->Geog()) != 0) {
+        Rcpp::stop("Can't compute X value of a non-point geography");
+      }
+
+      return s2geography::s2_x(feature->Geog());
     }
   };
 
@@ -137,7 +141,11 @@ NumericVector cpp_s2_x(List geog) {
 NumericVector cpp_s2_y(List geog) {
   class Op: public UnaryGeographyOperator<NumericVector, double> {
     double processFeature(XPtr<Geography> feature, R_xlen_t i) {
-      return feature->Y();
+      if (s2geography::s2_dimension(feature->Geog()) != 0) {
+        Rcpp::stop("Can't compute Y value of a non-point geography");
+      }
+
+      return s2geography::s2_y(feature->Geog());
     }
   };
 
@@ -151,27 +159,7 @@ NumericVector cpp_s2_project_normalized(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      if (feature1->IsCollection() || feature2->IsCollection()) {
-        throw GeographyOperatorException("`x` and `y` must both be simple geographies");
-      }
-
-      if (feature1->IsEmpty() || feature2->IsEmpty()) {
-        return NA_REAL;
-      }
-
-      if (feature1->GeographyType() == Geography::Type::GEOGRAPHY_POLYLINE) {
-        if (feature2->GeographyType() == Geography::Type::GEOGRAPHY_POINT) {
-          S2Point point = feature2->Point()->at(0);
-          int next_vertex;
-          S2Point point_on_line = feature1->Polyline()->at(0)->Project(point, &next_vertex);
-          return feature1->Polyline()->at(0)->UnInterpolate(point_on_line, next_vertex);
-        } else {
-          throw GeographyOperatorException("`y` must be a point geography");
-        }
-      } else {
-        throw GeographyOperatorException("`x` must be a polyline geography");
-      }
-      return NA_REAL;
+      return s2geography::s2_project_normalized(feature1->Geog(), feature2->Geog());
     }
   };
 
@@ -186,13 +174,7 @@ NumericVector cpp_s2_distance(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      S2ClosestEdgeQuery query(feature1->ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
-
-      const auto& result = query.FindClosestEdge(&target);
-
-      S1ChordAngle angle = result.distance();
-      double distance = angle.ToAngle().radians();
+      double distance = s2geography::s2_distance(feature1->Index(), feature2->Index());
 
       if (distance == R_PosInf) {
         return NA_REAL;
@@ -213,13 +195,7 @@ NumericVector cpp_s2_max_distance(List geog1, List geog2) {
     double processFeature(XPtr<Geography> feature1,
                           XPtr<Geography> feature2,
                           R_xlen_t i) {
-      S2FurthestEdgeQuery query(feature1->ShapeIndex());
-      S2FurthestEdgeQuery::ShapeIndexTarget target(feature2->ShapeIndex());
-
-      const auto& result = query.FindFurthestEdge(&target);
-
-      S1ChordAngle angle = result.distance();
-      double distance = angle.ToAngle().radians();
+      double distance = s2geography::s2_max_distance(feature1->Index(), feature2->Index());
 
       // returns -1 if one of the indexes is empty
       // NA is more consistent with the BigQuery

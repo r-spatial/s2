@@ -2,119 +2,94 @@
 #ifndef GEOGRAPHY_H
 #define GEOGRAPHY_H
 
-#include <memory>
-#include "s2/s2latlng.h"
-#include "s2/s2polyline.h"
-#include "s2/s2polygon.h"
-#include "s2/s2shape_index.h"
-#include "s2/s2shape_index_region.h"
-#include "s2/mutable_s2shape_index.h"
-#include "s2/s2point_vector_shape.h"
-#include "s2/s2cap.h"
-#include "wk/geometry-handler.hpp"
-#include <Rcpp.h>
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+
+#include "s2-geography/s2-geography.hpp"
 
 class Geography {
 public:
+  Geography(std::unique_ptr<s2geography::S2Geography> geog):
+    geog_(std::move(geog)), index_(nullptr) {}
 
-  enum class Type {
-    GEOGRAPHY_EMPTY,
-    GEOGRAPHY_POINT,
-    GEOGRAPHY_POLYLINE,
-    GEOGRAPHY_POLYGON,
-    GEOGRAPHY_COLLECTION
-  };
-
-  Geography(): hasIndex(false) {}
-
-  // accessors need to be methods, since their calculation
-  // depends on the geometry type
-  virtual Type GeographyType() {
-    return Type::GEOGRAPHY_EMPTY;
+  const s2geography::S2Geography& Geog() const {
+    return *geog_;
   }
 
-  virtual bool FindValidationError(S2Error* error) = 0;
-
-  // returns true for a multi-
-  // or geometrycollection type
-  virtual bool IsCollection() = 0;
-  // Returns 0 for point, 1 for line, 2 for polygon
-  virtual int Dimension() = 0;
-  // Returns the number of points in the input
-  virtual int NumPoints() = 0;
-  virtual bool IsEmpty() = 0;
-  virtual double Area() = 0;
-  virtual double Length() = 0;
-  virtual double Perimeter() = 0;
-  virtual double X() = 0;
-  virtual double Y() = 0;
-  virtual S2Point Centroid() = 0;
-  virtual std::unique_ptr<Geography> Boundary() = 0;
-
-  // every type will build the index differently based on
-  // the underlying data, and this can (should?) be done
-  // lazily. Returns a vector of shape IDs so the caller
-  // can keep track of which shape came from which feature.
-  virtual std::vector<int> BuildShapeIndex(MutableS2ShapeIndex* index) = 0;
-
-  // the factory handler is responsible for building these objects
-  // but exporting can be done here
-  virtual void Export(WKGeometryHandler* handler, uint32_t partId) = 0;
-
-  virtual ~Geography() {}
-
-  // Most calculations will use the ShapeIndex, but sometimes access to the
-  // underlying point, line, or polygon is useful to keep this class from
-  // becoming bloated with the entire s2 API.
-  virtual const std::vector<S2Point>* Point() {
-    return nullptr;
-  }
-
-  virtual const std::vector<std::unique_ptr<S2Polyline>>* Polyline() {
-    return nullptr;
-  }
-
-  virtual const S2Polygon* Polygon() {
-    return nullptr;
-  }
-
-  virtual const std::vector<std::unique_ptr<Geography>>* CollectionFeatures() {
-    return nullptr;
-  }
-
-  // other calculations use ShapeIndex
-  virtual S2ShapeIndex* ShapeIndex() {
-    if (!this->hasIndex) {
-      this->BuildShapeIndex(&this->shape_index_);
-      this->hasIndex = true;
+  const s2geography::ShapeIndexGeography& Index() {
+    if (!index_) {
+      this->index_ = absl::make_unique<s2geography::ShapeIndexGeography>(*geog_);
     }
 
-    return &this->shape_index_;
+    return *index_;
   }
 
-  virtual S2ShapeIndexRegion<S2ShapeIndex> ShapeIndexRegion() {
-	  S2ShapeIndex *ix = this->ShapeIndex();
-	  return MakeS2ShapeIndexRegion(ix);
+  static SEXP MakeXPtr(std::unique_ptr<s2geography::S2Geography> geog) {
+    SEXP xptr = PROTECT(R_MakeExternalPtr(new Geography(std::move(geog)), R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(xptr, &finalize_xptr);
+    UNPROTECT(1);
+    return xptr;
   }
 
-  virtual S2Cap GetCapBound() {
-	  return this->ShapeIndexRegion().GetCapBound();
+  static SEXP MakeXPtr(std::unique_ptr<Geography> geog) {
+    std::unique_ptr<Geography> geog_owning = std::move(geog);
+    SEXP xptr = PROTECT(R_MakeExternalPtr(geog_owning.release(), R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(xptr, &finalize_xptr);
+    UNPROTECT(1);
+    return xptr;
   }
 
-  virtual S2LatLngRect GetRectBound() {
-	  return this->ShapeIndexRegion().GetRectBound();
+  static std::unique_ptr<Geography> MakePoint() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>());
   }
 
-protected:
-  MutableS2ShapeIndex shape_index_;
-  bool hasIndex;
-};
+  static std::unique_ptr<Geography> MakePoint(S2Point point) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>(point));
+  }
 
+  static std::unique_ptr<Geography> MakePoint(std::vector<S2Point> points) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PointGeography>(std::move(points)));
+  }
 
-class GeographyBuilder: public WKGeometryHandler {
-public:
-  virtual std::unique_ptr<Geography> build() = 0;
-  virtual ~GeographyBuilder() {}
+  static std::unique_ptr<Geography> MakePolyline() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>());
+  }
+
+  static std::unique_ptr<Geography> MakePolyline(std::unique_ptr<S2Polyline> polyline) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>(std::move(polyline)));
+  }
+
+  static std::unique_ptr<Geography> MakePolyline(std::vector<std::unique_ptr<S2Polyline>> polylines) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolylineGeography>(std::move(polylines)));
+  }
+
+  static std::unique_ptr<Geography> MakePolygon() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolygonGeography>());
+  }
+
+  static std::unique_ptr<Geography> MakePolygon(std::unique_ptr<S2Polygon> polygon) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::PolygonGeography>(std::move(polygon)));
+  }
+
+  static std::unique_ptr<Geography> MakeCollection() {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyCollection>());
+  }
+
+  static std::unique_ptr<Geography> MakeCollection(std::vector<std::unique_ptr<s2geography::S2Geography>> features) {
+    return absl::make_unique<Geography>(absl::make_unique<s2geography::S2GeographyCollection>(std::move(features)));
+  }
+
+private:
+  std::unique_ptr<s2geography::S2Geography> geog_;
+  std::unique_ptr<s2geography::ShapeIndexGeography> index_;
+
+  static void finalize_xptr(SEXP xptr) {
+    Geography* geog = reinterpret_cast<Geography*>(R_ExternalPtrAddr(xptr));
+    if (geog != nullptr) {
+      delete geog;
+    }
+  }
 };
 
 #endif

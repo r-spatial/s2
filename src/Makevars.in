@@ -103,7 +103,15 @@ OBJECTS = $(ABSL_LIBS) \
      s2-xptr.o \
      wk-impl.o \
      wk-c-utils.o \
-     s2-c-api.o \
+     tessellator.o \
+     s2-geography/accessors.o \
+     s2-geography/accessors-geog.o \
+     s2-geography/linear-referencing.o \
+     s2-geography/distance.o \
+     s2-geography/build.o \
+     s2-geography/coverings.o \
+     s2-geography/geography.o \
+     s2-geography/predicates.o \
      s2/base/stringprintf.o \
      s2/base/strtoint.o \
      s2/encoded_s2cell_id_vector.o \

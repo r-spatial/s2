@@ -68,8 +68,18 @@ stop_problems <- function(feature_id, problem, header) {
 
 expect_wkt_equal <- function(x, y, precision = 16) {
   testthat::expect_equal(
-    s2_geography_to_wkt(as_s2_geography(x), precision = precision, trim = TRUE),
-    s2_geography_to_wkt(as_s2_geography(y), precision = precision, trim = TRUE)
+    wk::wk_format(
+      as_s2_geography(x),
+      precision = precision,
+      trim = TRUE,
+      max_coords = .Machine$integer.max
+    ),
+    wk::wk_format(
+      as_s2_geography(y),
+      precision = precision,
+      trim = TRUE,
+      max_coords = .Machine$integer.max
+    )
   )
 }
 

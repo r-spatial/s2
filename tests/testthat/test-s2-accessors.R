@@ -29,7 +29,7 @@ test_that("s2_is_valid() works", {
         # invalid
         "LINESTRING (0 0, 0 0, 1 1)",
         "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
-        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        "GEOMETRYCOLLECTION (POINT (0 1), POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
         NA
       )
     ),
@@ -50,7 +50,7 @@ test_that("s2_is_valid_detail() works", {
         # invalid
         "LINESTRING (0 0, 0 0, 1 1)",
         "POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0))",
-        "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
+        "GEOMETRYCOLLECTION (POINT (0 1), POLYGON ((0 0, 0 1, 1 0, 0 0, 0 0)))",
         NA
       )
     ),
@@ -81,6 +81,10 @@ test_that("s2_num_points works", {
   expect_identical(s2_num_points("POINT EMPTY"), 0L)
   expect_identical(s2_num_points("LINESTRING (0 0, 1 1)"), 2L)
   expect_identical(s2_num_points("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"), 4L)
+  expect_identical(
+    s2_num_points("GEOMETRYCOLLECTION (POINT (0 1), LINESTRING (0 0, 1 1))"),
+    3L
+  )
 })
 
 test_that("s2_is_empty works", {
@@ -103,6 +107,11 @@ test_that("s2_area works", {
   # make sure the radius is squared!
   expect_true(
     abs(s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 180 / pi) - 100) < 0.27
+  )
+
+  expect_identical(
+    s2_area("POLYGON ((0 0, 90 0, 0 90, 0 0))"),
+    s2_area("GEOMETRYCOLLECTION(POLYGON ((0 0, 90 0, 0 90, 0 0)))")
   )
 })
 
@@ -134,8 +143,8 @@ test_that("s2_x and s2_y works", {
   expect_identical(s2_y(NA_character_), NA_real_)
   expect_equal(s2_x("POINT (-64 45)"), -64)
   expect_equal(s2_y("POINT (-64 45)"), 45)
-  expect_identical(s2_x("POINT EMPTY"), NA_real_)
-  expect_identical(s2_y("POINT EMPTY"), NA_real_)
+  expect_identical(s2_x("POINT EMPTY"), NaN)
+  expect_identical(s2_y("POINT EMPTY"), NaN)
   expect_error(s2_x("LINESTRING EMPTY"), "Can't compute")
   expect_error(s2_y("LINESTRING EMPTY"), "Can't compute")
   expect_error(s2_x("POLYGON EMPTY"), "Can't compute")
@@ -160,17 +169,17 @@ test_that("s2_project() and s2_project_normalized() work", {
     c(0, 0.25, 0.75, 1, NA_real_, NA_real_)
   )
 
-  expect_error(
+  expect_identical(
     s2_project_normalized("POINT (0 1)", "POINT (0 1)"),
-    "must be a polyline"
+    NaN
   )
-  expect_error(
+  expect_identical(
     s2_project_normalized("LINESTRING (0 1, 1 1)", "LINESTRING (0 1, 1 1)"),
-    "must be a point"
+    NaN
   )
-  expect_error(
+  expect_identical(
     s2_project_normalized("LINESTRING (0 1, 1 1)", "MULTIPOINT (0 1, 1 1)"),
-    "must both be simple geographies"
+    NaN
   )
 })
 
