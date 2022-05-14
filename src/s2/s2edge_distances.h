@@ -61,8 +61,8 @@ bool IsDistanceLess(const S2Point& x, const S2Point& a, const S2Point& b,
 // because (1) using S1ChordAngle is much faster than S1Angle, and (2) it
 // can save a lot of work by not actually computing the distance when it is
 // obviously larger than the current minimum.
-bool UpdateMinDistance(const S2Point& x, const S2Point& a, const S2Point& b,
-                       S1ChordAngle* min_dist);
+int UpdateMinDistance(const S2Point& x, const S2Point& a, const S2Point& b,
+                      S1ChordAngle* min_dist);
 
 // If the maximum distance from X to the edge AB is greater than "max_dist",
 // this method updates "max_dist" and returns true.  Otherwise it returns false.
