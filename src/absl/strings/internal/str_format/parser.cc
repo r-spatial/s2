@@ -1,3 +1,4 @@
+#include "cpp-compat.h"
 // Copyright 2020 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,7 +81,7 @@ bool CheckFastPathSetting(const UnboundConversion& conv) {
                          (conv.width.value() == -1) &&
                          (conv.precision.value() == -1);
   if (should_be_basic != conv.flags.basic) {
-    fprintf(stderr,
+    cpp_compat_printf(
             "basic=%d left=%d show_pos=%d sign_col=%d alt=%d zero=%d "
             "width=%d precision=%d\n",
             conv.flags.basic, conv.flags.left, conv.flags.show_pos,
