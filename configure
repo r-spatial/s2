@@ -106,6 +106,13 @@ else
     PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
 fi
 
+# From apache/arrow/r/configure:
+# If on Raspberry Pi, need to manually link against latomic
+# See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81358 for similar example
+if grep raspbian /etc/os-release >/dev/null 2>&1; then
+  PKG_LIBS="-latomic $PKG_LIBS"
+fi
+
 echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 
