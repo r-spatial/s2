@@ -369,6 +369,10 @@ cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin`, geog1, geog2, distance)
 }
 
+cpp_s2_prepared_dwithin <- function(geog1, geog2, distance) {
+    .Call(`_s2_cpp_s2_prepared_dwithin`, geog1, geog2, distance)
+}
+
 cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, s2options) {
     .Call(`_s2_cpp_s2_intersects_box`, geog, lng1, lat1, lng2, lat2, detail, s2options)
 }

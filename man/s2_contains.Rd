@@ -11,6 +11,7 @@
 \alias{s2_intersects_box}
 \alias{s2_touches}
 \alias{s2_dwithin}
+\alias{s2_prepared_dwithin}
 \title{S2 Geography Predicates}
 \usage{
 s2_contains(x, y, options = s2_options(model = "open"))
@@ -40,6 +41,8 @@ s2_intersects_box(
 s2_touches(x, y, options = s2_options())
 
 s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
+
+s2_prepared_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 }
 \arguments{
 \item{x}{\link[=as_s2_geography]{geography vectors}. These inputs

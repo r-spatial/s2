@@ -1103,6 +1103,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_prepared_dwithin
+LogicalVector cpp_s2_prepared_dwithin(List geog1, List geog2, NumericVector distance);
+RcppExport SEXP _s2_cpp_s2_prepared_dwithin(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_prepared_dwithin(geog1, geog2, distance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_s2_intersects_box
 LogicalVector cpp_s2_intersects_box(List geog, NumericVector lng1, NumericVector lat1, NumericVector lng2, NumericVector lat2, IntegerVector detail, List s2options);
 RcppExport SEXP _s2_cpp_s2_intersects_box(SEXP geogSEXP, SEXP lng1SEXP, SEXP lat1SEXP, SEXP lng2SEXP, SEXP lat2SEXP, SEXP detailSEXP, SEXP s2optionsSEXP) {
@@ -1474,6 +1487,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
     {"_s2_cpp_s2_touches", (DL_FUNC) &_s2_cpp_s2_touches, 3},
     {"_s2_cpp_s2_dwithin", (DL_FUNC) &_s2_cpp_s2_dwithin, 3},
+    {"_s2_cpp_s2_prepared_dwithin", (DL_FUNC) &_s2_cpp_s2_prepared_dwithin, 3},
     {"_s2_cpp_s2_intersects_box", (DL_FUNC) &_s2_cpp_s2_intersects_box, 7},
     {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 3},
     {"_s2_cpp_s2_union", (DL_FUNC) &_s2_cpp_s2_union, 3},

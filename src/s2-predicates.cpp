@@ -5,6 +5,7 @@
 #include "s2/s2polygon.h"
 #include "s2/s2testing.h"
 #include "s2/s2builderutil_snap_functions.h"
+#include "s2/s2shape_index_buffered_region.h"
 
 #include "geography-operator.h"
 #include "s2-options.h"
@@ -102,12 +103,71 @@ LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
   class Op: public BinaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector distance;
-    Op(NumericVector distance): distance(distance) {}
+    Geography* geog2_id;
+    std::unique_ptr<S2ClosestEdgeQuery> query;
+
+    Op(NumericVector distance): distance(distance), geog2_id(nullptr) {}
 
     int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
-      S2ClosestEdgeQuery query(&feature1->Index().ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature2->Index().ShapeIndex());
-      return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance[i]));
+      if (feature2.get() != geog2_id) {
+        this->query = absl::make_unique<S2ClosestEdgeQuery>(&feature2->Index().ShapeIndex());
+        this->geog2_id = feature2.get();
+      }
+
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
+      return query->IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance[i]));
+    }
+  };
+
+  Op op(distance);
+  return op.processVector(geog1, geog2);
+}
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_prepared_dwithin(List geog1, List geog2, NumericVector distance) {
+  if (distance.size() != geog1.size())  {
+    stop("Incompatible lengths"); // #nocov
+  }
+
+  class Op: public BinaryGeographyOperator<LogicalVector, int> {
+  public:
+    NumericVector distance;
+    S2RegionCoverer coverer;
+    std::vector<S2CellId> covering;
+    Geography* covering_id;
+    std::unique_ptr<S2ClosestEdgeQuery> query;
+    MutableS2ShapeIndex::Iterator iterator;
+
+    Op(NumericVector distance):
+      distance(distance), covering_id(nullptr) {}
+
+    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+      S1ChordAngle distance_angle = S1ChordAngle::Radians(this->distance[i]);
+
+      // Update the query and covering on y if needed
+      if (feature2.get() != covering_id) {
+        S2ShapeIndexBufferedRegion buffered(&feature2->Index().ShapeIndex(), distance_angle);
+        coverer.GetCovering(buffered, &covering);
+        this->query = absl::make_unique<S2ClosestEdgeQuery>(&feature2->Index().ShapeIndex());
+        this->covering_id = feature2.get();
+      }
+
+      // Check for a possible intersection
+      iterator.Init(&feature1->Index().ShapeIndex());
+      bool may_intersect_buffer = false;
+      for (const S2CellId& query_cell: covering) {
+          if (iterator.Locate(query_cell) != S2ShapeIndex::CellRelation::DISJOINT) {
+            may_intersect_buffer = true;
+            break;
+          }
+      }
+
+      if (may_intersect_buffer) {
+        S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
+        return query->IsDistanceLessOrEqual(&target, distance_angle);
+      } else {
+        return false;
+      }
     }
   };
 
