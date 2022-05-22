@@ -4,13 +4,13 @@
 #include "s2/s2projections.h"
 #include "s2/s2edge_tessellator.h"
 
+// capi typedef start
 typedef struct s2_projection_t s2_projection_t;
 typedef struct s2_tessellator_t s2_tessellator_t;
+// capi typedef end
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
+// capi func start
 s2_projection_t* s2_projection_create_plate_carree(double scale);
 s2_projection_t* s2_projection_create_mercator(double max_x);
 void s2_projection_destroy(s2_projection_t* projection);
@@ -26,10 +26,8 @@ int s2_tessellator_r2_points_size(s2_tessellator_t* tessellator);
 int s2_tessellator_s2_points_size(s2_tessellator_t* tessellator);
 int s2_tessellator_r2_point(s2_tessellator_t* tessellator, int i, double* coord);
 int s2_tessellator_s2_point(s2_tessellator_t* tessellator, int i, double* coord);
-
-#ifdef __cplusplus
+// capi func end
 }
-#endif
 
 s2_projection_t* s2_projection_create_plate_carree(double scale) {
     return (s2_projection_t*) new S2::PlateCarreeProjection(scale);
@@ -69,7 +67,7 @@ public:
     TessellatorWrapper(s2_projection_t* projection, double tolerance_radians):
         tessellator((S2::Projection*) projection, S1Angle::Radians(tolerance_radians)),
         has_r2_last(false), has_s2_last(false) {}
-    
+
     void reset() {
         s2points.clear();
         r2points.clear();

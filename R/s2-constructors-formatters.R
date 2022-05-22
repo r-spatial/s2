@@ -70,31 +70,32 @@
 #' s2_as_binary(geog)
 #'
 s2_geog_point <- function(longitude, latitude) {
-  recycled <- recycle_common(longitude, latitude)
-  new_s2_xptr(cpp_s2_geog_point(recycled[[1]], recycled[[2]]), "s2_geography")
+  wk::wk_handle(wk::xy(longitude, latitude), s2_geography_writer())
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_make_line <- function(longitude, latitude, feature_id = 1L) {
-  recycled <- recycle_common(longitude, latitude, feature_id)
-  new_s2_xptr(cpp_s2_make_line(recycled[[1]], recycled[[2]], featureId = recycled[[3]]), "s2_geography")
+  wk::wk_handle(
+    wk::xy(longitude, latitude),
+    wk::wk_linestring_filter(
+      s2_geography_writer(),
+      feature_id = as.integer(feature_id)
+    )
+  )
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L,
                             oriented = FALSE, check = TRUE) {
-  recycled <- recycle_common(longitude, latitude, feature_id, ring_id)
-  new_s2_xptr(
-    cpp_s2_make_polygon(
-      recycled[[1]], recycled[[2]],
-      featureId = recycled[[3]],
-      ringId = recycled[[4]],
-      oriented = oriented,
-      check = check
-    ),
-    "s2_geography"
+  wk::wk_handle(
+    wk::xy(longitude, latitude),
+    wk::wk_polygon_filter(
+      s2_geography_writer(oriented = oriented, check = check),
+      feature_id = as.integer(feature_id),
+      ring_id = as.integer(ring_id)
+    )
   )
 }
 
@@ -102,14 +103,12 @@ s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L,
 #' @export
 s2_geog_from_text <- function(wkt_string, oriented = FALSE, check = TRUE) {
   attributes(wkt_string) <- NULL
-  wk::validate_wk_wkt(wk::new_wk_wkt(wkt_string))
-  new_s2_xptr(
-    s2_geography_from_wkt(
-      wkt_string,
-      oriented = oriented,
-      check = check
-    ),
-    "s2_geography"
+  wkt <- wk::new_wk_wkt(wkt_string, geodesic = TRUE)
+  wk::validate_wk_wkt(wkt)
+
+  wk::wk_handle(
+    wkt,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
@@ -117,25 +116,31 @@ s2_geog_from_text <- function(wkt_string, oriented = FALSE, check = TRUE) {
 #' @export
 s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE, check = TRUE) {
   attributes(wkb_bytes) <- NULL
-  wk::validate_wk_wkb(wk::new_wk_wkb(wkb_bytes))
-  new_s2_xptr(
-    s2_geography_from_wkb(
-      wkb_bytes,
-      oriented = oriented,
-      check = check
-    ),
-    "s2_geography"
+  wkb <- wk::new_wk_wkb(wkb_bytes)
+  wk::validate_wk_wkb(wkb)
+  wk::wk_handle(
+    wkb,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_as_text <- function(x, precision = 16, trim = TRUE) {
-  s2_geography_to_wkt(as_s2_geography(x), precision = precision, trim = trim)
+  wkt <- wk::wk_handle(
+    as_s2_geography(x),
+    wk::wkt_writer(precision = precision, trim = trim)
+  )
+
+  attributes(wkt) <- NULL
+  wkt
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_as_binary <- function(x, endian = wk::wk_platform_endian()) {
-  structure(s2_geography_to_wkb(as_s2_geography(x), endian = endian), class = "blob")
+  structure(
+    wk::wk_handle(as_s2_geography(x), wk::wkb_writer(endian = endian)),
+    class = "blob"
+  )
 }

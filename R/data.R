@@ -70,3 +70,10 @@ s2_data_cities <- function(name = NULL) {
 
   as_s2_geography(wkb)
 }
+
+#' Example Geometries
+#'
+#' These geometries are toy examples useful for testing various coordinate
+#' shuffling operations in the s2 package.
+#'
+"s2_data_example_wkt"

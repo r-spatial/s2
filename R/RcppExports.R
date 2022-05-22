@@ -253,40 +253,8 @@ cpp_s2_cell_common_ancestor_level_agg <- function(cellId) {
     .Call(`_s2_cpp_s2_cell_common_ancestor_level_agg`, cellId)
 }
 
-cpp_s2_geog_point <- function(x, y) {
-    .Call(`_s2_cpp_s2_geog_point`, x, y)
-}
-
-cpp_s2_make_line <- function(x, y, featureId) {
-    .Call(`_s2_cpp_s2_make_line`, x, y, featureId)
-}
-
-cpp_s2_make_polygon <- function(x, y, featureId, ringId, oriented, check) {
-    .Call(`_s2_cpp_s2_make_polygon`, x, y, featureId, ringId, oriented, check)
-}
-
-s2_geography_from_wkb <- function(wkb, oriented, check) {
-    .Call(`_s2_s2_geography_from_wkb`, wkb, oriented, check)
-}
-
-s2_geography_from_wkt <- function(wkt, oriented, check) {
-    .Call(`_s2_s2_geography_from_wkt`, wkt, oriented, check)
-}
-
 s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
-}
-
-s2_geography_to_wkt <- function(s2_geography, precision, trim) {
-    .Call(`_s2_s2_geography_to_wkt`, s2_geography, precision, trim)
-}
-
-s2_geography_to_wkb <- function(s2_geography, endian) {
-    .Call(`_s2_s2_geography_to_wkb`, s2_geography, endian)
-}
-
-s2_geography_format <- function(s2_geography, maxCoords, precision, trim) {
-    .Call(`_s2_s2_geography_format`, s2_geography, maxCoords, precision, trim)
 }
 
 s2_lnglat_from_numeric <- function(lng, lat) {
@@ -473,8 +441,12 @@ cpp_s2_buffer_cells <- function(geog, distance, maxCells, minLevel) {
     .Call(`_s2_cpp_s2_buffer_cells`, geog, distance, maxCells, minLevel)
 }
 
-cpp_s2_convex_hull_agg <- function(geog, s2options) {
-    .Call(`_s2_cpp_s2_convex_hull_agg`, geog, s2options)
+cpp_s2_convex_hull <- function(geog) {
+    .Call(`_s2_cpp_s2_convex_hull`, geog)
+}
+
+cpp_s2_convex_hull_agg <- function(geog, naRm) {
+    .Call(`_s2_cpp_s2_convex_hull_agg`, geog, naRm)
 }
 
 s2_xptr_test <- function(size) {

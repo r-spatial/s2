@@ -3,6 +3,7 @@
 \name{s2_unprojection_filter}
 \alias{s2_unprojection_filter}
 \alias{s2_projection_filter}
+\alias{s2_geography_writer}
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
 \title{Low-level wk filters and handlers}
@@ -19,6 +20,8 @@ s2_projection_filter(
   tessellate_tol = Inf
 )
 
+s2_geography_writer(oriented = FALSE, check = TRUE)
+
 s2_projection_plate_carree()
 
 s2_projection_mercator()
@@ -31,6 +34,12 @@ s2_projection_mercator()
 
 \item{tessellate_tol}{An angle in radians. Points will not be added
 if a line segment is within this distance of a point.}
+
+\item{oriented}{TRUE if polygon ring directions are known to be correct
+(i.e., exterior rings are defined counter clockwise and interior
+rings are defined clockwise).}
+
+\item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
 }
 \value{
 \itemize{

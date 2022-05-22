@@ -8,9 +8,6 @@
 #include "s2/s2region_union.h"
 
 #include "geography-operator.h"
-#include "point-geography.h"
-#include "polyline-geography.h"
-#include "polygon-geography.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -308,7 +305,7 @@ List cpp_s2_geography_from_cell_union(List cellUnionVector) {
     SEXP processCell(S2CellUnion& cellUnion, R_xlen_t i) {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
       polygon->InitToCellUnionBorder(cellUnion);
-      return XPtr<PolygonGeography>(new PolygonGeography(std::move(polygon)));
+      return Geography::MakeXPtr(Geography::MakePolygon(std::move(polygon)));
     }
   };
 
@@ -331,7 +328,7 @@ List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
 
     SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
       S2ShapeIndexBufferedRegion region;
-      region.Init(feature->ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
+      region.Init(&feature->Index().ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 
       S2CellUnion cellUnion;
       if (interior) {
@@ -366,7 +363,6 @@ List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
   S1ChordAngle bufferAngle = S1ChordAngle::Radians(buffer);
 
   S2RegionUnion regionUnion;
-
   SEXP item;
   for (R_xlen_t i = 0; i < geog.size(); i++) {
     item = geog[i];
@@ -379,7 +375,7 @@ List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
     if (item != R_NilValue) {
       Rcpp::XPtr<Geography> feature(item);
       auto region = absl::make_unique<S2ShapeIndexBufferedRegion>();
-      region->Init(feature->ShapeIndex(), bufferAngle);
+      region->Init(&feature->Index().ShapeIndex(), bufferAngle);
       regionUnion.Add(std::move(region));
     }
   }

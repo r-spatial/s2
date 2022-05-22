@@ -186,7 +186,9 @@ S1Angle GetDistance(const S2Point& x, const S2Point& a, const S2Point& b) {
   return min_dist.ToAngle();
 }
 
-bool UpdateMinDistance(const S2Point& x, const S2Point& a, const S2Point& b,
+// dd: changed return type to int because on new clang we get:
+// s2/s2edge_distances.cc:282:11: warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+int UpdateMinDistance(const S2Point& x, const S2Point& a, const S2Point& b,
                        S1ChordAngle* min_dist) {
   return AlwaysUpdateMinDistance<false>(x, a, b, min_dist);
 }

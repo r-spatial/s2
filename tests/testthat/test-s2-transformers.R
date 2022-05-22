@@ -279,7 +279,7 @@ test_that("s2_union(x) errors for the case of mixed dimension collections", {
     s2_union(
       c("GEOMETRYCOLLECTION(POLYGON ((-10 -10, -10 10, 10 10, 10 -10, -10 -10)), LINESTRING (0 -20, 0 20))")
     ),
-    "Unary union for collections is not implemented"
+    "for multidimensional collections not implemented"
   )
 })
 
@@ -388,17 +388,36 @@ test_that("s2_union_agg() works", {
 
   # NULL handling
   expect_identical(
-    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
+    s2_union_agg(c("POINT (30 10)", NA), na.rm = FALSE),
     as_s2_geography(NA_character_)
   )
   expect_wkt_equal(
-    s2_coverage_union_agg(character()),
+    s2_union_agg(character()),
     as_s2_geography("GEOMETRYCOLLECTION EMPTY")
   )
   expect_wkt_equal(
-    s2_coverage_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
+    s2_union_agg(c("POINT (30 10)", NA), na.rm = TRUE),
     "POINT (30 10)"
   )
+
+  # make sure this works on polygons since they are handled differently than
+  # points and linestrings
+  expect_equal(
+    s2_area(s2_union_agg(s2_data_countries())),
+    sum(s2_area(s2_union_agg(s2_data_countries())))
+  )
+
+  # check non-polygons and polygons together
+  points_and_poly <- s2_union_agg(
+    c(
+      s2_data_countries(),
+      s2_data_cities()
+    )
+  )
+
+  points <- s2_rebuild(points_and_poly, options = s2_options(dimensions = "point"))
+  poly <- s2_rebuild(points_and_poly, options = s2_options(dimensions = "polygon"))
+  expect_false(any(s2_intersects(points, poly)))
 })
 
 test_that("s2_rebuild_agg() works", {
@@ -635,6 +654,15 @@ test_that("s2_interpolate() and s2_interpolate_normalized() work", {
   )
 })
 
+test_that("s2_convex_hull() works", {
+  expect_equal(
+    s2_area(s2_convex_hull(
+      c("GEOMETRYCOLLECTION(POINT(3.6 43.2), POINT (0 0), POINT(3.61 43.21))", NA)
+    )),
+    s2_area(c("POLYGON ((0 0, 3.61 43.21, 3.6 43.2, 0 0))", NA))
+  )
+})
+
 
 test_that("s2_convex_hull_agg() works", {
   expect_equal(
@@ -661,8 +689,26 @@ test_that("s2_convex_hull_agg() works", {
     )
   )
 
-  expect_error(
-    s2_convex_hull_agg(c("GEOMETRYCOLLECTION(POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2)), POINT (3.6 43.2))")),
-    "GeometryCollection is not supported"
+  expect_equal(
+    s2_area(s2_convex_hull_agg(
+      "GEOMETRYCOLLECTION(POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2)),
+       POINT (3.6 43.2))"
+    )),
+    s2_area(s2_convex_hull_agg(
+      c(
+        "POLYGON ((3.01 43.2, 3.4 44.01, 3.5 43.5, 3.1 43.2, 3.01 43.2))",
+        "POINT (3.6 43.2)"
+      )
+    ))
+  )
+
+  expect_identical(
+    s2_convex_hull_agg(c("POINT (0 0)", NA), na.rm = FALSE),
+    as_s2_geography(NA_character_)
+  )
+
+  expect_equal(
+    s2_area(s2_convex_hull_agg(c("POINT (0 0)", NA), na.rm = TRUE)),
+    0
   )
 })
