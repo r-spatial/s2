@@ -123,11 +123,11 @@ test_that("matrix predicates work", {
 
   expect_identical(
     s2_dwithin_matrix(
-      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)"),
+      c("POINT (-1 0.5)", "POINT (0.5 0.5)", "POINT (2 0.5)", "POINT (10 0.5)"),
       "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
       0
     ),
-    list(integer(0), 1L, integer(0))
+    list(integer(0), 1L, integer(0), integer(0))
   )
   expect_identical(
     s2_dwithin_matrix(
@@ -256,5 +256,15 @@ test_that("indexed matrix predicates return the same thing as brute-force compar
   expect_identical(
     s2_equals_matrix(timezones, countries),
     s2_equals_matrix_brute_force(timezones, countries)
+  )
+
+  # dwithin
+  expect_identical(
+    s2_dwithin_matrix(countries, countries, 1e6),
+    s2_dwithin_matrix_brute_force(countries, countries, 1e6)
+  )
+  expect_identical(
+    s2_dwithin_matrix(timezones, countries, 1e6),
+    s2_dwithin_matrix_brute_force(timezones, countries, 1e6)
   )
 })

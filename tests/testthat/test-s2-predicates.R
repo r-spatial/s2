@@ -163,3 +163,20 @@ test_that("s2_dwithin() works", {
   )
 })
 
+test_that("s2_prepared_dwithin() works", {
+  expect_identical(s2_prepared_dwithin("POINT (0 0)", NA_character_, 0), NA)
+
+  expect_true(s2_prepared_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 + 0.01, radius = 1))
+  expect_false(s2_prepared_dwithin("POINT (0 0)", "POINT (90 0)", pi / 2 - 0.01, radius = 1))
+  expect_false(s2_prepared_dwithin("POINT (0 0)", "POINT EMPTY", 0))
+
+  expect_true(s2_prepared_dwithin("LINESTRING (-45 0, 45 0)", "POINT (0 20)", 21, radius = 180 / pi))
+  expect_false(s2_prepared_dwithin("LINESTRING (-45 0, 45 0)", "POINT (0 20)", 19, radius = 180 / pi))
+
+  # check vectorization
+  expect_identical(
+    s2_prepared_dwithin("POINT (0 0)", "POINT (90  0)", pi / 2 + c(0.01, -0.01), radius = 1),
+    c(TRUE, FALSE)
+  )
+})
+

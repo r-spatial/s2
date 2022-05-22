@@ -603,3 +603,21 @@ List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
   Op op(s2options);
   return op.processVector(geog1, geog2);
 }
+
+// [[Rcpp::export]]
+List cpp_s2_dwithin_matrix_brute_force(List geog1, List geog2, double distance) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    double distance;
+    Op(double distance): distance(distance) {}
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      S2ClosestEdgeQuery query(&feature2->Index().ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
+      return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
+    };
+  };
+
+  Op op(distance);
+  return op.processVector(geog1, geog2);
+}
