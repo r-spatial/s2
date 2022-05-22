@@ -14,6 +14,16 @@
   `s2_covering_cell_ids()`). Cell unions are useful as compact representations
   of spherical geometry and can be used like a bounding box to determine
   a possible intersection with one or more geographies (#85, #94, #164).
+- Refactored the simple features compatability layer into a standalone
+  code base for potential future use in a Python adaptation (#165).
+- Migrate input and output to non-deprecated wk package handlers and writers
+  (#101, #165, #168).
+- Make `s2_union_agg()` more efficient using a recursive merge strategy
+  (#103, #165).
+- Fix package build on Raspberry Pi (#169, #171).
+- Fix warning on clang14 when compiling with `-O0` (#167, #172).
+- Added `s2_prepared_dwithin()` and fixed `s2_dwithin_matrix()` such that it
+  efficiently uses the index (#157, #174).
 
 # s2 1.0.7
 
