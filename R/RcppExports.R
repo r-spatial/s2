@@ -337,6 +337,10 @@ cpp_s2_equals_matrix_brute_force <- function(geog1, geog2, s2options) {
     .Call(`_s2_cpp_s2_equals_matrix_brute_force`, geog1, geog2, s2options)
 }
 
+cpp_s2_dwithin_matrix_brute_force <- function(geog1, geog2, distance) {
+    .Call(`_s2_cpp_s2_dwithin_matrix_brute_force`, geog1, geog2, distance)
+}
+
 s2_point_from_numeric <- function(x, y, z) {
     .Call(`_s2_s2_point_from_numeric`, x, y, z)
 }
@@ -367,6 +371,10 @@ cpp_s2_touches <- function(geog1, geog2, s2options) {
 
 cpp_s2_dwithin <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin`, geog1, geog2, distance)
+}
+
+cpp_s2_prepared_dwithin <- function(geog1, geog2, distance) {
+    .Call(`_s2_cpp_s2_prepared_dwithin`, geog1, geog2, distance)
 }
 
 cpp_s2_intersects_box <- function(geog, lng1, lat1, lng2, lat2, detail, s2options) {

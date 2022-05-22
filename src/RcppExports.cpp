@@ -1003,6 +1003,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_dwithin_matrix_brute_force
+List cpp_s2_dwithin_matrix_brute_force(List geog1, List geog2, double distance);
+RcppExport SEXP _s2_cpp_s2_dwithin_matrix_brute_force(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< double >::type distance(distanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_dwithin_matrix_brute_force(geog1, geog2, distance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2_point_from_numeric
 List s2_point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
 RcppExport SEXP _s2_s2_point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -1100,6 +1113,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_dwithin(geog1, geog2, distance));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_s2_prepared_dwithin
+LogicalVector cpp_s2_prepared_dwithin(List geog1, List geog2, NumericVector distance);
+RcppExport SEXP _s2_cpp_s2_prepared_dwithin(SEXP geog1SEXP, SEXP geog2SEXP, SEXP distanceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
+    Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_prepared_dwithin(geog1, geog2, distance));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1466,6 +1492,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_intersects_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_intersects_matrix_brute_force, 3},
     {"_s2_cpp_s2_disjoint_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_disjoint_matrix_brute_force, 3},
     {"_s2_cpp_s2_equals_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_equals_matrix_brute_force, 3},
+    {"_s2_cpp_s2_dwithin_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_dwithin_matrix_brute_force, 3},
     {"_s2_s2_point_from_numeric", (DL_FUNC) &_s2_s2_point_from_numeric, 3},
     {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
     {"_s2_data_frame_from_s2_point", (DL_FUNC) &_s2_data_frame_from_s2_point, 1},
@@ -1474,6 +1501,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
     {"_s2_cpp_s2_touches", (DL_FUNC) &_s2_cpp_s2_touches, 3},
     {"_s2_cpp_s2_dwithin", (DL_FUNC) &_s2_cpp_s2_dwithin, 3},
+    {"_s2_cpp_s2_prepared_dwithin", (DL_FUNC) &_s2_cpp_s2_prepared_dwithin, 3},
     {"_s2_cpp_s2_intersects_box", (DL_FUNC) &_s2_cpp_s2_intersects_box, 7},
     {"_s2_cpp_s2_intersection", (DL_FUNC) &_s2_cpp_s2_intersection, 3},
     {"_s2_cpp_s2_union", (DL_FUNC) &_s2_cpp_s2_union, 3},

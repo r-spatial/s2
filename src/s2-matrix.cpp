@@ -7,6 +7,7 @@
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2furthest_edge_query.h"
 #include "s2/s2shape_index_region.h"
+#include "s2/s2shape_index_buffered_region.h"
 
 #include "geography-operator.h"
 #include "s2-options.h"
@@ -382,20 +383,50 @@ public:
 
 // [[Rcpp::export]]
 List cpp_s2_dwithin_matrix(List geog1, List geog2, double distance) {
-  class Op: public BruteForceMatrixPredicateOperator {
+  class Op: public IndexedBinaryGeographyOperator<List, IntegerVector> {
   public:
-    double distance;
-    Op(double distance): distance(distance) {}
-    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
-                        R_xlen_t i, R_xlen_t j) {
-      S2ClosestEdgeQuery query(&feature2->Index().ShapeIndex());
-      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
-      return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
-    };
+    List geog2;
+    S2RegionCoverer coverer;
+    std::vector<S2CellId> cell_ids;
+    std::unordered_set<int> indices_unsorted;
+    std::vector<int> indices;
+    S1ChordAngle distance;
+
+    IntegerVector processFeature(Rcpp::XPtr<Geography> feature1, R_xlen_t i) {
+      S2ShapeIndexBufferedRegion buffered(
+        &feature1->Index().ShapeIndex(),
+        this->distance
+      );
+      coverer.GetCovering(buffered, &cell_ids);
+
+      indices_unsorted.clear();
+      iterator->Query(cell_ids, &indices_unsorted);
+
+      S2ClosestEdgeQuery query(&feature1->Index().ShapeIndex());
+
+      indices.clear();
+
+      for (int j: indices_unsorted) {
+        SEXP item = this->geog2[j];
+        XPtr<Geography> feature2(item);
+
+        S2ClosestEdgeQuery::ShapeIndexTarget target(&feature2->Index().ShapeIndex());
+        if (query.IsDistanceLessOrEqual(&target, this->distance)) {
+          indices.push_back(j + 1);
+        }
+      }
+
+      // return sorted integer vector
+      std::sort(indices.begin(), indices.end());
+      return Rcpp::IntegerVector(indices.begin(), indices.end());
+    }
   };
 
-  Op op(distance);
-  return op.processVector(geog1, geog2);
+  Op op;
+  op.geog2 = geog2;
+  op.distance = S1ChordAngle::Radians(distance);
+  op.buildIndex(geog2);
+  return op.processVector(geog1);
 }
 
 // ----------- distance matrix operators -------------------
@@ -570,5 +601,23 @@ List cpp_s2_equals_matrix_brute_force(List geog1, List geog2, List s2options) {
   };
 
   Op op(s2options);
+  return op.processVector(geog1, geog2);
+}
+
+// [[Rcpp::export]]
+List cpp_s2_dwithin_matrix_brute_force(List geog1, List geog2, double distance) {
+  class Op: public BruteForceMatrixPredicateOperator {
+  public:
+    double distance;
+    Op(double distance): distance(distance) {}
+    bool processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2,
+                        R_xlen_t i, R_xlen_t j) {
+      S2ClosestEdgeQuery query(&feature2->Index().ShapeIndex());
+      S2ClosestEdgeQuery::ShapeIndexTarget target(&feature1->Index().ShapeIndex());
+      return query.IsDistanceLessOrEqual(&target, S1ChordAngle::Radians(this->distance));
+    };
+  };
+
+  Op op(distance);
   return op.processVector(geog1, geog2);
 }
