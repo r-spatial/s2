@@ -254,3 +254,20 @@ test_that("Full polygons work", {
   expect_true(s2_intersects(as_s2_geography(TRUE), "POINT(0 1)"))
   expect_wkt_equal(s2_difference(as_s2_geography(TRUE), "POINT(0 1)"), "POLYGON ((0 -90, 0 -90))")
 })
+
+test_that("wk crs and geodesic methods are defined", {
+  geog <- as_s2_geography("POINT (0 0)")
+
+  expect_identical(wk::wk_crs(geog), wk::wk_crs_longlat())
+  expect_true(wk::wk_is_geodesic(geog))
+
+  expect_identical(wk::wk_set_crs(geog, wk::wk_crs_longlat()), geog)
+  expect_identical(wk::wk_set_geodesic(geog, TRUE), geog)
+
+  expect_warning(
+    wk::wk_set_crs(geog, "EPSG:32620"),
+    "is not supported"
+  )
+
+  expect_error(wk::wk_set_geodesic(geog, FALSE), "Can't set geodesic")
+})
