@@ -4,7 +4,7 @@
 #include <Rinternals.h>
 
 #include "wk-v1.h"
-#include "s2-geography/s2-geography.hpp"
+#include "s2geography.h"
 #include "geography.h"
 
 
@@ -45,7 +45,7 @@
 
 
 typedef struct {
-    s2geography::VectorConstructor* builder;
+    s2geography::util::FeatureConstructor* builder;
     SEXP result;
     R_xlen_t feat_id;
     int coord_size;
@@ -119,7 +119,7 @@ SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
 int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
-  data->builder->start_feature();
+  data->builder->feat_start();
   return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
@@ -133,7 +133,7 @@ int builder_feature_null(void* handler_data) {
 int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
-  std::unique_ptr<s2geography::S2Geography> feat = data->builder->finish_feature();
+  std::unique_ptr<s2geography::Geography> feat = data->builder->finish_feature();
   builder_result_append(data, RGeography::MakeXPtr(std::move(feat)));
   return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
@@ -226,7 +226,7 @@ void builder_finalize(void* handler_data) {
 }
 
 void delete_vector_constructor(SEXP xptr) {
-    auto ptr = reinterpret_cast<s2geography::VectorConstructor*>(R_ExternalPtrAddr(xptr));
+    auto ptr = reinterpret_cast<s2geography::util::FeatureConstructor*>(R_ExternalPtrAddr(xptr));
     if (ptr != nullptr) {
         delete ptr;
     }
@@ -238,11 +238,11 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
   int oriented = LOGICAL(oriented_sexp)[0];
   int check = LOGICAL(check_sexp)[0];
 
-  s2geography::Constructor::Options options;
+  s2geography::util::Constructor::Options options;
   options.set_oriented(oriented);
   options.set_check(check);
 
-  auto builder = new s2geography::VectorConstructor(options);
+  auto builder = new s2geography::util::FeatureConstructor(options);
   SEXP builder_xptr = PROTECT(R_MakeExternalPtr(builder, R_NilValue, R_NilValue));
   R_RegisterCFinalizer(builder_xptr, &delete_vector_constructor);
 
@@ -524,7 +524,7 @@ int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* hand
   return WK_CONTINUE;
 }
 
-int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler_t* handler,
+int handle_collection(const s2geography::GeographyCollection& geog, wk_handler_t* handler,
                       uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -534,7 +534,7 @@ int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler
 
   HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
   for (size_t i = 0; i < geog.Features().size(); i++) {
-    const s2geography::S2Geography* child_ptr = geog.Features()[i].get();
+    const s2geography::Geography* child_ptr = geog.Features()[i].get();
 
     auto child_point = dynamic_cast<const s2geography::PointGeography*>(child_ptr);
     if (child_point != nullptr) {
@@ -554,7 +554,7 @@ int handle_collection(const s2geography::S2GeographyCollection& geog, wk_handler
       continue;
     }
 
-    auto child_collection = dynamic_cast<const s2geography::S2GeographyCollection*>(child_ptr);
+    auto child_collection = dynamic_cast<const s2geography::GeographyCollection*>(child_ptr);
     if (child_collection != nullptr) {
       HANDLE_OR_RETURN(handle_collection(*child_collection, handler, i));
       continue;
@@ -588,7 +588,7 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
           HANDLE_CONTINUE_OR_BREAK(handler->null_feature(handler->handler_data));
         } else {
           auto item_ptr = reinterpret_cast<RGeography*>(R_ExternalPtrAddr(item));
-          const s2geography::S2Geography* geog_ptr = &item_ptr->Geog();
+          const s2geography::Geography* geog_ptr = &item_ptr->Geog();
 
           auto child_point = dynamic_cast<const s2geography::PointGeography*>(geog_ptr);
           if (child_point != nullptr) {
@@ -602,7 +602,7 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
               if (child_polygon != nullptr) {
                 HANDLE_CONTINUE_OR_BREAK(handle_polygon(*child_polygon, handler));
               } else {
-                auto child_collection = dynamic_cast<const s2geography::S2GeographyCollection*>(geog_ptr);
+                auto child_collection = dynamic_cast<const s2geography::GeographyCollection*>(geog_ptr);
                 if (child_collection != nullptr) {
                   HANDLE_CONTINUE_OR_BREAK(handle_collection(*child_collection, handler));
                 } else {

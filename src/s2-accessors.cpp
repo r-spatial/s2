@@ -3,7 +3,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "s2-geography/s2-geography.hpp"
+#include "s2geography.h"
 
 // [[Rcpp::export]]
 LogicalVector cpp_s2_is_collection(List geog) {

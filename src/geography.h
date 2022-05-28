@@ -6,14 +6,14 @@
 #include <R.h>
 #include <Rinternals.h>
 
-#include "s2-geography/s2-geography.hpp"
+#include "s2geography.h"
 
 class RGeography {
 public:
-  RGeography(std::unique_ptr<s2geography::S2Geography> geog):
+  RGeography(std::unique_ptr<s2geography::Geography> geog):
     geog_(std::move(geog)), index_(nullptr) {}
 
-  const s2geography::S2Geography& Geog() const {
+  const s2geography::Geography& Geog() const {
     return *geog_;
   }
 
@@ -25,7 +25,7 @@ public:
     return *index_;
   }
 
-  static SEXP MakeXPtr(std::unique_ptr<s2geography::S2Geography> geog) {
+  static SEXP MakeXPtr(std::unique_ptr<s2geography::Geography> geog) {
     SEXP xptr = PROTECT(R_MakeExternalPtr(new RGeography(std::move(geog)), R_NilValue, R_NilValue));
     R_RegisterCFinalizer(xptr, &finalize_xptr);
     UNPROTECT(1);
@@ -73,15 +73,15 @@ public:
   }
 
   static std::unique_ptr<RGeography> MakeCollection() {
-    return absl::make_unique<RGeography>(absl::make_unique<s2geography::S2GeographyCollection>());
+    return absl::make_unique<RGeography>(absl::make_unique<s2geography::GeographyCollection>());
   }
 
-  static std::unique_ptr<RGeography> MakeCollection(std::vector<std::unique_ptr<s2geography::S2Geography>> features) {
-    return absl::make_unique<RGeography>(absl::make_unique<s2geography::S2GeographyCollection>(std::move(features)));
+  static std::unique_ptr<RGeography> MakeCollection(std::vector<std::unique_ptr<s2geography::Geography>> features) {
+    return absl::make_unique<RGeography>(absl::make_unique<s2geography::GeographyCollection>(std::move(features)));
   }
 
 private:
-  std::unique_ptr<s2geography::S2Geography> geog_;
+  std::unique_ptr<s2geography::Geography> geog_;
   std::unique_ptr<s2geography::ShapeIndexGeography> index_;
 
   static void finalize_xptr(SEXP xptr) {
