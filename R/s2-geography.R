@@ -152,6 +152,37 @@ as_wkt.s2_geography <- function(x, ...) {
   wkt
 }
 
+#' @importFrom wk wk_crs
+#' @export
+wk_crs.s2_geography <- function(x) {
+  wk::wk_crs_longlat()
+}
+
+#' @importFrom wk wk_set_crs
+#' @export
+wk_set_crs.s2_geography <- function(x, crs) {
+  if (!wk::wk_crs_equal(crs, wk::wk_crs(x))) {
+    warning("Setting the crs of s2_geography() is not supported")
+  }
+
+  x
+}
+
+#' @importFrom wk wk_is_geodesic
+#' @export
+wk_is_geodesic.s2_geography <- function(x) {
+  TRUE
+}
+
+#' @importFrom wk wk_set_geodesic
+#' @export
+wk_set_geodesic.s2_geography <- function(x, geodesic) {
+  if (!isTRUE(geodesic)) {
+    stop("Can't set geodesic of s2_geography to FALSE")
+  }
+
+  x
+}
 
 #' @export
 `[<-.s2_geography` <- function(x, i, value) {
