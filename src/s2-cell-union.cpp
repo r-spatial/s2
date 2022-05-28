@@ -305,7 +305,7 @@ List cpp_s2_geography_from_cell_union(List cellUnionVector) {
     SEXP processCell(S2CellUnion& cellUnion, R_xlen_t i) {
       std::unique_ptr<S2Polygon> polygon = absl::make_unique<S2Polygon>();
       polygon->InitToCellUnionBorder(cellUnion);
-      return Geography::MakeXPtr(Geography::MakePolygon(std::move(polygon)));
+      return RGeography::MakeXPtr(RGeography::MakePolygon(std::move(polygon)));
     }
   };
 
@@ -326,7 +326,7 @@ List cpp_s2_covering_cell_ids(List geog, int min_level, int max_level,
     Op(NumericVector distance, S2RegionCoverer& coverer, bool interior):
       distance(distance), coverer(coverer), interior(interior) {}
 
-    SEXP processFeature(XPtr<Geography> feature, R_xlen_t i) {
+    SEXP processFeature(XPtr<RGeography> feature, R_xlen_t i) {
       S2ShapeIndexBufferedRegion region;
       region.Init(&feature->Index().ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 
@@ -373,7 +373,7 @@ List cpp_s2_covering_cell_ids_agg(List geog, int min_level, int max_level,
     }
 
     if (item != R_NilValue) {
-      Rcpp::XPtr<Geography> feature(item);
+      Rcpp::XPtr<RGeography> feature(item);
       auto region = absl::make_unique<S2ShapeIndexBufferedRegion>();
       region->Init(&feature->Index().ShapeIndex(), bufferAngle);
       regionUnion.Add(std::move(region));
