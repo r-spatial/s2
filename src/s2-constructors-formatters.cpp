@@ -4,7 +4,6 @@
 #include <Rinternals.h>
 
 #include "wk-v1.h"
-#include "s2geography.h"
 #include "geography.h"
 
 

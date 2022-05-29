@@ -1,6 +1,5 @@
 
-#ifndef S2GEOGRAPHY_H_INCLUDED
-#define S2GEOGRAPHY_H_INCLUDED
+#pragma once
 
 #include "s2geography/accessors-geog.h"
 #include "s2geography/accessors.h"
@@ -12,5 +11,3 @@
 #include "s2geography/index.h"
 #include "s2geography/linear-referencing.h"
 #include "s2geography/predicates.h"
-
-#endif
