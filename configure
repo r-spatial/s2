@@ -84,6 +84,7 @@ fi
 # Test if versioned linking works
 ${CC} ${PKG_CFLAGS} src/tests/main.c ${PKG_LIBS_VERSIONED} -o src/main.exe 2>/dev/null
 if [ $? -eq 0 ]; then PKG_LIBS="${PKG_LIBS_VERSIONED}"; fi
+rm src/main.exe || true
 
 # Suppress opensslv3 warnings for now
 if [ "$SONAME" = "3" ]; then

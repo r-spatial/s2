@@ -1,6 +1,6 @@
 
 test_that("s2_options() works", {
-  expect_is(s2_options(), "s2_options")
+  expect_s3_class(s2_options(), "s2_options")
 })
 
 test_that("s2_options() errors are readable", {

@@ -1,9 +1,9 @@
 
 test_that("s2_lnglat objects can be created from and converted back to R objects", {
   # in
-  expect_is(s2_lnglat(45, 64), "s2_lnglat")
+  expect_s3_class(s2_lnglat(45, 64), "s2_lnglat")
   expect_length(s2_lnglat(45, 64), 1)
-  expect_is(as_s2_lnglat(matrix(45, 64, ncol = 2)), "s2_lnglat")
+  expect_s3_class(as_s2_lnglat(matrix(45, 64, ncol = 2)), "s2_lnglat")
   lnglat <- s2_lnglat(45, 64)
   expect_identical(as_s2_lnglat(lnglat), lnglat)
   expect_identical(
@@ -68,7 +68,7 @@ test_that("s2_lnglat can be imported/exported to/from wkb and wkt", {
 
 test_that("s2_lnglat vectors can't have other types of objects concatenated or asssigned", {
   lnglat <- new_s2_xptr(list(NULL), class = "s2_lnglat")
-  expect_is(c(lnglat, lnglat), "s2_lnglat")
+  expect_s3_class(c(lnglat, lnglat), "s2_lnglat")
   expect_error(c(lnglat, new_s2_xptr(list(), class = "some_other_class")), "All items must inherit")
   expect_error(lnglat[1] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
   expect_error(lnglat[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")

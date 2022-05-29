@@ -262,7 +262,7 @@ test_that("s2_union(x) works with polygons that have overlapping input regions",
   txt <- "MULTIPOLYGON (((0 0, 0 1, 1 1, 1 0, 0 0)), ((0.1 0.9, 0.1 1.9, 1.1 1.9, 1.1 0.9, 0.1 0.9)))"
   # geos::geos_unary_union(txt) %>% as_wkb() %>% s2_area(radius = 1)
   unioned <- s2_union(as_s2_geography(txt, check = F))
-  expect_equal(s2_area(unioned, radius = 1), 0.0005817275)
+  expect_equal(round(s2_area(unioned, radius = 1), 12), 0.00058172748)
 
   # two outer loops, one valid inner loop
   # geos::geos_unary_union(txt2) %>% as_wkb() %>% s2_area(radius = 1)
@@ -271,7 +271,7 @@ test_that("s2_union(x) works with polygons that have overlapping input regions",
     ((0.1 0.9, 0.1 1.9, 1.1 1.9, 1.1 0.9, 0.1 0.9))
   )"
   unioned <- s2_union(as_s2_geography(txt2, check = F))
-  expect_equal(s2_area(unioned, radius = 1), 0.0005329892)
+  expect_equal(round(s2_area(unioned, radius = 1), 12), 0.000532989259)
 })
 
 test_that("s2_union(x) errors for the case of mixed dimension collections", {
@@ -609,7 +609,7 @@ test_that("real data survives the S2BooleanOperation", {
 
   for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor
-    unioned <- expect_is(s2_coverage_union_agg(s2_data_countries(continent)), "s2_geography")
+    unioned <- expect_s3_class(s2_coverage_union_agg(s2_data_countries(continent)), "s2_geography")
 
     # this is a test of RGeography::Export() on potentially complex polygons
     exported <- expect_length(s2_as_binary(unioned), 1)

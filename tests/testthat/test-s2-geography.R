@@ -25,7 +25,7 @@ test_that("s2_geography vectors can be put in a data frame", {
 
 test_that("s2_geography vectors can't have other types of objects concatenated or asssigned", {
   geog <- new_s2_xptr(list(NULL), class = "s2_geography")
-  expect_is(c(geog, geog), "s2_geography")
+  expect_s3_class(c(geog, geog), "s2_geography")
   expect_error(c(geog, new_s2_xptr(list(), class = "some_other_class")), "All items must inherit")
   expect_error(geog[1] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
   expect_error(geog[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
