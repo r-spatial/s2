@@ -28,7 +28,7 @@ LogicalVector cpp_s2_intersects(List geog1, List geog2, List s2options) {
   class Op: public BinaryPredicateOperator {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       return s2geography::s2_intersects(feature1->Index(), feature2->Index(), options);
     };
   };
@@ -43,7 +43,7 @@ LogicalVector cpp_s2_equals(List geog1, List geog2, List s2options) {
   class Op: public BinaryPredicateOperator {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       return s2geography::s2_equals(feature1->Index(), feature2->Index(), options);
     }
   };
@@ -57,7 +57,7 @@ LogicalVector cpp_s2_contains(List geog1, List geog2, List s2options) {
   class Op: public BinaryPredicateOperator {
   public:
     Op(List s2options): BinaryPredicateOperator(s2options) {}
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       return s2geography::s2_contains(feature1->Index(), feature2->Index(), options);
     }
   };
@@ -80,7 +80,7 @@ LogicalVector cpp_s2_touches(List geog1, List geog2, List s2options) {
       this->openOptions.set_polyline_model(S2BooleanOperation::PolylineModel::OPEN);
     }
 
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       return s2geography::s2_intersects(feature1->Index(), feature2->Index(), this->closedOptions) &&
         !s2geography::s2_intersects(feature1->Index(), feature2->Index(), this->openOptions);
     }
@@ -103,12 +103,12 @@ LogicalVector cpp_s2_dwithin(List geog1, List geog2, NumericVector distance) {
   class Op: public BinaryGeographyOperator<LogicalVector, int> {
   public:
     NumericVector distance;
-    Geography* geog2_id;
+    RGeography* geog2_id;
     std::unique_ptr<S2ClosestEdgeQuery> query;
 
     Op(NumericVector distance): distance(distance), geog2_id(nullptr) {}
 
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       if (feature2.get() != geog2_id) {
         this->query = absl::make_unique<S2ClosestEdgeQuery>(&feature2->Index().ShapeIndex());
         this->geog2_id = feature2.get();
@@ -134,14 +134,14 @@ LogicalVector cpp_s2_prepared_dwithin(List geog1, List geog2, NumericVector dist
     NumericVector distance;
     S2RegionCoverer coverer;
     std::vector<S2CellId> covering;
-    Geography* covering_id;
+    RGeography* covering_id;
     std::unique_ptr<S2ClosestEdgeQuery> query;
     MutableS2ShapeIndex::Iterator iterator;
 
     Op(NumericVector distance):
       distance(distance), covering_id(nullptr) {}
 
-    int processFeature(XPtr<Geography> feature1, XPtr<Geography> feature2, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature1, XPtr<RGeography> feature2, R_xlen_t i) {
       S1ChordAngle distance_angle = S1ChordAngle::Radians(this->distance[i]);
 
       // Update the query and covering on y if needed
@@ -197,7 +197,7 @@ LogicalVector cpp_s2_intersects_box(List geog,
       this->options = options.booleanOperationOptions();
     }
 
-    int processFeature(XPtr<Geography> feature, R_xlen_t i) {
+    int processFeature(XPtr<RGeography> feature, R_xlen_t i) {
       // construct polygon
       // this might be easier with an s2region intersection
       double xmin = this->lng1[i];

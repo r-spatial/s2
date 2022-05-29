@@ -12,5 +12,5 @@ using namespace Rcpp;
 List s2_geography_full(LogicalVector x) { // create single geography with full polygon
   std::unique_ptr<S2Loop> l = absl::make_unique<S2Loop>(S2Loop::kFull());
   std::unique_ptr<S2Polygon> p = absl::make_unique<S2Polygon>(std::move(l));
-  return List::create(Geography::MakeXPtr(Geography::MakePolygon(std::move(p))));
+  return List::create(RGeography::MakeXPtr(RGeography::MakePolygon(std::move(p))));
 }

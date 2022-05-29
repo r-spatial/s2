@@ -611,7 +611,7 @@ test_that("real data survives the S2BooleanOperation", {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor
     unioned <- expect_is(s2_coverage_union_agg(s2_data_countries(continent)), "s2_geography")
 
-    # this is a test of Geography::Export() on potentially complex polygons
+    # this is a test of RGeography::Export() on potentially complex polygons
     exported <- expect_length(s2_as_binary(unioned), 1)
 
     # the output WKB should load as a polygon with oriented = TRUE and result in the

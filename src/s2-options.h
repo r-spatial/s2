@@ -10,7 +10,7 @@
 #include "s2/s2builderutil_s2polyline_vector_layer.h"
 #include "s2/s2builderutil_s2point_vector_layer.h"
 
-#include "s2-geography/s2-geography.hpp"
+#include "s2geography.h"
 
 // This class wraps several concepts in the S2BooleanOperation,
 // and S2Layer, parameterized such that these can be specified from R

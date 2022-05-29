@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "s2/s2boolean_operation.h"
+#include <s2/s2boolean_operation.h>
 
-#include "geography.hpp"
+#include "geography.h"
 
 namespace s2geography {
 
@@ -28,4 +28,4 @@ bool s2_intersects_box(const ShapeIndexGeography& geog1,
                        const S2BooleanOperation::Options& options,
                        double tolerance);
 
-}
+}  // namespace s2geography

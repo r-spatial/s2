@@ -29,7 +29,7 @@ public:
       if (item == R_NilValue) {
         output[i] = VectorType::get_na();
       } else {
-        Rcpp::XPtr<Geography> feature(item);
+        Rcpp::XPtr<RGeography> feature(item);
 
         try {
           output[i] = this->processFeature(feature, i);
@@ -50,7 +50,7 @@ public:
     return output;
   }
 
-  virtual ScalarType processFeature(Rcpp::XPtr<Geography> feature, R_xlen_t i) = 0;
+  virtual ScalarType processFeature(Rcpp::XPtr<RGeography> feature, R_xlen_t i) = 0;
 };
 
 
@@ -72,14 +72,14 @@ public:
 
     for (R_xlen_t i = 0; i < geog1.size(); i++) {
       Rcpp::checkUserInterrupt();
-      
+
       item1 = geog1[i];
       item2 = geog2[i];
       if (item1 ==  R_NilValue || item2 == R_NilValue) {
         output[i] = VectorType::get_na();
       } else {
-        Rcpp::XPtr<Geography> feature1(item1);
-        Rcpp::XPtr<Geography> feature2(item2);
+        Rcpp::XPtr<RGeography> feature1(item1);
+        Rcpp::XPtr<RGeography> feature2(item2);
 
         try {
           output[i] = processFeature(feature1, feature2, i);
@@ -100,8 +100,8 @@ public:
     return output;
   }
 
-  virtual ScalarType processFeature(Rcpp::XPtr<Geography> feature1,
-                                    Rcpp::XPtr<Geography> feature2,
+  virtual ScalarType processFeature(Rcpp::XPtr<RGeography> feature1,
+                                    Rcpp::XPtr<RGeography> feature2,
                                     R_xlen_t i) = 0;
 };
 
