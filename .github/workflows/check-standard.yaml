@@ -20,7 +20,7 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: '3.6'}
-          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'release', ssl_backend: 'openssl'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -45,6 +45,8 @@ jobs:
           extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v1
+        env:
+          CURL_SSL_BACKEND: ${{ matrix.config.ssl_backend }}
 
       - name: Show install output
         if: always()
