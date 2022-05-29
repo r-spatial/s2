@@ -3,8 +3,8 @@
 
 #include <sstream>
 
-#include "s2geography/geoarrow-imports.h"
-#include "s2geography/geography.h"
+#include "geoarrow-imports.h"
+#include "geography.h"
 
 namespace s2geography {
 

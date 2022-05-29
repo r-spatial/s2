@@ -1,5 +1,5 @@
 
-#include "s2geography/build.h"
+#include "build.h"
 
 #include <s2/s2boolean_operation.h>
 #include <s2/s2builder.h>
@@ -8,8 +8,8 @@
 #include <s2/s2builderutil_s2polygon_layer.h>
 #include <s2/s2builderutil_s2polyline_vector_layer.h>
 
-#include "s2geography/accessors.h"
-#include "s2geography/geography.h"
+#include "accessors.h"
+#include "geography.h"
 
 namespace s2geography {
 

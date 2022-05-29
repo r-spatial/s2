@@ -5,8 +5,8 @@
 #include <s2/s2builderutil_s2polygon_layer.h>
 #include <s2/s2builderutil_s2polyline_vector_layer.h>
 
-#include "s2geography/aggregator.h"
-#include "s2geography/geography.h"
+#include "aggregator.h"
+#include "geography.h"
 
 namespace s2geography {
 

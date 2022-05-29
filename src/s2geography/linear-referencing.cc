@@ -1,9 +1,9 @@
 
-#include "s2geography/linear-referencing.h"
+#include "linear-referencing.h"
 
-#include "s2geography/accessors.h"
-#include "s2geography/build.h"
-#include "s2geography/geography.h"
+#include "accessors.h"
+#include "build.h"
+#include "geography.h"
 
 namespace s2geography {
 

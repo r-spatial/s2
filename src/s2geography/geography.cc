@@ -1,5 +1,5 @@
 
-#include "s2geography/geography.h"
+#include "geography.h"
 
 #include <s2/mutable_s2shape_index.h>
 #include <s2/s2point_region.h>
