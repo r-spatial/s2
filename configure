@@ -31,14 +31,14 @@ elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
   PKG_LIBS=${PKGCONFIG_LIBS}
 elif [ `uname` = "Darwin" ]; then
-  brew --version 2>/dev/null
+  test ! "$CI" && brew --version 2>/dev/null
   if [ $? -eq 0 ]; then
-    BREWDIR=`brew --prefix openssl@1.1`
-    PKG_CFLAGS="-I$BREWDIR/include"
-    PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
+    BREWDIR=`brew --prefix`
+    PKG_CFLAGS="-I$BREWDIR/opt/openssl/include -I$BREWDIR/opt/openssl@1.1/include"
+    PKG_LIBS="-L$BREWDIR/opt/openssl/lib -L$BREWDIR/opt/openssl@1.1/lib $PKG_LIBS"
   else
     curl -sfL "https://autobrew.github.io/scripts/$PKG_BREW_NAME" > autobrew
-    . autobrew
+    . ./autobrew
   fi
 fi
 
@@ -83,7 +83,7 @@ fi
 
 # Test if versioned linking works
 ${CC} ${PKG_CFLAGS} src/tests/main.c ${PKG_LIBS_VERSIONED} -o src/main.exe 2>/dev/null
-if [ $? -eq 0 ]; then PKG_LIBS="${PKG_LIBS_VERSIONED}"; rm src/main.exe; fi
+if [ $? -eq 0 ]; then PKG_LIBS="${PKG_LIBS_VERSIONED}"; fi
 
 # Suppress opensslv3 warnings for now
 if [ "$SONAME" = "3" ]; then
