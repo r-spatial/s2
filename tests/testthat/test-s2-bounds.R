@@ -1,7 +1,7 @@
 
 test_that("s2_bounds_cap works", {
   cap_ant <- s2_data_countries("Antarctica")
-  expect_is(s2_bounds_cap(cap_ant), "data.frame")
+  expect_s3_class(s2_bounds_cap(cap_ant), "data.frame")
   expect_identical(nrow(s2_bounds_cap(cap_ant)), 1L)
   expect_true(s2_bounds_cap(cap_ant)$lat < -80)
   expect_true(s2_bounds_cap(cap_ant)$angle > 20)
@@ -14,7 +14,7 @@ test_that("s2_bounds_cap works", {
 
 test_that("s2_bounds_rect works", {
   rect_ant <- s2_bounds_rect(s2_data_countries("Antarctica"))
-  expect_is(rect_ant, "data.frame")
+  expect_s3_class(rect_ant, "data.frame")
   expect_named(rect_ant, c("lng_lo", "lat_lo", "lng_hi", "lat_hi"))
   expect_identical(nrow(s2_bounds_rect(s2_data_countries(c("Antarctica", "Netherlands")))), 2L)
   expect_equal(rect_ant$lng_lo, -180)

@@ -1,9 +1,9 @@
 
 test_that("s2_point objects can be created from and converted back to R objects", {
   # in
-  expect_is(s2_point(1, 2, 3), "s2_point")
+  expect_s3_class(s2_point(1, 2, 3), "s2_point")
   expect_length(s2_point(1, 2, 3), 1)
-  expect_is(as_s2_point(matrix(1, 2, 3, ncol = 3)), "s2_point")
+  expect_s3_class(as_s2_point(matrix(1, 2, 3, ncol = 3)), "s2_point")
   point <- s2_point(1, 2, 3)
   expect_identical(as_s2_point(point), point)
   expect_identical(
@@ -39,7 +39,7 @@ test_that("s2_point objects can be created from and converted back to R objects"
 
 test_that("s2_point vectors can't have other types of objects concatenated or asssigned", {
   point <- new_s2_xptr(list(NULL), class = "s2_point")
-  expect_is(c(point, point), "s2_point")
+  expect_s3_class(c(point, point), "s2_point")
   expect_error(c(point, new_s2_xptr(list(), class = "some_other_class")), "All items must inherit")
   expect_error(point[1] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
   expect_error(point[[1]] <- new_s2_xptr(list(NULL), class = "some_other_class"), "no applicable method")
@@ -48,7 +48,7 @@ test_that("s2_point vectors can't have other types of objects concatenated or as
 test_that("s2_point can be imported from s2_geography", {
   expect_equal(
     as.data.frame(as_s2_point(as_s2_geography("POINT (-64 45)"))),
-    as.data.frame(as_s2_point(as_s2_lnglat(as_s2_geography("POINT (-64 45)")))),
+    as.data.frame(as_s2_point(as_s2_lnglat(as_s2_geography("POINT (-64 45)"))))
   )
 })
 
