@@ -215,3 +215,19 @@ test_that("the s2_geography_writer() works", {
     )
   }
 })
+
+test_that("the s2_trans_point() and s2_trans_lnglat() work", {
+  lng_lats <- s2_lnglat(-179:179, 45)
+  points <- as_s2_point(lng_lats)
+  expect_identical(as_s2_lnglat(lng_lats), lng_lats)
+
+  expect_equal(
+    wk::wk_transform(lng_lats, s2_trans_point()),
+    wk::wk_set_crs(points, NULL)
+  )
+
+  expect_equal(
+    wk::wk_transform(points, s2_trans_lnglat()),
+    wk::wk_set_crs(lng_lats, NULL)
+  )
+})

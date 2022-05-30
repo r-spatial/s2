@@ -87,6 +87,18 @@ s2_geography_writer <- function(oriented = FALSE, check = TRUE) {
 
 #' @rdname s2_unprojection_filter
 #' @export
+s2_trans_point <- function() {
+  wk::new_wk_trans(.Call(c_s2_trans_s2_point_new))
+}
+
+#' @rdname s2_unprojection_filter
+#' @export
+s2_trans_lnglat <- function() {
+  wk::new_wk_trans(.Call(c_s2_trans_s2_lnglat_new))
+}
+
+#' @rdname s2_unprojection_filter
+#' @export
 s2_projection_plate_carree <- function() {
   .Call(c_s2_projection_plate_carree)
 }

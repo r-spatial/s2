@@ -1359,6 +1359,8 @@ RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
 RcppExport SEXP c_s2_projection_mercator();
 RcppExport SEXP c_s2_projection_plate_carree();
+RcppExport SEXP c_s2_trans_s2_lnglat_new();
+RcppExport SEXP c_s2_trans_s2_point_new();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
@@ -1478,6 +1480,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"c_s2_handle_geography",        (DL_FUNC) &c_s2_handle_geography,        2},
     {"c_s2_projection_mercator",     (DL_FUNC) &c_s2_projection_mercator,     0},
     {"c_s2_projection_plate_carree", (DL_FUNC) &c_s2_projection_plate_carree, 0},
+    {"c_s2_trans_s2_lnglat_new",     (DL_FUNC) &c_s2_trans_s2_lnglat_new,     0},
+    {"c_s2_trans_s2_point_new",      (DL_FUNC) &c_s2_trans_s2_point_new,      0},
     {NULL, NULL, 0}
 };
 

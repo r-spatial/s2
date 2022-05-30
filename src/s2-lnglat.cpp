@@ -5,6 +5,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#include "wk-v1.h"
+
 // [[Rcpp::export]]
 List s2_lnglat_from_s2_point(List s2_point) {
   NumericVector x = s2_point[0];
@@ -45,4 +47,41 @@ List s2_point_from_s2_lnglat(List s2_lnglat) {
   }
 
   return List::create(_["x"] = x, _["y"] = y, _["z"] = z);
+}
+
+int s2_point_trans(R_xlen_t feature_id, const double* xyzm_in, double* xyzm_out, void* trans_data) {
+    S2Point pt = S2LatLng::FromDegrees(xyzm_in[1], xyzm_in[0]).Normalized().ToPoint();
+    xyzm_out[0] = pt.x();
+    xyzm_out[1] = pt.y();
+    xyzm_out[2] = pt.z();
+    return WK_CONTINUE;
+}
+
+void trans_s2_point_lnglat_finalize(void* trans_data) {
+
+}
+
+extern "C" SEXP c_s2_trans_s2_point_new() {
+    wk_trans_t* trans = wk_trans_create();
+    trans->use_z = 1;
+
+    trans->trans = &s2_point_trans;
+    trans->finalizer = &trans_s2_point_lnglat_finalize;
+    return wk_trans_create_xptr(trans, R_NilValue, R_NilValue);
+}
+
+int s2_lnglat_trans(R_xlen_t feature_id, const double* xyzm_in, double* xyzm_out, void* trans_data) {
+    S2LatLng pt(S2Point(xyzm_in[0], xyzm_in[1], xyzm_in[2]));
+    xyzm_out[0] = pt.lng().degrees();
+    xyzm_out[1] = pt.lat().degrees();
+    return WK_CONTINUE;
+}
+
+extern "C" SEXP c_s2_trans_s2_lnglat_new() {
+    wk_trans_t* trans = wk_trans_create();
+    trans->use_z = 0;
+
+    trans->trans = &s2_lnglat_trans;
+    trans->finalizer = &trans_s2_point_lnglat_finalize;
+    return wk_trans_create_xptr(trans, R_NilValue, R_NilValue);
 }
