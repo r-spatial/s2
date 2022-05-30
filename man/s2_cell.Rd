@@ -8,8 +8,7 @@
 \alias{as_s2_cell.s2_cell}
 \alias{as_s2_cell.character}
 \alias{as_s2_cell.s2_geography}
-\alias{as_s2_cell.s2_lnglat}
-\alias{as_s2_cell.s2_point}
+\alias{as_s2_cell.wk_xy}
 \alias{new_s2_cell}
 \title{Create S2 Cell vectors}
 \usage{
@@ -29,9 +28,7 @@ as_s2_cell(x, ...)
 
 \method{as_s2_cell}{s2_geography}(x, ...)
 
-\method{as_s2_cell}{s2_lnglat}(x, ...)
-
-\method{as_s2_cell}{s2_point}(x, ...)
+\method{as_s2_cell}{wk_xy}(x, ...)
 
 new_s2_cell(x)
 }

@@ -6,54 +6,43 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List s2_lnglat_from_numeric(NumericVector lng, NumericVector lat) {
-  List output(lat.size());
+List s2_lnglat_from_s2_point(List s2_point) {
+  NumericVector x = s2_point[0];
+  NumericVector y = s2_point[1];
+  NumericVector z = s2_point[2];
+
+  R_len_t n = x.size();
+  NumericVector lng(n);
+  NumericVector lat(n);
 
   S2LatLng item;
-  for (R_xlen_t i = 0; i < lat.size(); i++) {
-    item = S2LatLng::FromDegrees(lat[i], lng[i]);
-    output[i] = XPtr<S2LatLng>(new S2LatLng(item));
+  for (R_xlen_t i = 0; i < n; i++) {
+    item = S2LatLng(S2Point(x[i], y[i], z[i]));
+    lng[i] = item.lng().degrees();
+    lat[i] = item.lat().degrees();
   }
 
-  return output;
+  return List::create(_["x"] = lng, _["y"] = lat);
 }
 
 // [[Rcpp::export]]
-List s2_lnglat_from_s2_point(List s2_point) {
-  List output(s2_point.size());
+List s2_point_from_s2_lnglat(List s2_lnglat) {
+  NumericVector lng = s2_lnglat[0];
+  NumericVector lat = s2_lnglat[1];
 
-  SEXP item;
-  S2LatLng newItem;
-  for (R_xlen_t i = 0; i < s2_point.size(); i++) {
-    item = s2_point[i];
-    if (item == R_NilValue) {
-      output[i] = R_NilValue;
-    } else {
-      XPtr<S2Point> ptr(item);
-      output[i] = XPtr<S2LatLng>(new S2LatLng(*ptr));
-    }
+  R_len_t n = lng.size();
+
+  NumericVector x(n);
+  NumericVector y(n);
+  NumericVector z(n);
+
+  S2Point item;
+  for (R_xlen_t i = 0; i < n; i++) {
+    item = S2LatLng::FromDegrees(lat[i], lng[i]).Normalized().ToPoint();
+    x[i] = item.x();
+    y[i] = item.y();
+    z[i] = item.z();
   }
 
-  return output;
-}
-
-// [[Rcpp::export]]
-List data_frame_from_s2_lnglat(List xptr) {
-  NumericVector lng(xptr.size());
-  NumericVector lat(xptr.size());
-
-  SEXP item;
-  for (R_xlen_t i = 0; i < xptr.size(); i++) {
-    item = xptr[i];
-    if (item == R_NilValue) {
-      lng[i] = NA_REAL;
-      lat[i] = NA_REAL;
-    } else {
-      XPtr<S2LatLng> ptr(item);
-      lng[i] = ptr->lng().degrees();
-      lat[i] = ptr->lat().degrees();
-    }
-  }
-
-  return List::create(_["lng"] = lng, _["lat"] = lat);
+  return List::create(_["x"] = x, _["y"] = y, _["z"] = z);
 }
