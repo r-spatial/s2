@@ -99,7 +99,6 @@ OBJECTS = $(ABSL_LIBS) \
      s2-geography.o \
      s2-lnglat.o \
      s2-matrix.o \
-     s2-point.o \
      s2-xptr.o \
      wk-impl.o \
      wk-c-utils.o \

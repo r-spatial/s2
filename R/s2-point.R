@@ -2,7 +2,7 @@
 #' Create an S2 Point Vector
 #'
 #' In S2 terminology, a "point" is a 3-dimensional unit vector representation
-#' of an [s2_lnglat()]. Internally, all s2 objects are stored as
+#' of an [s2_point()]. Internally, all s2 objects are stored as
 #' 3-dimensional unit vectors.
 #'
 #' @param x,y,z Vectors of latitude and longitude values in degrees.
@@ -12,13 +12,23 @@
 #' @export
 #'
 #' @examples
-#' lnglat <- s2_lnglat(-64, 45) # Halifax, Nova Scotia!
-#' as_s2_point(lnglat)
-#' as.data.frame(as_s2_point(lnglat))
+#' point <- s2_lnglat(-64, 45) # Halifax, Nova Scotia!
+#' as_s2_point(point)
+#' as.data.frame(as_s2_point(point))
 #'
 s2_point <- function(x, y, z) {
-  recycled <- recycle_common(as.double(x), as.double(y), as.double(z))
-  new_s2_xptr(s2_point_from_numeric(recycled[[1]], recycled[[2]], recycled[[3]]), "s2_point")
+  wk::xyz(x, y, z, crs = s2_point_crs())
+}
+
+#' @rdname s2_point
+#' @export
+s2_point_crs <- function() {
+  structure(list(), class = "s2_point_crs")
+}
+
+#' @export
+format.s2_point_crs <- function(x, ...) {
+  "s2_point_crs"
 }
 
 #' @rdname s2_point
@@ -29,61 +39,30 @@ as_s2_point <- function(x, ...) {
 
 #' @rdname s2_point
 #' @export
-as_s2_point.s2_point <- function(x, ...) {
-  x
+as_s2_point.default <- function(x, ...) {
+  as_s2_point(wk::as_xy(x))
 }
 
 #' @rdname s2_point
 #' @export
-as_s2_point.s2_lnglat <- function(x, ...) {
-  new_s2_xptr(s2_point_from_s2_lnglat(x), "s2_point")
-}
-
-#' @rdname s2_point
-#' @export
-as_s2_point.s2_geography <- function(x, ...) {
-  as_s2_point(as_s2_lnglat(x))
-}
-
-#' @rdname s2_point
-#' @export
-as_s2_point.matrix <- function(x, ...) {
-  s2_point(x[, 1, drop = TRUE], x[, 2, drop = TRUE], x[, 3, drop = TRUE])
-}
-
-#' @rdname s2_point
-#' @export
-as.data.frame.s2_point <- function(x, ...) {
-  as.data.frame(data_frame_from_s2_point(x))
-}
-
-#' @rdname s2_point
-#' @export
-as.matrix.s2_point <- function(x, ...) {
-  as.matrix(as.data.frame(data_frame_from_s2_point(x)))
-}
-
-#' @export
-`[<-.s2_point` <- function(x, i, value) {
-  x <- unclass(x)
-  x[i] <- as_s2_point(value)
-  new_s2_xptr(x, "s2_point")
-}
-
-#' @export
-`[[<-.s2_point` <- function(x, i, value) {
-  x <- unclass(x)
-  x[i] <- as_s2_point(value)
-  new_s2_xptr(x, "s2_point")
-}
-
-#' @export
-format.s2_point <- function(x, ...) {
-  df <- as.data.frame(x)
-  sprintf(
-    "[%s %s %s]",
-    format(df$x, trim = TRUE),
-    format(df$y, trim = TRUE),
-    format(df$z, trim = TRUE)
+as_s2_point.wk_xy <- function(x, ...) {
+  stopifnot(wk::wk_crs_equal(wk::wk_crs(x), wk::wk_crs_longlat()))
+  wk::new_wk_xyz(
+    s2_point_from_s2_lnglat(x),
+    crs = s2_point_crs()
   )
+}
+
+#' @rdname s2_point
+#' @export
+as_s2_point.wk_xyz <- function(x, ...) {
+  wk::wk_set_crs(
+    wk::as_xy(x, dims = c("x", "y", "z")),
+    s2_point_crs()
+  )
+}
+
+#' @export
+as_s2_point.character <- function(x, ...) {
+  as_s2_point(wk::new_wk_wkt(x))
 }

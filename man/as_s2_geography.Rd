@@ -4,8 +4,7 @@
 \alias{as_s2_geography}
 \alias{s2_geography}
 \alias{as_s2_geography.s2_geography}
-\alias{as_s2_geography.s2_lnglat}
-\alias{as_s2_geography.s2_point}
+\alias{as_s2_geography.wk_xy}
 \alias{as_s2_geography.wk_wkb}
 \alias{as_s2_geography.WKB}
 \alias{as_s2_geography.blob}
@@ -22,9 +21,7 @@ s2_geography()
 
 \method{as_s2_geography}{s2_geography}(x, ...)
 
-\method{as_s2_geography}{s2_lnglat}(x, ...)
-
-\method{as_s2_geography}{s2_point}(x, ...)
+\method{as_s2_geography}{wk_xy}(x, ...)
 
 \method{as_s2_geography}{wk_wkb}(x, ..., oriented = FALSE, check = TRUE)
 

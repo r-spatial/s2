@@ -748,18 +748,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_lnglat_from_numeric
-List s2_lnglat_from_numeric(NumericVector lng, NumericVector lat);
-RcppExport SEXP _s2_s2_lnglat_from_numeric(SEXP lngSEXP, SEXP latSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type lng(lngSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_lnglat_from_numeric(lng, lat));
-    return rcpp_result_gen;
-END_RCPP
-}
 // s2_lnglat_from_s2_point
 List s2_lnglat_from_s2_point(List s2_point);
 RcppExport SEXP _s2_s2_lnglat_from_s2_point(SEXP s2_pointSEXP) {
@@ -771,14 +759,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// data_frame_from_s2_lnglat
-List data_frame_from_s2_lnglat(List xptr);
-RcppExport SEXP _s2_data_frame_from_s2_lnglat(SEXP xptrSEXP) {
+// s2_point_from_s2_lnglat
+List s2_point_from_s2_lnglat(List s2_lnglat);
+RcppExport SEXP _s2_s2_point_from_s2_lnglat(SEXP s2_lnglatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type xptr(xptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2_lnglat(xptr));
+    Rcpp::traits::input_parameter< List >::type s2_lnglat(s2_lnglatSEXP);
+    rcpp_result_gen = Rcpp::wrap(s2_point_from_s2_lnglat(s2_lnglat));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1013,41 +1001,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
     Rcpp::traits::input_parameter< double >::type distance(distanceSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_dwithin_matrix_brute_force(geog1, geog2, distance));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_point_from_numeric
-List s2_point_from_numeric(NumericVector x, NumericVector y, NumericVector z);
-RcppExport SEXP _s2_s2_point_from_numeric(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_point_from_numeric(x, y, z));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_point_from_s2_lnglat
-List s2_point_from_s2_lnglat(List s2_lnglat);
-RcppExport SEXP _s2_s2_point_from_s2_lnglat(SEXP s2_lnglatSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_lnglat(s2_lnglatSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_point_from_s2_lnglat(s2_lnglat));
-    return rcpp_result_gen;
-END_RCPP
-}
-// data_frame_from_s2_point
-List data_frame_from_s2_point(List s2_point);
-RcppExport SEXP _s2_data_frame_from_s2_point(SEXP s2_pointSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_point(s2_pointSEXP);
-    rcpp_result_gen = Rcpp::wrap(data_frame_from_s2_point(s2_point));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1406,6 +1359,8 @@ RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
 RcppExport SEXP c_s2_projection_mercator();
 RcppExport SEXP c_s2_projection_plate_carree();
+RcppExport SEXP c_s2_trans_s2_lnglat_new();
+RcppExport SEXP c_s2_trans_s2_point_new();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
@@ -1472,9 +1427,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
-    {"_s2_s2_lnglat_from_numeric", (DL_FUNC) &_s2_s2_lnglat_from_numeric, 2},
     {"_s2_s2_lnglat_from_s2_point", (DL_FUNC) &_s2_s2_lnglat_from_s2_point, 1},
-    {"_s2_data_frame_from_s2_lnglat", (DL_FUNC) &_s2_data_frame_from_s2_lnglat, 1},
+    {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},
     {"_s2_cpp_s2_farthest_feature", (DL_FUNC) &_s2_cpp_s2_farthest_feature, 2},
     {"_s2_cpp_s2_closest_edges", (DL_FUNC) &_s2_cpp_s2_closest_edges, 5},
@@ -1493,9 +1447,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_disjoint_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_disjoint_matrix_brute_force, 3},
     {"_s2_cpp_s2_equals_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_equals_matrix_brute_force, 3},
     {"_s2_cpp_s2_dwithin_matrix_brute_force", (DL_FUNC) &_s2_cpp_s2_dwithin_matrix_brute_force, 3},
-    {"_s2_s2_point_from_numeric", (DL_FUNC) &_s2_s2_point_from_numeric, 3},
-    {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
-    {"_s2_data_frame_from_s2_point", (DL_FUNC) &_s2_data_frame_from_s2_point, 1},
     {"_s2_cpp_s2_intersects", (DL_FUNC) &_s2_cpp_s2_intersects, 3},
     {"_s2_cpp_s2_equals", (DL_FUNC) &_s2_cpp_s2_equals, 3},
     {"_s2_cpp_s2_contains", (DL_FUNC) &_s2_cpp_s2_contains, 3},
@@ -1529,6 +1480,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"c_s2_handle_geography",        (DL_FUNC) &c_s2_handle_geography,        2},
     {"c_s2_projection_mercator",     (DL_FUNC) &c_s2_projection_mercator,     0},
     {"c_s2_projection_plate_carree", (DL_FUNC) &c_s2_projection_plate_carree, 0},
+    {"c_s2_trans_s2_lnglat_new",     (DL_FUNC) &c_s2_trans_s2_lnglat_new,     0},
+    {"c_s2_trans_s2_point_new",      (DL_FUNC) &c_s2_trans_s2_point_new,      0},
     {NULL, NULL, 0}
 };
 

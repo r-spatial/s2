@@ -4,6 +4,8 @@
 \alias{s2_unprojection_filter}
 \alias{s2_projection_filter}
 \alias{s2_geography_writer}
+\alias{s2_trans_point}
+\alias{s2_trans_lnglat}
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
 \title{Low-level wk filters and handlers}
@@ -21,6 +23,10 @@ s2_projection_filter(
 )
 
 s2_geography_writer(oriented = FALSE, check = TRUE)
+
+s2_trans_point()
+
+s2_trans_lnglat()
 
 s2_projection_plate_carree()
 

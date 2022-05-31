@@ -46,15 +46,10 @@ as_s2_geography.s2_geography <- function(x, ...) {
 
 #' @rdname as_s2_geography
 #' @export
-as_s2_geography.s2_lnglat <- function(x, ...) {
-  df <- data_frame_from_s2_lnglat(x)
+as_s2_geography.wk_xy <- function(x, ...) {
+  x <- as_s2_lnglat(x)
+  df <- unclass(x)
   s2_geog_point(df[[1]], df[[2]])
-}
-
-#' @rdname as_s2_geography
-#' @export
-as_s2_geography.s2_point <- function(x, ...) {
-  as_s2_geography(as_s2_lnglat(x))
 }
 
 #' @rdname as_s2_geography

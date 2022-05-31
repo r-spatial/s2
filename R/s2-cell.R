@@ -84,14 +84,8 @@ as_s2_cell.s2_geography <- function(x, ...) {
 
 #' @rdname s2_cell
 #' @export
-as_s2_cell.s2_lnglat <- function(x, ...) {
-  cpp_s2_cell_from_lnglat(as.data.frame(x))
-}
-
-#' @rdname s2_cell
-#' @export
-as_s2_cell.s2_point <- function(x, ...) {
-  as_s2_cell(as_s2_lnglat(x))
+as_s2_cell.wk_xy <- function(x, ...) {
+  cpp_s2_cell_from_lnglat(as_s2_lnglat(x))
 }
 
 #' @rdname s2_cell

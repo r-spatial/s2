@@ -257,16 +257,12 @@ s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
 }
 
-s2_lnglat_from_numeric <- function(lng, lat) {
-    .Call(`_s2_s2_lnglat_from_numeric`, lng, lat)
-}
-
 s2_lnglat_from_s2_point <- function(s2_point) {
     .Call(`_s2_s2_lnglat_from_s2_point`, s2_point)
 }
 
-data_frame_from_s2_lnglat <- function(xptr) {
-    .Call(`_s2_data_frame_from_s2_lnglat`, xptr)
+s2_point_from_s2_lnglat <- function(s2_lnglat) {
+    .Call(`_s2_s2_point_from_s2_lnglat`, s2_lnglat)
 }
 
 cpp_s2_closest_feature <- function(geog1, geog2) {
@@ -339,18 +335,6 @@ cpp_s2_equals_matrix_brute_force <- function(geog1, geog2, s2options) {
 
 cpp_s2_dwithin_matrix_brute_force <- function(geog1, geog2, distance) {
     .Call(`_s2_cpp_s2_dwithin_matrix_brute_force`, geog1, geog2, distance)
-}
-
-s2_point_from_numeric <- function(x, y, z) {
-    .Call(`_s2_s2_point_from_numeric`, x, y, z)
-}
-
-s2_point_from_s2_lnglat <- function(s2_lnglat) {
-    .Call(`_s2_s2_point_from_s2_lnglat`, s2_lnglat)
-}
-
-data_frame_from_s2_point <- function(s2_point) {
-    .Call(`_s2_data_frame_from_s2_point`, s2_point)
 }
 
 cpp_s2_intersects <- function(geog1, geog2, s2options) {
