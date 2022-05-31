@@ -71,29 +71,14 @@ unit vector representation of this value.</p>
 
 <span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="co"># S3 method for s2_lnglat</span>
+<span class="co"># S3 method for default</span>
 <span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="co"># S3 method for s2_point</span>
+<span class="co"># S3 method for wk_xy</span>
 <span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="co"># S3 method for s2_geography</span>
-<span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_lnglat</span>
-<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_lnglat</span>
-<span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_lnglat</span>
-<span class="fu">as_wkb</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_lnglat</span>
-<span class="fu">as_wkt</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="co"># S3 method for wk_xyz</span>
+<span class="fu">as_s2_lnglat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,11 +98,11 @@ unit vector representation of this value.</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">s2_lnglat</span><span class="op">(</span><span class="fl">45</span>, <span class="op">-</span><span class="fl">64</span><span class="op">)</span> <span class="co"># Halifax, Nova Scotia!</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_lnglat[1]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] (45, -64)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;wk_xy[1] with CRS=OGC:CRS84&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] (45 -64)</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">s2_lnglat</span><span class="op">(</span><span class="fl">45</span>, <span class="op">-</span><span class="fl">64</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lng lat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  45 -64</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    x   y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 45 -64</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
