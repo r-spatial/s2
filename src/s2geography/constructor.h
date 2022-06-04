@@ -3,6 +3,8 @@
 
 #include <sstream>
 
+#include <s2/s2edge_tessellator.h>
+
 #include "geoarrow-imports.h"
 #include "geography.h"
 
@@ -14,28 +16,32 @@ class Constructor : public Handler {
  public:
   class Options {
    public:
-    Options() : oriented_(false), check_(true) {}
-    bool oriented() { return oriented_; }
+    Options() : oriented_(false), check_(true), tessellate_tolerance_(S1Angle::Infinity()) {}
+    bool oriented() const { return oriented_; }
     void set_oriented(bool oriented) { oriented_ = oriented; }
-    bool check() { return check_; }
+    bool check() const { return check_; }
     void set_check(bool check) { check_ = check; }
+    S1Angle tessellate_tolerance() const { return tessellate_tolerance_; }
+    void set_tessellate_tolerance(S1Angle tessellate_tolerance) {
+      tessellate_tolerance_ = tessellate_tolerance;
+    }
 
    private:
     bool oriented_;
     bool check_;
+    S1Angle tessellate_tolerance_;
   };
 
-  Constructor(const Options& options) : options_(options) {}
+  Constructor(const Options& options) :
+    options_(options),
+    projection_lnglat_(180),
+    tessellator_(new S2EdgeTessellator(&projection_lnglat_, options.tessellate_tolerance())) {}
 
   virtual ~Constructor() {}
 
-  Options* mutable_options() { return &options_; }
-
   virtual Result coords(const double* coord, int64_t n, int32_t coord_size) {
     for (int64_t i = 0; i < n; i++) {
-      S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1],
-                                          coord[i * coord_size]);
-      points_.push_back(pt.Normalized().ToPoint());
+      input_points_.push_back(R2Point(coord[i * coord_size], coord[i * coord_size + 1]));
     }
 
     return Result::CONTINUE;
@@ -44,8 +50,28 @@ class Constructor : public Handler {
   virtual std::unique_ptr<Geography> finish() = 0;
 
  protected:
+  std::vector<R2Point> input_points_;
   std::vector<S2Point> points_;
   Options options_;
+  S2::PlateCarreeProjection projection_lnglat_;
+  std::unique_ptr<S2EdgeTessellator> tessellator_;
+
+  void finish_points() {
+    points_.clear();
+    points_.reserve(input_points_.size());
+
+    if (options_.tessellate_tolerance() != S1Angle::Infinity()) {
+      for (size_t i = 1; i < input_points_.size(); i++) {
+        tessellator_->AppendUnprojected(input_points_[i - 1], input_points_[i], &points_);
+      }
+    } else {
+      for (const auto& input_point: input_points_) {
+        points_.push_back(projection_lnglat_.Unproject(input_point));
+      }
+    }
+
+    input_points_.clear();
+  }
 };
 
 class PointConstructor : public Constructor {
@@ -74,9 +100,8 @@ class PointConstructor : public Constructor {
         continue;
       }
 
-      S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1],
-                                          coord[i * coord_size]);
-      points_.push_back(pt.ToPoint());
+      R2Point pt = R2Point(coord[i * coord_size], coord[i * coord_size + 1]);
+      points_.push_back(projection_lnglat_.Unproject(pt));
     }
 
     return Result::CONTINUE;
@@ -114,13 +139,15 @@ class PolylineConstructor : public Constructor {
     }
 
     if (size > 0 && geometry_type == util::GeometryType::LINESTRING) {
-      points_.reserve(size);
+      input_points_.reserve(size);
     }
 
     return Result::CONTINUE;
   }
 
   Result geom_end() {
+    finish_points();
+
     if (points_.size() > 0) {
       auto polyline = absl::make_unique<S2Polyline>();
       polyline->Init(std::move(points_));
@@ -131,7 +158,6 @@ class PolylineConstructor : public Constructor {
       }
 
       polylines_.push_back(std::move(polyline));
-      points_.clear();
     }
 
     return Result::CONTINUE;
@@ -160,20 +186,21 @@ class PolygonConstructor : public Constructor {
   PolygonConstructor(const Options& options) : Constructor(options) {}
 
   Result ring_start(int64_t size) {
-    points_.clear();
+    input_points_.clear();
     if (size > 0) {
-      points_.reserve(size);
+      input_points_.reserve(size);
     }
 
     return Result::CONTINUE;
   }
 
   Result ring_end() {
+    finish_points();
+
     if (points_.size() == 0) {
       return Result::CONTINUE;
     }
 
-    // S2Loop is open instead of closed
     points_.pop_back();
     auto loop = absl::make_unique<S2Loop>();
     loop->set_s2debug_override(S2Debug::DISABLE);
