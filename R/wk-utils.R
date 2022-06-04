@@ -74,12 +74,14 @@ wk_handle.s2_geography <- function(geog, handler, ...)  {
 
 #' @rdname s2_unprojection_filter
 #' @export
-s2_geography_writer <- function(oriented = FALSE, check = TRUE) {
+s2_geography_writer <- function(oriented = FALSE, check = TRUE,
+                                tessellate_tol = Inf) {
   wk::new_wk_handler(
     .Call(
       c_s2_geography_writer_new,
       as.logical(oriented)[1],
-      as.logical(check)[1]
+      as.logical(check)[1],
+      as.double(tessellate_tol[1])
     ),
     "s2_geography_writer"
   )

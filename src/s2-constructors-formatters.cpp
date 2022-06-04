@@ -231,15 +231,20 @@ void delete_vector_constructor(SEXP xptr) {
     }
 }
 
-extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp) {
+extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
+                                          SEXP tessellate_tolerance_sexp) {
   CPP_START
 
   int oriented = LOGICAL(oriented_sexp)[0];
   int check = LOGICAL(check_sexp)[0];
+  double tessellate_tolerance = REAL(tessellate_tolerance_sexp)[0];
 
   s2geography::util::Constructor::Options options;
   options.set_oriented(oriented);
   options.set_check(check);
+  if (tessellate_tolerance != R_PosInf) {
+    options.set_tessellate_tolerance(S1Angle::Radians(tessellate_tolerance));
+  }
 
   auto builder = new s2geography::util::FeatureConstructor(options);
   SEXP builder_xptr = PROTECT(R_MakeExternalPtr(builder, R_NilValue, R_NilValue));

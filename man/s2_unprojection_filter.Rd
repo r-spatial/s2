@@ -22,7 +22,7 @@ s2_projection_filter(
   tessellate_tol = Inf
 )
 
-s2_geography_writer(oriented = FALSE, check = TRUE)
+s2_geography_writer(oriented = FALSE, check = TRUE, tessellate_tol = Inf)
 
 s2_trans_point()
 
