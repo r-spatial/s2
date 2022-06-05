@@ -295,6 +295,9 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
   CPP_END
 }
 
+// The following defines exporting...it will hopefully be subsumed by a more general
+// approach supported by geoarrow and/or s2geography
+
 #define HANDLE_OR_RETURN(expr)                                 \
     result = expr;                                             \
     if (result != WK_CONTINUE) return result
@@ -303,8 +306,132 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
     result = expr;                                             \
     if (result == WK_ABORT_FEATURE) continue; else if (result == WK_ABORT) break
 
+class SimpleExporter {
+public:
+  SimpleExporter(): projection_lnglat_(180) {}
 
-int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler,
+  int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
+    int result;
+    R2Point out = projection_lnglat_.Project(point);
+    coord_[0] = out.x();
+    coord_[1] = out.y();
+    HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id, handler->handler_data));
+    return WK_CONTINUE;
+  }
+
+  void reset() {
+    coord_id_ = -1;
+  }
+
+  int coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+  int last_coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+  int last_coord_in_loop(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+private:
+  S2::PlateCarreeProjection projection_lnglat_;
+  int32_t coord_id_;
+  double coord_[4];
+};
+
+class TessellatingExporter {
+public:
+  class Options {
+  public:
+    Options(): tessellate_tolerance_(S1Angle::Infinity()) {}
+
+    S1Angle tessellate_tolerance() const { return tessellate_tolerance_; }
+    void set_tessellate_tolerance(S1Angle tessellate_tolerance) {
+      tessellate_tolerance_ = tessellate_tolerance;
+    }
+
+   private:
+    S1Angle tessellate_tolerance_;
+  };
+
+  TessellatingExporter(const Options& options):
+    options_(options),
+    projection_lnglat_(180),
+    tessellator_(new S2EdgeTessellator(&projection_lnglat_, options.tessellate_tolerance())) {}
+
+  int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
+    int result;
+    R2Point out = projection_lnglat_.Project(point);
+    coord_[0] = out.x();
+    coord_[1] = out.y();
+    HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id, handler->handler_data));
+    return WK_CONTINUE;
+  }
+
+  void reset() {
+    is_first_point_ = true;
+    coord_id_ = -1;
+  }
+
+  int coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    int result;
+
+    if (is_first_point_) {
+      is_first_point_ = false;
+      most_recent_ = point;
+      first_in_loop_ = point;
+      return WK_CONTINUE;
+    }
+
+    points_out_.clear();
+    tessellator_->AppendProjected(most_recent_, point, &points_out_);
+    most_recent_ = point;
+
+    for (const R2Point& out: points_out_) {
+      coord_[0] = out.x();
+      coord_[1] = out.y();
+      coord_id_++;
+      HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id_, handler->handler_data));
+    }
+
+    return WK_CONTINUE;
+  }
+
+  int last_coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    int result;
+    HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
+    HANDLE_OR_RETURN(coord_point(meta, point, coord_id_, handler));
+    return WK_CONTINUE;
+  }
+
+  int last_coord_in_loop(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    int result;
+    HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
+    HANDLE_OR_RETURN(coord_point(meta, first_in_loop_, coord_id_, handler));
+    return WK_CONTINUE;
+  }
+
+private:
+  Options options_;
+  S2::PlateCarreeProjection projection_lnglat_;
+  std::unique_ptr<S2EdgeTessellator> tessellator_;
+  bool is_first_point_;
+  int32_t coord_id_;
+  S2Point first_in_loop_;
+  S2Point most_recent_;
+  std::vector<R2Point> points_out_;
+  double coord_[4];
+};
+
+template <typename EdgeExporterT>
+int handle_points(const s2geography::PointGeography& geog,
+                  EdgeExporterT& exporter,
+                  wk_handler_t* handler,
                   uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -315,7 +442,6 @@ int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler
   wk_meta_t meta_child;
   WK_META_RESET(meta_child, WK_POINT);
   meta_child.size = 1;
-  double coord[2];
 
   if (meta.size == 0) {
     meta_child.size = 0;
@@ -323,20 +449,14 @@ int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler
     HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
   } else if (meta.size == 1) {
     HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
-    S2LatLng pt(geog.Points()[0]);
-    coord[0] = pt.lng().degrees();
-    coord[1] = pt.lat().degrees();
-    HANDLE_OR_RETURN(handler->coord(&meta_child, coord, 0, handler->handler_data));
+    HANDLE_OR_RETURN(exporter.coord_point(&meta_child, geog.Points()[0], 0, handler));
     HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
   } else {
     HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
 
     for (size_t i = 0; i < geog.Points().size(); i++) {
       HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
-      S2LatLng pt(geog.Points()[i]);
-      coord[0] = pt.lng().degrees();
-      coord[1] = pt.lat().degrees();
-      HANDLE_OR_RETURN(handler->coord(&meta_child, coord, 0, handler->handler_data));
+      HANDLE_OR_RETURN(exporter.coord_point(&meta_child, geog.Points()[i], 0, handler));
       HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
     }
 
@@ -346,7 +466,10 @@ int handle_points(const s2geography::PointGeography& geog, wk_handler_t* handler
   return WK_CONTINUE;
 }
 
-int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* handler,
+template <typename EdgeExporterT>
+int handle_polylines(const s2geography::PolylineGeography& geog,
+                     EdgeExporterT& exporter,
+                     wk_handler_t* handler,
                      uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -356,7 +479,6 @@ int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* h
 
   wk_meta_t meta_child;
   WK_META_RESET(meta_child, WK_LINESTRING);
-  double coord[2];
 
   if (meta.size == 0) {
     meta_child.size = 0;
@@ -367,11 +489,13 @@ int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* h
     meta_child.size = poly.num_vertices();
     HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
 
+    exporter.reset();
     for (int j = 0; j < poly.num_vertices(); j++) {
-      S2LatLng pt(poly.vertex(j));
-      coord[0] = pt.lng().degrees();
-      coord[1] = pt.lat().degrees();
-      HANDLE_OR_RETURN(handler->coord(&meta_child, coord, j, handler->handler_data));
+      if (j < (poly.num_vertices() - 1)) {
+        HANDLE_OR_RETURN(exporter.coord_in_series(&meta_child, poly.vertex(j), handler));
+      } else {
+        HANDLE_OR_RETURN(exporter.last_coord_in_series(&meta_child, poly.vertex(j), handler));
+      }
     }
 
     HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
@@ -383,11 +507,13 @@ int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* h
       meta_child.size = poly.num_vertices();
       HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
 
+      exporter.reset();
       for (int j = 0; j < poly.num_vertices(); j++) {
-        S2LatLng pt(poly.vertex(j));
-        coord[0] = pt.lng().degrees();
-        coord[1] = pt.lat().degrees();
-        HANDLE_OR_RETURN(handler->coord(&meta_child, coord, j, handler->handler_data));
+        if (j < (poly.num_vertices() - 1)) {
+          HANDLE_OR_RETURN(exporter.coord_in_series(&meta_child, poly.vertex(j), handler));
+        } else {
+          HANDLE_OR_RETURN(exporter.last_coord_in_series(&meta_child, poly.vertex(j), handler));
+        }
       }
 
       HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
@@ -399,9 +525,11 @@ int handle_polylines(const s2geography::PolylineGeography& geog, wk_handler_t* h
   return WK_CONTINUE;
 }
 
-int handle_loop_shell(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
+template <typename EdgeExporterT>
+int handle_loop_shell(const S2Loop* loop,
+                      EdgeExporterT& exporter,
+                      const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
   int result;
-  double coord[2];
 
   if (loop->num_vertices() == 0) {
     return handler->error("Unexpected S2Loop with 0 vertices", handler->handler_data);
@@ -409,20 +537,21 @@ int handle_loop_shell(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_i
 
   HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
 
-  for (int i = 0; i <= loop->num_vertices(); i++) {
-    S2LatLng pt(loop->vertex(i));
-    coord[0] = pt.lng().degrees();
-    coord[1] = pt.lat().degrees();
-    HANDLE_OR_RETURN(handler->coord(meta, coord, i, handler->handler_data));
+  exporter.reset();
+  for (int i = 0; i < loop->num_vertices(); i++) {
+    HANDLE_OR_RETURN(exporter.coord_in_series(meta, loop->vertex(i), handler));
   }
+  HANDLE_OR_RETURN(exporter.last_coord_in_loop(meta, loop->vertex(loop->num_vertices()), handler));
 
   HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
   return WK_CONTINUE;
 }
 
-int handle_loop_hole(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
+template <typename EdgeExporterT>
+int handle_loop_hole(const S2Loop* loop,
+                     EdgeExporterT& exporter,
+                     const wk_meta_t* meta, uint32_t loop_id, wk_handler_t* handler) {
   int result;
-  double coord[2];
 
   if (loop->num_vertices() == 0) {
     return handler->error("Unexpected S2Loop with 0 vertices", handler->handler_data);
@@ -430,34 +559,29 @@ int handle_loop_hole(const S2Loop* loop, const wk_meta_t* meta, uint32_t loop_id
 
   HANDLE_OR_RETURN(handler->ring_start(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
 
-  uint32_t coord_id = 0;
+  exporter.reset();
   for (int i = loop->num_vertices() - 1; i >= 0; i--) {
-    S2LatLng pt(loop->vertex(i));
-    coord[0] = pt.lng().degrees();
-    coord[1] = pt.lat().degrees();
-    HANDLE_OR_RETURN(handler->coord(meta, coord, coord_id, handler->handler_data));
-    coord_id++;
+    HANDLE_OR_RETURN(exporter.coord_in_series(meta, loop->vertex(i), handler));
   }
-
-  S2LatLng pt(loop->vertex(loop->num_vertices() - 1));
-  coord[0] = pt.lng().degrees();
-  coord[1] = pt.lat().degrees();
-  HANDLE_OR_RETURN(handler->coord(meta, coord, coord_id, handler->handler_data));
+  HANDLE_OR_RETURN(exporter.last_coord_in_loop(meta, loop->vertex(loop->num_vertices() - 1), handler));
 
   HANDLE_OR_RETURN(handler->ring_end(meta, loop->num_vertices() + 1, loop_id, handler->handler_data));
   return WK_CONTINUE;
 }
 
-int handle_shell(const S2Polygon& poly, const wk_meta_t* meta, int loop_start, wk_handler_t* handler) {
+template <typename EdgeExporterT>
+int handle_shell(const S2Polygon& poly,
+                 EdgeExporterT& exporter,
+                 const wk_meta_t* meta, int loop_start, wk_handler_t* handler) {
   int result;
   const S2Loop* loop0 = poly.loop(loop_start);
-  HANDLE_OR_RETURN(handle_loop_shell(loop0, meta, 0, handler));
+  HANDLE_OR_RETURN(handle_loop_shell<EdgeExporterT>(loop0, exporter, meta, 0, handler));
 
   uint32_t loop_id = 1;
   for (int j = loop_start + 1; j <= poly.GetLastDescendant(loop_start); j++) {
     const S2Loop* loop = poly.loop(j);
     if (loop->depth() == (loop0->depth() + 1)) {
-      HANDLE_OR_RETURN(handle_loop_hole(loop, meta, loop_id, handler));
+      HANDLE_OR_RETURN(handle_loop_hole<EdgeExporterT>(loop, exporter, meta, loop_id, handler));
       loop_id++;
     }
   }
@@ -465,7 +589,10 @@ int handle_shell(const S2Polygon& poly, const wk_meta_t* meta, int loop_start, w
   return WK_CONTINUE;
 }
 
-int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* handler,
+template <typename EdgeExporterT>
+int handle_polygon(const s2geography::PolygonGeography& geog,
+                   EdgeExporterT& exporter,
+                   wk_handler_t* handler,
                    uint32_t part_id = WK_PART_ID_NONE) {
   const S2Polygon& poly = *geog.Polygon();
 
@@ -510,7 +637,7 @@ int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* hand
   } else if (meta.size == 1) {
     meta_child.size = outer_shell_loop_sizes[0];
     HANDLE_OR_RETURN(handler->geometry_start(&meta_child, part_id, handler->handler_data));
-    HANDLE_OR_RETURN(handle_shell(poly, &meta_child, outer_shell_loop_ids[0], handler));
+    HANDLE_OR_RETURN(handle_shell<EdgeExporterT>(poly, exporter, &meta_child, outer_shell_loop_ids[0], handler));
     HANDLE_OR_RETURN(handler->geometry_end(&meta_child, part_id, handler->handler_data));
   } else {
     HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
@@ -518,7 +645,7 @@ int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* hand
     for (size_t i = 0; i < outer_shell_loop_sizes.size(); i++) {
       meta_child.size = outer_shell_loop_sizes[i];
       HANDLE_OR_RETURN(handler->geometry_start(&meta_child, i, handler->handler_data));
-      HANDLE_OR_RETURN(handle_shell(poly, &meta_child, outer_shell_loop_ids[i], handler));
+      HANDLE_OR_RETURN(handle_shell<EdgeExporterT>(poly, exporter, &meta_child, outer_shell_loop_ids[i], handler));
       HANDLE_OR_RETURN(handler->geometry_end(&meta_child, i, handler->handler_data));
     }
 
@@ -528,7 +655,10 @@ int handle_polygon(const s2geography::PolygonGeography& geog, wk_handler_t* hand
   return WK_CONTINUE;
 }
 
-int handle_collection(const s2geography::GeographyCollection& geog, wk_handler_t* handler,
+template <typename EdgeExporterT>
+int handle_collection(const s2geography::GeographyCollection& geog,
+                      EdgeExporterT& exporter,
+                      wk_handler_t* handler,
                       uint32_t part_id = WK_PART_ID_NONE) {
   int result;
 
@@ -542,25 +672,25 @@ int handle_collection(const s2geography::GeographyCollection& geog, wk_handler_t
 
     auto child_point = dynamic_cast<const s2geography::PointGeography*>(child_ptr);
     if (child_point != nullptr) {
-      HANDLE_OR_RETURN(handle_points(*child_point, handler, i));
+      HANDLE_OR_RETURN(handle_points<EdgeExporterT>(*child_point, exporter, handler, i));
       continue;
     }
 
     auto child_polyline = dynamic_cast<const s2geography::PolylineGeography*>(child_ptr);
     if (child_polyline != nullptr) {
-      HANDLE_OR_RETURN(handle_polylines(*child_polyline, handler, i));
+      HANDLE_OR_RETURN(handle_polylines<EdgeExporterT>(*child_polyline, exporter, handler, i));
       continue;
     }
 
     auto child_polygon = dynamic_cast<const s2geography::PolygonGeography*>(child_ptr);
     if (child_polygon != nullptr) {
-      HANDLE_OR_RETURN(handle_polygon(*child_polygon, handler, i));
+      HANDLE_OR_RETURN(handle_polygon<EdgeExporterT>(*child_polygon, exporter, handler, i));
       continue;
     }
 
     auto child_collection = dynamic_cast<const s2geography::GeographyCollection*>(child_ptr);
     if (child_collection != nullptr) {
-      HANDLE_OR_RETURN(handle_collection(*child_collection, handler, i));
+      HANDLE_OR_RETURN(handle_collection<EdgeExporterT>(*child_collection, exporter, handler, i));
       continue;
     }
 
@@ -571,7 +701,8 @@ int handle_collection(const s2geography::GeographyCollection& geog, wk_handler_t
   return WK_CONTINUE;
 }
 
-SEXP handle_geography(SEXP data, wk_handler_t* handler) {
+template <typename EdgeExporterT>
+SEXP handle_geography_templ(SEXP data, EdgeExporterT& exporter, wk_handler_t* handler) {
   R_xlen_t n_features = Rf_xlength(data);
 
     wk_vector_meta_t vector_meta;
@@ -596,19 +727,19 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
 
           auto child_point = dynamic_cast<const s2geography::PointGeography*>(geog_ptr);
           if (child_point != nullptr) {
-            HANDLE_CONTINUE_OR_BREAK(handle_points(*child_point, handler));
+            HANDLE_CONTINUE_OR_BREAK(handle_points<EdgeExporterT>(*child_point, exporter, handler));
           } else {
             auto child_polyline = dynamic_cast<const s2geography::PolylineGeography*>(geog_ptr);
             if (child_polyline != nullptr) {
-              HANDLE_CONTINUE_OR_BREAK(handle_polylines(*child_polyline, handler));
+              HANDLE_CONTINUE_OR_BREAK(handle_polylines<EdgeExporterT>(*child_polyline, exporter, handler));
             } else {
               auto child_polygon = dynamic_cast<const s2geography::PolygonGeography*>(geog_ptr);
               if (child_polygon != nullptr) {
-                HANDLE_CONTINUE_OR_BREAK(handle_polygon(*child_polygon, handler));
+                HANDLE_CONTINUE_OR_BREAK(handle_polygon<EdgeExporterT>(*child_polygon, exporter, handler));
               } else {
                 auto child_collection = dynamic_cast<const s2geography::GeographyCollection*>(geog_ptr);
                 if (child_collection != nullptr) {
-                  HANDLE_CONTINUE_OR_BREAK(handle_collection(*child_collection, handler));
+                  HANDLE_CONTINUE_OR_BREAK(handle_collection<EdgeExporterT>(*child_collection, exporter, handler));
                 } else {
                   HANDLE_CONTINUE_OR_BREAK(
                     handler->error("Unsupported S2Geography subclass", handler->handler_data));
@@ -629,6 +760,20 @@ SEXP handle_geography(SEXP data, wk_handler_t* handler) {
     return result;
 }
 
+SEXP handle_geography(SEXP data, wk_handler_t* handler) {
+  SimpleExporter exporter;
+  return handle_geography_templ<SimpleExporter>(data, exporter, handler);
+}
+
 extern "C" SEXP c_s2_handle_geography(SEXP data, SEXP handler_xptr) {
     return wk_handler_run_xptr(&handle_geography, data, handler_xptr);
+}
+
+SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
+  SimpleExporter exporter;
+  return handle_geography_templ<SimpleExporter>(data, exporter, handler);
+}
+
+extern "C" SEXP c_s2_handle_geography_tessellated(SEXP data, SEXP handler_xptr) {
+    return wk_handler_run_xptr(&handle_geography_tessellated, data, handler_xptr);
 }

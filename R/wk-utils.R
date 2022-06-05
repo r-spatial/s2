@@ -4,8 +4,9 @@
 #' @inheritParams wk::wk_handle
 #' @param projection One of [s2_projection_plate_carree()] or
 #'   [s2_projection_mercator()]
-#' @param tessellate_tol An angle in radians. Points will not be added
-#'   if a line segment is within this distance of a point.
+#' @param tessellate_tol,s2_tessellate_tol An angle in radians.
+#'   Points will not be added if a line segment is within this
+#'   distance of a point.
 #' @inheritParams as_s2_geography
 #'
 #' @return
@@ -68,8 +69,13 @@ s2_projection_filter <- function(handler, projection = s2_projection_plate_carre
 
 #' @importFrom wk wk_handle
 #' @export
-wk_handle.s2_geography <- function(geog, handler, ...)  {
-  .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
+wk_handle.s2_geography <- function(geog, handler, ..., s2_tessellate_tol = Inf)  {
+  if (identical(s2_tessellate_tol, Inf)) {
+    .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
+  } else {
+    attr(geog, "s2_tessellate_tol") <- as.double(s2_tessellate_tol)[1]
+    .Call(c_s2_handle_geography_tessellated, geog, wk::as_wk_handler(handler))
+  }
 }
 
 #' @rdname s2_unprojection_filter

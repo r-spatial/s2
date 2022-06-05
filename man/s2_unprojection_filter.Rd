@@ -38,8 +38,9 @@ s2_projection_mercator()
 \item{projection}{One of \code{\link[=s2_projection_plate_carree]{s2_projection_plate_carree()}} or
 \code{\link[=s2_projection_mercator]{s2_projection_mercator()}}}
 
-\item{tessellate_tol}{An angle in radians. Points will not be added
-if a line segment is within this distance of a point.}
+\item{tessellate_tol, s2_tessellate_tol}{An angle in radians.
+Points will not be added if a line segment is within this
+distance of a point.}
 
 \item{oriented}{TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
