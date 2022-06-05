@@ -392,9 +392,9 @@ public:
     tessellator_->AppendProjected(most_recent_, point, &points_out_);
     most_recent_ = point;
 
-    for (const R2Point& out: points_out_) {
-      coord_[0] = out.x();
-      coord_[1] = out.y();
+    for (int i = 0; i < (points_out_.size() - 1); i++) {
+      coord_[0] = points_out_[i].x();
+      coord_[1] = points_out_[i].y();
       coord_id_++;
       HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id_, handler->handler_data));
     }
@@ -405,6 +405,7 @@ public:
   int last_coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
     int result;
     HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
+    coord_id_++;
     HANDLE_OR_RETURN(coord_point(meta, point, coord_id_, handler));
     return WK_CONTINUE;
   }
@@ -412,6 +413,7 @@ public:
   int last_coord_in_loop(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
     int result;
     HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
+    coord_id_++;
     HANDLE_OR_RETURN(coord_point(meta, first_in_loop_, coord_id_, handler));
     return WK_CONTINUE;
   }
@@ -770,8 +772,14 @@ extern "C" SEXP c_s2_handle_geography(SEXP data, SEXP handler_xptr) {
 }
 
 SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
-  SimpleExporter exporter;
-  return handle_geography_templ<SimpleExporter>(data, exporter, handler);
+  SEXP tessellate_tolerance_sexp = Rf_getAttrib(data, Rf_install("s2_tessellate_tol"));
+  double tessellate_tol = REAL(tessellate_tolerance_sexp)[0];
+  TessellatingExporter::Options options;
+  options.set_tessellate_tolerance(S1Angle::Radians(tessellate_tol));
+
+  TessellatingExporter exporter(options);
+
+  return handle_geography_templ<TessellatingExporter>(data, exporter, handler);
 }
 
 extern "C" SEXP c_s2_handle_geography_tessellated(SEXP data, SEXP handler_xptr) {
