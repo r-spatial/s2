@@ -279,3 +279,36 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
       sum(s2_num_points(s2_data_countries()))
   )
 })
+
+test_that("wk_handle + tessellate_tol works", {
+  tol <- 100000 / s2_earth_radius_meters()
+
+  expect_equal(
+    wk::wk_handle(
+      as_s2_geography(s2_lnglat(0, 0)),
+      wk::xy_writer(),
+      s2_tessellate_tol = tol
+    ),
+    wk::xy(0, 0)
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      as_s2_geography("LINESTRING (0 0, 0 45, -60 45)"),
+      s2_geography_writer(),
+      s2_tessellate_tol = tol
+    ) %>%
+      s2_num_points(),
+    6L
+  )
+
+  expect_identical(
+    wk::wk_handle(
+      as_s2_geography("POLYGON ((0 0, 0 45, -60 45, 0 0))"),
+      s2_geography_writer(),
+      s2_tessellate_tol = tol
+    ) %>%
+      s2_num_points(),
+    8L
+  )
+})
