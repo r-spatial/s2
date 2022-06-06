@@ -1,10 +1,31 @@
 
+#' Plot S2 Geographies
+#'
+#' @inheritParams wk::wk_plot
+#' @param plot_hemisphere Plot the outline of the earth
+#' @param centre The longitude/latitude point of the centre of the
+#'   orthographic projection
+#'
+#' @return The input, invisibly
 #' @export
-plot.s2_geography <- function(x, ..., asp = 1, xlab = "", ylab = "",
-                              rule = "evenodd", add = FALSE,
-                              plot_hemisphere = FALSE,
-                              centre = s2_centroid_agg(x, na.rm = TRUE)) {
-  # get the projected bbox before plotting
+#'
+#' @examples
+#' s2_plot(s2_data_countries())
+#' s2_plot(s2_data_cities(), add = TRUE)
+#'
+s2_plot <- function(x, ..., asp = 1, xlab = "", ylab = "",
+                   rule = "evenodd", add = FALSE,
+                   plot_hemisphere = FALSE,
+                   centre = NULL) {
+  x <- as_s2_geography(x)
+
+  if (add) {
+    last <- last_plot_env$centre
+    centre <- if (is.null(last)) s2_lnglat(0, 0) else last
+  } else if (is.null(centre)) {
+    centre <- s2_centroid_agg(x, na.rm = TRUE)
+  }
+
   centre <- as_s2_lnglat(centre)
   projection <- s2_projection_orthographic(centre)
   hemisphere_bounds_poly <- cap_to_polygon(centre, (pi / 2) - 1e-5)
@@ -26,6 +47,10 @@ plot.s2_geography <- function(x, ..., asp = 1, xlab = "", ylab = "",
     asp = asp, xlab = xlab, ylab = ylab,
     add = add
   )
+
+  if (!add) {
+    last_plot_env$centre <- centre
+  }
 
   if (plot_hemisphere) {
     wk::wk_plot(wk::crc(0, 0, 1), add = TRUE)
@@ -77,6 +102,28 @@ plot.s2_geography <- function(x, ..., asp = 1, xlab = "", ylab = "",
   invisible(x)
 }
 
+#' @export
+plot.s2_geography <- function(x, ...) {
+  s2_plot(x, ...)
+}
+
+#' @export
+plot.s2_cell_union <- function(x, ...) {
+  s2_plot(x, ...)
+  invisible(x)
+}
+
+#' @export
+plot.s2_cell <- function(x, ...) {
+  if (all(s2_cell_is_leaf(x), na.rm = TRUE)) {
+    s2_plot(s2_cell_center(x), ...)
+  } else {
+    s2_plot(s2_cell_polygon(x), ...)
+  }
+
+  invisible(x)
+}
+
 cap_to_polygon <- function(centre = s2_lnglat(0, 0), radius_rad) {
   centre <- as_s2_lnglat(centre)
   rad_proj <- sin(radius_rad)
@@ -92,3 +139,6 @@ cap_to_polygon <- function(centre = s2_lnglat(0, 0), radius_rad) {
   )
   s2_make_polygon(s2_x(points_s2), s2_y(points_s2))
 }
+
+last_plot_env <- new.env(parent = emptyenv())
+last_plot_env$centre <- NULL
