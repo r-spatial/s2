@@ -9,7 +9,13 @@
 \alias{s2_projection_mercator}
 \title{Low-level wk filters and handlers}
 \usage{
-\method{wk_handle}{s2_geography}(geog, handler, ..., s2_tessellate_tol = Inf)
+\method{wk_handle}{s2_geography}(
+  handleable,
+  handler,
+  ...,
+  s2_projection = s2_projection_plate_carree(),
+  s2_tessellate_tol = Inf
+)
 
 s2_geography_writer(
   oriented = FALSE,
@@ -27,6 +33,9 @@ s2_projection_plate_carree(x_scale = 180)
 s2_projection_mercator(x_scale = 20037508.3427892)
 }
 \arguments{
+\item{handleable}{A geometry vector (e.g., \code{\link[wk:wkb]{wkb()}}, \code{\link[wk:wkt]{wkt()}}, \code{\link[wk:xy]{xy()}},
+\code{\link[wk:rct]{rct()}}, or \code{\link[sf:sfc]{sf::st_sfc()}}) for which \code{\link[wk:wk_handle]{wk_handle()}} is defined.}
+
 \item{handler}{A \link[wk:wk_handle]{wk_handler} object.}
 
 \item{...}{Passed to the \code{\link[wk:wk_handle]{wk_handle()}} method.}
@@ -37,7 +46,7 @@ rings are defined clockwise).}
 
 \item{check}{Use \code{check = FALSE} to skip error on invalid geometries}
 
-\item{projection}{One of \code{\link[=s2_projection_plate_carree]{s2_projection_plate_carree()}} or
+\item{projection, s2_projection}{One of \code{\link[=s2_projection_plate_carree]{s2_projection_plate_carree()}} or
 \code{\link[=s2_projection_mercator]{s2_projection_mercator()}}}
 
 \item{tessellate_tol, s2_tessellate_tol}{An angle in radians.

@@ -2,7 +2,7 @@
 #' Low-level wk filters and handlers
 #'
 #' @inheritParams wk::wk_handle
-#' @param projection One of [s2_projection_plate_carree()] or
+#' @param projection,s2_projection One of [s2_projection_plate_carree()] or
 #'   [s2_projection_mercator()]
 #' @param tessellate_tol,s2_tessellate_tol An angle in radians.
 #'   Points will not be added if a line segment is within this
@@ -15,17 +15,17 @@
 #' @importFrom wk wk_handle
 #' @export
 #'
-wk_handle.s2_geography <- function(geog, handler, ...,
+wk_handle.s2_geography <- function(handleable, handler, ...,
                                    s2_projection = s2_projection_plate_carree(),
                                    s2_tessellate_tol = Inf)  {
   stopifnot(inherits(s2_projection, "s2_projection"))
-  attr(geog, "s2_projection") <- s2_projection
+  attr(handleable, "s2_projection") <- s2_projection
 
   if (identical(s2_tessellate_tol, Inf)) {
-    .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
+    .Call(c_s2_handle_geography, handleable, wk::as_wk_handler(handler))
   } else {
-    attr(geog, "s2_tessellate_tol") <- as.double(s2_tessellate_tol)[1]
-    .Call(c_s2_handle_geography_tessellated, geog, wk::as_wk_handler(handler))
+    attr(handleable, "s2_tessellate_tol") <- as.double(s2_tessellate_tol)[1]
+    .Call(c_s2_handle_geography_tessellated, handleable, wk::as_wk_handler(handler))
   }
 }
 
