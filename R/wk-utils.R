@@ -15,7 +15,12 @@
 #' @importFrom wk wk_handle
 #' @export
 #'
-wk_handle.s2_geography <- function(geog, handler, ..., s2_tessellate_tol = Inf)  {
+wk_handle.s2_geography <- function(geog, handler, ...,
+                                   s2_projection = s2_projection_plate_carree(),
+                                   s2_tessellate_tol = Inf)  {
+  stopifnot(inherits(s2_projection, "s2_projection"))
+  attr(geog, "s2_projection") <- s2_projection
+
   if (identical(s2_tessellate_tol, Inf)) {
     .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
   } else {

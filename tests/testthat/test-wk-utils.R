@@ -143,6 +143,33 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
   )
 })
 
+test_that("wk_handle() for s2_geography works with s2_projection_mercator()", {
+  # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
+  geog <- wk::wk_handle(
+    wk::xy(3339584.72379821, 1118889.97485796),
+    s2_geography_writer(projection = s2_projection_mercator())
+  )
+
+  expect_equal(
+    wk::wk_handle(
+      geog,
+      wk::xy_writer(),
+      s2_projection = s2_projection_mercator()
+    ),
+    wk::xy(3339584.72379821, 1118889.97485796)
+  )
+
+  expect_equal(
+    wk::wk_handle(
+      geog,
+      wk::xy_writer(),
+      s2_projection = s2_projection_mercator(),
+      s2_tessellate_tol = 1e10
+    ),
+    wk::xy(3339584.72379821, 1118889.97485796)
+  )
+})
+
 test_that("s2_geography_writer() works with s2_projection_mercator()", {
   # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
   expect_equal(

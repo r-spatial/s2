@@ -311,11 +311,11 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
 
 class SimpleExporter {
 public:
-  SimpleExporter(): projection_lnglat_(180) {}
+  SimpleExporter(const s2geography::util::Constructor::Options& options): options_(options) {}
 
   int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
     int result;
-    R2Point out = projection_lnglat_.Project(point);
+    R2Point out = options_.projection()->Project(point);
     coord_[0] = out.x();
     coord_[1] = out.y();
     HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id, handler->handler_data));
@@ -342,34 +342,20 @@ public:
   }
 
 private:
-  S2::PlateCarreeProjection projection_lnglat_;
+  s2geography::util::Constructor::Options options_;
   int32_t coord_id_;
   double coord_[4];
 };
 
 class TessellatingExporter {
 public:
-  class Options {
-  public:
-    Options(): tessellate_tolerance_(S1Angle::Infinity()) {}
-
-    S1Angle tessellate_tolerance() const { return tessellate_tolerance_; }
-    void set_tessellate_tolerance(S1Angle tessellate_tolerance) {
-      tessellate_tolerance_ = tessellate_tolerance;
-    }
-
-   private:
-    S1Angle tessellate_tolerance_;
-  };
-
-  TessellatingExporter(const Options& options):
+  TessellatingExporter(const s2geography::util::Constructor::Options& options):
     options_(options),
-    projection_lnglat_(180),
-    tessellator_(new S2EdgeTessellator(&projection_lnglat_, options.tessellate_tolerance())) {}
+    tessellator_(new S2EdgeTessellator(options.projection(), options.tessellate_tolerance())) {}
 
   int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
     int result;
-    R2Point out = projection_lnglat_.Project(point);
+    R2Point out = options_.projection()->Project(point);
     coord_[0] = out.x();
     coord_[1] = out.y();
     HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id, handler->handler_data));
@@ -422,8 +408,7 @@ public:
   }
 
 private:
-  Options options_;
-  S2::PlateCarreeProjection projection_lnglat_;
+  s2geography::util::Constructor::Options options_;
   std::unique_ptr<S2EdgeTessellator> tessellator_;
   bool is_first_point_;
   int32_t coord_id_;
@@ -774,7 +759,12 @@ void finalize_cpp_xptr(SEXP xptr) {
 }
 
 SEXP handle_geography(SEXP data, wk_handler_t* handler) {
-  auto exporter = new SimpleExporter();
+  SEXP projection_xptr = Rf_getAttrib(data, Rf_install("s2_projection"));
+  auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
+  s2geography::util::Constructor::Options options;
+  options.set_projection(projection);
+
+  auto exporter = new SimpleExporter(options);
   SEXP exporter_shelter = PROTECT(R_MakeExternalPtr(exporter, R_NilValue, R_NilValue));
   R_RegisterCFinalizer(exporter_shelter, &finalize_cpp_xptr<SimpleExporter>);
 
@@ -788,10 +778,13 @@ extern "C" SEXP c_s2_handle_geography(SEXP data, SEXP handler_xptr) {
 }
 
 SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
+  SEXP projection_xptr = Rf_getAttrib(data, Rf_install("s2_projection"));
+  auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
   SEXP tessellate_tolerance_sexp = Rf_getAttrib(data, Rf_install("s2_tessellate_tol"));
   double tessellate_tol = REAL(tessellate_tolerance_sexp)[0];
 
-  TessellatingExporter::Options options;
+  s2geography::util::Constructor::Options options;
+  options.set_projection(projection);
   options.set_tessellate_tolerance(S1Angle::Radians(tessellate_tol));
 
   auto exporter = new TessellatingExporter(options);
