@@ -7,6 +7,7 @@
 \alias{s2_trans_lnglat}
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
+\alias{s2_projection_orthographic}
 \title{Low-level wk filters and handlers}
 \usage{
 \method{wk_handle}{s2_geography}(
@@ -31,6 +32,8 @@ s2_trans_lnglat()
 s2_projection_plate_carree(x_scale = 180)
 
 s2_projection_mercator(x_scale = 20037508.3427892)
+
+s2_projection_orthographic(centre = s2_lnglat(0, 0))
 }
 \arguments{
 \item{handleable}{A geometry vector (e.g., \code{\link[wk:wkb]{wkb()}}, \code{\link[wk:wkt]{wkt()}}, \code{\link[wk:xy]{xy()}},
@@ -54,6 +57,8 @@ Points will not be added if a line segment is within this
 distance of a point.}
 
 \item{x_scale}{The maximum x value of the projection}
+
+\item{centre}{The center point of the orthographic projection}
 }
 \value{
 \itemize{

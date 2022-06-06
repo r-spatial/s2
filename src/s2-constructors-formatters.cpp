@@ -3,6 +3,8 @@
 #include <R.h>
 #include <Rinternals.h>
 
+#include "s2/s2pointutil.h"
+
 #include "wk-v1.h"
 #include "geography.h"
 
@@ -796,6 +798,47 @@ SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
   return result;
 }
 
+class OrthographicProjection: public S2::Projection {
+public:
+  OrthographicProjection(const S2Point& centre): centre_(centre) {
+    S2Point centre0 = S2LatLng::FromDegrees(0, 0).ToPoint();
+    angle_ = S1Angle(centre0, centre);
+    axis_ = S2::RobustCrossProd(centre, centre0).Normalize();
+  }
+
+  // Converts a point on the sphere to a projected 2D point.
+  R2Point Project(const S2Point& p) const {
+    S2Point rotated = S2::Rotate(p, axis_, angle_);
+    return R2Point(rotated.y(), rotated.z());
+  }
+
+  // Converts a projected 2D point to a point on the sphere.
+  S2Point Unproject(const R2Point& p) const {
+    double y = p.x();
+    double z = p.y();
+    double x = sqrt(1.0 - y * y - z * z);
+    S2Point pp(x, y, z);
+    S2Point out = S2::Rotate(pp.Normalize(), -axis_, angle_);
+    return out;
+  }
+
+  R2Point FromLatLng(const S2LatLng& ll) const {
+    return Project(ll.ToPoint());
+  }
+
+  S2LatLng ToLatLng(const R2Point& p) const {
+    return S2LatLng(Unproject(p));
+  }
+
+  R2Point wrap_distance() const {return R2Point(0, 0); }
+
+private:
+  S2Point centre_;
+  S2Point axis_;
+  S1Angle angle_;
+};
+
+
 extern "C" SEXP c_s2_handle_geography_tessellated(SEXP data, SEXP handler_xptr) {
     return wk_handler_run_xptr(&handle_geography_tessellated, data, handler_xptr);
 }
@@ -816,6 +859,17 @@ extern "C" SEXP c_s2_projection_mercator(SEXP x_scale_sexp) {
   auto projection = new S2::MercatorProjection(x_scale);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
   R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  UNPROTECT(1);
+  return xptr;
+}
+
+extern "C" SEXP c_s2_projection_orthographic(SEXP centre_sexp) {
+  S2LatLng centre =
+    S2LatLng::FromDegrees(REAL(centre_sexp)[1], REAL(centre_sexp)[0]);
+
+  auto projection = new OrthographicProjection(centre.ToPoint());
+  SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<OrthographicProjection>);
   UNPROTECT(1);
   return xptr;
 }

@@ -8,6 +8,7 @@
 #'   Points will not be added if a line segment is within this
 #'   distance of a point.
 #' @param x_scale The maximum x value of the projection
+#' @param centre The center point of the orthographic projection
 #' @inheritParams as_s2_geography
 #'
 #' @return
@@ -75,6 +76,18 @@ s2_projection_plate_carree <- function(x_scale = 180) {
 s2_projection_mercator <- function(x_scale = 20037508.3427892) {
   structure(
     .Call(c_s2_projection_mercator, as.double(x_scale)[1]),
+    class = "s2_projection"
+  )
+}
+
+#' @rdname wk_handle.s2_geography
+#' @export
+s2_projection_orthographic <- function(centre = s2_lnglat(0, 0)) {
+  centre <- as_s2_lnglat(centre)
+  centre <- as.matrix(centre)
+
+  structure(
+    .Call(c_s2_projection_orthographic, centre[1:2]),
     class = "s2_projection"
   )
 }

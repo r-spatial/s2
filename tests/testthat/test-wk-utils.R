@@ -182,3 +182,37 @@ test_that("s2_geography_writer() works with s2_projection_mercator()", {
     wk::xy(30, 10, crs = wk::wk_crs_longlat())
   )
 })
+
+test_that("wk_handle() for s2_geography works with s2_projection_orthographic()", {
+  geog <- as_s2_geography(c("POINT (0 0)", "POINT (0 45)", "POINT (45 0)"))
+  result <- wk::wk_handle(
+    geog,
+    wk::xy_writer(),
+    s2_projection = s2_projection_orthographic()
+  )
+
+  expect_equal(
+    result,
+    wk::xy(
+      c(0, 0, sqrt(2) / 2),
+      c(0, sqrt(2) / 2, 0)
+    )
+  )
+})
+
+test_that("s2_geography_writer() works with s2_projection_mercator()", {
+  # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
+  xy <- wk::xy(
+    c(0, 0, sqrt(2) / 2),
+    c(0, sqrt(2) / 2, 0)
+  )
+
+  geog <- wk::wk_handle(
+    xy,
+    s2_geography_writer(projection = s2_projection_orthographic())
+  )
+  expect_identical(
+    s2_as_text(geog, precision = 5),
+    c("POINT (0 0)", "POINT (0 45)", "POINT (45 0)")
+  )
+})
