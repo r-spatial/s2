@@ -7,6 +7,7 @@
 #' @param tessellate_tol,s2_tessellate_tol An angle in radians.
 #'   Points will not be added if a line segment is within this
 #'   distance of a point.
+#' @param x_scale The maximum x value of the projection
 #' @inheritParams as_s2_geography
 #'
 #' @return
