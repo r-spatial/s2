@@ -89,6 +89,8 @@ s2_plot <- function(x, ..., asp = 1, xlab = "", ylab = "",
     x_hemisphere,
     wk::wkb_writer(),
     s2_projection = projection,
+    # if this is too small we can get a stack overflow since the
+    # tessellation is recursive
     s2_tessellate_tol = max(0.002, resolution_usr_rad * 4)
   )
 
