@@ -232,16 +232,19 @@ void delete_vector_constructor(SEXP xptr) {
 }
 
 extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
+                                          SEXP projection_xptr,
                                           SEXP tessellate_tolerance_sexp) {
   CPP_START
 
   int oriented = LOGICAL(oriented_sexp)[0];
   int check = LOGICAL(check_sexp)[0];
+  auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
   double tessellate_tolerance = REAL(tessellate_tolerance_sexp)[0];
 
   s2geography::util::Constructor::Options options;
   options.set_oriented(oriented);
   options.set_check(check);
+  options.set_projection(projection);
   if (tessellate_tolerance != R_PosInf) {
     options.set_tessellate_tolerance(S1Angle::Radians(tessellate_tolerance));
   }
@@ -288,7 +291,7 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
   // include the builder pointer as a tag for this external pointer
   // which guarnatees that it will not be garbage collected until
   // this object is garbage collected
-  SEXP handler_xptr = wk_handler_create_xptr(handler, builder_xptr, R_NilValue);
+  SEXP handler_xptr = wk_handler_create_xptr(handler, builder_xptr, projection_xptr);
   UNPROTECT(1);
   return handler_xptr;
 
@@ -802,4 +805,24 @@ SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
 
 extern "C" SEXP c_s2_handle_geography_tessellated(SEXP data, SEXP handler_xptr) {
     return wk_handler_run_xptr(&handle_geography_tessellated, data, handler_xptr);
+}
+
+extern "C" SEXP c_s2_projection_plate_carree(SEXP x_scale_sexp) {
+  double x_scale = REAL(x_scale_sexp)[0];
+
+  auto projection = new S2::PlateCarreeProjection(x_scale);
+  SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  UNPROTECT(1);
+  return xptr;
+}
+
+extern "C" SEXP c_s2_projection_mercator(SEXP x_scale_sexp) {
+  double x_scale = REAL(x_scale_sexp)[0];
+
+  auto projection = new S2::MercatorProjection(x_scale);
+  SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  UNPROTECT(1);
+  return xptr;
 }

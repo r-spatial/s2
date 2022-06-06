@@ -21,6 +21,8 @@ class Constructor : public Handler {
     void set_oriented(bool oriented) { oriented_ = oriented; }
     bool check() const { return check_; }
     void set_check(bool check) { check_ = check; }
+    S2::Projection* projection() const { return projection_; }
+    void set_projection(S2::Projection* projection) { projection_ = projection; }
     S1Angle tessellate_tolerance() const { return tessellate_tolerance_; }
     void set_tessellate_tolerance(S1Angle tessellate_tolerance) {
       tessellate_tolerance_ = tessellate_tolerance;
@@ -29,13 +31,13 @@ class Constructor : public Handler {
    private:
     bool oriented_;
     bool check_;
+    S2::Projection* projection_;
     S1Angle tessellate_tolerance_;
   };
 
   Constructor(const Options& options) :
     options_(options),
-    projection_lnglat_(180),
-    tessellator_(new S2EdgeTessellator(&projection_lnglat_, options.tessellate_tolerance())) {}
+    tessellator_(new S2EdgeTessellator(options.projection(), options.tessellate_tolerance())) {}
 
   virtual ~Constructor() {}
 
@@ -53,7 +55,6 @@ class Constructor : public Handler {
   std::vector<R2Point> input_points_;
   std::vector<S2Point> points_;
   Options options_;
-  S2::PlateCarreeProjection projection_lnglat_;
   std::unique_ptr<S2EdgeTessellator> tessellator_;
 
   void finish_points() {
@@ -66,7 +67,7 @@ class Constructor : public Handler {
       }
     } else {
       for (const auto& input_point: input_points_) {
-        points_.push_back(projection_lnglat_.Unproject(input_point));
+        points_.push_back(options_.projection()->Unproject(input_point));
       }
     }
 
@@ -76,7 +77,7 @@ class Constructor : public Handler {
 
 class PointConstructor : public Constructor {
  public:
-  PointConstructor() : Constructor(Options()) {}
+  PointConstructor(const Options& options) : Constructor(options) {}
 
   Result geom_start(util::GeometryType geometry_type, int64_t size) {
     if (size != 0 && geometry_type != util::GeometryType::POINT &&
@@ -101,7 +102,7 @@ class PointConstructor : public Constructor {
       }
 
       R2Point pt = R2Point(coord[i * coord_size], coord[i * coord_size + 1]);
-      points_.push_back(projection_lnglat_.Unproject(pt));
+      points_.push_back(options_.projection()->Unproject(pt));
     }
 
     return Result::CONTINUE;
@@ -252,6 +253,7 @@ class CollectionConstructor : public Constructor {
  public:
   CollectionConstructor(const Options& options)
       : Constructor(options),
+        point_constructor_(options),
         polyline_constructor_(options),
         polygon_constructor_(options),
         collection_constructor_(nullptr),
