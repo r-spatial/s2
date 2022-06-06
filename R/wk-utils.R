@@ -82,6 +82,12 @@ s2_projection_mercator <- function(x_scale = 20037508.3427892) {
 
 #' @rdname wk_handle.s2_geography
 #' @export
+s2_hemisphere <- function(centre) {
+  cap_to_polygon(centre, pi / 2)
+}
+
+#' @rdname wk_handle.s2_geography
+#' @export
 s2_projection_orthographic <- function(centre = s2_lnglat(0, 0)) {
   centre <- as_s2_lnglat(centre)
   centre <- as.matrix(centre)

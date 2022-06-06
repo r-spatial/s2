@@ -7,6 +7,7 @@
 \alias{s2_trans_lnglat}
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
+\alias{s2_hemisphere}
 \alias{s2_projection_orthographic}
 \title{Low-level wk filters and handlers}
 \usage{
@@ -32,6 +33,8 @@ s2_trans_lnglat()
 s2_projection_plate_carree(x_scale = 180)
 
 s2_projection_mercator(x_scale = 20037508.3427892)
+
+s2_hemisphere(centre)
 
 s2_projection_orthographic(centre = s2_lnglat(0, 0))
 }

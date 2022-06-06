@@ -800,16 +800,17 @@ SEXP handle_geography_tessellated(SEXP data, wk_handler_t* handler) {
 
 class OrthographicProjection: public S2::Projection {
 public:
-  OrthographicProjection(const S2Point& centre): centre_(centre) {
-    S2Point centre0 = S2LatLng::FromDegrees(0, 0).ToPoint();
-    angle_ = S1Angle(centre0, centre);
-    axis_ = S2::RobustCrossProd(centre, centre0).Normalize();
+  OrthographicProjection(const S2LatLng& centre):
+      centre_(centre) {
+    z_axis_ = S2Point(0, 0, 1);
+    y_axis_ = S2Point(0, 1, 0);
   }
 
   // Converts a point on the sphere to a projected 2D point.
   R2Point Project(const S2Point& p) const {
-    S2Point rotated = S2::Rotate(p, axis_, angle_);
-    return R2Point(rotated.y(), rotated.z());
+    S2Point out = S2::Rotate(p, z_axis_, centre_.lng());
+    out = S2::Rotate(out, y_axis_, centre_.lat());
+    return R2Point(out.y(), out.z());
   }
 
   // Converts a projected 2D point to a point on the sphere.
@@ -818,7 +819,8 @@ public:
     double z = p.y();
     double x = sqrt(1.0 - y * y - z * z);
     S2Point pp(x, y, z);
-    S2Point out = S2::Rotate(pp.Normalize(), -axis_, angle_);
+    S2Point out = S2::Rotate(pp, y_axis_, -centre_.lat());
+    out = S2::Rotate(out, z_axis_, -centre_.lng());
     return out;
   }
 
@@ -833,9 +835,9 @@ public:
   R2Point wrap_distance() const {return R2Point(0, 0); }
 
 private:
-  S2Point centre_;
-  S2Point axis_;
-  S1Angle angle_;
+  S2LatLng centre_;
+  S2Point z_axis_;
+  S2Point y_axis_;
 };
 
 
@@ -867,7 +869,7 @@ extern "C" SEXP c_s2_projection_orthographic(SEXP centre_sexp) {
   S2LatLng centre =
     S2LatLng::FromDegrees(REAL(centre_sexp)[1], REAL(centre_sexp)[0]);
 
-  auto projection = new OrthographicProjection(centre.ToPoint());
+  auto projection = new OrthographicProjection(centre);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
   R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<OrthographicProjection>);
   UNPROTECT(1);
