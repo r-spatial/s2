@@ -142,3 +142,16 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
       sum(s2_num_points(s2_data_countries()))
   )
 })
+
+test_that("s2_geography_writer() works with s2_projection_mercator()", {
+  # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
+  expect_equal(
+    wk::as_xy(
+      wk::wk_handle(
+        wk::xy(3339584.72379821, 1118889.97485796),
+        s2_geography_writer(projection = s2_projection_mercator())
+      )
+    ),
+    wk::xy(30, 10, crs = wk::wk_crs_longlat())
+  )
+})
