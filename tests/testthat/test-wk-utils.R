@@ -312,3 +312,19 @@ test_that("wk_handle + tessellate_tol works", {
     8L
   )
 })
+
+test_that("s2_geography_writer() with tesselate_tol works with real data", {
+  tol <- 1000 / s2_earth_radius_meters()
+
+  countries <- s2_data_countries()
+  countries_tes <- wk::wk_handle(
+    countries,
+    s2_geography_writer(),
+    s2_tessellate_tol = tol
+  )
+
+  expect_true(
+    sum(s2_num_points(countries_tes)) >
+      sum(s2_num_points(s2_data_countries()))
+  )
+})
