@@ -70,7 +70,7 @@ s2_plot <- function(x, ..., asp = 1, xlab = "", ylab = "",
   resolution_usr_rad <- 0.25 / scale
 
   # limit output to dimensions in input
-  dimensions_in_input <- unique(s2_dimension(x))
+  dimensions_in_input <- setdiff(unique(s2_dimension(x)), NA_character_)
 
   x_hemisphere <- s2_intersection(
     x,
