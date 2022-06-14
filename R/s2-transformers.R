@@ -122,48 +122,48 @@
 #'
 #'
 s2_boundary <- function(x) {
-  new_s2_xptr(cpp_s2_boundary(as_s2_geography(x)), "s2_geography")
+  new_s2_geography(cpp_s2_boundary(as_s2_geography(x)))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_centroid <- function(x) {
-  new_s2_xptr(cpp_s2_centroid(as_s2_geography(x)), "s2_geography")
+  new_s2_geography(cpp_s2_centroid(as_s2_geography(x)))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_closest_point <- function(x, y) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_closest_point(recycled[[1]], recycled[[2]]), "s2_geography")
+  new_s2_geography(cpp_s2_closest_point(recycled[[1]], recycled[[2]]))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_minimum_clearance_line_between <- function(x, y) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_minimum_clearance_line_between(recycled[[1]], recycled[[2]]), "s2_geography")
+  new_s2_geography(cpp_s2_minimum_clearance_line_between(recycled[[1]], recycled[[2]]))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_difference <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_difference(recycled[[1]], recycled[[2]], options), "s2_geography")
+  new_s2_geography(cpp_s2_difference(recycled[[1]], recycled[[2]], options))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_sym_difference <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_sym_difference(recycled[[1]], recycled[[2]], options), "s2_geography")
+  new_s2_geography(cpp_s2_sym_difference(recycled[[1]], recycled[[2]], options))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_intersection <- function(x, y, options = s2_options()) {
   recycled <- recycle_common(as_s2_geography(x), as_s2_geography(y))
-  new_s2_xptr(cpp_s2_intersection(recycled[[1]], recycled[[2]], options), "s2_geography")
+  new_s2_geography(cpp_s2_intersection(recycled[[1]], recycled[[2]], options))
 }
 
 #' @rdname s2_boundary
@@ -172,10 +172,10 @@ s2_union <- function(x, y = NULL, options = s2_options()) {
   x <- as_s2_geography(x)
 
   if (is.null(y)) {
-    new_s2_xptr(cpp_s2_unary_union(x, options), "s2_geography")
+    new_s2_geography(cpp_s2_unary_union(x, options))
   } else {
     recycled <- recycle_common(x, as_s2_geography(y))
-    new_s2_xptr(cpp_s2_union(recycled[[1]], recycled[[2]], options), "s2_geography")
+    new_s2_geography(cpp_s2_union(recycled[[1]], recycled[[2]], options))
   }
 }
 
@@ -200,7 +200,7 @@ s2_simplify <- function(x, tolerance, radius = s2_earth_radius_meters()) {
 #' @rdname s2_boundary
 #' @export
 s2_rebuild <- function(x, options = s2_options()) {
-  new_s2_xptr(cpp_s2_rebuild(as_s2_geography(x), options), "s2_geography")
+  new_s2_geography(cpp_s2_rebuild(as_s2_geography(x), options))
 }
 
 #' @rdname s2_boundary
@@ -208,43 +208,43 @@ s2_rebuild <- function(x, options = s2_options()) {
 s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
                             radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(as_s2_geography(x), distance / radius)
-  new_s2_xptr(cpp_s2_buffer_cells(recycled[[1]], recycled[[2]], max_cells, min_level), "s2_geography")
+  new_s2_geography(cpp_s2_buffer_cells(recycled[[1]], recycled[[2]], max_cells, min_level))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_convex_hull <- function(x) {
-  new_s2_xptr(cpp_s2_convex_hull(as_s2_geography(x)), "s2_geography")
+  new_s2_geography(cpp_s2_convex_hull(as_s2_geography(x)))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_centroid_agg <- function(x, na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm), "s2_geography")
+  new_s2_geography(cpp_s2_centroid_agg(as_s2_geography(x), naRm = na.rm))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_coverage_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_coverage_union_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+  new_s2_geography(cpp_s2_coverage_union_agg(as_s2_geography(x), options, na.rm))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_rebuild_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_rebuild_agg(as_s2_geography(x), options, na.rm), "s2_geography")
+  new_s2_geography(cpp_s2_rebuild_agg(as_s2_geography(x), options, na.rm))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_union_agg <- function(x, options = s2_options(), na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm), "s2_geography")
+  new_s2_geography(cpp_s2_union_agg(s2_union(x, options = options), options, na.rm))
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_convex_hull_agg <- function(x, na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_convex_hull_agg(as_s2_geography(x), na.rm), "s2_geography")
+  new_s2_geography(cpp_s2_convex_hull_agg(as_s2_geography(x), na.rm))
 }
 
 #' Linear referencing
@@ -277,9 +277,8 @@ s2_convex_hull_agg <- function(x, na.rm = FALSE) {
 s2_interpolate <- function(x, distance, radius = s2_earth_radius_meters()) {
   recycled <- recycle_common(as_s2_geography(x), distance / radius)
   length <- cpp_s2_length(recycled[[1]])
-  new_s2_xptr(
-    cpp_s2_interpolate_normalized(recycled[[1]], distance / radius / length),
-    "s2_geography"
+  new_s2_geography(
+    cpp_s2_interpolate_normalized(recycled[[1]], distance / radius / length)
   )
 }
 
@@ -287,14 +286,13 @@ s2_interpolate <- function(x, distance, radius = s2_earth_radius_meters()) {
 #' @export
 s2_interpolate_normalized <- function(x, distance_normalized) {
   recycled <- recycle_common(as_s2_geography(x), distance_normalized)
-  new_s2_xptr(
-    cpp_s2_interpolate_normalized(recycled[[1]], distance_normalized),
-    "s2_geography"
+  new_s2_geography(
+    cpp_s2_interpolate_normalized(recycled[[1]], distance_normalized)
   )
 }
 
 #' @rdname s2_boundary
 #' @export
 s2_point_on_surface <- function(x, na.rm = FALSE) {
-  new_s2_xptr(cpp_s2_point_on_surface(as_s2_geography(x)), "s2_geography")
+  new_s2_geography(cpp_s2_point_on_surface(as_s2_geography(x)))
 }

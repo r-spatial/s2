@@ -111,7 +111,7 @@ SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
   builder_result_finalize(data);
   SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
   SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
-  SET_STRING_ELT(cls, 1, Rf_mkChar("s2_xptr"));
+  SET_STRING_ELT(cls, 1, Rf_mkChar("wk_vctr"));
   Rf_setAttrib(data->result, R_ClassSymbol, cls);
   UNPROTECT(1);
   return data->result;

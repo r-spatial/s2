@@ -1332,27 +1332,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_xptr_test
-List s2_xptr_test(R_xlen_t size);
-RcppExport SEXP _s2_s2_xptr_test(SEXP sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type size(sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_xptr_test(size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_xptr_test_op
-void s2_xptr_test_op(List s2_xptr_test);
-RcppExport SEXP _s2_s2_xptr_test_op(SEXP s2_xptr_testSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_xptr_test(s2_xptr_testSEXP);
-    s2_xptr_test_op(s2_xptr_test);
-    return R_NilValue;
-END_RCPP
-}
 
 RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
@@ -1474,8 +1453,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_cpp_s2_convex_hull", (DL_FUNC) &_s2_cpp_s2_convex_hull, 1},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
-    {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
-    {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
     {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         4},
     {"c_s2_handle_geography",             (DL_FUNC) &c_s2_handle_geography,             2},
     {"c_s2_handle_geography_tessellated", (DL_FUNC) &c_s2_handle_geography_tessellated, 2},

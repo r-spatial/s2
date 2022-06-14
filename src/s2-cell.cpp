@@ -363,7 +363,7 @@ List cpp_s2_cell_center(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
   return result;
 }
 
@@ -382,7 +382,7 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
   return result;
 }
 
@@ -404,7 +404,7 @@ List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   Op op;
   op.k = k;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "s2_xptr");
+  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
   return result;
 }
 
