@@ -24,6 +24,17 @@
 - Fix warning on clang14 when compiling with `-O0` (#167, #172).
 - Added `s2_prepared_dwithin()` and fixed `s2_dwithin_matrix()` such that it
   efficiently uses the index (#157, #174).
+- Updated `s2_lnglat()` and `s2_point()` to use `wk::xy()` (a record-style
+  vctr) to represent point coordinates. This is much faster than the previous
+  representation which relied on `list()` of external pointers (#181, #159).
+- Added arguments `planar` and `tessellate_tol_m` to `s2_as_text()`,
+  `s2_as_binary()`. Use `planar = TRUE` and set `tessellate_tol_m` to the 
+  maximum error for your use-case to automatically subdivide edges to 
+  preserve or "straight" lines in Plate carree projection on import (#182).
+- Added arguments `planar` and `tessellate_tol_m` to `s2_geog_from_text()`, and
+  `s2_geog_from_wkb()`. Use `planar = TRUE` and set `tessellate_tol_m` to the 
+  maximum error for your use-case to automatically subdivide edges to 
+  ensure or "straight" lines in Plate carree projection on export (#182).
 
 # s2 1.0.7
 
