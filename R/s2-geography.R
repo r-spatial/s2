@@ -184,6 +184,11 @@ new_s2_geography <- function(x) {
 }
 
 #' @export
+is.na.s2_geography <- function(x) {
+  cpp_s2_geography_is_na(x)
+}
+
+#' @export
 `[<-.s2_geography` <- function(x, i, value) {
   x <- unclass(x)
   x[i] <- as_s2_geography(value)

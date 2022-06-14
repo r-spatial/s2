@@ -14,3 +14,12 @@ List s2_geography_full(LogicalVector x) { // create single geography with full p
   std::unique_ptr<S2Polygon> p = absl::make_unique<S2Polygon>(std::move(l));
   return List::create(RGeography::MakeXPtr(RGeography::MakePolygon(std::move(p))));
 }
+
+// [[Rcpp::export]]
+LogicalVector cpp_s2_geography_is_na(List geog) {
+  LogicalVector out(geog.size());
+  for (R_xlen_t i = 0; i < geog.size(); i++) {
+    out[i] = geog[i] == R_NilValue;
+  }
+  return out;
+}

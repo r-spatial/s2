@@ -748,6 +748,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_geography_is_na
+LogicalVector cpp_s2_geography_is_na(List geog);
+RcppExport SEXP _s2_cpp_s2_geography_is_na(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_geography_is_na(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2_lnglat_from_s2_point
 List s2_lnglat_from_s2_point(List s2_point);
 RcppExport SEXP _s2_s2_lnglat_from_s2_point(SEXP s2_pointSEXP) {
@@ -1407,6 +1418,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
+    {"_s2_cpp_s2_geography_is_na", (DL_FUNC) &_s2_cpp_s2_geography_is_na, 1},
     {"_s2_s2_lnglat_from_s2_point", (DL_FUNC) &_s2_s2_lnglat_from_s2_point, 1},
     {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},

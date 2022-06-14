@@ -257,6 +257,10 @@ s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
 }
 
+cpp_s2_geography_is_na <- function(geog) {
+    .Call(`_s2_cpp_s2_geography_is_na`, geog)
+}
+
 s2_lnglat_from_s2_point <- function(s2_point) {
     .Call(`_s2_s2_lnglat_from_s2_point`, s2_point)
 }

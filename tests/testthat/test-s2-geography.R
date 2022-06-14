@@ -6,6 +6,11 @@ test_that("s2_geography class works", {
   expect_output(str(geog), "s2_geography")
   expect_identical(as_s2_geography(geog), geog)
 
+  expect_identical(
+    is.na(as_s2_geography(c("POINT (0 1)", NA_character_))),
+    c(FALSE, TRUE)
+  )
+
   # subset assignment
   geog2 <- geog
   geog2[1] <- geog
