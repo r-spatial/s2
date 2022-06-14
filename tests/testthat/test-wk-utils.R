@@ -31,7 +31,6 @@ test_that("the s2_geography_writer() works for example WKT", {
 })
 
 test_that("wk_handle() works for example WKT", {
-  # nc has some rings that get reordered by this operation
   for (name in names(s2_data_example_wkt)) {
     geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
@@ -47,7 +46,6 @@ test_that("wk_handle() works for example WKT", {
 })
 
 test_that("wk_handle() works for example WKT with tessellation", {
-  # nc has some rings that get reordered by this operation
   for (name in names(s2_data_example_wkt)) {
     geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
