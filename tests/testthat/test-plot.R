@@ -8,6 +8,18 @@ test_that("s2_plot works", {
   expect_identical(s2_plot(x, centre = s2_lnglat(0, 0)), x)
 })
 
+test_that("s2_plot works for all examples", {
+  for (name in names(s2_data_example_wkt)) {
+    geog <- as_s2_geography(s2_data_example_wkt[[name]])
+
+    # need non-nulls for now:
+    # https://github.com/paleolimbot/wk/issues/143
+    geog <- geog[!is.na(geog)]
+
+    expect_identical(s2_plot(geog), geog)
+  }
+})
+
 test_that("plot() works for vector classes", {
   x <- as_s2_geography("POINT (0 1)")
   expect_identical(plot(x), x)
