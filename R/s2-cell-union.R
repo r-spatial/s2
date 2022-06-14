@@ -19,7 +19,7 @@ s2_cell_union <- function(x = list()) {
 #' @rdname s2_cell_union
 #' @export
 as_s2_geography.s2_cell_union <- function(x, ...) {
-  new_s2_xptr(cpp_s2_geography_from_cell_union(as_s2_cell_union(x)), "s2_geography")
+  new_s2_geography(cpp_s2_geography_from_cell_union(as_s2_cell_union(x)))
 }
 
 #' @rdname s2_cell_union

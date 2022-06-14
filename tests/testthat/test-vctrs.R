@@ -1,6 +1,6 @@
 
 test_that("s2_geography is a vctr", {
-  x <- new_s2_xptr(list(NULL), "s2_geography")
+  x <- new_s2_geography(list(NULL))
   expect_true(vctrs::vec_is(x))
   expect_identical(vctrs::vec_data(x), list(NULL))
   expect_identical(vctrs::vec_restore(list(NULL), x), x)

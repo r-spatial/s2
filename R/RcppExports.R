@@ -257,6 +257,10 @@ s2_geography_full <- function(x) {
     .Call(`_s2_s2_geography_full`, x)
 }
 
+cpp_s2_geography_is_na <- function(geog) {
+    .Call(`_s2_cpp_s2_geography_is_na`, geog)
+}
+
 s2_lnglat_from_s2_point <- function(s2_point) {
     .Call(`_s2_s2_lnglat_from_s2_point`, s2_point)
 }
@@ -439,13 +443,5 @@ cpp_s2_convex_hull <- function(geog) {
 
 cpp_s2_convex_hull_agg <- function(geog, naRm) {
     .Call(`_s2_cpp_s2_convex_hull_agg`, geog, naRm)
-}
-
-s2_xptr_test <- function(size) {
-    .Call(`_s2_s2_xptr_test`, size)
-}
-
-s2_xptr_test_op <- function(s2_xptr_test) {
-    invisible(.Call(`_s2_s2_xptr_test_op`, s2_xptr_test))
 }
 

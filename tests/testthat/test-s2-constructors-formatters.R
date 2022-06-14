@@ -169,3 +169,32 @@ test_that("polygon constructors respect oriented and check arguments", {
     )
   )
 })
+
+test_that("planar = TRUE works for s2_geog_from_text()", {
+  geog_wkt <- "LINESTRING (-64 45, 0 45)"
+  geog <- s2_geog_from_text(geog_wkt, planar = TRUE)
+  expect_true(s2_distance(geog, "POINT (-30 45)") < s2_tessellate_tol_default())
+})
+
+test_that("planar = TRUE works for s2_geog_from_wkb()", {
+  geog_wkb <- wk::as_wkb("LINESTRING (-64 45, 0 45)")
+  geog <- s2_geog_from_wkb(geog_wkb, planar = TRUE)
+  expect_true(s2_distance(geog, "POINT (-30 45)") < s2_tessellate_tol_default())
+})
+
+test_that("planar = TRUE works for s2_as_text()", {
+  # cells very specifically have geodesic edges
+  geog <- s2_cell_polygon(s2_cell_parent(as_s2_cell(s2_lnglat(-64, 45)), 4))
+  expect_identical(s2_num_points(geog), 4L)
+
+  out <- s2_as_text(geog, planar = TRUE)
+  expect_true(s2_num_points(out) > s2_num_points(geog))
+})
+
+test_that("planar = TRUE works for s2_geog_from_text()", {
+  geog <- s2_cell_polygon(s2_cell_parent(as_s2_cell(s2_lnglat(-64, 45)), 4))
+  expect_identical(s2_num_points(geog), 4L)
+
+  out <- s2_as_binary(geog, planar = TRUE)
+  expect_true(s2_num_points(out) > s2_num_points(geog))
+})

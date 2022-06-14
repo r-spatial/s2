@@ -99,10 +99,7 @@ OBJECTS = $(ABSL_LIBS) \
      s2-geography.o \
      s2-lnglat.o \
      s2-matrix.o \
-     s2-xptr.o \
      wk-impl.o \
-     wk-c-utils.o \
-     tessellator.o \
      s2geography/accessors.o \
      s2geography/accessors-geog.o \
      s2geography/linear-referencing.o \

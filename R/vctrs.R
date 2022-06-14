@@ -4,7 +4,7 @@ vec_proxy.s2_geography <- function(x, ...) {
 }
 
 vec_restore.s2_geography <- function(x, ...) {
-  new_s2_xptr(x, "s2_geography")
+  new_s2_geography(x)
 }
 
 vec_ptype_abbr.s2_geography <- function(x, ...) {

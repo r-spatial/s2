@@ -35,7 +35,7 @@ as_s2_geography <- function(x, ...) {
 #' @rdname as_s2_geography
 #' @export
 s2_geography <- function() {
-  new_s2_xptr(list(), "s2_geography")
+  new_s2_geography(list())
 }
 
 #' @rdname as_s2_geography
@@ -124,7 +124,7 @@ as_s2_geography.character <- function(x, ..., oriented = FALSE, check = TRUE) {
 #' @export
 as_s2_geography.logical <- function(x, ...) {
   stopifnot(isTRUE(x))
-  new_s2_xptr(s2_geography_full(TRUE), "s2_geography")
+  new_s2_geography(s2_geography_full(TRUE))
 }
 
 #' @importFrom wk as_wkb
@@ -179,18 +179,27 @@ wk_set_geodesic.s2_geography <- function(x, geodesic) {
   x
 }
 
+new_s2_geography <- function(x) {
+  structure(x, class = c("s2_geography", "wk_vctr"))
+}
+
+#' @export
+is.na.s2_geography <- function(x) {
+  cpp_s2_geography_is_na(x)
+}
+
 #' @export
 `[<-.s2_geography` <- function(x, i, value) {
   x <- unclass(x)
   x[i] <- as_s2_geography(value)
-  new_s2_xptr(x, "s2_geography")
+  new_s2_geography(x)
 }
 
 #' @export
 `[[<-.s2_geography` <- function(x, i, value) {
   x <- unclass(x)
   x[i] <- as_s2_geography(value)
-  new_s2_xptr(x, "s2_geography")
+  new_s2_geography(x)
 }
 
 #' @export

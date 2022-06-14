@@ -748,6 +748,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_s2_geography_is_na
+LogicalVector cpp_s2_geography_is_na(List geog);
+RcppExport SEXP _s2_cpp_s2_geography_is_na(SEXP geogSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_s2_geography_is_na(geog));
+    return rcpp_result_gen;
+END_RCPP
+}
 // s2_lnglat_from_s2_point
 List s2_lnglat_from_s2_point(List s2_point);
 RcppExport SEXP _s2_s2_lnglat_from_s2_point(SEXP s2_pointSEXP) {
@@ -1332,33 +1343,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// s2_xptr_test
-List s2_xptr_test(R_xlen_t size);
-RcppExport SEXP _s2_s2_xptr_test(SEXP sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type size(sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(s2_xptr_test(size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// s2_xptr_test_op
-void s2_xptr_test_op(List s2_xptr_test);
-RcppExport SEXP _s2_s2_xptr_test_op(SEXP s2_xptr_testSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type s2_xptr_test(s2_xptr_testSEXP);
-    s2_xptr_test_op(s2_xptr_test);
-    return R_NilValue;
-END_RCPP
-}
 
-RcppExport SEXP c_s2_coord_filter_new(SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP);
+RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
-RcppExport SEXP c_s2_projection_mercator();
-RcppExport SEXP c_s2_projection_plate_carree();
+RcppExport SEXP c_s2_handle_geography_tessellated(SEXP, SEXP);
+RcppExport SEXP c_s2_projection_mercator(SEXP);
+RcppExport SEXP c_s2_projection_orthographic(SEXP);
+RcppExport SEXP c_s2_projection_plate_carree(SEXP);
 RcppExport SEXP c_s2_trans_s2_lnglat_new();
 RcppExport SEXP c_s2_trans_s2_point_new();
 
@@ -1427,6 +1418,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_cell_common_ancestor_level", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level, 2},
     {"_s2_cpp_s2_cell_common_ancestor_level_agg", (DL_FUNC) &_s2_cpp_s2_cell_common_ancestor_level_agg, 1},
     {"_s2_s2_geography_full", (DL_FUNC) &_s2_s2_geography_full, 1},
+    {"_s2_cpp_s2_geography_is_na", (DL_FUNC) &_s2_cpp_s2_geography_is_na, 1},
     {"_s2_s2_lnglat_from_s2_point", (DL_FUNC) &_s2_s2_lnglat_from_s2_point, 1},
     {"_s2_s2_point_from_s2_lnglat", (DL_FUNC) &_s2_s2_point_from_s2_lnglat, 1},
     {"_s2_cpp_s2_closest_feature", (DL_FUNC) &_s2_cpp_s2_closest_feature, 2},
@@ -1473,15 +1465,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_cpp_s2_convex_hull", (DL_FUNC) &_s2_cpp_s2_convex_hull, 1},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
-    {"_s2_s2_xptr_test", (DL_FUNC) &_s2_s2_xptr_test, 1},
-    {"_s2_s2_xptr_test_op", (DL_FUNC) &_s2_s2_xptr_test_op, 1},
-    {"c_s2_coord_filter_new",        (DL_FUNC) &c_s2_coord_filter_new,        4},
-    {"c_s2_geography_writer_new",    (DL_FUNC) &c_s2_geography_writer_new,    2},
-    {"c_s2_handle_geography",        (DL_FUNC) &c_s2_handle_geography,        2},
-    {"c_s2_projection_mercator",     (DL_FUNC) &c_s2_projection_mercator,     0},
-    {"c_s2_projection_plate_carree", (DL_FUNC) &c_s2_projection_plate_carree, 0},
-    {"c_s2_trans_s2_lnglat_new",     (DL_FUNC) &c_s2_trans_s2_lnglat_new,     0},
-    {"c_s2_trans_s2_point_new",      (DL_FUNC) &c_s2_trans_s2_point_new,      0},
+    {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         4},
+    {"c_s2_handle_geography",             (DL_FUNC) &c_s2_handle_geography,             2},
+    {"c_s2_handle_geography_tessellated", (DL_FUNC) &c_s2_handle_geography_tessellated, 2},
+    {"c_s2_projection_mercator",          (DL_FUNC) &c_s2_projection_mercator,          1},
+    {"c_s2_projection_orthographic",      (DL_FUNC) &c_s2_projection_orthographic,      1},
+    {"c_s2_projection_plate_carree",      (DL_FUNC) &c_s2_projection_plate_carree,      1},
+    {"c_s2_trans_s2_lnglat_new",          (DL_FUNC) &c_s2_trans_s2_lnglat_new,          0},
+    {"c_s2_trans_s2_point_new",           (DL_FUNC) &c_s2_trans_s2_point_new,           0},
     {NULL, NULL, 0}
 };
 

@@ -2,109 +2,98 @@
 #' Low-level wk filters and handlers
 #'
 #' @inheritParams wk::wk_handle
-#' @param projection One of [s2_projection_plate_carree()] or
+#' @param projection,s2_projection One of [s2_projection_plate_carree()] or
 #'   [s2_projection_mercator()]
-#' @param tessellate_tol An angle in radians. Points will not be added
-#'   if a line segment is within this distance of a point.
+#' @param tessellate_tol,s2_tessellate_tol An angle in radians.
+#'   Points will not be added if a line segment is within this
+#'   distance of a point.
+#' @param x_scale The maximum x value of the projection
+#' @param centre The center point of the orthographic projection
 #' @inheritParams as_s2_geography
 #'
 #' @return
-#'   - `s2_unprojection_filter()`, `s2_projection_filter()`: A `new_wk_handler()`
 #'   - `s2_projection_plate_carree()`, `s2_projection_mercator()`: An external pointer
 #'     to an S2 projection.
-#' @export
-#'
-#' @examples
-#' library(wk)
-#'
-#' # simple conversion of individual coordinates *to* unit sphere
-#' # space
-#' wk_handle(
-#'   wkt("LINESTRING (0 0, 0 45, -60 45)"),
-#'   s2_unprojection_filter(wkt_format_handler(5))
-#' )
-#'
-#' # simple conversion of individual coordinates *from* unit sphere
-#' # space
-#' wk_handle(
-#'   wkt("LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"),
-#'   s2_projection_filter(wkt_format_handler(5))
-#' )
-#'
-#' # use tessellate_tol to force points to be added to an edge
-#' # unprojection will ensure an edge maintains its cartesian
-#' # assumption when transformed to the unit sphere
-#' # (i.e., what you probably want when importing a geography)
-#' wk_handle(
-#'   wkt("LINESTRING (0 0, 0 45, -60 45)"),
-#'   s2_unprojection_filter(wkt_format_handler(5), tessellate_tol = 0.001)
-#' )
-#'
-#' # projection will ensure an edge maintains its geodesic
-#' # assumption when transformed to projected space
-#' # (i.e., what you probably want when exporting a geography)
-#' wk_handle(
-#'   wkt("LINESTRING Z (1 0 0, 0.7071 0 0.7071, 0.3536 -0.6124 0.7071)"),
-#'   s2_projection_filter(wkt_format_handler(5), tessellate_tol = 0.001)
-#' )
-#'
-s2_unprojection_filter <- function(handler, projection = s2_projection_plate_carree(),
-                                   tessellate_tol = Inf) {
-  wk::new_wk_handler(
-    .Call(c_s2_coord_filter_new, handler, projection, TRUE, tessellate_tol),
-    subclass = "s2_coord_filter"
-  )
-}
-
-#' @rdname s2_unprojection_filter
-#' @export
-s2_projection_filter <- function(handler, projection = s2_projection_plate_carree(),
-                                 tessellate_tol = Inf) {
-  wk::new_wk_handler(
-    .Call(c_s2_coord_filter_new, handler, projection, FALSE, tessellate_tol),
-    subclass = "s2_coord_filter"
-  )
-}
-
 #' @importFrom wk wk_handle
 #' @export
-wk_handle.s2_geography <- function(geog, handler, ...)  {
-  .Call(c_s2_handle_geography, geog, wk::as_wk_handler(handler))
+#'
+wk_handle.s2_geography <- function(handleable, handler, ...,
+                                   s2_projection = s2_projection_plate_carree(),
+                                   s2_tessellate_tol = Inf)  {
+  stopifnot(inherits(s2_projection, "s2_projection"))
+  attr(handleable, "s2_projection") <- s2_projection
+
+  if (identical(s2_tessellate_tol, Inf)) {
+    .Call(c_s2_handle_geography, handleable, wk::as_wk_handler(handler))
+  } else {
+    attr(handleable, "s2_tessellate_tol") <- as.double(s2_tessellate_tol)[1]
+    .Call(c_s2_handle_geography_tessellated, handleable, wk::as_wk_handler(handler))
+  }
 }
 
-#' @rdname s2_unprojection_filter
+#' @rdname wk_handle.s2_geography
 #' @export
-s2_geography_writer <- function(oriented = FALSE, check = TRUE) {
+s2_geography_writer <- function(oriented = FALSE, check = TRUE,
+                                projection = s2_projection_plate_carree(),
+                                tessellate_tol = Inf) {
+  stopifnot(inherits(projection, "s2_projection"))
+
   wk::new_wk_handler(
     .Call(
       c_s2_geography_writer_new,
       as.logical(oriented)[1],
-      as.logical(check)[1]
+      as.logical(check)[1],
+      projection,
+      as.double(tessellate_tol[1])
     ),
     "s2_geography_writer"
   )
 }
 
-#' @rdname s2_unprojection_filter
+#' @rdname wk_handle.s2_geography
 #' @export
 s2_trans_point <- function() {
   wk::new_wk_trans(.Call(c_s2_trans_s2_point_new))
 }
 
-#' @rdname s2_unprojection_filter
+#' @rdname wk_handle.s2_geography
 #' @export
 s2_trans_lnglat <- function() {
   wk::new_wk_trans(.Call(c_s2_trans_s2_lnglat_new))
 }
 
-#' @rdname s2_unprojection_filter
+#' @rdname wk_handle.s2_geography
 #' @export
-s2_projection_plate_carree <- function() {
-  .Call(c_s2_projection_plate_carree)
+s2_projection_plate_carree <- function(x_scale = 180) {
+  structure(
+    .Call(c_s2_projection_plate_carree, as.double(x_scale)[1]),
+    class = "s2_projection"
+  )
 }
 
-#' @rdname s2_unprojection_filter
+#' @rdname wk_handle.s2_geography
 #' @export
-s2_projection_mercator <- function() {
-  .Call(c_s2_projection_mercator)
+s2_projection_mercator <- function(x_scale = 20037508.3427892) {
+  structure(
+    .Call(c_s2_projection_mercator, as.double(x_scale)[1]),
+    class = "s2_projection"
+  )
+}
+
+#' @rdname wk_handle.s2_geography
+#' @export
+s2_hemisphere <- function(centre) {
+  cap_to_polygon(centre, pi / 2)
+}
+
+#' @rdname wk_handle.s2_geography
+#' @export
+s2_projection_orthographic <- function(centre = s2_lnglat(0, 0)) {
+  centre <- as_s2_lnglat(centre)
+  centre <- as.matrix(centre)
+
+  structure(
+    .Call(c_s2_projection_orthographic, centre[1:2]),
+    class = "s2_projection"
+  )
 }
