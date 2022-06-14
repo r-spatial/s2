@@ -15,7 +15,7 @@ test_that("wk_handle() for s2_geography works", {
   }
 })
 
-test_that("the s2_geography_writer() works", {
+test_that("the s2_geography_writer() works for example WKT", {
   # nc has some rings that get reordered by this operation
   for (name in setdiff(names(s2_data_example_wkt), "nc")) {
     geog <- wk::wk_handle(
@@ -26,6 +26,39 @@ test_that("the s2_geography_writer() works", {
     expect_equal(
       wk::wk_coords(as_wkt(geog))[c("x", "y")],
       wk::wk_coords(s2_data_example_wkt[[name]])[c("x", "y")]
+    )
+  }
+})
+
+test_that("wk_handle() works for example WKT", {
+  # nc has some rings that get reordered by this operation
+  for (name in names(s2_data_example_wkt)) {
+    geog <- wk::wk_handle(
+      s2_data_example_wkt[[name]],
+      s2_geography_writer()
+    )
+
+    expect_wkt_equal(
+      wk_handle(geog, s2_geography_writer()),
+      geog,
+      precision = 14
+    )
+  }
+})
+
+test_that("wk_handle() works for example WKT with tessellation", {
+  # nc has some rings that get reordered by this operation
+  for (name in names(s2_data_example_wkt)) {
+    geog <- wk::wk_handle(
+      s2_data_example_wkt[[name]],
+      s2_geography_writer()
+    )
+
+    expect_wkt_equal(
+      # use a big but non-infinite number to trigger the tessellator
+      wk_handle(geog, s2_geography_writer(), s2_tessellate_tol = 1e10),
+      geog,
+      precision = 14
     )
   }
 })
