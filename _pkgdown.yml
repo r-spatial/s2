@@ -87,8 +87,3 @@ reference:
   desc: Useful data for testing and demonstrating s2 functions
   contents:
   - starts_with("s2_data")
-
-- title: Low-level Details
-  desc: Interact with spherical geometry at a low level
-  contents:
-  - s2_unprojection_filter
