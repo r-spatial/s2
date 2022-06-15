@@ -114,41 +114,60 @@ the feature at <code>x[i]</code>.</p>
     <dl><dt>x, y</dt>
 <dd><p>Geography vectors, coerced using <code><a href="as_s2_geography.html">as_s2_geography()</a></code>.
 <code>x</code> is considered the source, where as <code>y</code> is considered the target.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>The number of closest edges to consider when searching. Note
 that in S2 a point is also considered an edge.</p></dd>
+
+
 <dt>min_distance</dt>
 <dd><p>The minimum distance to consider when searching for
 edges. This filter is applied after the search is complete (i.e.,
 may cause fewer than <code>k</code> values to be returned).</p></dd>
+
+
 <dt>max_distance</dt>
 <dd><p>The maximum distance to consider when searching for
 edges. This filter is applied before the search.</p></dd>
+
+
 <dt>radius</dt>
 <dd><p>Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by <code><a href="s2_earth_radius_meters.html">s2_earth_radius_meters()</a></code>.</p></dd>
+
+
 <dt>options</dt>
 <dd><p>An <code><a href="s2_options.html">s2_options()</a></code> object describing the polygon/polyline
 model to use and the snap level.</p></dd>
+
+
 <dt>distance</dt>
 <dd><p>A distance on the surface of the earth in the same units
 as <code>radius</code>.</p></dd>
+
+
 <dt>max_edges_per_cell</dt>
 <dd><p>For <code>s2_may_intersect_matrix()</code>,
 this values controls the nature of the index on <code>y</code>, with higher values
 leading to coarser index. Values should be between 10 and 50; the default
 of 50 is adequate for most use cases, but for specialized operations users
 may wish to use a lower value to increase performance.</p></dd>
+
+
 <dt>max_feature_cells</dt>
 <dd><p>For <code>s2_may_intersect_matrix()</code>, this value
 controls the approximation of <code>x</code> used to identify potential intersections
 on <code>y</code>. The default value of 4 gives the best performance for most operations,
 but for specialized operations users may wish to use a higher value to increase
 performance.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A vector of length <code>x</code>.</p>
+    
+
+<p>A vector of length <code>x</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -209,7 +228,7 @@ performance.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

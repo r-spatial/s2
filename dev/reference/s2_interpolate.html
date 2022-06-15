@@ -76,22 +76,33 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A simple polyline geography vector</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A simple point geography vector. The point will be
 snapped to the nearest point on <code>x</code> for the purposes of
 interpolation.</p></dd>
+
+
 <dt>radius</dt>
 <dd><p>Radius of the earth. Defaults to the average radius of
 the earth in meters as defined by <code><a href="s2_earth_radius_meters.html">s2_earth_radius_meters()</a></code>.</p></dd>
+
+
 <dt>distance</dt>
 <dd><p>A distance along <code>x</code> in <code>radius</code> units.</p></dd>
+
+
 <dt>distance_normalized</dt>
 <dd><p>A <code>distance</code> normalized to <code><a href="s2_is_collection.html">s2_length()</a></code> of
 <code>x</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <ul><li><p><code>s2_interpolate()</code> returns the point on <code>x</code>, <code>distance</code> meters
+    
+
+<ul><li><p><code>s2_interpolate()</code> returns the point on <code>x</code>, <code>distance</code> meters
 along the line.</p></li>
 <li><p><code>s2_interpolate_normalized()</code> returns the point on <code>x</code> interpolated
 to a fraction along the line.</p></li>
@@ -107,10 +118,10 @@ where <code>point</code> occurs.</p></li>
 <span class="r-in"><span class="fu">s2_project</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="st">"POINT (0 22.5)"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2501890</span>
 <span class="r-in"><span class="fu">s2_interpolate_normalized</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">0.25</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0 22.5)</span>
 <span class="r-in"><span class="fu">s2_interpolate</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">2501890</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0 22.500002)</span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -127,7 +138,7 @@ where <code>point</code> occurs.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

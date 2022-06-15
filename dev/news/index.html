@@ -72,6 +72,9 @@
 <li>Fix package build on Raspberry Pi (<a href="https://github.com/r-spatial/s2/issues/169" class="external-link">#169</a>, <a href="https://github.com/r-spatial/s2/issues/171" class="external-link">#171</a>).</li>
 <li>Fix warning on clang14 when compiling with <code>-O0</code> (<a href="https://github.com/r-spatial/s2/issues/167" class="external-link">#167</a>, <a href="https://github.com/r-spatial/s2/issues/172" class="external-link">#172</a>).</li>
 <li>Added <code><a href="../reference/s2_contains.html">s2_prepared_dwithin()</a></code> and fixed <code><a href="../reference/s2_closest_feature.html">s2_dwithin_matrix()</a></code> such that it efficiently uses the index (<a href="https://github.com/r-spatial/s2/issues/157" class="external-link">#157</a>, <a href="https://github.com/r-spatial/s2/issues/174" class="external-link">#174</a>).</li>
+<li>Updated <code><a href="../reference/s2_lnglat.html">s2_lnglat()</a></code> and <code><a href="../reference/s2_point.html">s2_point()</a></code> to use <code><a href="https://paleolimbot.github.io/wk/reference/xy.html" class="external-link">wk::xy()</a></code> (a record-style vctr) to represent point coordinates. This is much faster than the previous representation which relied on <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> of external pointers (<a href="https://github.com/r-spatial/s2/issues/181" class="external-link">#181</a>, <a href="https://github.com/r-spatial/s2/issues/159" class="external-link">#159</a>).</li>
+<li>Added arguments <code>planar</code> and <code>tessellate_tol_m</code> to <code><a href="../reference/s2_geog_point.html">s2_as_text()</a></code>, <code><a href="../reference/s2_geog_point.html">s2_as_binary()</a></code>. Use <code>planar = TRUE</code> and set <code>tessellate_tol_m</code> to the maximum error for your use-case to automatically subdivide edges to preserve or “straight” lines in Plate carree projection on import (<a href="https://github.com/r-spatial/s2/issues/182" class="external-link">#182</a>).</li>
+<li>Added arguments <code>planar</code> and <code>tessellate_tol_m</code> to <code><a href="../reference/s2_geog_point.html">s2_geog_from_text()</a></code>, and <code><a href="../reference/s2_geog_point.html">s2_geog_from_wkb()</a></code>. Use <code>planar = TRUE</code> and set <code>tessellate_tol_m</code> to the maximum error for your use-case to automatically subdivide edges to ensure or “straight” lines in Plate carree projection on export (<a href="https://github.com/r-spatial/s2/issues/182" class="external-link">#182</a>).</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.7" id="s2-107">s2 1.0.7<small>2021-09-28</small><a class="anchor" aria-label="anchor" href="#s2-107"></a></h2>
@@ -84,7 +87,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.5" id="s2-105">s2 1.0.5<small>2021-06-01</small><a class="anchor" aria-label="anchor" href="#s2-105"></a></h2>
-<ul><li>Added <code><a href="../reference/s2_unprojection_filter.html">s2_projection_filter()</a></code> and <code><a href="../reference/s2_unprojection_filter.html">s2_unprojection_filter()</a></code> to expose the S2 edge tessellator, which can be used to make Cartesian or great circle assumptions of line segments explicit by adding points where necessary (<a href="https://github.com/r-spatial/s2/issues/115" class="external-link">#115</a>).</li>
+<ul><li>Added <code>s2_projection_filter()</code> and <code>s2_unprojection_filter()</code> to expose the S2 edge tessellator, which can be used to make Cartesian or great circle assumptions of line segments explicit by adding points where necessary (<a href="https://github.com/r-spatial/s2/issues/115" class="external-link">#115</a>).</li>
 <li>Added an <code><a href="../reference/s2_cell.html">s2_cell()</a></code> vector class to expose a subset of the S2 indexing system to R users (<a href="https://github.com/r-spatial/s2/issues/85" class="external-link">#85</a>, <a href="https://github.com/r-spatial/s2/issues/114" class="external-link">#114</a>).</li>
 <li>Added <code><a href="../reference/s2_closest_feature.html">s2_closest_edges()</a></code> to make k-nearest neighbours calculation possible on the sphere (<a href="https://github.com/r-spatial/s2/issues/111" class="external-link">#111</a>, <a href="https://github.com/r-spatial/s2/issues/112" class="external-link">#112</a>).</li>
 <li>Added <code><a href="../reference/s2_interpolate.html">s2_interpolate()</a></code>, <code><a href="../reference/s2_interpolate.html">s2_interpolate_normalized()</a></code>, <code><a href="../reference/s2_interpolate.html">s2_project()</a></code>, and <code><a href="../reference/s2_interpolate.html">s2_project_normalized()</a></code> to provide linear referencing support on the sphere (<a href="https://github.com/r-spatial/s2/issues/96" class="external-link">#96</a>, <a href="https://github.com/r-spatial/s2/issues/110" class="external-link">#110</a>).</li>
@@ -133,7 +136,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

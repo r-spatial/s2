@@ -73,9 +73,12 @@
     <loc>https://r-spatial.github.io/s2/reference/s2_options.html</loc>
   </url>
   <url>
+    <loc>https://r-spatial.github.io/s2/reference/s2_plot.html</loc>
+  </url>
+  <url>
     <loc>https://r-spatial.github.io/s2/reference/s2_point.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/s2/reference/s2_unprojection_filter.html</loc>
+    <loc>https://r-spatial.github.io/s2/reference/wk_handle.s2_geography.html</loc>
   </url>
 </urlset>

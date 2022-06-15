@@ -94,15 +94,18 @@ low-resolution world boundaries and timezone boundaries.</p>
     <dl><dt>name</dt>
 <dd><p>The name of a country, continent, city, or <code>NULL</code>
 for all features.</p></dd>
+
+
 <dt>utc_offset_min, utc_offset_max</dt>
 <dd><p>Minimum and/or maximum timezone
 offsets.</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">s2_data_countries</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[6]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[6] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((61.2108171 35.6500723, 60.8031934 34.4041019, 60.5284298 33.676446, 60.9637004 33.5288323, 60.5360779 32.9812688...       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] MULTIPOLYGON (((16.3265284 -5.8774704, 13.3755974 -5.8642412, 13.0248694 -5.9843889, 12.7351713 -5.9656821, 12.3224317 -6.1000925...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] POLYGON ((20.5902474 41.8554042, 20.52295 42.21787, 20.2837545 42.3202595, 20.0707 42.58863, 19.8016134 42.5000935...               </span>
@@ -110,10 +113,10 @@ offsets.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] MULTIPOLYGON (((-65.5 -55.2, -65.05 -54.7, -66.45 -54.45, -67.75 -53.85, -68.25 -53.1...                                            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] POLYGON ((43.5827458 41.0921433, 43.7526579 40.7402009, 43.6564364 40.253564, 44.4000086 40.0050003, 44.7939897 39.7130026...       </span>
 <span class="r-in"><span class="fu">s2_data_countries</span><span class="op">(</span><span class="st">"Germany"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((9.9219064 54.9831042, 9.2820488 54.8308654, 8.5262293 54.9627436, 8.572118 54.3956465, 8.8007345 54.0207856...</span>
 <span class="r-in"><span class="fu">s2_data_countries</span><span class="op">(</span><span class="st">"Europe"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[39]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[39] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] POLYGON ((20.5902474 41.8554042, 20.52295 42.21787, 20.2837545 42.3202595, 20.0707 42.58863, 19.8016134 42.5000935...               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2] POLYGON ((16.9796668 48.123497, 16.8799829 48.4700133, 16.9602881 48.5969823, 16.4992827 48.785808, 16.0296473 48.733899...         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [3] POLYGON ((3.3149711 51.345781, 2.513573 51.1485062, 2.6584221 50.796848, 3.1232516 50.7803633, 3.5881844 50.3789924...              </span>
@@ -155,26 +158,26 @@ offsets.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] POLYGON ((31.7859982 52.101678, 30.9275493 52.0423534, 30.6194544 51.8228061, 30.5551172 51.3195035, 30.1573637 51.4161384...       </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">s2_data_timezones</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[6]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-142.530441 90, -157.52562 90, -157.525965 71.3309041, -157.207599 71.4722633, -156.858383 71.5747442...                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((177.269342 57.8252945, 174.9285 56.3300414, 172.43336 54.6758919, 169.999662 52.9999323, 172.52132 51.7761616...              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] POLYGON ((-157.775443 71.1848848, -157.527499 71.3299328, -157.52562 90, -172.509033 90, -172.508475 70.4920519...                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4] POLYGON ((-172.500008 14.9990848, -172.502027 -2.50931703, -158.486571 -2.50943351, -158.486571 -0.228073405, -160.639769 1.49816053... </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] POLYGON ((-172.500008 34.9987943, -180 34.9987943, -179.999989 29.9988927, -178.046725 30.0025387, -178.046725 27.5915348...            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[6] with CRS=OGC:CRS84&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-142.530008 89.9, -157.52562 89.9, -157.525959 85.257726, -157.525963 80.615452, -157.525964 75.9731781...                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((179.9 48.0498729, 179.9 53.7458252, 179.9 59.4417774, 177.269342 57.8252945, 174.9285 56.3300414...                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] POLYGON ((-157.52562 89.9, -172.509033 89.9, -172.508484 85.048013, -172.508478 80.1960259, -172.508476 75.3440389...                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] POLYGON ((-172.483 15.0205262, -172.500008 14.9990848, -172.501035 6.24488388, -172.502027 -2.50931703, -165.4943 -2.52823772...        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] POLYGON ((-179.9 34.9987943, -179.9 29.9990794, -178.046725 30.0025387, -178.046725 27.5915348, -176.346743 27.5914979...               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] POLYGON ((-167.997656 -5.84229697, -169.396078 -5.84229697, -170.992788 -9.42836242, -171.293786 -11.0572656, -171.003287 -13.9679213...</span>
 <span class="r-in"><span class="fu">s2_data_timezones</span><span class="op">(</span><span class="op">-</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[3]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-67.5030209 90, -67.5030209 83.1870838, -66.2483102 83.1525808, -65.3278911 83.1046193, -64.1363806 83.102807...            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((-55.9540449 46.6167698, -56.1509228 46.5543787, -56.1515514 46.3058973, -56.4049242 46.3064124, -56.4050827 46.3676109...   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] POLYGON ((-58.2772826 -61.7282322, -58.573951 -61.7378441, -58.9724899 -61.8467801, -59.1345596 -61.9549021, -59.2765198 -62.017726...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[3] with CRS=OGC:CRS84&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-52.543144 89.9, -67.5030209 89.9, -67.5030209 83.1870838, -66.2483102 83.1525808, -65.3278911 83.1046193...             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((-55.9540449 46.6167698, -56.1509228 46.5543787, -56.1515514 46.3058973, -56.4049242 46.3064124, -56.4050827 46.3676109...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] POLYGON ((-67.4927669 -89.9, -52.5322527 -89.9, -52.5326913 -83.4592992, -52.5326947 -77.0185985, -61.1288044 -75.0218643...       </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">s2_data_cities</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[6]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[6] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (12.4533865 41.9032822)  POINT (12.4417702 43.9360958) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] POINT (9.51666947 47.1337238)  POINT (31.1999971 -26.4666675)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] POINT (6.13000281 49.6116604)  POINT (158.149974 6.9166437)  </span>
 <span class="r-in"><span class="fu">s2_data_cities</span><span class="op">(</span><span class="st">"Cairo"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (31.2480224 30.0519062)</span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -191,7 +194,7 @@ offsets.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -82,45 +82,98 @@ using <code>s2_make_polygon()</code>, rings can be open or closed.</p>
   check <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
 
-<span class="fu">s2_geog_from_text</span><span class="op">(</span><span class="va">wkt_string</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">s2_geog_from_text</span><span class="op">(</span>
+  <span class="va">wkt_string</span>,
+  oriented <span class="op">=</span> <span class="cn">FALSE</span>,
+  check <span class="op">=</span> <span class="cn">TRUE</span>,
+  planar <span class="op">=</span> <span class="cn">FALSE</span>,
+  tessellate_tol_m <span class="op">=</span> <span class="fu">s2_tessellate_tol_default</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu">s2_geog_from_wkb</span><span class="op">(</span><span class="va">wkb_bytes</span>, oriented <span class="op">=</span> <span class="cn">FALSE</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">s2_geog_from_wkb</span><span class="op">(</span>
+  <span class="va">wkb_bytes</span>,
+  oriented <span class="op">=</span> <span class="cn">FALSE</span>,
+  check <span class="op">=</span> <span class="cn">TRUE</span>,
+  planar <span class="op">=</span> <span class="cn">FALSE</span>,
+  tessellate_tol_m <span class="op">=</span> <span class="fu">s2_tessellate_tol_default</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu">s2_as_text</span><span class="op">(</span><span class="va">x</span>, precision <span class="op">=</span> <span class="fl">16</span>, trim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">s2_as_text</span><span class="op">(</span>
+  <span class="va">x</span>,
+  precision <span class="op">=</span> <span class="fl">16</span>,
+  trim <span class="op">=</span> <span class="cn">TRUE</span>,
+  planar <span class="op">=</span> <span class="cn">FALSE</span>,
+  tessellate_tol_m <span class="op">=</span> <span class="fu">s2_tessellate_tol_default</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu">s2_as_binary</span><span class="op">(</span><span class="va">x</span>, endian <span class="op">=</span> <span class="fu">wk</span><span class="fu">::</span><span class="fu"><a href="https://paleolimbot.github.io/wk/reference/wkb.html" class="external-link">wk_platform_endian</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu">s2_as_binary</span><span class="op">(</span>
+  <span class="va">x</span>,
+  endian <span class="op">=</span> <span class="fu">wk</span><span class="fu">::</span><span class="fu"><a href="https://paleolimbot.github.io/wk/reference/wkb.html" class="external-link">wk_platform_endian</a></span><span class="op">(</span><span class="op">)</span>,
+  planar <span class="op">=</span> <span class="cn">FALSE</span>,
+  tessellate_tol_m <span class="op">=</span> <span class="fu">s2_tessellate_tol_default</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="fu">s2_tessellate_tol_default</span><span class="op">(</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>longitude, latitude</dt>
 <dd><p>Vectors of latitude and longitude</p></dd>
+
+
 <dt>feature_id, ring_id</dt>
 <dd><p>Vectors for which a change in
 sequential values indicates a new feature or ring. Use <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code>
 to convert from a character vector.</p></dd>
+
+
 <dt>oriented</dt>
 <dd><p>TRUE if polygon ring directions are known to be correct
 (i.e., exterior rings are defined counter clockwise and interior
 rings are defined clockwise).</p></dd>
+
+
 <dt>check</dt>
 <dd><p>Use <code>check = FALSE</code> to skip error on invalid geometries</p></dd>
+
+
 <dt>wkt_string</dt>
 <dd><p>Well-known text</p></dd>
+
+
+<dt>planar</dt>
+<dd><p>Use <code>TRUE</code> to force planar edges in import or export.</p></dd>
+
+
+<dt>tessellate_tol_m</dt>
+<dd><p>The maximum number of meters to that a point must
+be moved to satisfy the planar edge constraint.</p></dd>
+
+
 <dt>wkb_bytes</dt>
 <dd><p>A <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> of <code><a href="https://rdrr.io/r/base/raw.html" class="external-link">raw()</a></code></p></dd>
+
+
 <dt>x</dt>
 <dd><p><a href="as_s2_geography.html">geography vectors</a>. These inputs
 are passed to <code><a href="as_s2_geography.html">as_s2_geography()</a></code>, so you can pass other objects
 (e.g., character vectors of well-known text) directly.</p></dd>
+
+
 <dt>precision</dt>
 <dd><p>The number of significant digits to export when
 writing well-known text. If <code>trim = FALSE</code>, the number of
 digits after the decimal place.</p></dd>
+
+
 <dt>trim</dt>
 <dd><p>Should trailing zeroes be included after the decimal place?</p></dd>
+
+
 <dt>endian</dt>
 <dd><p>The endian-ness of the well-known binary. See <code><a href="https://paleolimbot.github.io/wk/reference/deprecated.html" class="external-link">wk::wkb_translate_wkb()</a></code>.</p></dd>
+
 </dl></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -139,12 +192,12 @@ digits after the decimal place.</p></dd>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># create point geographies using coordinate values:</span></span>
 <span class="r-in"><span class="fu">s2_geog_point</span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">45</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create line geographies using coordinate values:</span></span>
 <span class="r-in"><span class="fu">s2_make_line</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">71</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (-64 45, 8 71)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># optionally, separate features using feature_id:</span></span>
@@ -152,13 +205,13 @@ digits after the decimal place.</p></dd>
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">8</span>, <span class="op">-</span><span class="fl">27</span>, <span class="op">-</span><span class="fl">27</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">71</span>, <span class="fl">0</span>, <span class="fl">45</span><span class="op">)</span>,</span>
 <span class="r-in">  feature_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[2]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[2] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (-64 45, 8 71)  LINESTRING (-27 0, -27 45)</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create polygon geographies using coordinate values:</span></span>
 <span class="r-in"><span class="co"># (rings can be open or closed)</span></span>
 <span class="r-in"><span class="fu">s2_make_polygon</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">45</span>, <span class="fl">8</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">64</span>, <span class="fl">71</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((-45 64, 8 71, 0 90, -45 64))</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># optionally, separate rings and/or features using</span></span>
@@ -169,20 +222,20 @@ digits after the decimal place.</p></dd>
 <span class="r-in">  feature_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
 <span class="r-in">  ring_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[2]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[2] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((20 35, 10 30, 10 10, 30 5, 45 20...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] POLYGON ((40 40, 20 45, 45 30, 40 40))       </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># import and export well-known text</span></span>
 <span class="r-in"><span class="op">(</span><span class="va">geog</span> <span class="op">&lt;-</span> <span class="fu">s2_geog_from_text</span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"><span class="fu">s2_as_text</span><span class="op">(</span><span class="va">geog</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "POINT (-64 45)"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># import and export well-known binary</span></span>
 <span class="r-in"><span class="op">(</span><span class="va">geog</span> <span class="op">&lt;-</span> <span class="fu">s2_geog_from_wkb</span><span class="op">(</span><span class="fu">wk</span><span class="fu">::</span><span class="fu"><a href="https://paleolimbot.github.io/wk/reference/wkb.html" class="external-link">as_wkb</a></span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_geography[1]&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (-64 45)</span>
 <span class="r-in"><span class="fu">s2_as_binary</span><span class="op">(</span><span class="va">geog</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
@@ -205,7 +258,7 @@ digits after the decimal place.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -98,10 +98,14 @@ containment and how new geometries should be constructed.</p>
     <dl><dt>model</dt>
 <dd><p>One of 'open', 'semi-open' (default for polygons),
 or 'closed' (default for polylines). See section 'Model'</p></dd>
+
+
 <dt>snap</dt>
 <dd><p>Use <code>s2_snap_identity()</code>, <code>s2_snap_distance()</code>, <code>s2_snap_level()</code>,
 or <code>s2_snap_precision()</code> to specify how or if coordinate rounding should
 occur.</p></dd>
+
+
 <dt>snap_radius</dt>
 <dd><p>As opposed to the snap function, which specifies
 the maximum distance a vertex should move, the snap radius (in radians) sets
@@ -109,40 +113,65 @@ the minimum distance between vertices of the output that don't cause vertices
 to move more than the distance specified by the snap function. This can be used
 to simplify the result of a boolean operation. Use -1 to specify that any
 minimum distance is acceptable.</p></dd>
+
+
 <dt>duplicate_edges</dt>
 <dd><p>Use <code>TRUE</code> to keep duplicate edges (e.g., duplicate
 points).</p></dd>
+
+
 <dt>edge_type</dt>
 <dd><p>One of 'directed' (default) or 'undirected'.</p></dd>
+
+
 <dt>validate</dt>
 <dd><p>Use <code>TRUE</code> to validate the result from the builder.</p></dd>
+
+
 <dt>polyline_type</dt>
 <dd><p>One of 'path' (default) or 'walk'. If 'walk',
 polylines that backtrack are preserved.</p></dd>
+
+
 <dt>polyline_sibling_pairs</dt>
 <dd><p>One of 'discard' (default) or 'keep'.</p></dd>
+
+
 <dt>simplify_edge_chains</dt>
 <dd><p>Use <code>TRUE</code> to remove vertices that are within
 <code>snap_radius</code> of the original vertex.</p></dd>
+
+
 <dt>split_crossing_edges</dt>
 <dd><p>Use <code>TRUE</code> to split crossing polyline edges
 when creating geometries.</p></dd>
+
+
 <dt>idempotent</dt>
 <dd><p>Use <code>FALSE</code> to apply snap even if snapping is not necessary
 to satisfy vertex constraints.</p></dd>
+
+
 <dt>dimensions</dt>
 <dd><p>A combination of 'point', 'polyline', and/or 'polygon'
 that can used to constrain the output of <code><a href="s2_boundary.html">s2_rebuild()</a></code> or a
 boolean operation.</p></dd>
+
+
 <dt>level</dt>
 <dd><p>A value from 0 to 30 corresponding to the cell level
 at which snapping should occur.</p></dd>
+
+
 <dt>precision</dt>
 <dd><p>A number by which coordinates should be multiplied
 before being rounded. Rounded to the nearest exponent of 10.</p></dd>
+
+
 <dt>distance</dt>
 <dd><p>A distance (in radians) denoting the maximum
 distance a vertex should move in the snapping process.</p></dd>
+
 </dl></div>
     <div id="model">
     <h2>Model</h2>
@@ -223,7 +252,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
