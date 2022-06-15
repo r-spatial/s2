@@ -82,8 +82,14 @@ reference:
   contents:
   - s2_earth_radius_meters
   - s2_options
+  - s2_plot
 
 - title: Example Data
   desc: Useful data for testing and demonstrating s2 functions
   contents:
   - starts_with("s2_data")
+
+- title: Low-level Details
+  desc: Interact with spherical geometry at a low level
+  contents:
+  - wk_handle.s2_geography
