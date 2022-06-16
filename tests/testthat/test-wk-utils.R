@@ -164,7 +164,7 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
   countries <- s2_data_countries()
   countries_tes <- wk::wk_handle(
     countries,
-    s2_geography_writer(),
+    s2_geography_writer(check = FALSE),
     s2_tessellate_tol = tol
   )
 
