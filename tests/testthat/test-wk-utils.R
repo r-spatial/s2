@@ -247,3 +247,24 @@ test_that("s2_geography_writer() works with s2_projection_mercator()", {
     c("POINT (0 0)", "POINT (0 45)", "POINT (45 0)")
   )
 })
+
+test_that("s2_hemisphere() works", {
+  expect_equal(
+    s2_area(s2_hemisphere(s2_lnglat(0, 0)), radius = 1),
+    2 * pi
+  )
+})
+
+test_that("s2_world() works", {
+  world0 <- s2_world(0, 0)
+  expect_identical(
+    wk::wk_bbox(wk::wkt(s2_as_text(world0))),
+    wk::rct(-180, -90, 180, 90)
+  )
+
+  world_eps <- s2_world(1, 2)
+  expect_identical(
+    wk::wk_bbox(wk::wkt(s2_as_text(world_eps))),
+    wk::rct(-179, -88, 179, 88)
+  )
+})

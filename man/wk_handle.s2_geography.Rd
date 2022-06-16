@@ -8,6 +8,7 @@
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
 \alias{s2_hemisphere}
+\alias{s2_world}
 \alias{s2_projection_orthographic}
 \title{Low-level wk filters and handlers}
 \usage{
@@ -36,6 +37,8 @@ s2_projection_mercator(x_scale = 20037508.3427892)
 
 s2_hemisphere(centre)
 
+s2_world(epsilon_east_west = 0, epsilon_north_south = 0)
+
 s2_projection_orthographic(centre = s2_lnglat(0, 0))
 }
 \arguments{
@@ -62,6 +65,11 @@ distance of a point.}
 \item{x_scale}{The maximum x value of the projection}
 
 \item{centre}{The center point of the orthographic projection}
+
+\item{epsilon_east_west, epsilon_north_south}{Use a positive number to
+define the edges of a Cartesian world slightly inward from -180, -90,
+180, 90. This may be used to define a world outline for a projection where
+projecting at the extreme edges of the earth results in a non-finite value.}
 }
 \value{
 \itemize{
