@@ -89,6 +89,8 @@
 
 <span class="fu">s2_hemisphere</span><span class="op">(</span><span class="va">centre</span><span class="op">)</span>
 
+<span class="fu">s2_world_plate_carree</span><span class="op">(</span>epsilon_east_west <span class="op">=</span> <span class="fl">0</span>, epsilon_north_south <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+
 <span class="fu">s2_projection_orthographic</span><span class="op">(</span>centre <span class="op">=</span> <span class="fu"><a href="s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
     </div>
 
@@ -134,6 +136,13 @@ distance of a point.</p></dd>
 
 <dt>centre</dt>
 <dd><p>The center point of the orthographic projection</p></dd>
+
+
+<dt>epsilon_east_west, epsilon_north_south</dt>
+<dd><p>Use a positive number to
+define the edges of a Cartesian world slightly inward from -180, -90,
+180, 90. This may be used to define a world outline for a projection where
+projecting at the extreme edges of the earth results in a non-finite value.</p></dd>
 
 </dl></div>
     <div id="value">
