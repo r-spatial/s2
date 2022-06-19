@@ -365,13 +365,11 @@ public:
   }
 
   void reset() {
+    points_out_.clear();
     is_first_point_ = true;
-    coord_id_ = -1;
   }
 
   int coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
-    int result;
-
     if (is_first_point_) {
       is_first_point_ = false;
       most_recent_ = point;
@@ -379,33 +377,38 @@ public:
       return WK_CONTINUE;
     }
 
-    points_out_.clear();
     tessellator_->AppendProjected(most_recent_, point, &points_out_);
     most_recent_ = point;
-
-    for (int i = 0; i < (points_out_.size() - 1); i++) {
-      coord_[0] = points_out_[i].x();
-      coord_[1] = points_out_[i].y();
-      coord_id_++;
-      HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id_, handler->handler_data));
-    }
-
     return WK_CONTINUE;
   }
 
   int last_coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
     int result;
     HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
-    coord_id_++;
-    HANDLE_OR_RETURN(coord_point(meta, point, coord_id_, handler));
+
+    for (int i = 0; i < points_out_.size(); i++) {
+      coord_[0] = points_out_[i].x();
+      coord_[1] = points_out_[i].y();
+      HANDLE_OR_RETURN(handler->coord(meta, coord_, i, handler->handler_data));
+    }
+
     return WK_CONTINUE;
   }
 
   int last_coord_in_loop(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
     int result;
     HANDLE_OR_RETURN(coord_in_series(meta, point, handler));
-    coord_id_++;
-    HANDLE_OR_RETURN(coord_point(meta, first_in_loop_, coord_id_, handler));
+
+    for (int i = 0; i < (points_out_.size() - 1); i++) {
+      coord_[0] = points_out_[i].x();
+      coord_[1] = points_out_[i].y();
+      HANDLE_OR_RETURN(handler->coord(meta, coord_, i, handler->handler_data));
+    }
+
+    if (!is_first_point_) {
+      HANDLE_OR_RETURN(coord_point(meta, point, points_out_.size() - 1, handler));
+    }
+
     return WK_CONTINUE;
   }
 
@@ -413,7 +416,6 @@ private:
   s2geography::util::Constructor::Options options_;
   std::unique_ptr<S2EdgeTessellator> tessellator_;
   bool is_first_point_;
-  int32_t coord_id_;
   S2Point first_in_loop_;
   S2Point most_recent_;
   std::vector<R2Point> points_out_;

@@ -164,7 +164,7 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
   countries <- s2_data_countries()
   countries_tes <- wk::wk_handle(
     countries,
-    s2_geography_writer(),
+    s2_geography_writer(check = FALSE),
     s2_tessellate_tol = tol
   )
 
@@ -245,5 +245,26 @@ test_that("s2_geography_writer() works with s2_projection_mercator()", {
   expect_identical(
     s2_as_text(geog, precision = 5),
     c("POINT (0 0)", "POINT (0 45)", "POINT (45 0)")
+  )
+})
+
+test_that("s2_hemisphere() works", {
+  expect_equal(
+    s2_area(s2_hemisphere(s2_lnglat(0, 0)), radius = 1),
+    2 * pi
+  )
+})
+
+test_that("s2_world_plate_carree() works", {
+  world0 <- s2_world_plate_carree(0, 0)
+  expect_identical(
+    wk::wk_bbox(wk::wkt(s2_as_text(world0))),
+    wk::rct(-180, -90, 180, 90)
+  )
+
+  world_eps <- s2_world_plate_carree(1, 2)
+  expect_identical(
+    wk::wk_bbox(wk::wkt(s2_as_text(world_eps))),
+    wk::rct(-179, -88, 179, 88)
   )
 })

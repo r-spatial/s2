@@ -72,6 +72,24 @@
 #' (geog <- s2_geog_from_wkb(wk::as_wkb("POINT (-64 45)")))
 #' s2_as_binary(geog)
 #'
+#' # import geometry from planar space
+#' s2_geog_from_text(
+#'    "POLYGON ((0 0, 1 0, 0 1, 0 0))",
+#'    planar = TRUE,
+#'    tessellate_tol_m = 1
+#' )
+#'
+#' # export geographies into planar space
+#' geog <- s2_make_polygon(c(179, -179, 179), c(10, 10, 11))
+#' s2_as_text(geog, planar = TRUE)
+#'
+#' # polygons containing a pole need an extra step
+#' geog <- s2_data_countries("Antarctica")
+#' geom <- s2_as_text(
+#'   s2_intersection(geog, s2_world_plate_carree()),
+#'   planar = TRUE
+#' )
+#'
 s2_geog_point <- function(longitude, latitude) {
   wk::wk_handle(wk::xy(longitude, latitude), s2_geography_writer())
 }

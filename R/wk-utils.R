@@ -9,6 +9,10 @@
 #'   distance of a point.
 #' @param x_scale The maximum x value of the projection
 #' @param centre The center point of the orthographic projection
+#' @param epsilon_east_west,epsilon_north_south Use a positive number to
+#'   define the edges of a Cartesian world slightly inward from -180, -90,
+#'   180, 90. This may be used to define a world outline for a projection where
+#'   projecting at the extreme edges of the earth results in a non-finite value.
 #' @inheritParams as_s2_geography
 #'
 #' @return
@@ -84,6 +88,24 @@ s2_projection_mercator <- function(x_scale = 20037508.3427892) {
 #' @export
 s2_hemisphere <- function(centre) {
   cap_to_polygon(centre, pi / 2)
+}
+
+#' @rdname wk_handle.s2_geography
+#' @export
+s2_world_plate_carree <- function(epsilon_east_west = 0, epsilon_north_south = 0) {
+  s2_make_polygon(
+    c(
+      -180 + epsilon_east_west, 0, 180 - epsilon_east_west,
+      180 - epsilon_east_west, 180 - epsilon_east_west, 0,
+      -180 + epsilon_east_west, -180 + epsilon_east_west
+    ),
+    c(
+      -90 + epsilon_north_south, -90 + epsilon_north_south,
+      -90 + epsilon_north_south, 0, 90 - epsilon_north_south,
+      90 - epsilon_north_south, 90 - epsilon_north_south, 0
+    ),
+    oriented = TRUE
+  )
 }
 
 #' @rdname wk_handle.s2_geography
