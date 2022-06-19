@@ -8,7 +8,7 @@
 \alias{s2_projection_plate_carree}
 \alias{s2_projection_mercator}
 \alias{s2_hemisphere}
-\alias{s2_world}
+\alias{s2_world_plate_carree}
 \alias{s2_projection_orthographic}
 \title{Low-level wk filters and handlers}
 \usage{
@@ -37,7 +37,7 @@ s2_projection_mercator(x_scale = 20037508.3427892)
 
 s2_hemisphere(centre)
 
-s2_world(epsilon_east_west = 0, epsilon_north_south = 0)
+s2_world_plate_carree(epsilon_east_west = 0, epsilon_north_south = 0)
 
 s2_projection_orthographic(centre = s2_lnglat(0, 0))
 }

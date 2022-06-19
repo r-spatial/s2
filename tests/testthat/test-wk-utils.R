@@ -255,14 +255,14 @@ test_that("s2_hemisphere() works", {
   )
 })
 
-test_that("s2_world() works", {
-  world0 <- s2_world(0, 0)
+test_that("s2_world_plate_carree() works", {
+  world0 <- s2_world_plate_carree(0, 0)
   expect_identical(
     wk::wk_bbox(wk::wkt(s2_as_text(world0))),
     wk::rct(-180, -90, 180, 90)
   )
 
-  world_eps <- s2_world(1, 2)
+  world_eps <- s2_world_plate_carree(1, 2)
   expect_identical(
     wk::wk_bbox(wk::wkt(s2_as_text(world_eps))),
     wk::rct(-179, -88, 179, 88)

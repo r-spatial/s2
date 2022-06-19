@@ -92,7 +92,7 @@ s2_hemisphere <- function(centre) {
 
 #' @rdname wk_handle.s2_geography
 #' @export
-s2_world <- function(epsilon_east_west = 0, epsilon_north_south = 0) {
+s2_world_plate_carree <- function(epsilon_east_west = 0, epsilon_north_south = 0) {
   s2_make_polygon(
     c(
       -180 + epsilon_east_west, 0, 180 - epsilon_east_west,
