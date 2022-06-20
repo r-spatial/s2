@@ -24,7 +24,7 @@
 wk_handle.s2_geography <- function(handleable, handler, ...,
                                    s2_projection = s2_projection_plate_carree(),
                                    s2_tessellate_tol = Inf)  {
-  stopifnot(inherits(s2_projection, "s2_projection"))
+  stopifnot(is.null(s2_projection) || inherits(s2_projection, "s2_projection"))
   attr(handleable, "s2_projection") <- s2_projection
 
   if (identical(s2_tessellate_tol, Inf)) {

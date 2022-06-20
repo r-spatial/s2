@@ -822,16 +822,29 @@ void finalize_cpp_xptr(SEXP xptr) {
 
 SEXP handle_geography(SEXP data, wk_handler_t* handler) {
   SEXP projection_xptr = Rf_getAttrib(data, Rf_install("s2_projection"));
-  auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
-  s2geography::util::Constructor::Options options;
-  options.set_projection(projection);
 
-  auto exporter = new SimpleExporter(options);
-  SEXP exporter_shelter = PROTECT(R_MakeExternalPtr(exporter, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(exporter_shelter, &finalize_cpp_xptr<SimpleExporter>);
+  SEXP result;
 
-  SEXP result = PROTECT(handle_geography_templ<SimpleExporter>(data, exporter, handler));
-  UNPROTECT(2);
+  if (projection_xptr != R_NilValue) {
+    auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
+    s2geography::util::Constructor::Options options;
+    options.set_projection(projection);
+
+    auto exporter = new SimpleExporter(options);
+    SEXP exporter_shelter = PROTECT(R_MakeExternalPtr(exporter, R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(exporter_shelter, &finalize_cpp_xptr<SimpleExporter>);
+
+    result = PROTECT(handle_geography_templ<SimpleExporter>(data, exporter, handler));
+    UNPROTECT(2);
+  } else {
+    auto exporter = new S2Exporter();
+    SEXP exporter_shelter = PROTECT(R_MakeExternalPtr(exporter, R_NilValue, R_NilValue));
+    R_RegisterCFinalizer(exporter_shelter, &finalize_cpp_xptr<S2Exporter>);
+
+    result = PROTECT(handle_geography_templ<S2Exporter>(data, exporter, handler));
+    UNPROTECT(2);
+  }
+
   return result;
 }
 
