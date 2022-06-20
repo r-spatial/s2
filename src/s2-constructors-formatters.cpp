@@ -311,9 +311,57 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
     result = expr;                                             \
     if (result == WK_ABORT_FEATURE) continue; else if (result == WK_ABORT) break
 
-class SimpleExporter {
+class S2Exporter {
+public:
+
+  void set_vector_meta_flags(wk_vector_meta_t* vector_meta) {
+    vector_meta->flags |= WK_FLAG_HAS_Z;
+  }
+
+  void set_meta_flags(wk_meta_t* vector_meta) {
+    vector_meta->flags |= WK_FLAG_HAS_Z;
+  }
+
+  int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
+    int result;
+    coord_[0] = point.x();
+    coord_[1] = point.y();
+    coord_[2] = point.z();
+    HANDLE_OR_RETURN(handler->coord(meta, coord_, coord_id, handler->handler_data));
+    return WK_CONTINUE;
+  }
+
+  void reset() {
+    coord_id_ = -1;
+  }
+
+  int coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+  int last_coord_in_series(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+  int last_coord_in_loop(const wk_meta_t* meta, const S2Point& point, wk_handler_t* handler) {
+    coord_id_++;
+    return coord_point(meta, point, coord_id_, handler);
+  }
+
+protected:
+  int32_t coord_id_;
+  double coord_[4];
+};
+
+class SimpleExporter: public S2Exporter {
 public:
   SimpleExporter(const s2geography::util::Constructor::Options& options): options_(options) {}
+
+  void set_vector_meta_flags(wk_vector_meta_t* vector_meta) {}
+
+  void set_meta_flags(wk_meta_t* vector_meta) {}
 
   int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
     int result;
@@ -345,8 +393,6 @@ public:
 
 private:
   s2geography::util::Constructor::Options options_;
-  int32_t coord_id_;
-  double coord_[4];
 };
 
 class TessellatingExporter {
@@ -354,6 +400,10 @@ public:
   TessellatingExporter(const s2geography::util::Constructor::Options& options):
     options_(options),
     tessellator_(new S2EdgeTessellator(options.projection(), options.tessellate_tolerance())) {}
+
+  void set_vector_meta_flags(wk_vector_meta_t* vector_meta) {}
+
+  void set_meta_flags(wk_meta_t* vector_meta) {}
 
   int coord_point(const wk_meta_t* meta, const S2Point& point, uint32_t coord_id, wk_handler_t* handler) {
     int result;
@@ -432,10 +482,12 @@ int handle_points(const s2geography::PointGeography& geog,
   wk_meta_t meta;
   WK_META_RESET(meta, WK_MULTIPOINT);
   meta.size = geog.Points().size();
+  exporter->set_meta_flags(&meta);
 
   wk_meta_t meta_child;
   WK_META_RESET(meta_child, WK_POINT);
   meta_child.size = 1;
+  exporter->set_meta_flags(&meta_child);
 
   if (meta.size == 0) {
     meta_child.size = 0;
@@ -470,9 +522,11 @@ int handle_polylines(const s2geography::PolylineGeography& geog,
   wk_meta_t meta;
   WK_META_RESET(meta, WK_MULTILINESTRING);
   meta.size = geog.Polylines().size();
+  exporter->set_meta_flags(&meta);
 
   wk_meta_t meta_child;
   WK_META_RESET(meta_child, WK_LINESTRING);
+  exporter->set_meta_flags(&meta_child);
 
   if (meta.size == 0) {
     meta_child.size = 0;
@@ -620,9 +674,11 @@ int handle_polygon(const s2geography::PolygonGeography& geog,
   wk_meta_t meta;
   WK_META_RESET(meta, WK_MULTIPOLYGON);
   meta.size = outer_shell_loop_ids.size();
+  exporter->set_meta_flags(&meta);
 
   wk_meta_t meta_child;
   WK_META_RESET(meta_child, WK_POLYGON);
+  exporter->set_meta_flags(&meta_child);
 
   if (meta.size == 0) {
     meta_child.size = 0;
@@ -659,6 +715,7 @@ int handle_collection(const s2geography::GeographyCollection& geog,
   wk_meta_t meta;
   WK_META_RESET(meta, WK_GEOMETRYCOLLECTION);
   meta.size = geog.Features().size();
+  exporter->set_meta_flags(&meta);
 
   HANDLE_OR_RETURN(handler->geometry_start(&meta, part_id, handler->handler_data));
   for (size_t i = 0; i < geog.Features().size(); i++) {
@@ -703,6 +760,7 @@ SEXP handle_geography_templ(SEXP data, EdgeExporterT* exporter, wk_handler_t* ha
     WK_VECTOR_META_RESET(vector_meta, WK_GEOMETRY);
     vector_meta.size = n_features;
     vector_meta.flags |= WK_FLAG_DIMS_UNKNOWN;
+    exporter->set_vector_meta_flags(&vector_meta);
 
     if (handler->vector_start(&vector_meta, handler->handler_data) == WK_CONTINUE) {
       int result;
