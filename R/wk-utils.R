@@ -40,7 +40,7 @@ wk_handle.s2_geography <- function(handleable, handler, ...,
 s2_geography_writer <- function(oriented = FALSE, check = TRUE,
                                 projection = s2_projection_plate_carree(),
                                 tessellate_tol = Inf) {
-  stopifnot(inherits(projection, "s2_projection"))
+  stopifnot(is.null(projection) || inherits(projection, "s2_projection"))
 
   wk::new_wk_handler(
     .Call(

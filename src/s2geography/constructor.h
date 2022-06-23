@@ -42,8 +42,20 @@ class Constructor : public Handler {
   virtual ~Constructor() {}
 
   virtual Result coords(const double* coord, int64_t n, int32_t coord_size) {
-    for (int64_t i = 0; i < n; i++) {
-      input_points_.push_back(R2Point(coord[i * coord_size], coord[i * coord_size + 1]));
+    if (coord_size == 3) {
+      for (int64_t i = 0; i < n; i++) {
+        input_points_.push_back(
+          S2Point(
+            coord[i * coord_size],
+            coord[i * coord_size + 1],
+            coord[i * coord_size + 2]
+          )
+        );
+      }
+    } else {
+      for (int64_t i = 0; i < n; i++) {
+        input_points_.push_back(S2Point(coord[i * coord_size], coord[i * coord_size + 1], 0));
+      }
     }
 
     return Result::CONTINUE;
@@ -52,7 +64,7 @@ class Constructor : public Handler {
   virtual std::unique_ptr<Geography> finish() = 0;
 
  protected:
-  std::vector<R2Point> input_points_;
+  std::vector<S2Point> input_points_;
   std::vector<S2Point> points_;
   Options options_;
   std::unique_ptr<S2EdgeTessellator> tessellator_;
@@ -61,13 +73,19 @@ class Constructor : public Handler {
     points_.clear();
     points_.reserve(input_points_.size());
 
-    if (options_.tessellate_tolerance() != S1Angle::Infinity()) {
+    if (options_.projection() == nullptr) {
+      for (const auto& pt: input_points_) {
+        points_.push_back(pt);
+      }
+    } else if (options_.tessellate_tolerance() != S1Angle::Infinity()) {
       for (size_t i = 1; i < input_points_.size(); i++) {
-        tessellator_->AppendUnprojected(input_points_[i - 1], input_points_[i], &points_);
+        const S2Point& pt0(input_points_[i - 1]);
+        const S2Point& pt1(input_points_[i]);
+        tessellator_->AppendUnprojected(R2Point(pt0.x(), pt0.y()), R2Point(pt1.x(), pt1.y()), &points_);
       }
     } else {
-      for (const auto& input_point: input_points_) {
-        points_.push_back(options_.projection()->Unproject(input_point));
+      for (const auto& pt: input_points_) {
+        points_.push_back(options_.projection()->Unproject(R2Point(pt.x(), pt.y())));
       }
     }
 
@@ -101,8 +119,13 @@ class PointConstructor : public Constructor {
         continue;
       }
 
-      R2Point pt = R2Point(coord[i * coord_size], coord[i * coord_size + 1]);
-      points_.push_back(options_.projection()->Unproject(pt));
+      if (options_.projection() == nullptr) {
+        S2Point pt(coord[i * coord_size], coord[i * coord_size + 1], coord[i * coord_size + 2]);
+        points_.push_back(pt);
+      } else {
+        R2Point pt(coord[i * coord_size], coord[i * coord_size + 1]);
+        points_.push_back(options_.projection()->Unproject(pt));
+      }
     }
 
     return Result::CONTINUE;

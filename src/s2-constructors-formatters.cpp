@@ -240,7 +240,10 @@ extern "C" SEXP c_s2_geography_writer_new(SEXP oriented_sexp, SEXP check_sexp,
 
   int oriented = LOGICAL(oriented_sexp)[0];
   int check = LOGICAL(check_sexp)[0];
-  auto projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
+  S2::Projection* projection = NULL;
+  if (projection_xptr != R_NilValue) {
+    projection = reinterpret_cast<S2::Projection*>(R_ExternalPtrAddr(projection_xptr));
+  }
   double tessellate_tolerance = REAL(tessellate_tolerance_sexp)[0];
 
   s2geography::util::Constructor::Options options;
