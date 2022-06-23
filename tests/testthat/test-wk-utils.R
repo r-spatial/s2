@@ -36,6 +36,10 @@ test_that("wk_handle() for s2_geography works for s2_point projection", {
   }
 })
 
+test_that("wk_writer() works for s2_geography()", {
+  expect_s3_class(wk::wk_writer(s2_geography()), "s2_geography_writer")
+})
+
 test_that("the s2_geography_writer() works for example WKT", {
   # nc has some rings that get reordered by this operation
   for (name in setdiff(names(s2_data_example_wkt), "nc")) {

@@ -3,6 +3,7 @@
 \name{wk_handle.s2_geography}
 \alias{wk_handle.s2_geography}
 \alias{s2_geography_writer}
+\alias{wk_writer.s2_geography}
 \alias{s2_trans_point}
 \alias{s2_trans_lnglat}
 \alias{s2_projection_plate_carree}
@@ -26,6 +27,8 @@ s2_geography_writer(
   projection = s2_projection_plate_carree(),
   tessellate_tol = Inf
 )
+
+\method{wk_writer}{s2_geography}(handleable, ...)
 
 s2_trans_point()
 

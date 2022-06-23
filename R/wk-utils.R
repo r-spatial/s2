@@ -55,6 +55,14 @@ s2_geography_writer <- function(oriented = FALSE, check = TRUE,
 }
 
 #' @rdname wk_handle.s2_geography
+#' @importFrom wk wk_writer
+#' @method wk_writer s2_geography
+#' @export
+wk_writer.s2_geography <- function(handleable, ...) {
+  s2_geography_writer()
+}
+
+#' @rdname wk_handle.s2_geography
 #' @export
 s2_trans_point <- function() {
   wk::new_wk_trans(.Call(c_s2_trans_s2_point_new))
