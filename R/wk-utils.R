@@ -24,7 +24,7 @@
 wk_handle.s2_geography <- function(handleable, handler, ...,
                                    s2_projection = s2_projection_plate_carree(),
                                    s2_tessellate_tol = Inf)  {
-  stopifnot(inherits(s2_projection, "s2_projection"))
+  stopifnot(is.null(s2_projection) || inherits(s2_projection, "s2_projection"))
   attr(handleable, "s2_projection") <- s2_projection
 
   if (identical(s2_tessellate_tol, Inf)) {
@@ -40,7 +40,7 @@ wk_handle.s2_geography <- function(handleable, handler, ...,
 s2_geography_writer <- function(oriented = FALSE, check = TRUE,
                                 projection = s2_projection_plate_carree(),
                                 tessellate_tol = Inf) {
-  stopifnot(inherits(projection, "s2_projection"))
+  stopifnot(is.null(projection) || inherits(projection, "s2_projection"))
 
   wk::new_wk_handler(
     .Call(
@@ -52,6 +52,14 @@ s2_geography_writer <- function(oriented = FALSE, check = TRUE,
     ),
     "s2_geography_writer"
   )
+}
+
+#' @rdname wk_handle.s2_geography
+#' @importFrom wk wk_writer
+#' @method wk_writer s2_geography
+#' @export
+wk_writer.s2_geography <- function(handleable, ...) {
+  s2_geography_writer()
 }
 
 #' @rdname wk_handle.s2_geography
