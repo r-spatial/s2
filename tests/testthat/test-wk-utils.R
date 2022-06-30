@@ -256,6 +256,24 @@ test_that("wk_handle() for s2_geography works with s2_projection_orthographic()"
   )
 })
 
+test_that("orthographic projection maintains 'north up' orientation", {
+  result_coords <- wk::wk_coords(
+    as_s2_geography(s2_lnglat(-64, c(45, 50))),
+    s2_projection = s2_projection_orthographic(s2_lnglat(-64, 45))
+  )
+
+  expect_equal(result_coords$x[1], 0)
+  expect_equal(result_coords$y[1], 0)
+  expect_equal(result_coords$x[1], result_coords$x[2])
+
+  # proj_result <- sf::sf_project(
+  #   "EPSG:4326",
+  #   "+proj=ortho +lon_0=-64 +lat_0=45 +ellips=sphere",
+  #   s2::s2_lnglat(-64, c(45, 50))
+  # ) / 6370997
+  # result_coords <- wk::wk_coords(wk::as_xy(proj_result))
+})
+
 test_that("s2_geography_writer() works with s2_projection_mercator()", {
   # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
   xy <- wk::xy(
