@@ -13,6 +13,7 @@ s2_plot(
   rule = "evenodd",
   add = FALSE,
   plot_hemisphere = FALSE,
+  simplify = TRUE,
   centre = NULL
 )
 }
@@ -36,6 +37,8 @@ and multipolygon geometries.}
 existing plot?}
 
 \item{plot_hemisphere}{Plot the outline of the earth}
+
+\item{simplify}{Use \code{FALSE} to skip the simplification step}
 
 \item{centre}{The longitude/latitude point of the centre of the
 orthographic projection}
