@@ -5,6 +5,7 @@
 #' @param plot_hemisphere Plot the outline of the earth
 #' @param centre The longitude/latitude point of the centre of the
 #'   orthographic projection
+#' @param simplify Use `FALSE` to skip the simplification step
 #'
 #' @return The input, invisibly
 #' @export
@@ -16,6 +17,7 @@
 s2_plot <- function(x, ..., asp = 1, xlab = "", ylab = "",
                    rule = "evenodd", add = FALSE,
                    plot_hemisphere = FALSE,
+                   simplify = TRUE,
                    centre = NULL) {
   x <- as_s2_geography(x)
 
@@ -72,16 +74,26 @@ s2_plot <- function(x, ..., asp = 1, xlab = "", ylab = "",
   # limit output to dimensions in input
   dimensions_in_input <- setdiff(unique(s2_dimension(x)), NA_character_)
 
-  x_hemisphere <- s2_intersection(
-    x,
-    hemisphere_bounds_poly,
-    options = s2_options(
-      snap = s2_snap_distance(resolution_usr_rad),
-      snap_radius = resolution_usr_rad,
-      simplify_edge_chains = TRUE,
-      dimensions = c("point", "polyline", "polygon")[dimensions_in_input + 1]
+  if (simplify) {
+    x_hemisphere <- s2_intersection(
+      x,
+      hemisphere_bounds_poly,
+      options = s2_options(
+        snap = s2_snap_distance(resolution_usr_rad),
+        snap_radius = resolution_usr_rad,
+        simplify_edge_chains = TRUE,
+        dimensions = c("point", "polyline", "polygon")[dimensions_in_input + 1]
+      )
     )
-  )
+  } else {
+    x_hemisphere <- s2_intersection(
+      x,
+      hemisphere_bounds_poly,
+      options = s2_options(
+        dimensions = c("point", "polyline", "polygon")[dimensions_in_input + 1]
+      )
+    )
+  }
 
   x_hemisphere[s2_is_empty(x_hemisphere)] <- as_s2_geography("POINT EMPTY")
 

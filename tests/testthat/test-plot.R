@@ -4,6 +4,7 @@ test_that("s2_plot works", {
   expect_identical(s2_plot(x), x)
   s2_plot(s2_data_cities(), add = TRUE)
 
+  expect_identical(s2_plot(x, simplify = FALSE), x)
   expect_identical(s2_plot(x, plot_hemisphere = TRUE), x)
   expect_identical(s2_plot(x, centre = s2_lnglat(0, 0)), x)
 })

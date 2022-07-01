@@ -884,7 +884,7 @@ public:
 
   // Converts a point on the sphere to a projected 2D point.
   R2Point Project(const S2Point& p) const {
-    S2Point out = S2::Rotate(p, z_axis_, centre_.lng());
+    S2Point out = S2::Rotate(p, z_axis_, -centre_.lng());
     out = S2::Rotate(out, y_axis_, centre_.lat());
     return R2Point(out.y(), out.z());
   }
@@ -896,7 +896,7 @@ public:
     double x = sqrt(1.0 - y * y - z * z);
     S2Point pp(x, y, z);
     S2Point out = S2::Rotate(pp, y_axis_, -centre_.lat());
-    out = S2::Rotate(out, z_axis_, -centre_.lng());
+    out = S2::Rotate(out, z_axis_, centre_.lng());
     return out;
   }
 
