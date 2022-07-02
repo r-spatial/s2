@@ -926,7 +926,7 @@ extern "C" SEXP c_s2_projection_plate_carree(SEXP x_scale_sexp) {
 
   auto projection = new S2::PlateCarreeProjection(x_scale);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
@@ -936,7 +936,7 @@ extern "C" SEXP c_s2_projection_mercator(SEXP x_scale_sexp) {
 
   auto projection = new S2::MercatorProjection(x_scale);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
@@ -947,7 +947,7 @@ extern "C" SEXP c_s2_projection_orthographic(SEXP centre_sexp) {
 
   auto projection = new OrthographicProjection(centre);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<OrthographicProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
