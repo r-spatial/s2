@@ -2,9 +2,7 @@
 #ifndef GEOGRAPHY_H
 #define GEOGRAPHY_H
 
-#define R_NO_REMAP
-#include <R.h>
-#include <Rinternals.h>
+#include <Rcpp.h>
 
 #include "s2geography.h"
 
@@ -32,12 +30,10 @@ public:
     return xptr;
   }
 
-  static SEXP MakeXPtr(std::unique_ptr<RGeography> geog) {
-    std::unique_ptr<RGeography> geog_owning = std::move(geog);
-    SEXP xptr = PROTECT(R_MakeExternalPtr(geog_owning.release(), R_NilValue, R_NilValue));
-    R_RegisterCFinalizer(xptr, &finalize_xptr);
-    UNPROTECT(1);
-    return xptr;
+  // For an unknown reason, using the same logic for MakeXPtr as above here
+  // results in an rchk error.
+  static Rcpp::XPtr<RGeography> MakeXPtr(std::unique_ptr<RGeography> geog) {
+    return Rcpp::XPtr<RGeography>(geog.release());
   }
 
   static std::unique_ptr<RGeography> MakePoint() {
