@@ -23,15 +23,13 @@ public:
     return *index_;
   }
 
-  static SEXP MakeXPtr(std::unique_ptr<s2geography::Geography> geog) {
-    SEXP xptr = PROTECT(R_MakeExternalPtr(new RGeography(std::move(geog)), R_NilValue, R_NilValue));
-    R_RegisterCFinalizer(xptr, &finalize_xptr);
-    UNPROTECT(1);
-    return xptr;
+  // For an unknown reason, returning a SEXP from MakeXPtr results in
+  // rchk reporting a memory protection error. Until this is sorted, return a
+  // Rcpp::XPtr<>() (even though this might be slower)
+  static Rcpp::XPtr<RGeography> MakeXPtr(std::unique_ptr<s2geography::Geography> geog) {
+    return Rcpp::XPtr<RGeography>(new RGeography(std::move(geog)));
   }
 
-  // For an unknown reason, using the same logic for MakeXPtr as above here
-  // results in an rchk error.
   static Rcpp::XPtr<RGeography> MakeXPtr(std::unique_ptr<RGeography> geog) {
     return Rcpp::XPtr<RGeography>(geog.release());
   }
