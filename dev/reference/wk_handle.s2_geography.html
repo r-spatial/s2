@@ -63,38 +63,38 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for s2_geography</span>
-<span class="fu">wk_handle</span><span class="op">(</span>
-  <span class="va">handleable</span>,
-  <span class="va">handler</span>,
-  <span class="va">...</span>,
-  s2_projection <span class="op">=</span> <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>,
-  s2_tessellate_tol <span class="op">=</span> <span class="cn">Inf</span>
-<span class="op">)</span>
-
-<span class="fu">s2_geography_writer</span><span class="op">(</span>
-  oriented <span class="op">=</span> <span class="cn">FALSE</span>,
-  check <span class="op">=</span> <span class="cn">TRUE</span>,
-  projection <span class="op">=</span> <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>,
-  tessellate_tol <span class="op">=</span> <span class="cn">Inf</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for s2_geography</span>
-<span class="fu">wk_writer</span><span class="op">(</span><span class="va">handleable</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">s2_trans_point</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">s2_trans_lnglat</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">s2_projection_plate_carree</span><span class="op">(</span>x_scale <span class="op">=</span> <span class="fl">180</span><span class="op">)</span>
-
-<span class="fu">s2_projection_mercator</span><span class="op">(</span>x_scale <span class="op">=</span> <span class="fl">20037508.3427892</span><span class="op">)</span>
-
-<span class="fu">s2_hemisphere</span><span class="op">(</span><span class="va">centre</span><span class="op">)</span>
-
-<span class="fu">s2_world_plate_carree</span><span class="op">(</span>epsilon_east_west <span class="op">=</span> <span class="fl">0</span>, epsilon_north_south <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
-
-<span class="fu">s2_projection_orthographic</span><span class="op">(</span>centre <span class="op">=</span> <span class="fu"><a href="s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for s2_geography</span></span>
+<span><span class="fu">wk_handle</span><span class="op">(</span></span>
+<span>  <span class="va">handleable</span>,</span>
+<span>  <span class="va">handler</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  s2_projection <span class="op">=</span> <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  s2_tessellate_tol <span class="op">=</span> <span class="cn">Inf</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_geography_writer</span><span class="op">(</span></span>
+<span>  oriented <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  projection <span class="op">=</span> <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  tessellate_tol <span class="op">=</span> <span class="cn">Inf</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for s2_geography</span></span>
+<span><span class="fu">wk_writer</span><span class="op">(</span><span class="va">handleable</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_trans_point</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_trans_lnglat</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_projection_plate_carree</span><span class="op">(</span>x_scale <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_projection_mercator</span><span class="op">(</span>x_scale <span class="op">=</span> <span class="fl">20037508.3427892</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_hemisphere</span><span class="op">(</span><span class="va">centre</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_world_plate_carree</span><span class="op">(</span>epsilon_east_west <span class="op">=</span> <span class="fl">0</span>, epsilon_north_south <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_projection_orthographic</span><span class="op">(</span>centre <span class="op">=</span> <span class="fu"><a href="s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -168,7 +168,7 @@ to an S2 projection.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

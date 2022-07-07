@@ -93,122 +93,122 @@
 </h2>
 <p>You can install the released version of s2 from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"s2"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"s2"</span><span class="op">)</span></span></code></pre></div>
 <p>And the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"r-spatial/s2"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"r-spatial/s2"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>The s2 package provides geometry transformers and predicates similar to those found in <a href="https://trac.osgeo.org/geos/" class="external-link">GEOS</a>, except instead of assuming a planar geometry, s2’s functions work in latitude and longitude and assume a spherical geometry:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span>
-
-<span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span>
-  <span class="co"># polygon containing much  of the northern hemisphere</span>
-  <span class="st">"POLYGON ((-63.5 44.6, -149.75 61.20, 116.4 40.2, 13.5 52.51, -63.5 44.6))"</span>,
-  <span class="co"># ...should contain the north pole</span>
-  <span class="st">"POINT (0 90)"</span>
-<span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span></span>
+<span>  <span class="co"># polygon containing much  of the northern hemisphere</span></span>
+<span>  <span class="st">"POLYGON ((-63.5 44.6, -149.75 61.20, 116.4 40.2, 13.5 52.51, -63.5 44.6))"</span>,</span>
+<span>  <span class="co"># ...should contain the north pole</span></span>
+<span>  <span class="st">"POINT (0 90)"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>The <a href="https://r-spatial.github.io/sf/" class="external-link">sf package</a> uses s2 for geographic coordinates with <code>sf::sf_use_s2(TRUE)</code>, and will become the default after sf version 1.0.0. The sf package also supports creating s2 vectors using <code><a href="reference/as_s2_geography.html">as_s2_geography()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
-
-<span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">select</span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span>
-
-<span class="va">nc_s2</span>
-<span class="co">#&gt; # A tibble: 100 × 2</span>
-<span class="co">#&gt;    NAME        geometry                                                         </span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
-<span class="co">#&gt;  1 Ashe        POLYGON ((-81.4528885 36.2395859, -81.4310379 36.2607193, -81.41…</span>
-<span class="co">#&gt;  2 Alleghany   POLYGON ((-81.1766739 36.4154434, -81.1533661 36.4247398, -81.13…</span>
-<span class="co">#&gt;  3 Surry       POLYGON ((-80.4530106 36.2570877, -80.4353104 36.5510445, -80.61…</span>
-<span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.9419327 36.2943382, -75.9575119 36.2594528, …</span>
-<span class="co">#&gt;  5 Northampton POLYGON ((-77.1419601 36.4170647, -77.1393204 36.4564781, -77.12…</span>
-<span class="co">#&gt;  6 Hertford    POLYGON ((-76.7074966 36.2661324, -76.7413483 36.3151665, -76.92…</span>
-<span class="co">#&gt;  7 Camden      POLYGON ((-76.0173492 36.3377304, -76.0328751 36.3359756, -76.04…</span>
-<span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.4522858, -76.4983…</span>
-<span class="co">#&gt;  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 36.2135086, -78.05…</span>
-<span class="co">#&gt; 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 36.5471344, -80.43…</span>
-<span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nc_s2</span></span>
+<span><span class="co">#&gt; # A tibble: 100 × 2</span></span>
+<span><span class="co">#&gt;    NAME        geometry                                                         </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span></span>
+<span><span class="co">#&gt;  1 Ashe        POLYGON ((-81.4528885 36.2395859, -81.4310379 36.2607193, -81.41…</span></span>
+<span><span class="co">#&gt;  2 Alleghany   POLYGON ((-81.1766739 36.4154434, -81.1533661 36.4247398, -81.13…</span></span>
+<span><span class="co">#&gt;  3 Surry       POLYGON ((-80.4530106 36.2570877, -80.4353104 36.5510445, -80.61…</span></span>
+<span><span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.9419327 36.2943382, -75.9575119 36.2594528, …</span></span>
+<span><span class="co">#&gt;  5 Northampton POLYGON ((-77.1419601 36.4170647, -77.1393204 36.4564781, -77.12…</span></span>
+<span><span class="co">#&gt;  6 Hertford    POLYGON ((-76.7074966 36.2661324, -76.7413483 36.3151665, -76.92…</span></span>
+<span><span class="co">#&gt;  7 Camden      POLYGON ((-76.0173492 36.3377304, -76.0328751 36.3359756, -76.04…</span></span>
+<span><span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.4522858, -76.4983…</span></span>
+<span><span class="co">#&gt;  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 36.2135086, -78.05…</span></span>
+<span><span class="co">#&gt; 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 36.5471344, -80.43…</span></span>
+<span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Use accessors to extract information about geometries:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>
-    area <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_area</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span>,
-    perimeter <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_perimeter</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span>
-  <span class="op">)</span>
-<span class="co">#&gt; # A tibble: 100 × 4</span>
-<span class="co">#&gt;    NAME        geometry                                           area perimeter</span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                    &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 Ashe        POLYGON ((-81.4528885 36.2395859, -81.4310379 3… 1.14e9   141627.</span>
-<span class="co">#&gt;  2 Alleghany   POLYGON ((-81.1766739 36.4154434, -81.1533661 3… 6.11e8   119876.</span>
-<span class="co">#&gt;  3 Surry       POLYGON ((-80.4530106 36.2570877, -80.4353104 3… 1.42e9   160458.</span>
-<span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.9419327 36.2943382, -75.957… 6.94e8   301644.</span>
-<span class="co">#&gt;  5 Northampton POLYGON ((-77.1419601 36.4170647, -77.1393204 3… 1.52e9   211794.</span>
-<span class="co">#&gt;  6 Hertford    POLYGON ((-76.7074966 36.2661324, -76.7413483 3… 9.68e8   160780.</span>
-<span class="co">#&gt;  7 Camden      POLYGON ((-76.0173492 36.3377304, -76.0328751 3… 6.16e8   150430.</span>
-<span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.… 9.03e8   123170.</span>
-<span class="co">#&gt;  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 3… 1.18e9   141073.</span>
-<span class="co">#&gt; 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 3… 1.23e9   140583.</span>
-<span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>    area <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_area</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span>,</span>
+<span>    perimeter <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_perimeter</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 100 × 4</span></span>
+<span><span class="co">#&gt;    NAME        geometry                                           area perimeter</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                    &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 Ashe        POLYGON ((-81.4528885 36.2395859, -81.4310379 3… 1.14e9   141627.</span></span>
+<span><span class="co">#&gt;  2 Alleghany   POLYGON ((-81.1766739 36.4154434, -81.1533661 3… 6.11e8   119876.</span></span>
+<span><span class="co">#&gt;  3 Surry       POLYGON ((-80.4530106 36.2570877, -80.4353104 3… 1.42e9   160458.</span></span>
+<span><span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.9419327 36.2943382, -75.957… 6.94e8   301644.</span></span>
+<span><span class="co">#&gt;  5 Northampton POLYGON ((-77.1419601 36.4170647, -77.1393204 3… 1.52e9   211794.</span></span>
+<span><span class="co">#&gt;  6 Hertford    POLYGON ((-76.7074966 36.2661324, -76.7413483 3… 9.68e8   160780.</span></span>
+<span><span class="co">#&gt;  7 Camden      POLYGON ((-76.0173492 36.3377304, -76.0328751 3… 6.16e8   150430.</span></span>
+<span><span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.… 9.03e8   123170.</span></span>
+<span><span class="co">#&gt;  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 3… 1.18e9   141073.</span></span>
+<span><span class="co">#&gt; 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 3… 1.23e9   140583.</span></span>
+<span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Use predicates to subset vectors:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 × 2</span>
-<span class="co">#&gt;   NAME    geometry                                                              </span>
-<span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span>
-<span class="co">#&gt; 1 Catawba POLYGON ((-80.9312744 35.6195908, -81.0035782 35.6970558, -81.0547791…</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span><span class="co">#&gt;   NAME    geometry                                                              </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span></span>
+<span><span class="co">#&gt; 1 Catawba POLYGON ((-80.9312744 35.6195908, -81.0035782 35.6970558, -81.0547791…</span></span></code></pre></div>
 <p>Use transformers to create new geometries:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/s2_boundary.html">s2_boundary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 100 × 2</span>
-<span class="co">#&gt;    NAME        geometry                                                         </span>
-<span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span>
-<span class="co">#&gt;  1 Ashe        LINESTRING (-81.4528885 36.2395859, -81.4310379 36.2607193, -81.…</span>
-<span class="co">#&gt;  2 Alleghany   LINESTRING (-81.1766739 36.4154434, -81.1533661 36.4247398, -81.…</span>
-<span class="co">#&gt;  3 Surry       LINESTRING (-80.4530106 36.2570877, -80.4353104 36.5510445, -80.…</span>
-<span class="co">#&gt;  4 Currituck   MULTILINESTRING ((-75.9419327 36.2943382, -75.9575119 36.2594528…</span>
-<span class="co">#&gt;  5 Northampton LINESTRING (-77.1419601 36.4170647, -77.1393204 36.4564781, -77.…</span>
-<span class="co">#&gt;  6 Hertford    LINESTRING (-76.7074966 36.2661324, -76.7413483 36.3151665, -76.…</span>
-<span class="co">#&gt;  7 Camden      LINESTRING (-76.0173492 36.3377304, -76.0328751 36.3359756, -76.…</span>
-<span class="co">#&gt;  8 Gates       LINESTRING (-76.46035 36.3738976, -76.5024643 36.4522858, -76.49…</span>
-<span class="co">#&gt;  9 Warren      LINESTRING (-78.1347198 36.2365837, -78.1096268 36.2135086, -78.…</span>
-<span class="co">#&gt; 10 Stokes      LINESTRING (-80.0240555 36.5450249, -80.0480957 36.5471344, -80.…</span>
-<span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/s2_boundary.html">s2_boundary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 100 × 2</span></span>
+<span><span class="co">#&gt;    NAME        geometry                                                         </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span></span>
+<span><span class="co">#&gt;  1 Ashe        LINESTRING (-81.4528885 36.2395859, -81.4310379 36.2607193, -81.…</span></span>
+<span><span class="co">#&gt;  2 Alleghany   LINESTRING (-81.1766739 36.4154434, -81.1533661 36.4247398, -81.…</span></span>
+<span><span class="co">#&gt;  3 Surry       LINESTRING (-80.4530106 36.2570877, -80.4353104 36.5510445, -80.…</span></span>
+<span><span class="co">#&gt;  4 Currituck   MULTILINESTRING ((-75.9419327 36.2943382, -75.9575119 36.2594528…</span></span>
+<span><span class="co">#&gt;  5 Northampton LINESTRING (-77.1419601 36.4170647, -77.1393204 36.4564781, -77.…</span></span>
+<span><span class="co">#&gt;  6 Hertford    LINESTRING (-76.7074966 36.2661324, -76.7413483 36.3151665, -76.…</span></span>
+<span><span class="co">#&gt;  7 Camden      LINESTRING (-76.0173492 36.3377304, -76.0328751 36.3359756, -76.…</span></span>
+<span><span class="co">#&gt;  8 Gates       LINESTRING (-76.46035 36.3738976, -76.5024643 36.4522858, -76.49…</span></span>
+<span><span class="co">#&gt;  9 Warren      LINESTRING (-78.1347198 36.2365837, -78.1096268 36.2135086, -78.…</span></span>
+<span><span class="co">#&gt; 10 Stokes      LINESTRING (-80.0240555 36.5450249, -80.0480957 36.5471344, -80.…</span></span>
+<span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Finally, use the WKB or WKT exporters to export to sf or some other package:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc_s2</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">st_as_sfc</span><span class="op">(</span><span class="fu"><a href="reference/s2_geog_point.html">s2_as_binary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Simple feature collection with 100 features and 1 field</span>
-<span class="co">#&gt; Geometry type: GEOMETRY</span>
-<span class="co">#&gt; Dimension:     XY</span>
-<span class="co">#&gt; Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
-<span class="co">#&gt; CRS:           NA</span>
-<span class="co">#&gt; # A tibble: 100 × 2</span>
-<span class="co">#&gt;    NAME                                                                 geometry</span>
-<span class="co">#&gt;    &lt;chr&gt;                                                              &lt;GEOMETRY&gt;</span>
-<span class="co">#&gt;  1 Ashe        POLYGON ((-81.45289 36.23959, -81.43104 36.26072, -81.41233 36.2…</span>
-<span class="co">#&gt;  2 Alleghany   POLYGON ((-81.17667 36.41544, -81.15337 36.42474, -81.1384 36.41…</span>
-<span class="co">#&gt;  3 Surry       POLYGON ((-80.45301 36.25709, -80.43531 36.55104, -80.61105 36.5…</span>
-<span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.94193 36.29434, -75.95751 36.25945, -75.9137…</span>
-<span class="co">#&gt;  5 Northampton POLYGON ((-77.14196 36.41706, -77.13932 36.45648, -77.12733 36.4…</span>
-<span class="co">#&gt;  6 Hertford    POLYGON ((-76.7075 36.26613, -76.74135 36.31517, -76.92408 36.39…</span>
-<span class="co">#&gt;  7 Camden      POLYGON ((-76.01735 36.33773, -76.03288 36.33598, -76.04395 36.3…</span>
-<span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.50…</span>
-<span class="co">#&gt;  9 Warren      POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.2…</span>
-<span class="co">#&gt; 10 Stokes      POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.55…</span>
-<span class="co">#&gt; # … with 90 more rows</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">st_as_sfc</span><span class="op">(</span><span class="fu"><a href="reference/s2_geog_point.html">s2_as_binary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Simple feature collection with 100 features and 1 field</span></span>
+<span><span class="co">#&gt; Geometry type: GEOMETRY</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></span>
+<span><span class="co">#&gt; CRS:           NA</span></span>
+<span><span class="co">#&gt; # A tibble: 100 × 2</span></span>
+<span><span class="co">#&gt;    NAME                                                                 geometry</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;                                                              &lt;GEOMETRY&gt;</span></span>
+<span><span class="co">#&gt;  1 Ashe        POLYGON ((-81.45289 36.23959, -81.43104 36.26072, -81.41233 36.2…</span></span>
+<span><span class="co">#&gt;  2 Alleghany   POLYGON ((-81.17667 36.41544, -81.15337 36.42474, -81.1384 36.41…</span></span>
+<span><span class="co">#&gt;  3 Surry       POLYGON ((-80.45301 36.25709, -80.43531 36.55104, -80.61105 36.5…</span></span>
+<span><span class="co">#&gt;  4 Currituck   MULTIPOLYGON (((-75.94193 36.29434, -75.95751 36.25945, -75.9137…</span></span>
+<span><span class="co">#&gt;  5 Northampton POLYGON ((-77.14196 36.41706, -77.13932 36.45648, -77.12733 36.4…</span></span>
+<span><span class="co">#&gt;  6 Hertford    POLYGON ((-76.7075 36.26613, -76.74135 36.31517, -76.92408 36.39…</span></span>
+<span><span class="co">#&gt;  7 Camden      POLYGON ((-76.01735 36.33773, -76.03288 36.33598, -76.04395 36.3…</span></span>
+<span><span class="co">#&gt;  8 Gates       POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.50…</span></span>
+<span><span class="co">#&gt;  9 Warren      POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.2…</span></span>
+<span><span class="co">#&gt; 10 Stokes      POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.55…</span></span>
+<span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="acknowledgment">Acknowledgment<a class="anchor" aria-label="anchor" href="#acknowledgment"></a>
@@ -274,7 +274,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

@@ -75,29 +75,29 @@ when used within R code.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_cell</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_cell_sentinel</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">s2_cell_invalid</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">s2_cell_sentinel</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_cell</span>
-<span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for s2_geography</span>
-<span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for wk_xy</span>
-<span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">new_s2_cell</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_cell</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_sentinel</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_invalid</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_sentinel</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for s2_cell</span></span>
+<span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for s2_geography</span></span>
+<span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for wk_xy</span></span>
+<span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_s2_cell</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -137,16 +137,16 @@ be interpreted in this way is constructed with <code>new_s2_cell()</code>.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">s2_cell</span><span class="op">(</span><span class="st">"4b59a0cd83b5de49"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">s2_cell</span><span class="op">(</span><span class="st">"4b59a0cd83b5de49"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_cell[1]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4b59a0cd83b5de49</span>
-<span class="r-in"><span class="fu">as_s2_cell</span><span class="op">(</span><span class="fu"><a href="s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">45</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="fu"><a href="s2_lnglat.html">s2_lnglat</a></span><span class="op">(</span><span class="op">-</span><span class="fl">64</span>, <span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_cell[1]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4b59a0cd83b5de49</span>
-<span class="r-in"><span class="fu">as_s2_cell</span><span class="op">(</span><span class="fu"><a href="s2_data_tbl_countries.html">s2_data_cities</a></span><span class="op">(</span><span class="st">"Ottawa"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as_s2_cell</span><span class="op">(</span><span class="fu"><a href="s2_data_tbl_countries.html">s2_data_cities</a></span><span class="op">(</span><span class="st">"Ottawa"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;s2_cell[1]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4cce045470cbd267</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -161,7 +161,7 @@ be interpreted in this way is constructed with <code>new_s2_cell()</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

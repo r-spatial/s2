@@ -65,49 +65,49 @@ return a geography vector.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_boundary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_centroid</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_closest_point</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_minimum_clearance_line_between</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_sym_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_intersection</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_union</span><span class="op">(</span><span class="va">x</span>, y <span class="op">=</span> <span class="cn">NULL</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_snap_to_grid</span><span class="op">(</span><span class="va">x</span>, <span class="va">grid_size</span><span class="op">)</span>
-
-<span class="fu">s2_simplify</span><span class="op">(</span><span class="va">x</span>, <span class="va">tolerance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_rebuild</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_buffer_cells</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">distance</span>,
-  max_cells <span class="op">=</span> <span class="fl">1000</span>,
-  min_level <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">s2_convex_hull</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_centroid_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">s2_coverage_union_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">s2_rebuild_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">s2_union_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">s2_convex_hull_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">s2_point_on_surface</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_boundary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_centroid</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_closest_point</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_minimum_clearance_line_between</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_sym_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_intersection</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_union</span><span class="op">(</span><span class="va">x</span>, y <span class="op">=</span> <span class="cn">NULL</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_snap_to_grid</span><span class="op">(</span><span class="va">x</span>, <span class="va">grid_size</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_simplify</span><span class="op">(</span><span class="va">x</span>, <span class="va">tolerance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_rebuild</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_buffer_cells</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">distance</span>,</span>
+<span>  max_cells <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  min_level <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_convex_hull</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_centroid_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_coverage_union_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_rebuild_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_union_agg</span><span class="op">(</span><span class="va">x</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_convex_hull_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_point_on_surface</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -197,122 +197,122 @@ of these operators.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># returns the boundary:</span></span>
-<span class="r-in"><span class="co"># empty for point, endpoints of a linestring,</span></span>
-<span class="r-in"><span class="co"># perimeter of a polygon</span></span>
-<span class="r-in"><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># returns the boundary:</span></span></span>
+<span class="r-in"><span><span class="co"># empty for point, endpoints of a linestring,</span></span></span>
+<span class="r-in"><span><span class="co"># perimeter of a polygon</span></span></span>
+<span class="r-in"><span><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"POINT (-64 45)"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] GEOMETRYCOLLECTION EMPTY</span>
-<span class="r-in"><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 10 0)"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 10 0)"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] MULTIPOINT ((0 0), (10 0))</span>
-<span class="r-in"><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_boundary</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (0 0, 10 0, 10 10, 0 10, 0 0...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># returns the area-weighted centroid, element-wise</span></span>
-<span class="r-in"><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># returns the area-weighted centroid, element-wise</span></span></span>
+<span class="r-in"><span><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (5 5.00595863)</span>
-<span class="r-in"><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 10 0)"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 10 0)"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (5 0)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># s2_point_on_surface guarantees a point on surface</span></span>
-<span class="r-in"><span class="co"># Note: this is not the same as st_point_on_surface</span></span>
-<span class="r-in"><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># s2_point_on_surface guarantees a point on surface</span></span></span>
+<span class="r-in"><span><span class="co"># Note: this is not the same as st_point_on_surface</span></span></span>
+<span class="r-in"><span><span class="fu">s2_centroid</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (2.00377112 2.00234355)</span>
-<span class="r-in"><span class="fu">s2_point_on_surface</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_point_on_surface</span><span class="op">(</span><span class="st">"POLYGON ((0 0, 10 0, 1 1, 0 10, 0 0))"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0.450236802 0.450222902)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># returns the unweighted centroid of the entire input</span></span>
-<span class="r-in"><span class="fu">s2_centroid_agg</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (0 0)"</span>, <span class="st">"POINT (10 0)"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># returns the unweighted centroid of the entire input</span></span></span>
+<span class="r-in"><span><span class="fu">s2_centroid_agg</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (0 0)"</span>, <span class="st">"POINT (10 0)"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (5 0)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># returns the closest point on x to y</span></span>
-<span class="r-in"><span class="fu">s2_closest_point</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POINT (0 90)"</span> <span class="co"># north pole!</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># returns the closest point on x to y</span></span></span>
+<span class="r-in"><span><span class="fu">s2_closest_point</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POINT (0 90)"</span> <span class="co"># north pole!</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (5 10.037423)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># returns the shortest possible line between x and y</span></span>
-<span class="r-in"><span class="fu">s2_minimum_clearance_line_between</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POINT (0 90)"</span> <span class="co"># north pole!</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># returns the shortest possible line between x and y</span></span></span>
+<span class="r-in"><span><span class="fu">s2_minimum_clearance_line_between</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POINT (0 90)"</span> <span class="co"># north pole!</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] LINESTRING (5 10.037423, 0 90)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># binary operations: difference, symmetric difference, intersection and union</span></span>
-<span class="r-in"><span class="fu">s2_difference</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span>
-<span class="r-in">  <span class="co"># 32 bit platforms may need to set snap rounding</span></span>
-<span class="r-in">  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># binary operations: difference, symmetric difference, intersection and union</span></span></span>
+<span class="r-in"><span><span class="fu">s2_difference</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span></span>
+<span class="r-in"><span>  <span class="co"># 32 bit platforms may need to set snap rounding</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((5.00000004 10.0374231, 3.55739019e-08 10, 3.55739019e-08 3.55739019e-08, 10 3.50334544e-08, 10 5.01900178...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_sym_difference</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span>
-<span class="r-in">  <span class="co"># 32 bit platforms may need to set snap rounding</span></span>
-<span class="r-in">  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_sym_difference</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span></span>
+<span class="r-in"><span>  <span class="co"># 32 bit platforms may need to set snap rounding</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] MULTIPOLYGON (((5.00000004 10.0374231, 3.55739019e-08 10, 3.55739019e-08 3.55739019e-08, 10 3.50334544e-08, 10 5.01900178...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_intersection</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span>
-<span class="r-in">  <span class="co"># 32 bit platforms may need to set snap rounding</span></span>
-<span class="r-in">  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_intersection</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span></span>
+<span class="r-in"><span>  <span class="co"># 32 bit platforms may need to set snap rounding</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((5.00000004 4.99999997, 10 5.01900178, 10 9.99999999, 5.00000004 10.0374231, 5.00000004 4.99999997...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_union</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span>
-<span class="r-in">  <span class="co"># 32 bit platforms may need to set snap rounding</span></span>
-<span class="r-in">  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_union</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span>,</span></span>
+<span class="r-in"><span>  <span class="co"># 32 bit platforms may need to set snap rounding</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((5.00000004 10.0374231, 3.55739019e-08 10, 3.55739019e-08 3.55739019e-08, 10 3.50334544e-08, 10 5.01900178...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># s2_convex_hull_agg builds the convex hull of a list of geometries</span></span>
-<span class="r-in"><span class="fu">s2_convex_hull_agg</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">    <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># s2_convex_hull_agg builds the convex hull of a list of geometries</span></span></span>
+<span class="r-in"><span><span class="fu">s2_convex_hull_agg</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((0 0, 10 0, 15 5, 15 15, 5 15...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># use s2_union_agg() to aggregate geographies in a vector</span></span>
-<span class="r-in"><span class="fu">s2_coverage_union_agg</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">    <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span></span>
-<span class="r-in">  <span class="op">)</span>,</span>
-<span class="r-in">  <span class="co"># 32 bit platforms may need to set snap rounding</span></span>
-<span class="r-in">  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># use s2_union_agg() to aggregate geographies in a vector</span></span></span>
+<span class="r-in"><span><span class="fu">s2_coverage_union_agg</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((5 5, 15 5, 15 15, 5 15, 5 5))"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="co"># 32 bit platforms may need to set snap rounding</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>snap <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_snap_level</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POLYGON ((5.00000004 10.0374231, 3.55739019e-08 10, 3.55739019e-08 3.55739019e-08, 10 3.50334544e-08, 10 5.01900178...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># snap to grid rounds coordinates to a specified grid size</span></span>
-<span class="r-in"><span class="fu">s2_snap_to_grid</span><span class="op">(</span><span class="st">"POINT (0.333333333333 0.666666666666)"</span>, <span class="fl">1e-2</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># snap to grid rounds coordinates to a specified grid size</span></span></span>
+<span class="r-in"><span><span class="fu">s2_snap_to_grid</span><span class="op">(</span><span class="st">"POINT (0.333333333333 0.666666666666)"</span>, <span class="fl">1e-2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0.33 0.67)</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -327,7 +327,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

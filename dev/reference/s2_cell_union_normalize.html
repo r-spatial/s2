@@ -63,38 +63,38 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_cell_union_normalize</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_union_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_union_intersects</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_union_intersection</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_union_union</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_union_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_covering_cell_ids</span><span class="op">(</span>
-  <span class="va">x</span>,
-  min_level <span class="op">=</span> <span class="fl">0</span>,
-  max_level <span class="op">=</span> <span class="fl">30</span>,
-  max_cells <span class="op">=</span> <span class="fl">8</span>,
-  buffer <span class="op">=</span> <span class="fl">0</span>,
-  interior <span class="op">=</span> <span class="cn">FALSE</span>,
-  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">s2_covering_cell_ids_agg</span><span class="op">(</span>
-  <span class="va">x</span>,
-  min_level <span class="op">=</span> <span class="fl">0</span>,
-  max_level <span class="op">=</span> <span class="fl">30</span>,
-  max_cells <span class="op">=</span> <span class="fl">8</span>,
-  buffer <span class="op">=</span> <span class="fl">0</span>,
-  interior <span class="op">=</span> <span class="cn">FALSE</span>,
-  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>,
-  na.rm <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_cell_union_normalize</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_union_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_union_intersects</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_union_intersection</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_union_union</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_union_difference</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covering_cell_ids</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  min_level <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  max_level <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  max_cells <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  buffer <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  interior <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covering_cell_ids_agg</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  min_level <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  max_level <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  max_cells <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  buffer <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  interior <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -142,7 +142,7 @@ covering.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

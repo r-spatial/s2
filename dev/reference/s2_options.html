@@ -69,28 +69,28 @@ containment and how new geometries should be constructed.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_options</span><span class="op">(</span>
-  model <span class="op">=</span> <span class="cn">NULL</span>,
-  snap <span class="op">=</span> <span class="fu">s2_snap_identity</span><span class="op">(</span><span class="op">)</span>,
-  snap_radius <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  duplicate_edges <span class="op">=</span> <span class="cn">FALSE</span>,
-  edge_type <span class="op">=</span> <span class="st">"directed"</span>,
-  validate <span class="op">=</span> <span class="cn">FALSE</span>,
-  polyline_type <span class="op">=</span> <span class="st">"path"</span>,
-  polyline_sibling_pairs <span class="op">=</span> <span class="st">"keep"</span>,
-  simplify_edge_chains <span class="op">=</span> <span class="cn">FALSE</span>,
-  split_crossing_edges <span class="op">=</span> <span class="cn">FALSE</span>,
-  idempotent <span class="op">=</span> <span class="cn">FALSE</span>,
-  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"polyline"</span>, <span class="st">"polygon"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">s2_snap_identity</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">s2_snap_level</span><span class="op">(</span><span class="va">level</span><span class="op">)</span>
-
-<span class="fu">s2_snap_precision</span><span class="op">(</span><span class="va">precision</span><span class="op">)</span>
-
-<span class="fu">s2_snap_distance</span><span class="op">(</span><span class="va">distance</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_options</span><span class="op">(</span></span>
+<span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  snap <span class="op">=</span> <span class="fu">s2_snap_identity</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  snap_radius <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  duplicate_edges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  edge_type <span class="op">=</span> <span class="st">"directed"</span>,</span>
+<span>  validate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  polyline_type <span class="op">=</span> <span class="st">"path"</span>,</span>
+<span>  polyline_sibling_pairs <span class="op">=</span> <span class="st">"keep"</span>,</span>
+<span>  simplify_edge_chains <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  split_crossing_edges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  idempotent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"polyline"</span>, <span class="st">"polygon"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_snap_identity</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_snap_level</span><span class="op">(</span><span class="va">level</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_snap_precision</span><span class="op">(</span><span class="va">precision</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_snap_distance</span><span class="op">(</span><span class="va">distance</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -192,9 +192,9 @@ of these operators.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># use s2_options() to specify containment models, snap level</span></span>
-<span class="r-in"><span class="co"># layer creation options, and builder options</span></span>
-<span class="r-in"><span class="fu">s2_options</span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span>, snap <span class="op">=</span> <span class="fu">s2_snap_level</span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># use s2_options() to specify containment models, snap level</span></span></span>
+<span class="r-in"><span><span class="co"># layer creation options, and builder options</span></span></span>
+<span class="r-in"><span><span class="fu">s2_options</span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span>, snap <span class="op">=</span> <span class="fu">s2_snap_level</span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -237,7 +237,7 @@ of these operators.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "s2_options"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -252,7 +252,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

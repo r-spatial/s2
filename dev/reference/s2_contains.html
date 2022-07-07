@@ -65,35 +65,35 @@ a logical vector.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_within</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_covered_by</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_covers</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_disjoint</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_intersects</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_equals</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_intersects_box</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">lng1</span>,
-  <span class="va">lat1</span>,
-  <span class="va">lng2</span>,
-  <span class="va">lat2</span>,
-  detail <span class="op">=</span> <span class="fl">1000</span>,
-  options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">s2_touches</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_dwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_prepared_dwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_within</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covered_by</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covers</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_disjoint</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_intersects</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_equals</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_intersects_box</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">lng1</span>,</span>
+<span>  <span class="va">lat1</span>,</span>
+<span>  <span class="va">lng2</span>,</span>
+<span>  <span class="va">lat2</span>,</span>
+<span>  detail <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_touches</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_dwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_prepared_dwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -168,84 +168,84 @@ of these operators.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">s2_contains</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">s2_contains</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_within</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_within</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_covered_by</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_covered_by</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_covers</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_covers</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_disjoint</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_disjoint</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE  TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_intersects</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_intersects</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_equals</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">    <span class="st">"POLYGON ((10 0, 10 10, 0 10, 0 0, 10 0))"</span>,</span>
-<span class="r-in">    <span class="st">"POLYGON ((-1 -1, 10 0, 10 10, 0 10, -1 -1))"</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_equals</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((10 0, 10 10, 0 10, 0 0, 10 0))"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"POLYGON ((-1 -1, 10 0, 10 10, 0 10, -1 -1))"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_intersects</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_intersects</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_intersects_box</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">10</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_intersects_box</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_touches</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (0 0)"</span>, <span class="st">"POINT (0.5 0.75)"</span>, <span class="st">"POINT (0 0.5)"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_touches</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 0 1, 1 1, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (0 0)"</span>, <span class="st">"POINT (0.5 0.75)"</span>, <span class="st">"POINT (0 0.5)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_dwithin</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fl">0</span> <span class="co"># distance in meters</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_dwithin</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">0</span> <span class="co"># distance in meters</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">s2_dwithin</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fl">1e6</span> <span class="co"># distance in meters</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">s2_dwithin</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POINT (5 5)"</span>, <span class="st">"POINT (-1 1)"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">1e6</span> <span class="co"># distance in meters</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE TRUE</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -260,7 +260,7 @@ of these operators.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

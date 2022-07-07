@@ -71,42 +71,42 @@ the feature at <code>x[i]</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_closest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_closest_edges</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">y</span>,
-  <span class="va">k</span>,
-  min_distance <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  max_distance <span class="op">=</span> <span class="cn">Inf</span>,
-  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">s2_farthest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_distance_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_max_distance_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_contains_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_within_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_covers_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_covered_by_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_intersects_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_disjoint_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_equals_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_touches_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_dwithin_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_may_intersect_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, max_edges_per_cell <span class="op">=</span> <span class="fl">50</span>, max_feature_cells <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_closest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_closest_edges</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">k</span>,</span>
+<span>  min_distance <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  max_distance <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_farthest_feature</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_distance_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_max_distance_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_contains_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_within_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"open"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covers_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_covered_by_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_intersects_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_disjoint_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_equals_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_touches_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, options <span class="op">=</span> <span class="fu"><a href="s2_options.html">s2_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_dwithin_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_may_intersect_matrix</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, max_edges_per_cell <span class="op">=</span> <span class="fl">50</span>, max_feature_cells <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -176,44 +176,44 @@ performance.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">city_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Vatican City"</span>, <span class="st">"San Marino"</span>, <span class="st">"Luxembourg"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">cities</span> <span class="op">&lt;-</span> <span class="fu"><a href="s2_data_tbl_countries.html">s2_data_cities</a></span><span class="op">(</span><span class="va">city_names</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">country_names</span> <span class="op">&lt;-</span> <span class="va">s2_data_tbl_countries</span><span class="op">$</span><span class="va">name</span></span>
-<span class="r-in"><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu"><a href="s2_data_tbl_countries.html">s2_data_countries</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># closest feature returns y indices of the closest feature</span></span>
-<span class="r-in"><span class="co"># for each feature in x</span></span>
-<span class="r-in"><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_closest_feature</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">city_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Vatican City"</span>, <span class="st">"San Marino"</span>, <span class="st">"Luxembourg"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cities</span> <span class="op">&lt;-</span> <span class="fu"><a href="s2_data_tbl_countries.html">s2_data_cities</a></span><span class="op">(</span><span class="va">city_names</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">country_names</span> <span class="op">&lt;-</span> <span class="va">s2_data_tbl_countries</span><span class="op">$</span><span class="va">name</span></span></span>
+<span class="r-in"><span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu"><a href="s2_data_tbl_countries.html">s2_data_countries</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># closest feature returns y indices of the closest feature</span></span></span>
+<span class="r-in"><span><span class="co"># for each feature in x</span></span></span>
+<span class="r-in"><span><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_closest_feature</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Italy"      "Italy"      "Luxembourg"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># farthest feature returns y indices of the farthest feature</span></span>
-<span class="r-in"><span class="co"># for each feature in x</span></span>
-<span class="r-in"><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_farthest_feature</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># farthest feature returns y indices of the farthest feature</span></span></span>
+<span class="r-in"><span><span class="co"># for each feature in x</span></span></span>
+<span class="r-in"><span><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_farthest_feature</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "New Zealand" "New Zealand" "New Zealand"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># use s2_closest_edges() to find the k-nearest neighbours</span></span>
-<span class="r-in"><span class="va">nearest</span> <span class="op">&lt;-</span> <span class="fu">s2_closest_edges</span><span class="op">(</span><span class="va">cities</span>, <span class="va">cities</span>, k <span class="op">=</span> <span class="fl">2</span>, min_distance <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">city_names</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># use s2_closest_edges() to find the k-nearest neighbours</span></span></span>
+<span class="r-in"><span><span class="va">nearest</span> <span class="op">&lt;-</span> <span class="fu">s2_closest_edges</span><span class="op">(</span><span class="va">cities</span>, <span class="va">cities</span>, k <span class="op">=</span> <span class="fl">2</span>, min_distance <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">city_names</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Vatican City" "San Marino"   "Luxembourg"  </span>
-<span class="r-in"><span class="va">city_names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nearest</span><span class="op">)</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">city_names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nearest</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "San Marino"   "Vatican City" "San Marino"  </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># predicate matrices</span></span>
-<span class="r-in"><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_intersects_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># predicate matrices</span></span></span>
+<span class="r-in"><span><span class="va">country_names</span><span class="op">[</span><span class="fu">s2_intersects_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Italy"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># distance matrices</span></span>
-<span class="r-in"><span class="fu">s2_distance_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">cities</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># distance matrices</span></span></span>
+<span class="r-in"><span><span class="fu">s2_distance_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">cities</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]     [,2]     [,3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0.0 226040.9 986762.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 226040.9      0.0 792700.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 986762.6 792700.1      0.0</span>
-<span class="r-in"><span class="fu">s2_max_distance_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_max_distance_matrix</span><span class="op">(</span><span class="va">cities</span>, <span class="va">countries</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         [,1]    [,2]      [,3]    [,4]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 5284474 6716222  729253.1 4488169</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 5225941 6939199  798367.2 4551290</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 5543951 7659266 1564998.8 5198533</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -228,7 +228,7 @@ performance.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

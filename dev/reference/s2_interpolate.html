@@ -63,13 +63,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_project</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_project_normalized</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_interpolate</span><span class="op">(</span><span class="va">x</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_interpolate_normalized</span><span class="op">(</span><span class="va">x</span>, <span class="va">distance_normalized</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_project</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_project_normalized</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_interpolate</span><span class="op">(</span><span class="va">x</span>, <span class="va">distance</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_interpolate_normalized</span><span class="op">(</span><span class="va">x</span>, <span class="va">distance_normalized</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,17 +113,17 @@ where <code>point</code> occurs.</p></li>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">s2_project_normalized</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="st">"POINT (0 22.5)"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">s2_project_normalized</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="st">"POINT (0 22.5)"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>
-<span class="r-in"><span class="fu">s2_project</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="st">"POINT (0 22.5)"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_project</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="st">"POINT (0 22.5)"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2501890</span>
-<span class="r-in"><span class="fu">s2_interpolate_normalized</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">0.25</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_interpolate_normalized</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">0.25</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0 22.5)</span>
-<span class="r-in"><span class="fu">s2_interpolate</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">2501890</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">s2_interpolate</span><span class="op">(</span><span class="st">"LINESTRING (0 0, 0 90)"</span>, <span class="fl">2501890</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;geodesic s2_geography[1] with CRS=OGC:CRS84&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] POINT (0 22.500002)</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -138,7 +138,7 @@ where <code>point</code> occurs.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

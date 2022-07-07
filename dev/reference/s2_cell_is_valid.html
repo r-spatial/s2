@@ -63,47 +63,47 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">s2_cell_is_valid</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_debug_string</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_to_lnglat</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_center</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_boundary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_polygon</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_vertex</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span>
-
-<span class="fu">s2_cell_level</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_is_leaf</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_is_face</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">s2_cell_area</span><span class="op">(</span><span class="va">x</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_cell_area_approx</span><span class="op">(</span><span class="va">x</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_cell_parent</span><span class="op">(</span><span class="va">x</span>, level <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span>
-
-<span class="fu">s2_cell_child</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span>
-
-<span class="fu">s2_cell_edge_neighbour</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span>
-
-<span class="fu">s2_cell_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_distance</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_cell_max_distance</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">s2_cell_may_intersect</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_common_ancestor_level</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-
-<span class="fu">s2_cell_common_ancestor_level_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_cell_is_valid</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_debug_string</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_to_lnglat</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_center</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_boundary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_polygon</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_vertex</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_level</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_is_leaf</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_is_face</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_area</span><span class="op">(</span><span class="va">x</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_area_approx</span><span class="op">(</span><span class="va">x</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_parent</span><span class="op">(</span><span class="va">x</span>, level <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_child</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_edge_neighbour</span><span class="op">(</span><span class="va">x</span>, <span class="va">k</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_contains</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_distance</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_max_distance</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, radius <span class="op">=</span> <span class="fu"><a href="s2_earth_radius_meters.html">s2_earth_radius_meters</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_may_intersect</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_common_ancestor_level</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">s2_cell_common_ancestor_level_agg</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -141,7 +141,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
