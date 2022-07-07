@@ -2,9 +2,7 @@
 #ifndef GEOGRAPHY_H
 #define GEOGRAPHY_H
 
-#define R_NO_REMAP
-#include <R.h>
-#include <Rinternals.h>
+#include <Rcpp.h>
 
 #include "s2geography.h"
 
@@ -25,19 +23,15 @@ public:
     return *index_;
   }
 
-  static SEXP MakeXPtr(std::unique_ptr<s2geography::Geography> geog) {
-    SEXP xptr = PROTECT(R_MakeExternalPtr(new RGeography(std::move(geog)), R_NilValue, R_NilValue));
-    R_RegisterCFinalizer(xptr, &finalize_xptr);
-    UNPROTECT(1);
-    return xptr;
+  // For an unknown reason, returning a SEXP from MakeXPtr results in
+  // rchk reporting a memory protection error. Until this is sorted, return a
+  // Rcpp::XPtr<>() (even though this might be slower)
+  static Rcpp::XPtr<RGeography> MakeXPtr(std::unique_ptr<s2geography::Geography> geog) {
+    return Rcpp::XPtr<RGeography>(new RGeography(std::move(geog)));
   }
 
-  static SEXP MakeXPtr(std::unique_ptr<RGeography> geog) {
-    std::unique_ptr<RGeography> geog_owning = std::move(geog);
-    SEXP xptr = PROTECT(R_MakeExternalPtr(geog_owning.release(), R_NilValue, R_NilValue));
-    R_RegisterCFinalizer(xptr, &finalize_xptr);
-    UNPROTECT(1);
-    return xptr;
+  static Rcpp::XPtr<RGeography> MakeXPtr(std::unique_ptr<RGeography> geog) {
+    return Rcpp::XPtr<RGeography>(geog.release());
   }
 
   static std::unique_ptr<RGeography> MakePoint() {

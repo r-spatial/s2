@@ -135,7 +135,9 @@ int builder_feature_end(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* ha
   builder_handler_t* data = (builder_handler_t*) handler_data;
   WK_METHOD_CPP_START
   std::unique_ptr<s2geography::Geography> feat = data->builder->finish_feature();
-  builder_result_append(data, RGeography::MakeXPtr(std::move(feat)));
+  SEXP feature_xptr = PROTECT(RGeography::MakeXPtr(std::move(feat)));
+  builder_result_append(data, feature_xptr);
+  UNPROTECT(1);
   return WK_CONTINUE;
   WK_METHOD_CPP_END_INT
 }
@@ -926,7 +928,7 @@ extern "C" SEXP c_s2_projection_plate_carree(SEXP x_scale_sexp) {
 
   auto projection = new S2::PlateCarreeProjection(x_scale);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
@@ -936,7 +938,7 @@ extern "C" SEXP c_s2_projection_mercator(SEXP x_scale_sexp) {
 
   auto projection = new S2::MercatorProjection(x_scale);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::PlateCarreeProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
@@ -947,7 +949,7 @@ extern "C" SEXP c_s2_projection_orthographic(SEXP centre_sexp) {
 
   auto projection = new OrthographicProjection(centre);
   SEXP xptr = PROTECT(R_MakeExternalPtr(projection, R_NilValue, R_NilValue));
-  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<OrthographicProjection>);
+  R_RegisterCFinalizer(xptr, &finalize_cpp_xptr<S2::Projection>);
   UNPROTECT(1);
   return xptr;
 }
