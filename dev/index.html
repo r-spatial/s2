@@ -118,10 +118,10 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span></span>
+<span><span class="va">nc_s2</span> <span class="op">&lt;-</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/as_s2_geography.html">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">geometry</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nc_s2</span></span>
 <span><span class="co">#&gt; # A tibble: 100 × 2</span></span>
@@ -140,8 +140,8 @@
 <span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Use accessors to extract information about geometries:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    area <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_area</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span>,</span>
 <span>    perimeter <span class="op">=</span> <span class="fu"><a href="reference/s2_is_collection.html">s2_perimeter</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -161,16 +161,16 @@
 <span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Use predicates to subset vectors:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="reference/s2_contains.html">s2_contains</a></span><span class="op">(</span><span class="va">geometry</span>, <span class="st">"POINT (-80.9313 35.6196)"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
 <span><span class="co">#&gt;   NAME    geometry                                                              </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;   &lt;s2_geography&gt;                                                        </span></span>
 <span><span class="co">#&gt; 1 Catawba POLYGON ((-80.9312744 35.6195908, -81.0035782 35.6970558, -81.0547791…</span></span></code></pre></div>
 <p>Use transformers to create new geometries:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/s2_boundary.html">s2_boundary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="reference/s2_boundary.html">s2_boundary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 100 × 2</span></span>
 <span><span class="co">#&gt;    NAME        geometry                                                         </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;       &lt;s2_geography&gt;                                                   </span></span>
@@ -187,8 +187,8 @@
 <span><span class="co">#&gt; # … with 90 more rows</span></span></code></pre></div>
 <p>Finally, use the WKB or WKT exporters to export to sf or some other package:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">st_as_sfc</span><span class="op">(</span><span class="fu"><a href="reference/s2_geog_point.html">s2_as_binary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">nc_s2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">st_as_sfc</span><span class="op">(</span><span class="fu"><a href="reference/s2_geog_point.html">s2_as_binary</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">st_as_sf</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Simple feature collection with 100 features and 1 field</span></span>
 <span><span class="co">#&gt; Geometry type: GEOMETRY</span></span>
