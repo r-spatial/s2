@@ -35,9 +35,11 @@ class Constructor : public Handler {
     S1Angle tessellate_tolerance_;
   };
 
-  Constructor(const Options& options) :
-    options_(options),
-    tessellator_(new S2EdgeTessellator(options.projection(), options.tessellate_tolerance())) {}
+  Constructor(const Options& options) : options_(options) {
+    if (options.projection() != nullptr) {
+      this->tessellator_ = absl::make_unique<S2EdgeTessellator>(options.projection(), options.tessellate_tolerance());
+    }
+  }
 
   virtual ~Constructor() {}
 
