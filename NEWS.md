@@ -1,4 +1,4 @@
-# s2 (development version)
+# s2 1.1.0
 
 - Fix for s2 build on Windows with R <= 3.6.x (#142)
 - Fix for s2 build on MacOS with multiple openssl versions (#142, #145, #146)
