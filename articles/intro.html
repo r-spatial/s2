@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">s2</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -64,8 +60,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/s2/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/r-spatial/s2/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -85,28 +81,17 @@
       <h1 data-toc-skip>Introduction to s2</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/s2/blob/master/vignettes/intro.Rmd"><code>vignettes/intro.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/s2/blob/HEAD/vignettes/articles/intro.Rmd" class="external-link"><code>vignettes/articles/intro.Rmd</code></a></small>
       <div class="hidden name"><code>intro.Rmd</code></div>
 
     </div>
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/r-spatial/s2">s2</a></span>)
-</pre></div>
-<ul>
-<li>S2LatLng points are always latitude-longitude</li>
-<li>internally represented as S2Points, 3-D unit vectors (geocentric)</li>
-<li>S2polyline; when is a polyline invalid</li>
-<li>S2Loop: rings get reordered (different starting point)</li>
-<li>rings are not closed</li>
-<li>polygons are properly nested rings (unlike e.g. MULTIPOLYGON)</li>
-<li>in addition to empty polygon: full polygon</li>
-<li>default polygon building: not oriented, assuming their area is less than <code>2*pi</code>
-</li>
-</ul>
-</div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/s2/">s2</a></span><span class="op">)</span></span></code></pre></div>
+<p>See vignette 7, “Spherical geometry in sf using s2geometry” of package sf.</p>
+  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
@@ -117,11 +102,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Dewey Dunnington, Edzer Pebesma, Ege Rubak.</p>
+  <p></p>
+<p>Developed by Dewey Dunnington, Edzer Pebesma, Ege Rubak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>
@@ -129,6 +116,8 @@
 
   
 
+
+  
 
   </body>
 </html>
