@@ -1,6 +1,6 @@
 Package: s2
 Title: Spherical Geometry Operators Using the S2 Geometry Library
-Version: 1.1.0
+Version: 1.1.0.9000
 Authors@R: c(
      person(given = "Dewey",
            family = "Dunnington",
