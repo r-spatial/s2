@@ -187,14 +187,16 @@ S1Angle GetDistance(const S2Point& x, const S2Point& a, const S2Point& b) {
 }
 
 // dd: changed return type to int because on new clang we get:
-// s2/s2edge_distances.cc:282:11: warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+// warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
 int UpdateMinDistance(const S2Point& x, const S2Point& a, const S2Point& b,
                        S1ChordAngle* min_dist) {
   return AlwaysUpdateMinDistance<false>(x, a, b, min_dist);
 }
 
-bool UpdateMaxDistance(const S2Point& x, const S2Point& a, const S2Point& b,
-                       S1ChordAngle* max_dist) {
+// dd: changed return type to int because on new clang we get:
+// warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+int UpdateMaxDistance(const S2Point& x, const S2Point& a, const S2Point& b,
+                      S1ChordAngle* max_dist) {
   auto dist = max(S1ChordAngle(x, a), S1ChordAngle(x, b));
   if (dist > S1ChordAngle::Right()) {
     AlwaysUpdateMinDistance<true>(-x, a, b, &dist);
@@ -264,7 +266,9 @@ S2Point Project(const S2Point& x, const S2Point& a, const S2Point& b) {
   return Project(x, a, b, S2::RobustCrossProd(a, b));
 }
 
-bool UpdateEdgePairMinDistance(
+// dd: changed return type to int because on new clang we get:
+// warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+int UpdateEdgePairMinDistance(
     const S2Point& a0, const S2Point& a1,
     const S2Point& b0, const S2Point& b1,
     S1ChordAngle* min_dist) {
@@ -287,7 +291,9 @@ bool UpdateEdgePairMinDistance(
           UpdateMinDistance(b1, a0, a1, min_dist));
 }
 
-bool UpdateEdgePairMaxDistance(
+// dd: changed return type to int because on new clang we get:
+// warning: use of bitwise '|' with boolean operands [-Wbitwise-instead-of-logical]
+int UpdateEdgePairMaxDistance(
     const S2Point& a0, const S2Point& a1,
     const S2Point& b0, const S2Point& b1,
     S1ChordAngle* max_dist) {
