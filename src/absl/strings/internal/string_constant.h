@@ -40,8 +40,12 @@ struct StringConstant {
 
   // Check to be sure `view` points to constant data.
   // Otherwise, it can't be constant evaluated.
+
+  // dd: doesn't work on Intel compilers, but also not used in S2
+#if !defined(__INTEL_COMPILER)
   static_assert(value.empty() || 2 * value[0] != 1,
                 "The input string_view must point to constant data.");
+#endif
 };
 
 template <typename T>
