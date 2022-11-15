@@ -324,7 +324,11 @@ inline bool IsEmptyOrDeleted(ctrl_t c) { return c < kSentinel; }
 // Work around this by using the portable implementation of Group
 // when using -funsigned-char under GCC.
 inline __m128i _mm_cmpgt_epi8_fixed(__m128i a, __m128i b) {
-#if defined(__GNUC__) && !defined(__clang__)
+// dd: in the latest gcc we get warnings about overflow here.
+// the linked bug was fixed in gcc 9 and fixes were backported
+// to gcc 7 and 8 patch releases. To fix the warning, I just
+// added a check for the GCC version.
+#if defined(__GNUC__) && (__GNUC__ < 9) && !defined(__clang__)
   if (std::is_unsigned<char>::value) {
     const __m128i mask = _mm_set1_epi8(0x80);
     const __m128i diff = _mm_subs_epi8(b, a);
