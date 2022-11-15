@@ -409,7 +409,7 @@ std::string ExactFloat::ToStringWithMaxDigits(int max_digits) const {
       str.append(digits.begin() + 1, digits.end());
     }
     char exp_buf[20];
-    sprintf(exp_buf, "e%+02d", exp10 - 1);
+    snprintf(exp_buf, sizeof(exp_buf), "e%+02d", exp10 - 1);
     str += exp_buf;
   } else {
     // Use fixed format.  We split this into two cases depending on whether
@@ -512,7 +512,7 @@ int ExactFloat::GetDecimalDigits(int max_digits, std::string* digits) const {
 
 std::string ExactFloat::ToUniqueString() const {
   char prec_buf[20];
-  sprintf(prec_buf, "<%d>", prec());
+  snprintf(prec_buf, sizeof(prec_buf), "<%d>", prec());
   return ToString() + prec_buf;
 }
 
