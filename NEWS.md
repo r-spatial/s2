@@ -1,3 +1,5 @@
+# s2 (development version)
+
 # s2 1.1.1
 
 - Fix new CRAN check warnings (#202, #203).
