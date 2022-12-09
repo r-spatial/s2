@@ -229,7 +229,6 @@ test_that("s2_cell can be put into a data.frame", {
     data.frame(geom = new_s2_cell(NA_real_)),
     new_data_frame(list(geom = new_s2_cell(NA_real_)))
   )
-  expect_error(as.data.frame(new_s2_cell(NA_real_)), "cannot coerce class")
 })
 
 test_that("s2_cell default format/print/str methods work", {
