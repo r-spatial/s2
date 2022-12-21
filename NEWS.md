@@ -2,7 +2,7 @@
 
 # s2 1.1.1
 
-- Fix new CRAN check warnings (#202, #203).
+- Fix new CRAN check warnings (#202, #203).  
 
 # s2 1.1.0
 
