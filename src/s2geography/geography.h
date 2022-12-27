@@ -63,7 +63,7 @@ class Geography {
   // to be faster than using Region().GetCovering() directly and to
   // return a small number of cells that can be used to compute a possible
   // intersection quickly.
-  virtual void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
+  virtual void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
 };
 
 // An Geography representing zero or more points using a std::vector<S2Point>
@@ -78,9 +78,9 @@ class PointGeography : public Geography {
   int num_shapes() const { return 1; }
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
 
-  const std::vector<S2Point> &Points() const { return points_; }
+  const std::vector<S2Point>& Points() const { return points_; }
 
  private:
   std::vector<S2Point> points_;
@@ -101,9 +101,9 @@ class PolylineGeography : public Geography {
   int num_shapes() const;
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
 
-  const std::vector<std::unique_ptr<S2Polyline>> &Polylines() const {
+  const std::vector<std::unique_ptr<S2Polyline>>& Polylines() const {
     return polylines_;
   }
 
@@ -117,7 +117,7 @@ class PolylineGeography : public Geography {
 // perspective).
 class PolygonGeography : public Geography {
  public:
-  PolygonGeography() : polygon_(new S2Polygon()) {}
+  PolygonGeography(): polygon_(new S2Polygon()) {}
   PolygonGeography(std::unique_ptr<S2Polygon> polygon)
       : polygon_(std::move(polygon)) {}
 
@@ -125,9 +125,9 @@ class PolygonGeography : public Geography {
   int num_shapes() const { return 1; }
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
 
-  const std::unique_ptr<S2Polygon> &Polygon() const { return polygon_; }
+  const std::unique_ptr<S2Polygon>& Polygon() const { return polygon_; }
 
  private:
   std::unique_ptr<S2Polygon> polygon_;
@@ -141,7 +141,7 @@ class GeographyCollection : public Geography {
 
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features)
       : features_(std::move(features)), total_shapes_(0) {
-    for (const auto &feature : features_) {
+    for (const auto& feature : features_) {
       num_shapes_.push_back(feature->num_shapes());
       total_shapes_ += feature->num_shapes();
     }
@@ -151,7 +151,7 @@ class GeographyCollection : public Geography {
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
 
-  const std::vector<std::unique_ptr<Geography>> &Features() const {
+  const std::vector<std::unique_ptr<Geography>>& Features() const {
     return features_;
   }
 
@@ -174,12 +174,12 @@ class ShapeIndexGeography : public Geography {
       MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
       : shape_index_(options) {}
 
-  explicit ShapeIndexGeography(const Geography &geog) { Add(geog); }
+  explicit ShapeIndexGeography(const Geography& geog) { Add(geog); }
 
   // Add a Geography to the index, returning the last shape_id
   // that was added to the index or -1 if no shapes were added
   // to the index.
-  int Add(const Geography &geog) {
+  int Add(const Geography& geog) {
     int id = -1;
     for (int i = 0; i < geog.num_shapes(); i++) {
       id = shape_index_.Add(geog.Shape(i));
@@ -191,7 +191,7 @@ class ShapeIndexGeography : public Geography {
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
 
-  const MutableS2ShapeIndex &ShapeIndex() const { return shape_index_; }
+  const MutableS2ShapeIndex& ShapeIndex() const { return shape_index_; }
 
  private:
   MutableS2ShapeIndex shape_index_;
