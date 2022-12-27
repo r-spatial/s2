@@ -1,5 +1,8 @@
 # s2 (development version)
 
+- Fixed test for `as.data.frame()` for `s2_cell()` to comply with new wk
+  version and the latest release of R (#207).
+
 # s2 1.1.1
 
 - Fix new CRAN check warnings (#202, #203).  
