@@ -11,7 +11,7 @@
 namespace s2geography {
 
 class Exception : public std::runtime_error {
- public:
+public:
   Exception(std::string what) : std::runtime_error(what.c_str()) {}
 };
 
@@ -23,7 +23,7 @@ class Exception : public std::runtime_error {
 // and underlying S2 objects), however, the interface is designed to allow
 // future abstractions where this is not the case.
 class Geography {
- public:
+public:
   virtual ~Geography() {}
 
   // Returns 0, 1, or 2 if all Shape()s that are returned will have
@@ -63,13 +63,13 @@ class Geography {
   // to be faster than using Region().GetCovering() directly and to
   // return a small number of cells that can be used to compute a possible
   // intersection quickly.
-  virtual void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+  virtual void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
 };
 
 // An Geography representing zero or more points using a std::vector<S2Point>
 // as the underlying representation.
 class PointGeography : public Geography {
- public:
+public:
   PointGeography() {}
   PointGeography(S2Point point) { points_.push_back(point); }
   PointGeography(std::vector<S2Point> points) : points_(std::move(points)) {}
@@ -78,18 +78,18 @@ class PointGeography : public Geography {
   int num_shapes() const { return 1; }
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
 
-  const std::vector<S2Point>& Points() const { return points_; }
+  const std::vector<S2Point> &Points() const { return points_; }
 
- private:
+private:
   std::vector<S2Point> points_;
 };
 
 // An Geography representing zero or more polylines using the S2Polyline class
 // as the underlying representation.
 class PolylineGeography : public Geography {
- public:
+public:
   PolylineGeography() {}
   PolylineGeography(std::unique_ptr<S2Polyline> polyline) {
     polylines_.push_back(std::move(polyline));
@@ -101,13 +101,13 @@ class PolylineGeography : public Geography {
   int num_shapes() const;
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
 
-  const std::vector<std::unique_ptr<S2Polyline>>& Polylines() const {
+  const std::vector<std::unique_ptr<S2Polyline>> &Polylines() const {
     return polylines_;
   }
 
- private:
+private:
   std::vector<std::unique_ptr<S2Polyline>> polylines_;
 };
 
@@ -116,8 +116,8 @@ class PolylineGeography : public Geography {
 // perspective) can represent zero or more polygons (from the simple features
 // perspective).
 class PolygonGeography : public Geography {
- public:
-  PolygonGeography() {}
+public:
+  PolygonGeography() : polygon_(new S2Polygon()) {}
   PolygonGeography(std::unique_ptr<S2Polygon> polygon)
       : polygon_(std::move(polygon)) {}
 
@@ -125,23 +125,23 @@ class PolygonGeography : public Geography {
   int num_shapes() const { return 1; }
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
-  void GetCellUnionBound(std::vector<S2CellId>* cell_ids) const;
+  void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
 
-  const std::unique_ptr<S2Polygon>& Polygon() const { return polygon_; }
+  const std::unique_ptr<S2Polygon> &Polygon() const { return polygon_; }
 
- private:
+private:
   std::unique_ptr<S2Polygon> polygon_;
 };
 
 // An Geography wrapping zero or more Geography objects. These objects
 // can be used to represent a simple features GEOMETRYCOLLECTION.
 class GeographyCollection : public Geography {
- public:
+public:
   GeographyCollection() : total_shapes_(0) {}
 
   GeographyCollection(std::vector<std::unique_ptr<Geography>> features)
       : features_(std::move(features)), total_shapes_(0) {
-    for (const auto& feature : features_) {
+    for (const auto &feature : features_) {
       num_shapes_.push_back(feature->num_shapes());
       total_shapes_ += feature->num_shapes();
     }
@@ -151,11 +151,11 @@ class GeographyCollection : public Geography {
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
 
-  const std::vector<std::unique_ptr<Geography>>& Features() const {
+  const std::vector<std::unique_ptr<Geography>> &Features() const {
     return features_;
   }
 
- private:
+private:
   std::vector<std::unique_ptr<Geography>> features_;
   std::vector<int> num_shapes_;
   int total_shapes_;
@@ -169,17 +169,17 @@ class GeographyCollection : public Geography {
 // own any Geography objects that are added do it and thus is only
 // valid for the scope of those objects.
 class ShapeIndexGeography : public Geography {
- public:
+public:
   ShapeIndexGeography(
       MutableS2ShapeIndex::Options options = MutableS2ShapeIndex::Options())
       : shape_index_(options) {}
 
-  explicit ShapeIndexGeography(const Geography& geog) { Add(geog); }
+  explicit ShapeIndexGeography(const Geography &geog) { Add(geog); }
 
   // Add a Geography to the index, returning the last shape_id
   // that was added to the index or -1 if no shapes were added
   // to the index.
-  int Add(const Geography& geog) {
+  int Add(const Geography &geog) {
     int id = -1;
     for (int i = 0; i < geog.num_shapes(); i++) {
       id = shape_index_.Add(geog.Shape(i));
@@ -191,10 +191,10 @@ class ShapeIndexGeography : public Geography {
   std::unique_ptr<S2Shape> Shape(int id) const;
   std::unique_ptr<S2Region> Region() const;
 
-  const MutableS2ShapeIndex& ShapeIndex() const { return shape_index_; }
+  const MutableS2ShapeIndex &ShapeIndex() const { return shape_index_; }
 
- private:
+private:
   MutableS2ShapeIndex shape_index_;
 };
 
-}  // namespace s2geography
+} // namespace s2geography
