@@ -257,6 +257,13 @@ test_that("s2_union(x) works", {
   )
 })
 
+test_that("s2_union(x) works with empty input", {
+  expect_identical(
+    s2_as_text(s2_union("MULTIPOLYGON EMPTY")),
+    "GEOMETRYCOLLECTION EMPTY"
+  )
+})
+
 test_that("s2_union(x) works with polygons that have overlapping input regions", {
   # two outer loops
   txt <- "MULTIPOLYGON (((0 0, 0 1, 1 1, 1 0, 0 0)), ((0.1 0.9, 0.1 1.9, 1.1 1.9, 1.1 0.9, 0.1 0.9)))"
