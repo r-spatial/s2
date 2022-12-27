@@ -292,8 +292,12 @@ std::unique_ptr<PointGeography> s2_build_point(const Geography& geog) {
       GlobalOptions::OutputAction::OUTPUT_ACTION_ERROR,
       GlobalOptions::OutputAction::OUTPUT_ACTION_ERROR);
 
-  return std::unique_ptr<PointGeography>(
+  if (s2_is_empty(*geog_out)) {
+    return absl::make_unique<PointGeography>();
+  } else {
+    return std::unique_ptr<PointGeography>(
       dynamic_cast<PointGeography*>(geog_out.release()));
+  }
 }
 
 std::unique_ptr<PolylineGeography> s2_build_polyline(const Geography& geog) {
@@ -302,8 +306,12 @@ std::unique_ptr<PolylineGeography> s2_build_polyline(const Geography& geog) {
       GlobalOptions::OutputAction::OUTPUT_ACTION_INCLUDE,
       GlobalOptions::OutputAction::OUTPUT_ACTION_ERROR);
 
-  return std::unique_ptr<PolylineGeography>(
+  if (s2_is_empty(*geog_out)) {
+    return absl::make_unique<PolylineGeography>();
+  } else {
+    return std::unique_ptr<PolylineGeography>(
       dynamic_cast<PolylineGeography*>(geog_out.release()));
+  }
 }
 
 std::unique_ptr<PolygonGeography> s2_build_polygon(const Geography& geog) {
@@ -312,8 +320,12 @@ std::unique_ptr<PolygonGeography> s2_build_polygon(const Geography& geog) {
       GlobalOptions::OutputAction::OUTPUT_ACTION_ERROR,
       GlobalOptions::OutputAction::OUTPUT_ACTION_INCLUDE);
 
-  return std::unique_ptr<PolygonGeography>(
-      dynamic_cast<PolygonGeography*>(geog_out.release()));
+  if (s2_is_empty(*geog_out)) {
+    return absl::make_unique<PolygonGeography>();
+  } else {
+    return std::unique_ptr<PolygonGeography>(
+        dynamic_cast<PolygonGeography*>(geog_out.release()));
+  }
 }
 
 void RebuildAggregator::Add(const Geography& geog) { index_.Add(geog); }

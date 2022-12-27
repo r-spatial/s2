@@ -11,3 +11,4 @@
 ^pkgdown$
 ^README\.Rmd$
 ^vignettes/articles$
+^\.clang-format$

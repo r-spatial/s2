@@ -2,6 +2,7 @@
 
 - Fixed test for `as.data.frame()` for `s2_cell()` to comply with new wk
   version and the latest release of R (#207).
+- Fix unary union of an empty multipolygon (#208).
 
 # s2 1.1.1
 
