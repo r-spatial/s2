@@ -125,9 +125,10 @@ fix_pragmas("src/absl/container/internal/counting_allocator.h")
 # Aborts
 fix_aborts <- function(f) {
   content <- readr::read_file(f)
-  content <- stringr::str_replace_all(content, fixed("abort();"), "throw std::runtime_error(\"abort()\");")
+  content <- stringr::str_replace_all(content, fixed("abort()"), "throw std::runtime_error(\"abort()\")")
   readr::write_file(content, f)
 }
 
 fix_aborts("src/absl/base/internal/raw_logging.cc")
 fix_aborts("src/absl/base/internal/sysinfo.cc")
+fix_aborts("src/absl/debugging/symbolize_elf.inc")
