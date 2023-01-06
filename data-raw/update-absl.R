@@ -105,3 +105,29 @@ absl_objects <- list.files("src/absl", ".cc$", recursive = TRUE) %>%
 clipr::write_clip(absl_objects)
 usethis::edit_file("src/Makevars.win")
 usethis::edit_file("src/Makevars.in")
+
+# Edits needed to make CMD check happy
+
+# Pragmas
+fix_pragmas <- function(f) {
+  content <- readr::read_file(f)
+  content <- stringr::str_replace_all(content, "\n#pragma", "\n// #pragma")
+  readr::write_file(content, f)
+}
+
+fix_pragmas("src/absl/base/internal/invoke.h")
+fix_pragmas("src/absl/container/inlined_vector.h")
+fix_pragmas("src/absl/container/internal/inlined_vector.h")
+fix_pragmas("src/absl/functional/internal/any_invocable.h")
+fix_pragmas("src/absl/types/internal/optional.h")
+fix_pragmas("src/absl/container/internal/counting_allocator.h")
+
+# Aborts
+fix_aborts <- function(f) {
+  content <- readr::read_file(f)
+  content <- stringr::str_replace_all(content, fixed("abort();"), "throw std::runtime_error(\"abort()\");")
+  readr::write_file(content, f)
+}
+
+fix_aborts("src/absl/base/internal/raw_logging.cc")
+fix_aborts("src/absl/base/internal/sysinfo.cc")

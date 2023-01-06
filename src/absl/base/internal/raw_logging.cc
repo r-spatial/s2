@@ -181,7 +181,7 @@ void RawLogVA(absl::LogSeverity severity, const char* file, int line,
   // was suppressed.
   if (severity == absl::LogSeverity::kFatal) {
     abort_hook(file, line, buffer, prefix_end, buffer + kLogBufSize);
-    abort();
+    throw std::runtime_error("abort()");
   }
 }
 

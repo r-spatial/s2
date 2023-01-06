@@ -223,7 +223,7 @@ static int64_t ReadMonotonicClockNanos() {
 #endif
   if (rc != 0) {
     perror("clock_gettime() failed");
-    abort();
+    throw std::runtime_error("abort()");
   }
   return int64_t{t.tv_sec} * 1000000000 + t.tv_nsec;
 }
@@ -440,7 +440,7 @@ static void InitGetTID() {
   if (pthread_key_create(&tid_key, FreeTID) != 0) {
     // The logging system calls GetTID() so it can't be used here.
     perror("pthread_key_create failed");
-    abort();
+    throw std::runtime_error("abort()");
   }
 
   // Initialize tid_array.
@@ -482,7 +482,7 @@ pid_t GetTID() {
 
   if (pthread_setspecific(tid_key, reinterpret_cast<void *>(tid)) != 0) {
     perror("pthread_setspecific failed");
-    abort();
+    throw std::runtime_error("abort()");
   }
 
   return static_cast<pid_t>(tid);

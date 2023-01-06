@@ -105,14 +105,14 @@ struct MemFunAndRef : StrippedAccept<MemFunAndRef> {
 // Ignore bogus GCC warnings on this line.
 // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101436 for similar example.
 #if ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(11, 0)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Warray-bounds"
+// #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
     return (std::forward<Obj>(obj).*
             std::forward<MemFun>(mem_fun))(std::forward<Args>(args)...);
 #if ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(11, 0)
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
 #endif
   }
 };

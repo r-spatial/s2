@@ -38,8 +38,8 @@ namespace inlined_vector_internal {
 
 // GCC does not deal very well with the below code
 #if !defined(__clang__) && defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Warray-bounds"
 #endif
 
 template <typename A>
@@ -943,7 +943,7 @@ auto Storage<T, N, A>::Swap(Storage* other_storage_ptr) -> void {
 
 // End ignore "array-bounds"
 #if !defined(__clang__) && defined(__GNUC__)
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
 #endif
 
 }  // namespace inlined_vector_internal
