@@ -16,6 +16,10 @@
 #ifndef ABSL_BASE_INTERNAL_LOW_LEVEL_ALLOC_H_
 #define ABSL_BASE_INTERNAL_LOW_LEVEL_ALLOC_H_
 
+#if defined(Free)
+#undef Free
+#endif
+
 // A simple thread-safe memory allocator that does not depend on
 // mutexes or thread-specific data.  It is intended to be used
 // sparingly, and only when malloc() would introduce an unwanted
