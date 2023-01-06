@@ -4,9 +4,7 @@ PKG_CXXFLAGS = @cflags@ -pthread
 CXX_STD = CXX11
 
 ABSL_LIBS = absl/base/internal/cycleclock.o \
-    absl/base/internal/exponential_biased.o \
     absl/base/internal/low_level_alloc.o \
-    absl/base/internal/periodic_sampler.o \
     absl/base/internal/raw_logging.o \
     absl/base/internal/scoped_set_env.o \
     absl/base/internal/spinlock_wait.o \
@@ -27,19 +25,31 @@ ABSL_LIBS = absl/base/internal/cycleclock.o \
     absl/debugging/internal/examine_stack.o \
     absl/debugging/internal/stack_consumption.o \
     absl/debugging/internal/vdso_support.o \
-    absl/debugging/leak_check_disable.o \
     absl/debugging/leak_check.o \
     absl/debugging/stacktrace.o \
     absl/debugging/symbolize.o \
     absl/numeric/int128.o \
+    absl/profiling/internal/exponential_biased.o \
+    absl/profiling/internal/periodic_sampler.o \
     absl/strings/ascii.o \
     absl/strings/charconv.o \
+    absl/strings/cord_analysis.o \
+    absl/strings/cord_buffer.o \
     absl/strings/cord.o \
     absl/strings/escaping.o \
     absl/strings/internal/charconv_bigint.o \
     absl/strings/internal/charconv_parse.o \
     absl/strings/internal/cord_internal.o \
+    absl/strings/internal/cord_rep_btree_navigator.o \
+    absl/strings/internal/cord_rep_btree_reader.o \
+    absl/strings/internal/cord_rep_btree.o \
+    absl/strings/internal/cord_rep_consume.o \
+    absl/strings/internal/cord_rep_crc.o \
     absl/strings/internal/cord_rep_ring.o \
+    absl/strings/internal/cordz_functions.o \
+    absl/strings/internal/cordz_handle.o \
+    absl/strings/internal/cordz_info.o \
+    absl/strings/internal/cordz_sample_token.o \
     absl/strings/internal/escaping.o \
     absl/strings/internal/memutil.o \
     absl/strings/internal/ostringstream.o \

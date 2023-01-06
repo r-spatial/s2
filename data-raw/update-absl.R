@@ -1,8 +1,9 @@
 
 library(tidyverse)
+tag <- "20220623.1"
 
 # download Abseil
-source_url <- "https://github.com/abseil/abseil-cpp/archive/refs/tags/20210324.2.zip"
+source_url <- glue::glue("https://github.com/abseil/abseil-cpp/archive/refs/tags/{tag}.zip")
 curl::curl_download(source_url, "data-raw/abseil-cpp-source.zip")
 unzip("data-raw/abseil-cpp-source.zip", exdir = "data-raw")
 
@@ -22,69 +23,76 @@ absl_copy <- function(src, dst) {
   stopifnot(all(file.copy(file.path(src, src_files), dst_files)))
 }
 
+unlink("src/absl", recursive = TRUE)
+
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/container",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/container"),
   "src/absl/container"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/base",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/base"),
   "src/absl/base"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/meta",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/meta"),
   "src/absl/meta"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/synchronization",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/synchronization"),
   "src/absl/synchronization"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/time",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/time"),
   "src/absl/time"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/strings",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/strings"),
   "src/absl/strings"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/utility",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/utility"),
   "src/absl/utility"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/debugging",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/debugging"),
   "src/absl/debugging"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/memory",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/memory"),
   "src/absl/memory"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/types",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/types"),
   "src/absl/types"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/numeric",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/numeric"),
   "src/absl/numeric"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/algorithm",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/algorithm"),
   "src/absl/algorithm"
 )
 
 absl_copy(
-  "data-raw/abseil-cpp-20210324.2/absl/functional",
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/functional"),
   "src/absl/functional"
+)
+
+absl_copy(
+  glue::glue("data-raw/abseil-cpp-{tag}/absl/profiling"),
+  "src/absl/profiling"
 )
 
 absl_objects <- list.files("src/absl", ".cc$", recursive = TRUE) %>%
@@ -95,3 +103,5 @@ absl_objects <- list.files("src/absl", ".cc$", recursive = TRUE) %>%
   paste0("ABSL_LIBS = ", .)
 
 clipr::write_clip(absl_objects)
+usethis::edit_file("src/Makevars.win")
+usethis::edit_file("src/Makevars.in")

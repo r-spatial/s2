@@ -1,4 +1,3 @@
-#include "cpp-compat.h"
 // Copyright 2018 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +23,11 @@
 #endif
 #endif
 
+// Emscripten symbolization relies on JS. Do not use them in standalone mode.
+#if defined(__EMSCRIPTEN__) && !defined(STANDALONE_WASM)
+#define ABSL_INTERNAL_HAVE_SYMBOLIZE_WASM
+#endif
+
 #if defined(ABSL_INTERNAL_HAVE_ELF_SYMBOLIZE)
 #include "absl/debugging/symbolize_elf.inc"
 #elif defined(ABSL_INTERNAL_HAVE_SYMBOLIZE_WIN32)
@@ -32,6 +36,8 @@
 #include "absl/debugging/symbolize_win32.inc"
 #elif defined(__APPLE__)
 #include "absl/debugging/symbolize_darwin.inc"
+#elif defined(ABSL_INTERNAL_HAVE_SYMBOLIZE_WASM)
+#include "absl/debugging/symbolize_emscripten.inc"
 #else
 #include "absl/debugging/symbolize_unimplemented.inc"
 #endif
