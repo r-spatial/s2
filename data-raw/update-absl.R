@@ -132,3 +132,21 @@ fix_aborts <- function(f) {
 fix_aborts("src/absl/base/internal/raw_logging.cc")
 fix_aborts("src/absl/base/internal/sysinfo.cc")
 fix_aborts("src/absl/debugging/symbolize_elf.inc")
+
+# Manual updates
+
+# The symbolizer implementation causes some trouble. We don't use this feature here
+# and there seems to be a way to turn it off completely. Do this.
+usethis::edit_file("src/absl/debugging/symbolize.cc")
+
+# On Windows, R.h defines a macro 'Free', which we have to undefine
+usethis::edit_file("src/absl/base/internal/low_level_alloc.h")
+
+# On Windows with rtools35 (i.e., very old GCC with incomplete C++11), a reference
+# to std::get_time() causes compilation error. We don't need strptime here, so just
+# return nullptr in this function.
+usethis::edit_file("src/absl/time/internal/cctz/src/time_zone_format.cc")
+
+# Windows builds have some additional issues with format strings. These are all within
+# absl logger functions...just remove the definition of ABSL_RAW_LOG(...).
+usethis::edit_file("src/absl/base/internal/raw_logging.h")
