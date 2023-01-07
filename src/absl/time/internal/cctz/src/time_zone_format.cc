@@ -59,11 +59,7 @@ namespace {
 #if !HAS_STRPTIME
 // Build a strptime() using C++11's std::get_time().
 char* strptime(const char* s, const char* fmt, std::tm* tm) {
-  std::istringstream input(s);
-  input >> std::get_time(tm, fmt);
-  if (input.fail()) return nullptr;
-  return const_cast<char*>(s) +
-         (input.eof() ? strlen(s) : static_cast<std::size_t>(input.tellg()));
+  return nullptr;
 }
 #endif
 
