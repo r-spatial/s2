@@ -38,6 +38,10 @@
 #include "absl/base/macros.h"
 #include "absl/base/port.h"
 
+#if defined(ABSL_HAVE_INTRINSIC_INT128)
+#error "This should not be defined here"
+#endif
+
 #if defined(_MSC_VER)
 // In very old versions of MSVC and when the /Zc:wchar_t flag is off, wchar_t is
 // a typedef for unsigned short.  Otherwise wchar_t is mapped to the __wchar_t
