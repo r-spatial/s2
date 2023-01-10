@@ -150,3 +150,12 @@ usethis::edit_file("src/absl/time/internal/cctz/src/time_zone_format.cc")
 # Windows builds have some additional issues with format strings. These are all within
 # absl logger functions...just remove the definition of ABSL_RAW_LOG(...).
 usethis::edit_file("src/absl/base/internal/raw_logging.h")
+
+# Fix a workaround for older gcc that causes a check warning. The bug that the
+# workaround is addressing only applies to old gcc, so only use that bit of code
+# for old gcc
+usethis::edit_file("src/absl/container/internal/raw_hash_set.h")
+
+# CRAN compiles with -Wpedantic, so we can't use the __int128 intrinsic type
+# undefine ABSL_HAVE_INTRINSIC_INT128 here:
+usethis::edit_file("src/absl/base/config.h")

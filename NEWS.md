@@ -5,6 +5,7 @@
 - Fix unary union of an empty multipolygon (#208).
 - Added `#include <cstdint>` to an Abseil header to fix compilation with
   gcc13 (#209, #210).
+- Update internal Abseil to 20220623.1 LTS (#210).
 
 # s2 1.1.1
 
