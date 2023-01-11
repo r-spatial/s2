@@ -1,4 +1,3 @@
-#include "cpp-compat.h"
 // Copyright 2017 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,9 +61,77 @@ namespace absl {
 ABSL_NAMESPACE_BEGIN
 namespace base_internal {
 
+namespace {
+
+#if defined(_WIN32)
+
+// Returns number of bits set in `bitMask`
+DWORD Win32CountSetBits(ULONG_PTR bitMask) {
+  for (DWORD bitSetCount = 0; ; ++bitSetCount) {
+    if (bitMask == 0) return bitSetCount;
+    bitMask &= bitMask - 1;
+  }
+}
+
+// Returns the number of logical CPUs using GetLogicalProcessorInformation(), or
+// 0 if the number of processors is not available or can not be computed.
+// https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformation
+int Win32NumCPUs() {
+#pragma comment(lib, "kernel32.lib")
+  using Info = SYSTEM_LOGICAL_PROCESSOR_INFORMATION;
+
+  DWORD info_size = sizeof(Info);
+  Info* info(static_cast<Info*>(malloc(info_size)));
+  if (info == nullptr) return 0;
+
+  bool success = GetLogicalProcessorInformation(info, &info_size);
+  if (!success && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
+    free(info);
+    info = static_cast<Info*>(malloc(info_size));
+    if (info == nullptr) return 0;
+    success = GetLogicalProcessorInformation(info, &info_size);
+  }
+
+  DWORD logicalProcessorCount = 0;
+  if (success) {
+    Info* ptr = info;
+    DWORD byteOffset = 0;
+    while (byteOffset + sizeof(Info) <= info_size) {
+      switch (ptr->Relationship) {
+        case RelationProcessorCore:
+          logicalProcessorCount += Win32CountSetBits(ptr->ProcessorMask);
+          break;
+
+        case RelationNumaNode:
+        case RelationCache:
+        case RelationProcessorPackage:
+          // Ignore other entries
+          break;
+
+        default:
+          // Ignore unknown entries
+          break;
+      }
+      byteOffset += sizeof(Info);
+      ptr++;
+    }
+  }
+  free(info);
+  return logicalProcessorCount;
+}
+
+#endif
+
+}  // namespace
+
 static int GetNumCPUs() {
 #if defined(__myriad2__)
   return 1;
+#elif defined(_WIN32)
+  const unsigned hardware_concurrency = Win32NumCPUs();
+  return hardware_concurrency ? hardware_concurrency : 1;
+#elif defined(_AIX)
+  return sysconf(_SC_NPROCESSORS_ONLN);
 #else
   // Other possibilities:
   //  - Read /sys/devices/system/cpu/online and use cpumask_parse()
@@ -156,9 +223,7 @@ static int64_t ReadMonotonicClockNanos() {
 #endif
   if (rc != 0) {
     perror("clock_gettime() failed");
-    // dd: R CMD check will fail if abort() is used
-    // abort();
-    cpp_compat_abort();
+    throw std::runtime_error("abort()");
   }
   return int64_t{t.tv_sec} * 1000000000 + t.tv_nsec;
 }
@@ -375,9 +440,7 @@ static void InitGetTID() {
   if (pthread_key_create(&tid_key, FreeTID) != 0) {
     // The logging system calls GetTID() so it can't be used here.
     perror("pthread_key_create failed");
-    // dd: R CMD check will fail if abort() is used
-    // abort();
-    cpp_compat_abort();
+    throw std::runtime_error("abort()");
   }
 
   // Initialize tid_array.
@@ -419,7 +482,7 @@ pid_t GetTID() {
 
   if (pthread_setspecific(tid_key, reinterpret_cast<void *>(tid)) != 0) {
     perror("pthread_setspecific failed");
-    cpp_compat_abort();
+    throw std::runtime_error("abort()");
   }
 
   return static_cast<pid_t>(tid);

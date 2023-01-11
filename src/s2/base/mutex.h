@@ -19,43 +19,6 @@
 #include <condition_variable>
 #include <mutex>
 
-namespace absl {
-
-class Mutex {
- public:
-  Mutex() = default;
-  ~Mutex() = default;
-  Mutex(Mutex const&) = delete;
-  Mutex& operator=(Mutex const&) = delete;
-
-  inline void Lock() { mutex_.lock(); }
-  inline void Unlock() { mutex_.unlock(); }
-
- private:
-  std::mutex mutex_;
-
-  friend class CondVar;
-};
-
-class CondVar {
- public:
-  CondVar() = default;
-  ~CondVar() = default;
-  CondVar(CondVar const&) = delete;
-  CondVar& operator=(CondVar const&) = delete;
-
-  inline void Wait(Mutex* mu) {
-    std::unique_lock<std::mutex> lock(mu->mutex_, std::adopt_lock);
-    cond_var_.wait(lock);
-    lock.release();
-  }
-  inline void Signal() { cond_var_.notify_one(); }
-  inline void SignalAll() { cond_var_.notify_all(); }
-
- private:
-  std::condition_variable cond_var_;
-};
-
-}  // namespace absl
+#include <absl/synchronization/mutex.h>
 
 #endif  // S2_BASE_MUTEX_H_

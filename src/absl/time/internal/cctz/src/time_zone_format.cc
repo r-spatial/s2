@@ -56,21 +56,10 @@ namespace detail {
 
 namespace {
 
-#if !HAS_STRPTIME && !defined(OMIT_STRPTIME)
+#if !HAS_STRPTIME
 // Build a strptime() using C++11's std::get_time().
 char* strptime(const char* s, const char* fmt, std::tm* tm) {
-  std::istringstream input(s);
-  input >> std::get_time(tm, fmt);
-  if (input.fail()) return nullptr;
-  return const_cast<char*>(s) +
-         (input.eof() ? strlen(s) : static_cast<std::size_t>(input.tellg()));
-}
-#endif
-
-#if defined(OMIT_STRPTIME)
-// Dummy version of strptime() (not needed for s2 and not accessible via old rtools)
-char* strptime(const char* s, const char* fmt, std::tm* tm) {
-  return (char*) s;
+  return nullptr;
 }
 #endif
 
