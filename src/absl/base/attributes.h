@@ -629,19 +629,21 @@
 // no effect on diagnostics. In any case this macro has no effect on runtime
 // behavior and performance of code.
 
-#ifdef ABSL_FALLTHROUGH_INTENDED
-#error "ABSL_FALLTHROUGH_INTENDED should not be defined."
-#elif ABSL_HAVE_CPP_ATTRIBUTE(fallthrough)
-#define ABSL_FALLTHROUGH_INTENDED [[fallthrough]]
-#elif ABSL_HAVE_CPP_ATTRIBUTE(clang::fallthrough)
-#define ABSL_FALLTHROUGH_INTENDED [[clang::fallthrough]]
-#elif ABSL_HAVE_CPP_ATTRIBUTE(gnu::fallthrough)
-#define ABSL_FALLTHROUGH_INTENDED [[gnu::fallthrough]]
-#else
+// The use of ABSL_HAVE_CPP_ATTRIBUTE() here uses C++17 attributes
+// even if -std=c++17 is not set, which does not work with -Wpedantic on R
+// #ifdef ABSL_FALLTHROUGH_INTENDED
+// #error "ABSL_FALLTHROUGH_INTENDED should not be defined."
+// #elif ABSL_HAVE_CPP_ATTRIBUTE(fallthrough)
+// #define ABSL_FALLTHROUGH_INTENDED [[fallthrough]]
+// #elif ABSL_HAVE_CPP_ATTRIBUTE(clang::fallthrough)
+// #define ABSL_FALLTHROUGH_INTENDED [[clang::fallthrough]]
+// #elif ABSL_HAVE_CPP_ATTRIBUTE(gnu::fallthrough)
+// #define ABSL_FALLTHROUGH_INTENDED [[gnu::fallthrough]]
+// #else
 #define ABSL_FALLTHROUGH_INTENDED \
   do {                            \
   } while (0)
-#endif
+// #endif
 
 // ABSL_DEPRECATED()
 //

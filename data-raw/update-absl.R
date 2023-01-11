@@ -159,3 +159,8 @@ usethis::edit_file("src/absl/container/internal/raw_hash_set.h")
 # CRAN compiles with -Wpedantic, so we can't use the __int128 intrinsic type
 # undefine ABSL_HAVE_INTRINSIC_INT128 here:
 usethis::edit_file("src/absl/base/config.h")
+
+# The use of ABSL_HAVE_CPP_ATTRIBUTE() with ABSL_FALLTHROUGH_INTENDED
+# here uses C++17 attributes even if -std=c++17 is not set,
+# which causes CRAN warnings with -Wpedantic
+usethis::edit_file("src/absl/base/attributes.h")
