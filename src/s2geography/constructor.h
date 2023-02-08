@@ -395,7 +395,7 @@ class FeatureConstructor : public CollectionConstructor {
       return absl::make_unique<GeographyCollection>();
     } else {
       std::unique_ptr<Geography> feature = std::move(features_.back());
-      if (feature.get() == nullptr) {
+      if (feature == nullptr) {
         throw Exception("finish_feature() generated nullptr");
       }
 
