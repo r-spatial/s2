@@ -22,8 +22,8 @@ std::unique_ptr<Geography> s2_geography_from_layers(
     GlobalOptions::OutputAction polygon_layer_action) {
   // count non-empty dimensions
   bool has_polygon = !polygon->is_empty();
-  bool has_polylines = polylines.size() > 0;
-  bool has_points = points.size() > 0;
+  bool has_polylines = !polylines.empty();
+  bool has_points = !points.empty();
 
   // use the requstested dimensions to produce the right kind of EMTPY
   bool include_polygon =
@@ -350,7 +350,7 @@ void S2UnionAggregator::Add(const Geography& geog) {
     return;
   }
 
-  if (other_.size() == 0) {
+  if (other_.empty()) {
     other_.push_back(absl::make_unique<Node>());
     other_.back()->index1.Add(geog);
     return;
@@ -399,7 +399,7 @@ std::unique_ptr<Geography> S2UnionAggregator::Finalize() {
     }
   }
 
-  if (other_.size() == 0) {
+  if (other_.empty()) {
     return root_.Merge(options_);
   } else {
     std::unique_ptr<Geography> merged = other_[0]->Merge(options_);
