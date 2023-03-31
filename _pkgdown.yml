@@ -1,6 +1,8 @@
 url: https://r-spatial.github.io/s2
 development:
   mode: auto
+template:
+  bootstrap: 5
 
 reference:
 - title: Geography Constructors and Exporters
