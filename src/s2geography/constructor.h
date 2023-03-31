@@ -174,7 +174,7 @@ class PolylineConstructor : public Constructor {
   Result geom_end() {
     finish_points();
 
-    if (points_.size() > 0) {
+    if (!points_.empty()) {
       auto polyline = absl::make_unique<S2Polyline>();
       polyline->Init(std::move(points_));
 
@@ -195,11 +195,11 @@ class PolylineConstructor : public Constructor {
   std::unique_ptr<Geography> finish() {
     std::unique_ptr<PolylineGeography> result;
 
-    if (polylines_.size() > 0) {
+    if (polylines_.empty()) {
+      result = absl::make_unique<PolylineGeography>();
+    } else {
       result = absl::make_unique<PolylineGeography>(std::move(polylines_));
       polylines_.clear();
-    } else {
-      result = absl::make_unique<PolylineGeography>();
     }
 
     return std::unique_ptr<Geography>(result.release());
@@ -226,7 +226,7 @@ class PolygonConstructor : public Constructor {
   Result ring_end() {
     finish_points();
 
-    if (points_.size() == 0) {
+    if (points_.empty()) {
       return Result::CONTINUE;
     }
 
@@ -395,7 +395,7 @@ class FeatureConstructor : public CollectionConstructor {
       return absl::make_unique<GeographyCollection>();
     } else {
       std::unique_ptr<Geography> feature = std::move(features_.back());
-      if (feature.get() == nullptr) {
+      if (feature == nullptr) {
         throw Exception("finish_feature() generated nullptr");
       }
 

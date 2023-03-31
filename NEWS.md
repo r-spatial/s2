@@ -1,3 +1,5 @@
+# s2 (development version)
+
 # s2 1.1.2
 
 - Fixed test for `as.data.frame()` for `s2_cell()` to comply with new wk
