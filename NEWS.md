@@ -1,5 +1,10 @@
 # s2 (development version)
 
+* Made a test less strict to pass tests on Alpine Linux (#218, #220).
+* Updated tests to pass on forthcoming waldo package update (@hadley, #226).
+* Updated vendored file modifications to suppress a multi-line comment
+  warning on gcc (#214, #227).
+
 # s2 1.1.2
 
 - Fixed test for `as.data.frame()` for `s2_cell()` to comply with new wk
@@ -11,14 +16,14 @@
 
 # s2 1.1.1
 
-- Fix new CRAN check warnings (#202, #203).  
+- Fix new CRAN check warnings (#202, #203).
 
 # s2 1.1.0
 
 - Fix for s2 build on Windows with R <= 3.6.x (#142)
 - Fix for s2 build on MacOS with multiple openssl versions (#142, #145, #146)
 - Fix for s2 build on 32-bit openssl (#143, #147)
-- Added `s2_convex_hull()` and `s2_convex_hull_agg()` (@spiry34, #150, 
+- Added `s2_convex_hull()` and `s2_convex_hull_agg()` (@spiry34, #150,
   #151, #163).
 - Added `max_distance` argument to `s2_closest_edges()`, making
   distance-constrained k-nearest neighbours possible (#125, #156, #162).
@@ -43,12 +48,12 @@
   vctr) to represent point coordinates. This is much faster than the previous
   representation which relied on `list()` of external pointers (#181, #159).
 - Added arguments `planar` and `tessellate_tol_m` to `s2_as_text()`,
-  `s2_as_binary()`. Use `planar = TRUE` and set `tessellate_tol_m` to the 
-  maximum error for your use-case to automatically subdivide edges to 
+  `s2_as_binary()`. Use `planar = TRUE` and set `tessellate_tol_m` to the
+  maximum error for your use-case to automatically subdivide edges to
   preserve or "straight" lines in Plate carree projection on import (#182).
 - Added arguments `planar` and `tessellate_tol_m` to `s2_geog_from_text()`, and
-  `s2_geog_from_wkb()`. Use `planar = TRUE` and set `tessellate_tol_m` to the 
-  maximum error for your use-case to automatically subdivide edges to 
+  `s2_geog_from_wkb()`. Use `planar = TRUE` and set `tessellate_tol_m` to the
+  maximum error for your use-case to automatically subdivide edges to
   ensure or "straight" lines in Plate carree projection on export (#182).
 
 # s2 1.0.7
@@ -74,7 +79,7 @@
   indexing system to R users (#85, #114).
 * Added `s2_closest_edges()` to make k-nearest neighbours calculation
   possible on the sphere (#111, #112).
-* Added `s2_interpolate()`, `s2_interpolate_normalized()`, 
+* Added `s2_interpolate()`, `s2_interpolate_normalized()`,
   `s2_project()`, and `s2_project_normalized()` to provide linear
   referencing support on the sphere (#96, #110).
 * Fixed import of empty points from WKB (#109).
@@ -124,10 +129,10 @@
   throughout the package (#69).
 * Added `s2_bounds_cap()` and `s2_bounds_rect()` to compute bounding areas
   using geographic coordinates (@edzer, #63).
-* `s2_*_matrix()` predicates now efficiently use indexing to compute the 
+* `s2_*_matrix()` predicates now efficiently use indexing to compute the
   results of many predicate comparisons (#61).
 
 # s2 1.0.0
 
-This version is a complete rewrite of the former s2 CRAN package, entirely 
+This version is a complete rewrite of the former s2 CRAN package, entirely
 backwards incompatible with previous versions.
