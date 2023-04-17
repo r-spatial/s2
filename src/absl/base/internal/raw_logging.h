@@ -41,16 +41,16 @@
 // This will print an almost standard log line like this to stderr only:
 //   E0821 211317 file.cc:123] RAW: Failed foo with 22: bad_file
 
-#define ABSL_RAW_LOG(severity, ...)                                            \
+#define ABSL_RAW_LOG(severity, ...)
   // R/Windows gives compilation warnings here that fail the CMD
   // check.
-  // do {                                                                         \
-  //   constexpr const char* absl_raw_logging_internal_basename =                 \
-  //       ::absl::raw_logging_internal::Basename(__FILE__,                       \
-  //                                              sizeof(__FILE__) - 1);          \
-  //   ::absl::raw_logging_internal::RawLog(ABSL_RAW_LOGGING_INTERNAL_##severity, \
-  //                                        absl_raw_logging_internal_basename,   \
-  //                                        __LINE__, __VA_ARGS__);               \
+  // do {
+  //   constexpr const char* absl_raw_logging_internal_basename =
+  //       ::absl::raw_logging_internal::Basename(__FILE__,
+  //                                              sizeof(__FILE__) - 1);
+  //   ::absl::raw_logging_internal::RawLog(ABSL_RAW_LOGGING_INTERNAL_##severity,
+  //                                        absl_raw_logging_internal_basename,
+  //                                        __LINE__, __VA_ARGS__);
   // } while (0)
 
 // Similar to CHECK(condition) << message, but for low-level modules:
