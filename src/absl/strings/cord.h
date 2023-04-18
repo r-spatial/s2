@@ -1179,8 +1179,15 @@ inline cord_internal::CordRepFlat* Cord::InlineRep::MakeFlatWithExtraCapacity(
   size_t len = data_.inline_size();
   auto* result = CordRepFlat::New(len + extra);
   result->length = len;
-  memcpy(result->Data(), data_.as_chars(), sizeof(data_));
-  return result;
+  // The following line results in a warning in gcc13 because result->Data()
+  // is a structure that is declared to be 3 bytes in length but is allocated
+  // using C++ trickery such that the following line is safe in a way that
+  // the compiler cannot detect. S2 doesn't use cords anyway, so we just
+  // comment out this line and throw an exception to make sure we don't silently
+  // do the wrong thing.
+  // memcpy(result->Data(), data_.as_chars(), sizeof(data_));
+  throw std::runtime_error(
+    "Cord::InlineRep::MakeFlatWithExtraCapacity() not supported in Abseil as vendored by R/s2");
 }
 
 inline void Cord::InlineRep::EmplaceTree(CordRep* rep,
