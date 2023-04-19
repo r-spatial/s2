@@ -9,6 +9,9 @@ s2_bounds_cap(x)
 
 s2_bounds_rect(x)
 }
+\arguments{
+\item{x}{An \code{\link[=s2_geography]{s2_geography()}} vector.}
+}
 \value{
 Both functions return a \code{data.frame}:
 \itemize{

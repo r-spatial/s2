@@ -8,7 +8,7 @@
 #' the order of points or polylines. `lng_lo` values larger than `lng_hi` indicate
 #' regions that span the antimeridian, see the Fiji example.
 #'
-#' @inheritParams s2_is_collection
+#' @param x An [s2_geography()] vector.
 #' @export
 #' @return Both functions return a `data.frame`:
 #'
