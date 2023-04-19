@@ -69,7 +69,7 @@ s2_cell_common_ancestor_level_agg(x, na.rm = FALSE)
 \arguments{
 \item{x, y}{An \code{\link[=s2_cell]{s2_cell()}} vector}
 
-\item{k}{An integer between 1 and 4}
+\item{k}{An integer between 0 and 3}
 
 \item{radius}{The radius to use (e.g., \code{\link[=s2_earth_radius_meters]{s2_earth_radius_meters()}})}
 

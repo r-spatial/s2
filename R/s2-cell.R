@@ -183,7 +183,7 @@ Summary.s2_cell <- function(x, ..., na.rm = FALSE) {
 #'
 #' @param x,y An [s2_cell()] vector
 #' @param level An integer between 0 and 30, inclusive.
-#' @param k An integer between 1 and 4
+#' @param k An integer between 0 and 3
 #' @param radius The radius to use (e.g., [s2_earth_radius_meters()])
 #' @param na.rm Remove NAs prior to computing aggregate?
 #' @export
