@@ -25,11 +25,7 @@ for point and multipoint geometries, \code{\link[graphics:lines]{graphics::lines
 and multilinestring geometries, and \code{\link[graphics:polypath]{graphics::polypath()}} for polygon
 and multipolygon geometries.}
 
-\item{asp}{Passed to \code{\link[graphics:plot.default]{graphics::plot()}}}
-
-\item{xlab}{Passed to \code{\link[graphics:plot.default]{graphics::plot()}}}
-
-\item{ylab}{Passed to \code{\link[graphics:plot.default]{graphics::plot()}}}
+\item{asp, xlab, ylab}{Passed to \code{\link[graphics:plot.default]{graphics::plot()}}}
 
 \item{rule}{The rule to use for filling polygons (see \code{\link[graphics:polypath]{graphics::polypath()}})}
 

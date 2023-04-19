@@ -79,9 +79,7 @@ be moved to satisfy the planar edge constraint.}
 
 \item{wkb_bytes}{A \code{list()} of \code{raw()}}
 
-\item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
-are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
-(e.g., character vectors of well-known text) directly.}
+\item{x}{An object that can be converted to an s2_geography vector}
 
 \item{precision}{The number of significant digits to export when
 writing well-known text. If \code{trim = FALSE}, the number of

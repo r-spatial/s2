@@ -9,11 +9,6 @@ s2_bounds_cap(x)
 
 s2_bounds_rect(x)
 }
-\arguments{
-\item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
-are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
-(e.g., character vectors of well-known text) directly.}
-}
 \value{
 Both functions return a \code{data.frame}:
 \itemize{
