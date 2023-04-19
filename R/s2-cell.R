@@ -90,9 +90,27 @@ as_s2_cell.wk_xy <- function(x, ...) {
 
 #' @rdname s2_cell
 #' @export
+as_s2_cell.integer64 <- function(x, ...) {
+  storage <- unclass(x)
+  storage[is.na(x)] <- NA_real_
+  new_s2_cell(storage)
+}
+
+#' @rdname s2_cell
+#' @export
 new_s2_cell <- function(x) {
   stopifnot(is.double(x))
   structure(x, class = c("s2_cell", "wk_vctr"))
+}
+
+# registered in zzz.R
+as.integer64.s2_cell <- function(x, ...) {
+  # We store 64-bit integegers the same way bit64 does so we can just set the
+  # class attribute and propagate NA values in the way that bit64 expects them.
+  x_is_na <- is.na(x)
+  class(x) <- "integer64"
+  x[x_is_na] <- bit64::NA_integer64_
+  x
 }
 
 #' @export

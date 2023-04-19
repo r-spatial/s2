@@ -34,6 +34,7 @@ Imports:
     Rcpp,
     wk (>= 0.6.0)
 Suggests: 
+    bit64,
     testthat (>= 3.0.0),
     vctrs
 URL: https://r-spatial.github.io/s2/, https://github.com/r-spatial/s2, https://s2geometry.io/

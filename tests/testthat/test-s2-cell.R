@@ -10,6 +10,13 @@ test_that("s2_cell class works", {
   )
 })
 
+test_that("s2_cell bit64::integer64 support works", {
+  cells <- c(as_s2_cell(NA_character_), s2_cell_sentinel())
+  int64s <- bit64::as.integer64(cells)
+  expect_identical(int64s, bit64::as.integer64(c(NA, -1)))
+  expect_identical(as_s2_cell(int64s), cells)
+})
+
 test_that("invalid and sentinel values work as expected", {
   expect_false(s2_cell_is_valid(s2_cell_sentinel()))
   expect_false(s2_cell_is_valid(s2_cell_invalid()))
