@@ -10,6 +10,8 @@
     s3_register("vctrs::vec_restore", cls)
     s3_register("vctrs::vec_ptype_abbr", cls)
   }
+
+  s3_register("bit64::as.integer64", "s2_cell")
 }
 
 s3_register <- function(generic, class, method = NULL) {
