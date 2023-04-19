@@ -45,11 +45,7 @@ s2_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 s2_prepared_dwithin(x, y, distance, radius = s2_earth_radius_meters())
 }
 \arguments{
-\item{x}{\link[=as_s2_geography]{geography vectors}. These inputs
-are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
-(e.g., character vectors of well-known text) directly.}
-
-\item{y}{\link[=as_s2_geography]{geography vectors}. These inputs
+\item{x, y}{\link[=as_s2_geography]{geography vectors}. These inputs
 are passed to \code{\link[=as_s2_geography]{as_s2_geography()}}, so you can pass other objects
 (e.g., character vectors of well-known text) directly.}
 
