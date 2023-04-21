@@ -2,8 +2,6 @@ VERSION = 1.1.1k
 PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../windows/openssl-$(VERSION)/include -I../src
 PKG_LIBS = -Ls2 -ls2static -L../windows/openssl-$(VERSION)/lib${R_ARCH}${CRT} -lssl -lcrypto -lws2_32 -lgdi32 -lcrypt32
 
-CXX_STD = CXX11
-
 STATLIB = s2/libs2static.a
 
 ABSL_LIBS = absl/base/internal/cycleclock.o \
