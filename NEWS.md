@@ -1,4 +1,4 @@
-# s2 (development version)
+# s2 1.1.3
 
 * Made a test less strict to pass tests on Alpine Linux (#218, #220).
 * Updated tests to pass on forthcoming waldo package update (@hadley, #226).
