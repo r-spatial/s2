@@ -166,7 +166,7 @@ test_that("s2_project() and s2_project_normalized() work", {
       "LINESTRING (0 0, 0 90)",
       c("POINT (0 0)", "POINT (0 22.5)", "POINT (0 67.5)", "POINT (0 90)", "POINT EMPTY", NA)
     ),
-    c(0, 0.25, 0.75, 1, NA_real_, NA_real_)
+    c(0, 0.25, 0.75, 1, NaN, NA_real_)
   )
 
   expect_identical(
