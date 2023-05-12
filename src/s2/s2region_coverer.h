@@ -248,7 +248,10 @@ class S2RegionCoverer {
  private:
   struct Candidate {
     void* operator new(std::size_t size, std::size_t max_children) {
-      return ::operator new (size + max_children * sizeof(Candidate *));
+      // dd: CRAN reports a sanitizer error when using this magic, so
+      // we just hard code for the maximum size the comments suggest it will be
+      // return ::operator new (size + max_children * sizeof(Candidate *));
+      return ::operator new (size);
     }
 
     void operator delete(void* p) {
@@ -268,7 +271,9 @@ class S2RegionCoverer {
     S2Cell cell;
     bool is_terminal;        // Cell should not be expanded further.
     int num_children = 0;    // Number of children that intersect the region.
-    __extension__ Candidate* children[0];  // Actual size may be 0, 4, 16, or 64 elements.
+    // dd: To avoid a sanitizer, we hard-code 64 here rather than rely on
+    // flexible array member magic.
+    Candidate* children[64];  // Actual size may be 0, 4, 16, or 64 elements.
   };
 
   // If the cell intersects the given region, return a new candidate with no
