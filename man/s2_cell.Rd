@@ -9,6 +9,7 @@
 \alias{as_s2_cell.character}
 \alias{as_s2_cell.s2_geography}
 \alias{as_s2_cell.wk_xy}
+\alias{as_s2_cell.integer64}
 \alias{new_s2_cell}
 \title{Create S2 Cell vectors}
 \usage{
@@ -17,8 +18,6 @@ s2_cell(x = character())
 s2_cell_sentinel()
 
 s2_cell_invalid()
-
-s2_cell_sentinel()
 
 as_s2_cell(x, ...)
 
@@ -29,6 +28,8 @@ as_s2_cell(x, ...)
 \method{as_s2_cell}{s2_geography}(x, ...)
 
 \method{as_s2_cell}{wk_xy}(x, ...)
+
+\method{as_s2_cell}{integer64}(x, ...)
 
 new_s2_cell(x)
 }
