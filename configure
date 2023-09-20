@@ -1,9 +1,14 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
-# if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
-# if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
-# if test -f "$CMAKE"; then echo "no ‘cmake’ command found"; exit 1; fi
+if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
+if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
+if ${CMAKE} --version ; then
+  echo "Using CMAKE=$CMAKE"
+  echo "Using MAKE=$MAKE $MAKEVARS"
+else
+  echo "cmake not found"
+fi
 
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -19,13 +24,6 @@ CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
 CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake"
-
-if [ -z "$CMAKE" ]; then
-  CMAKE=cmake
-fi
-
-echo "Using CMAKE=$CMAKE"
-echo "Using MAKE=$MAKE $MAKEVARS"
 
 build_cmake () {
   if [ ! -d "tools/build/$1" ]; then
