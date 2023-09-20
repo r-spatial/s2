@@ -1,10 +1,6 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
-OPENSSL_ROOT_DIR=
-
-
-
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
   echo "could not determine R_HOME"
@@ -27,7 +23,7 @@ fi
 echo "Using CMAKE=$CMAKE"
 echo "Using MAKE=$MAKE $MAKEVARS"
 
-function build_cmake() {
+function build_cmake () {
   if [ ! -d "tools/build/$1" ]; then
     mkdir -p "tools/build/$1"
   fi
