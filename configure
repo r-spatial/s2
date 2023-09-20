@@ -1,19 +1,65 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
-if [ -d tools/dist ]; then
-  echo "Already built"
-else
-  echo "building"
-  mkdir tools/build && cd tools/build
-  cmake ../../tools/vendor/s2geography -DS2GEOGRAPHY_S2_SOURCE=BREW -DBUILD_SHARED_LIBS=OFF
-  cmake --build .
-  cmake --install . --prefix=../dist
-  cd ../..
+OPENSSL_ROOT_DIR=
+
+
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
 fi
 
-PKG_LIBS="-L`pwd`/tools/dist/lib -ls2geography -I/opt/homebrew/Cellar/s2geometry/0.10.0_5/lib -ls2 -L/opt/homebrew/Cellar/abseil/20230802.1 -L/opt/homebrew/Cellar/openssl@3/3.1.2/lib -lcrypto -lssl"
-PKG_CFLAGS="-I`pwd`/tools/dist/include -I/opt/homebrew/Cellar/s2geometry/0.10.0_5/include -I/opt/homebrew/Cellar/abseil/20230802.1/include -I/opt/homebrew/Cellar/openssl@3/3.1.2/include"
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CXX=`${R_HOME}/bin/R CMD config CXX17`
+CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
+LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+
+CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake"
+
+if [ -z "$CMAKE" ]; then
+  CMAKE=cmake
+fi
+
+echo "Using CMAKE=$CMAKE"
+echo "Using MAKE=$MAKE $MAKEVARS"
+
+function build_cmake() {
+  if [ ! -d "tools/build/$1" ]; then
+    mkdir -p "tools/build/$1"
+  fi
+
+  cd "tools/build/$1"
+
+  ${CMAKE} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+    -DCMAKE_CXX_STANDARD=17 $2 \
+    "../../vendor/$1" &&
+    ${MAKE} ${MAKEVARS} &&
+    ${CMAKE} --install . --prefix=../../dist
+
+  cd ../../..
+}
+
+# Consider doing this in a separate CMakeLists.txt?
+build_cmake abseil-cpp &&
+  build_cmake s2geometry &&
+  build_cmake s2geography -DS2_ROOT_DIR="`pwd`/tools/dist"
+
+# Assemble bulit libraries
+CMAKE_LIBS=`ls tools/dist/lib | grep -e "lib" | sed -e "s/^lib/-l/" -e "s/.a$//" | tr '\n' ' '`
+OPENSSL_INCLUDE_DIR=`cat tools/build/s2geography/OPENSSL_INCLUDE_DIR`
+OPENSSL_CRYPTO_LIBRARY=`cat tools/build/s2geography/OPENSSL_CRYPTO_LIBRARY`
+OPENSSSL_LIB_DIR=`dirname $OPENSSL_CRYPTO_LIBRARY`
+
+PKG_LIBS="-L`pwd`/tools/dist/lib $CMAKE_LIBS -L$OPENSSSL_LIB_DIR -lcrypto"
+PKG_CFLAGS="-I`pwd`/tools/dist/include -I$OPENSSL_INCLUDE_DIR"
 
 # From apache/arrow/r/configure:
 # If on Raspberry Pi, need to manually link against latomic
@@ -24,7 +70,6 @@ fi
 
 echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
-
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars

@@ -23,106 +23,25 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 # Dependencies
 # ------------
 
-# openssl on Apple / Homebrew (dependency via s2geometry)
-# copied from Arrow
-# (copyright The Apache Software Foundation, Apache License, Version 2.0)
-
-if(APPLE AND NOT OPENSSL_ROOT_DIR)
-  find_program(BREW_PROG brew)
-  if(BREW_PROG)
-    execute_process(COMMAND ${BREW_PROG} --prefix "openssl@1.1"
-                    OUTPUT_VARIABLE OPENSSL11_BREW_PREFIX
-                    OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if(OPENSSL11_BREW_PREFIX)
-      set(OPENSSL_ROOT_DIR ${OPENSSL11_BREW_PREFIX})
-    else()
-      execute_process(COMMAND ${BREW_PROG} --prefix "openssl"
-                      OUTPUT_VARIABLE OPENSSL_BREW_PREFIX
-                      OUTPUT_STRIP_TRAILING_WHITESPACE)
-      if(OPENSSL_BREW_PREFIX)
-        set(OPENSSL_ROOT_DIR ${OPENSSL_BREW_PREFIX})
-      endif()
-    endif()
-  endif()
-endif()
+find_package(OpenSSL REQUIRED)
 
 # s2geometry
 
-if(DEFINED ENV{CONDA_PREFIX})
-  set(S2GEOGRAPHY_S2_SOURCE_DEFAULT "CONDA")
-else()
-  set(S2GEOGRAPHY_S2_SOURCE_DEFAULT "AUTO")
-endif()
+find_package(s2 REQUIRED)
+message(STATUS "Found s2: ${s2_INCLUDE_DIRS}")
 
-set(S2GEOGRAPHY_S2_SOURCE
-  "${S2GEOGRAPHY_S2_SOURCE_DEFAULT}"
-  CACHE STRING "Method to use for acquiring the s2geometry dependency")
+find_package(OpenSSL)
+target_include_directories(s2 INTERFACE ${OPENSSL_INCLUDE_DIR})
 
-message(STATUS "Using ${S2GEOGRAPHY_S2_SOURCE} approach to find s2geometry")
-
-macro(build_s2)
-  message(STATUS "Building s2geometry from source (version 0.10.0)")
-
-  FetchContent_Declare(
-    s2
-    GIT_REPOSITORY https://github.com/google/s2geometry.git
-    GIT_TAG tags/v0.10.0
-    GIT_SHALLOW TRUE)
-  FetchContent_MakeAvailable(s2)
-
-  set_property(TARGET s2 PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
-
-  # this might be needed since s2geometry includes it in general
-  # but not for any target explicilty?
-  find_package(OpenSSL)
-  target_include_directories(s2 INTERFACE ${OPENSSL_INCLUDE_DIR})
-endmacro()
-
-if(${S2GEOGRAPHY_S2_SOURCE} STREQUAL "CONDA")
-  set(S2_ROOT_DIR "$ENV{CONDA_PREFIX}")
-  set(S2_SOURCE "SYSTEM")
-elseif(${S2GEOGRAPHY_S2_SOURCE} STREQUAL "BREW")
-  # required for Homebrew installed s2geometry headers to find OpenSSL headers
-  find_package(OpenSSL)
-  include_directories(${OPENSSL_INCLUDE_DIR})
-  set(S2_SOURCE "SYSTEM")
-else()
-  set(S2_SOURCE ${S2GEOGRAPHY_S2_SOURCE})
-endif()
-
-if(${S2_SOURCE} STREQUAL "AUTO")
-  find_package(s2 QUIET)
-  if(${s2_FOUND})
-    message(STATUS "Found s2: ${s2_INCLUDE_DIRS}")
-  else()
-    build_s2()
-  endif()
-elseif(${S2_SOURCE} STREQUAL "BUNDLED")
-  build_s2()
-elseif(${S2_SOURCE} STREQUAL "SYSTEM")
-  find_package(s2 REQUIRED)
-  if(NOT ${s2_FOUND})
-    message(FATAL_ERROR "Couldn't find s2geometry")
-  endif()
-endif()
-
-if (MSVC AND NOT ${S2_SOURCE} STREQUAL "BUNDLED")
-  # used in s2geometry's CMakeLists.txt but not defined in target
-  # TODO: move this in FindS2.cmake?
-  target_compile_definitions(s2 INTERFACE _USE_MATH_DEFINES)
-  target_compile_definitions(s2 INTERFACE NOMINMAX)
-  target_compile_options(s2 INTERFACE /J)
-endif()
+# Export the include and lib directories
+file(WRITE ${CMAKE_BINARY_DIR}/OPENSSL_INCLUDE_DIR "${OPENSSL_INCLUDE_DIR}")
+file(WRITE ${CMAKE_BINARY_DIR}/OPENSSL_CRYPTO_LIBRARY "${OPENSSL_CRYPTO_LIBRARY}")
 
 # Abseil (bundled build not supported)
 
 find_package(absl REQUIRED)
-if(${absl_FOUND})
-  get_target_property(ABSL_INCLUDE_DIRS absl::memory INTERFACE_INCLUDE_DIRECTORIES)
-  message(STATUS "Found absl: ${ABSL_INCLUDE_DIRS}/absl")
-else()
-  message(FATAL_ERROR "Couldn't find absl")
-endif()
+get_target_property(ABSL_INCLUDE_DIRS absl::memory INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "Found absl: ${ABSL_INCLUDE_DIRS}/absl")
 
 # GTest (always bundled)
 
