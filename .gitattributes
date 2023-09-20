@@ -1,1 +1,2 @@
-tools/vendor linguist-vendored
+tools/vendor/abseil-cpp linguist-vendored
+tools/vendor/s2-geometry linguist-vendored

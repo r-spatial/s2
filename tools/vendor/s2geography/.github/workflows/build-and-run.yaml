@@ -1,0 +1,88 @@
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: Build and Run (Linux)
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y cmake libssl-dev
+
+      - name: Cache Build Directory
+        id: cache-build
+        uses: actions/cache@v3
+        with:
+          path: build
+          key: ${{ runner.os }}-0
+
+      - name: Init build dir
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        run: mkdir build
+
+      - name: Fetch abseil
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: abseil/abseil-cpp
+          ref: 215105818dfde3174fe799600bb0f3cae233d0bf
+          path: build/absl-src
+          fetch-depth: 0
+
+      - name: Configure and Build Abseil
+        if: steps.cache-build.outputs.cache-hit != 'true'
+        run: |
+          cd build/absl-src
+          cmake . -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_CXX_STANDARD=11 -DABSL_ENABLE_INSTALL=ON
+          cmake --build .
+          cmake --install . --prefix ../dist
+
+      - name: Install Abseil
+        run: |
+          cd build
+          cmake --install absl-src --prefix ../dist
+
+      - name: Clean previous coverage
+        run: |
+          rm `find . -name "*.gcno"` || true
+          rm `find . -name "*.gcda"` || true
+          rm -rf build/cov || true
+
+      - name: Build s2geography
+        run: |
+          cd build
+          cmake .. -Dabsl_DIR=`pwd`/../dist/lib/cmake/absl -DS2GEOGRAPHY_BUILD_EXAMPLES=ON -DS2GEOGRAPHY_BUILD_TESTS=ON -DS2GEOGRAPHY_CODE_COVERAGE=ON -DCMAKE_CXX_STANDARD=11 -DBUILD_SHARED_LIBS=OFF
+          cmake --build .
+          cmake --install . --prefix ../dist
+
+      - name: Run tests
+        run: |
+          cd build
+          ctest -T test --output-on-failure .
+
+      - name: Calculate coverage
+        run: |
+          SOURCE_PREFIX=`pwd`
+          mkdir build/cov
+          cd build/cov
+          gcov -abcfu --source-prefix=$SOURCE_PREFIX `find ../CMakeFiles/s2geography.dir/ -name "*.gcno"`
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          directory: build/cov
+
+      - name: Run example-simple
+        run: |
+          ./dist/examples/example-simple
