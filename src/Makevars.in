@@ -1,3 +1,5 @@
 PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
 PKG_LIBS = @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
+
+CXX_STD=CXX14

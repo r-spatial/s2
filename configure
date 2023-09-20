@@ -1,6 +1,10 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
+# if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
+# if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
+# if test -f "$CMAKE"; then echo "no ‘cmake’ command found"; exit 1; fi
+
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
   echo "could not determine R_HOME"
@@ -8,10 +12,10 @@ if test -z "${R_HOME}"; then
 fi
 
 CC=`"${R_HOME}/bin/R" CMD config CC`
-CXX=`${R_HOME}/bin/R CMD config CXX17`
+CXX=`${R_HOME}/bin/R CMD config CXX14`
 CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
 CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake"
@@ -23,7 +27,7 @@ fi
 echo "Using CMAKE=$CMAKE"
 echo "Using MAKE=$MAKE $MAKEVARS"
 
-function build_cmake () {
+build_cmake () {
   if [ ! -d "tools/build/$1" ]; then
     mkdir -p "tools/build/$1"
   fi
@@ -35,7 +39,7 @@ function build_cmake () {
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
     -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
-    -DCMAKE_CXX_STANDARD=17 $2 \
+    -DCMAKE_CXX_STANDARD=14 $2 \
     "../../vendor/$1" &&
     ${MAKE} ${MAKEVARS} &&
     ${CMAKE} --install . --prefix=../../dist
@@ -44,14 +48,19 @@ function build_cmake () {
 }
 
 # Consider doing this in a separate CMakeLists.txt?
-build_cmake abseil-cpp &&
-  build_cmake s2geometry &&
-  build_cmake s2geography -DS2_ROOT_DIR="`pwd`/tools/dist"
+
+if [ -d tools/build ] || [ ! -d tools/dist ]; then
+  build_cmake abseil-cpp -DABSL_PROPAGATE_CXX_STD=ON &&
+    build_cmake s2geometry &&
+    build_cmake s2geography -DS2_ROOT_DIR="`pwd`/tools/dist" &&
+    cp tools/build/s2geography/OPENSSL* tools/dist/ &&
+    rm -rf tools/build
+fi
 
 # Assemble bulit libraries
 CMAKE_LIBS=`ls tools/dist/lib | grep -e "lib" | sed -e "s/^lib/-l/" -e "s/.a$//" | tr '\n' ' '`
-OPENSSL_INCLUDE_DIR=`cat tools/build/s2geography/OPENSSL_INCLUDE_DIR`
-OPENSSL_CRYPTO_LIBRARY=`cat tools/build/s2geography/OPENSSL_CRYPTO_LIBRARY`
+OPENSSL_INCLUDE_DIR=`cat tools/dist/OPENSSL_INCLUDE_DIR`
+OPENSSL_CRYPTO_LIBRARY=`cat tools/dist/OPENSSL_CRYPTO_LIBRARY`
 OPENSSSL_LIB_DIR=`dirname $OPENSSL_CRYPTO_LIBRARY`
 
 PKG_LIBS="-L`pwd`/tools/dist/lib $CMAKE_LIBS -L$OPENSSSL_LIB_DIR -lcrypto"
