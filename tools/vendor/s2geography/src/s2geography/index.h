@@ -3,7 +3,7 @@
 
 #include <unordered_set>
 
-#include "s2geography/geography.h"
+#include "geography.h"
 
 namespace s2geography {
 

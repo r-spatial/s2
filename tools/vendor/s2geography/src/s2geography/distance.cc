@@ -1,10 +1,10 @@
 
-#include "s2geography/distance.h"
+#include "distance.h"
 
 #include <s2/s2closest_edge_query.h>
 #include <s2/s2furthest_edge_query.h>
 
-#include "s2geography/geography.h"
+#include "geography.h"
 
 namespace s2geography {
 

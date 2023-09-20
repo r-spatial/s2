@@ -1,111 +1,19 @@
-# Anticonf (tm) script by Jeroen Ooms (2020)
-# This script will query 'pkg-config' for the required cflags and ldflags.
-# If pkg-config is unavailable or does not find the library, try setting
-# INCLUDE_DIR and LIB_DIR manually via e.g:
-# R CMD INSTALL --configure-vars='INCLUDE_DIR=/.../include LIB_DIR=/.../lib'
 
-# Library settings
-PKG_CONFIG_NAME="openssl"
-PKG_DEB_NAME="libssl-dev"
-PKG_RPM_NAME="openssl-devel"
-PKG_CSW_NAME="libssl_dev"
-PKG_BREW_NAME="openssl@1.1"
-PKG_TEST_FILE="tools/version.c"
-PKG_LIBS="-lssl -lcrypto"
-PKG_CFLAGS=""
+# https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
-# Use pkg-config if available
-pkg-config ${PKG_CONFIG_NAME} --atleast-version=1.0  2>/dev/null
-if [ $? -eq 0 ]; then
-  PKGCONFIG_CFLAGS=`pkg-config --cflags ${PKG_CONFIG_NAME}`
-  PKGCONFIG_LIBS=`pkg-config --libs ${PKG_CONFIG_NAME}`
-fi
-
-# Note that cflags may be empty in case of success
-if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
-  echo "Found INCLUDE_DIR and/or LIB_DIR!"
-  PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
-  PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
-elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
-  echo "Found pkg-config cflags and libs!"
-  PKG_CFLAGS=${PKGCONFIG_CFLAGS}
-  PKG_LIBS=${PKGCONFIG_LIBS}
-elif [ `uname` = "Darwin" ]; then
-  test ! "$CI" && brew --version 2>/dev/null
-  if [ $? -eq 0 ]; then
-    BREWDIR=`brew --prefix`
-    PKG_CFLAGS="-I$BREWDIR/opt/openssl/include -I$BREWDIR/opt/openssl@1.1/include"
-    PKG_LIBS="-L$BREWDIR/opt/openssl/lib -L$BREWDIR/opt/openssl@1.1/lib $PKG_LIBS"
-  else
-    curl -sfL "https://autobrew.github.io/scripts/$PKG_BREW_NAME" > autobrew
-    . ./autobrew
-  fi
-fi
-
-# Find compiler
-CC=`${R_HOME}/bin/R CMD config CC`
-CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
-CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
-
-# For debugging
-echo "Testing compiler using PKG_CFLAGS=$PKG_CFLAGS"
-
-# Test configuration
-${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>configure.log
-
-# Customize the error
-if [ $? -ne 0 ]; then
-  echo "--------------------------- [ANTICONF] --------------------------------"
-  echo "Configuration failed because $PKG_CONFIG_NAME was not found. Try installing:"
-  echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
-  echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
-  echo " * csw: $PKG_CSW_NAME (Solaris)"
-  echo " * brew: $PKG_BREW_NAME (Mac OSX)"
-  echo "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is in your"
-  echo "PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file. If pkg-config"
-  echo "is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:"
-  echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
-  echo "-------------------------- [ERROR MESSAGE] ---------------------------"
-  cat configure.log
-  echo "--------------------------------------------------------------------"
-  exit 1
-fi
-
-# Try to link against the correct OpenSSL version
-if [ -z "$AUTOBREW" ]; then
-SONAME=`${CC} -E ${PKG_CFLAGS} src/tests/soname.h | sh | xargs`
-if [ "$SONAME" ]; then
-if [ `uname` = "Darwin" ]; then
-  PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-lssl.${SONAME}/" | sed "s/-lcrypto/-lcrypto.${SONAME}/"`
+if [ -d tools/dist ]; then
+  echo "Already built"
 else
-  PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-l:libssl.so.${SONAME}/" | sed "s/-lcrypto/-l:libcrypto.so.${SONAME}/"`
+  echo "building"
+  mkdir tools/build && cd tools/build
+  cmake ../../tools/vendor/s2geography -DS2GEOGRAPHY_S2_SOURCE=BREW -DBUILD_SHARED_LIBS=OFF
+  cmake --build .
+  cmake --install . --prefix=../dist
+  cd ../..
 fi
 
-# Test if versioned linking works
-${CC} ${PKG_CFLAGS} src/tests/main.c ${PKG_LIBS_VERSIONED} -o src/main.exe 2>/dev/null
-if [ $? -eq 0 ]; then PKG_LIBS="${PKG_LIBS_VERSIONED}"; fi
-rm src/main.exe || true
-
-# Suppress opensslv3 warnings for now
-if [ "$SONAME" = "3" ]; then
-PKG_CFLAGS="$PKG_CFLAGS -DOPENSSL_SUPPRESS_DEPRECATED"
-fi
-
-fi #SONAME
-fi #AUTOBREW
-
-# Define system endianness (compile-time endianness using system/compiler
-# defines isn't detected on Solaris)
-# based on endian detection from the feather package by @hadley
-R_ENDIAN=`${R_HOME}/bin/Rscript -e 'cat(.Platform$endian)'`
-# Trim off any warning messages that Rscript appends in front of the platform endianness
-R_ENDIAN=`expr "$R_ENDIAN" : '.*\(little\)$'`
-SYS_ENDIAN=""
-if [ "$R_ENDIAN" = "little" ]; then
-    PKG_CFLAGS="$PKG_CFLAGS -DIS_LITTLE_ENDIAN"
-else
-    PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
-fi
+PKG_LIBS="-L`pwd`/tools/dist/lib -ls2geography -I/opt/homebrew/Cellar/s2geometry/0.10.0_5/lib -ls2 -L/opt/homebrew/Cellar/abseil/20230802.1 -L/opt/homebrew/Cellar/openssl@3/3.1.2/lib -lcrypto -lssl"
+PKG_CFLAGS="-I`pwd`/tools/dist/include -I/opt/homebrew/Cellar/s2geometry/0.10.0_5/include -I/opt/homebrew/Cellar/abseil/20230802.1/include -I/opt/homebrew/Cellar/openssl@3/3.1.2/include"
 
 # From apache/arrow/r/configure:
 # If on Raspberry Pi, need to manually link against latomic

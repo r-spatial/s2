@@ -1,8 +1,8 @@
 
-#include "s2geography/accessors.h"
+#include "accessors.h"
 
-#include "s2geography/build.h"
-#include "s2geography/geography.h"
+#include "build.h"
+#include "geography.h"
 
 namespace s2geography {
 
@@ -206,7 +206,8 @@ bool s2_find_validation_error(const PolygonGeography& geog, S2Error* error) {
   return geog.Polygon()->FindValidationError(error);
 }
 
-bool s2_find_validation_error(const GeographyCollection& geog, S2Error* error) {
+bool s2_find_validation_error(const GeographyCollection& geog,
+                              S2Error* error) {
   for (const auto& feature : geog.Features()) {
     if (s2_find_validation_error(*feature, error)) {
       return true;

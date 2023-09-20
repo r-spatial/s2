@@ -1,11 +1,11 @@
 
-#include "s2geography/predicates.h"
+#include "predicates.h"
 
 #include <s2/s2boolean_operation.h>
 #include <s2/s2edge_tessellator.h>
 #include <s2/s2lax_loop_shape.h>
 
-#include "s2geography/accessors.h"
+#include "accessors.h"
 
 namespace s2geography {
 

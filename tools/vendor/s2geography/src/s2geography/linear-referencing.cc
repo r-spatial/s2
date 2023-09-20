@@ -1,9 +1,9 @@
 
-#include "s2geography/linear-referencing.h"
+#include "linear-referencing.h"
 
-#include "s2geography/accessors.h"
-#include "s2geography/build.h"
-#include "s2geography/geography.h"
+#include "accessors.h"
+#include "build.h"
+#include "geography.h"
 
 namespace s2geography {
 
@@ -18,7 +18,8 @@ double s2_project_normalized(const PolylineGeography& geog1,
   return geog1.Polylines()[0]->UnInterpolate(point_on_line, next_vertex);
 }
 
-double s2_project_normalized(const Geography& geog1, const Geography& geog2) {
+double s2_project_normalized(const Geography& geog1,
+                             const Geography& geog2) {
   if (geog1.dimension() != 1 || geog2.dimension() != 0) {
     return NAN;
   }
@@ -55,7 +56,8 @@ S2Point s2_interpolate_normalized(const PolylineGeography& geog,
   }
 }
 
-S2Point s2_interpolate_normalized(const Geography& geog, double distance_norm) {
+S2Point s2_interpolate_normalized(const Geography& geog,
+                                  double distance_norm) {
   if (s2_is_empty(geog)) {
     return S2Point();
   }

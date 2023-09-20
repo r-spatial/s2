@@ -1,11 +1,11 @@
 
-#include "s2geography/accessors-geog.h"
+#include "accessors-geog.h"
 
 #include <s2/s2centroids.h>
 
-#include "s2geography/accessors.h"
-#include "s2geography/build.h"
-#include "s2geography/geography.h"
+#include "accessors.h"
+#include "build.h"
+#include "geography.h"
 
 namespace s2geography {
 

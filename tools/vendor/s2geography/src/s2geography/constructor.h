@@ -3,8 +3,10 @@
 
 #include <sstream>
 
-#include "s2geography/geoarrow-imports.h"
-#include "s2geography/geography.h"
+#include <s2/s2edge_tessellator.h>
+
+#include "geoarrow-imports.h"
+#include "geography.h"
 
 namespace s2geography {
 
@@ -14,28 +16,48 @@ class Constructor : public Handler {
  public:
   class Options {
    public:
-    Options() : oriented_(false), check_(true) {}
-    bool oriented() { return oriented_; }
+    Options() : oriented_(false), check_(true), tessellate_tolerance_(S1Angle::Infinity()) {}
+    bool oriented() const { return oriented_; }
     void set_oriented(bool oriented) { oriented_ = oriented; }
-    bool check() { return check_; }
+    bool check() const { return check_; }
     void set_check(bool check) { check_ = check; }
+    S2::Projection* projection() const { return projection_; }
+    void set_projection(S2::Projection* projection) { projection_ = projection; }
+    S1Angle tessellate_tolerance() const { return tessellate_tolerance_; }
+    void set_tessellate_tolerance(S1Angle tessellate_tolerance) {
+      tessellate_tolerance_ = tessellate_tolerance;
+    }
 
    private:
     bool oriented_;
     bool check_;
+    S2::Projection* projection_;
+    S1Angle tessellate_tolerance_;
   };
 
-  Constructor(const Options& options) : options_(options) {}
+  Constructor(const Options& options) : options_(options) {
+    if (options.projection() != nullptr) {
+      this->tessellator_ = absl::make_unique<S2EdgeTessellator>(options.projection(), options.tessellate_tolerance());
+    }
+  }
 
   virtual ~Constructor() {}
 
-  Options* mutable_options() { return &options_; }
-
   virtual Result coords(const double* coord, int64_t n, int32_t coord_size) {
-    for (int64_t i = 0; i < n; i++) {
-      S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1],
-                                          coord[i * coord_size]);
-      points_.push_back(pt.Normalized().ToPoint());
+    if (coord_size == 3) {
+      for (int64_t i = 0; i < n; i++) {
+        input_points_.push_back(
+          S2Point(
+            coord[i * coord_size],
+            coord[i * coord_size + 1],
+            coord[i * coord_size + 2]
+          )
+        );
+      }
+    } else {
+      for (int64_t i = 0; i < n; i++) {
+        input_points_.push_back(S2Point(coord[i * coord_size], coord[i * coord_size + 1], 0));
+      }
     }
 
     return Result::CONTINUE;
@@ -44,13 +66,38 @@ class Constructor : public Handler {
   virtual std::unique_ptr<Geography> finish() = 0;
 
  protected:
+  std::vector<S2Point> input_points_;
   std::vector<S2Point> points_;
   Options options_;
+  std::unique_ptr<S2EdgeTessellator> tessellator_;
+
+  void finish_points() {
+    points_.clear();
+    points_.reserve(input_points_.size());
+
+    if (options_.projection() == nullptr) {
+      for (const auto& pt: input_points_) {
+        points_.push_back(pt);
+      }
+    } else if (options_.tessellate_tolerance() != S1Angle::Infinity()) {
+      for (size_t i = 1; i < input_points_.size(); i++) {
+        const S2Point& pt0(input_points_[i - 1]);
+        const S2Point& pt1(input_points_[i]);
+        tessellator_->AppendUnprojected(R2Point(pt0.x(), pt0.y()), R2Point(pt1.x(), pt1.y()), &points_);
+      }
+    } else {
+      for (const auto& pt: input_points_) {
+        points_.push_back(options_.projection()->Unproject(R2Point(pt.x(), pt.y())));
+      }
+    }
+
+    input_points_.clear();
+  }
 };
 
 class PointConstructor : public Constructor {
  public:
-  PointConstructor() : Constructor(Options()) {}
+  PointConstructor(const Options& options) : Constructor(options) {}
 
   Result geom_start(util::GeometryType geometry_type, int64_t size) {
     if (size != 0 && geometry_type != util::GeometryType::POINT &&
@@ -74,9 +121,13 @@ class PointConstructor : public Constructor {
         continue;
       }
 
-      S2LatLng pt = S2LatLng::FromDegrees(coord[i * coord_size + 1],
-                                          coord[i * coord_size]);
-      points_.push_back(pt.ToPoint());
+      if (options_.projection() == nullptr) {
+        S2Point pt(coord[i * coord_size], coord[i * coord_size + 1], coord[i * coord_size + 2]);
+        points_.push_back(pt);
+      } else {
+        R2Point pt(coord[i * coord_size], coord[i * coord_size + 1]);
+        points_.push_back(options_.projection()->Unproject(pt));
+      }
     }
 
     return Result::CONTINUE;
@@ -114,24 +165,28 @@ class PolylineConstructor : public Constructor {
     }
 
     if (size > 0 && geometry_type == util::GeometryType::LINESTRING) {
-      points_.reserve(size);
+      input_points_.reserve(size);
     }
 
     return Result::CONTINUE;
   }
 
   Result geom_end() {
-    if (points_.size() > 0) {
+    finish_points();
+
+    if (!points_.empty()) {
       auto polyline = absl::make_unique<S2Polyline>();
       polyline->Init(std::move(points_));
 
-      if (options_.check() && !polyline->IsValid()) {
-        polyline->FindValidationError(&error_);
-        throw Exception(error_.text());
-      }
+      // Previous version of s2 didn't check for this, so in
+      // this check is temporarily disabled to avoid mayhem in
+      // reverse dependency checks.
+      // if (options_.check() && !polyline->IsValid()) {
+      //   polyline->FindValidationError(&error_);
+      //   throw Exception(error_.text());
+      // }
 
       polylines_.push_back(std::move(polyline));
-      points_.clear();
     }
 
     return Result::CONTINUE;
@@ -140,11 +195,11 @@ class PolylineConstructor : public Constructor {
   std::unique_ptr<Geography> finish() {
     std::unique_ptr<PolylineGeography> result;
 
-    if (polylines_.size() > 0) {
+    if (polylines_.empty()) {
+      result = absl::make_unique<PolylineGeography>();
+    } else {
       result = absl::make_unique<PolylineGeography>(std::move(polylines_));
       polylines_.clear();
-    } else {
-      result = absl::make_unique<PolylineGeography>();
     }
 
     return std::unique_ptr<Geography>(result.release());
@@ -160,20 +215,21 @@ class PolygonConstructor : public Constructor {
   PolygonConstructor(const Options& options) : Constructor(options) {}
 
   Result ring_start(int64_t size) {
-    points_.clear();
+    input_points_.clear();
     if (size > 0) {
-      points_.reserve(size);
+      input_points_.reserve(size);
     }
 
     return Result::CONTINUE;
   }
 
   Result ring_end() {
-    if (points_.size() == 0) {
+    finish_points();
+
+    if (points_.empty()) {
       return Result::CONTINUE;
     }
 
-    // S2Loop is open instead of closed
     points_.pop_back();
     auto loop = absl::make_unique<S2Loop>();
     loop->set_s2debug_override(S2Debug::DISABLE);
@@ -225,6 +281,7 @@ class CollectionConstructor : public Constructor {
  public:
   CollectionConstructor(const Options& options)
       : Constructor(options),
+        point_constructor_(options),
         polyline_constructor_(options),
         polygon_constructor_(options),
         collection_constructor_(nullptr),
@@ -301,7 +358,8 @@ class CollectionConstructor : public Constructor {
   }
 
   std::unique_ptr<Geography> finish() {
-    auto result = absl::make_unique<GeographyCollection>(std::move(features_));
+    auto result =
+        absl::make_unique<GeographyCollection>(std::move(features_));
     features_.clear();
     return std::unique_ptr<Geography>(result.release());
   }
@@ -337,7 +395,7 @@ class FeatureConstructor : public CollectionConstructor {
       return absl::make_unique<GeographyCollection>();
     } else {
       std::unique_ptr<Geography> feature = std::move(features_.back());
-      if (feature.get() == nullptr) {
+      if (feature == nullptr) {
         throw Exception("finish_feature() generated nullptr");
       }
 

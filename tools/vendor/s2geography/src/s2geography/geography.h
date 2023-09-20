@@ -117,7 +117,7 @@ class PolylineGeography : public Geography {
 // perspective).
 class PolygonGeography : public Geography {
  public:
-  PolygonGeography() {}
+  PolygonGeography(): polygon_(new S2Polygon()) {}
   PolygonGeography(std::unique_ptr<S2Polygon> polygon)
       : polygon_(std::move(polygon)) {}
 

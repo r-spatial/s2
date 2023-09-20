@@ -5,8 +5,8 @@
 #include <s2/s2builderutil_s2polygon_layer.h>
 #include <s2/s2builderutil_s2polyline_vector_layer.h>
 
-#include "s2geography/aggregator.h"
-#include "s2geography/geography.h"
+#include "aggregator.h"
+#include "geography.h"
 
 namespace s2geography {
 
@@ -39,10 +39,10 @@ std::unique_ptr<Geography> s2_boolean_operation(
     S2BooleanOperation::OpType op_type, const GlobalOptions& options);
 
 std::unique_ptr<Geography> s2_unary_union(const ShapeIndexGeography& geog,
-                                          const GlobalOptions& options);
+                                            const GlobalOptions& options);
 
 std::unique_ptr<Geography> s2_rebuild(const Geography& geog,
-                                      const GlobalOptions& options);
+                                        const GlobalOptions& options);
 
 std::unique_ptr<PointGeography> s2_build_point(const Geography& geog);
 
