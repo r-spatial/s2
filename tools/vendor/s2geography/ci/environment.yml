@@ -1,0 +1,8 @@
+name: s2geography-dev
+channels:
+  - conda-forge
+dependencies:
+  - cxx-compiler
+  - s2geometry
+  - libabseil
+  - cmake

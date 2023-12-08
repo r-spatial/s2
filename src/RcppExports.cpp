@@ -1344,14 +1344,14 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
-RcppExport SEXP c_s2_handle_geography_tessellated(SEXP, SEXP);
-RcppExport SEXP c_s2_projection_mercator(SEXP);
-RcppExport SEXP c_s2_projection_orthographic(SEXP);
-RcppExport SEXP c_s2_projection_plate_carree(SEXP);
-RcppExport SEXP c_s2_trans_s2_lnglat_new();
-RcppExport SEXP c_s2_trans_s2_point_new();
+RcppExport SEXP c_s2_geography_writer_new(void *, void *, void *, void *);
+RcppExport SEXP c_s2_handle_geography(void *, void *);
+RcppExport SEXP c_s2_handle_geography_tessellated(void *, void *);
+RcppExport SEXP c_s2_projection_mercator(void *);
+RcppExport SEXP c_s2_projection_orthographic(void *);
+RcppExport SEXP c_s2_projection_plate_carree(void *);
+RcppExport SEXP c_s2_trans_s2_lnglat_new(void);
+RcppExport SEXP c_s2_trans_s2_point_new(void);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},

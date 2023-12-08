@@ -3,6 +3,7 @@
 #include <R.h>
 #include <Rinternals.h>
 
+#include "s2/s2projections.h"
 #include "s2/s2pointutil.h"
 
 #include "wk-v1.h"
