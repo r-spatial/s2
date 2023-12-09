@@ -1,4 +1,8 @@
-# s2 (development version)
+# s2 1.1.5
+
+* fix compiler problem on Alpine 3.19.0 (#251)
+
+# s2 1.1.4
 
 * Updated more tests to pass on a forthcoming waldo package update (#237).
 
