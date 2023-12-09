@@ -13,7 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://r-spatial.github.io/s2/}
   \item \url{https://github.com/r-spatial/s2}
-  \item \url{https://s2geometry.io/}
+  \item \url{http://s2geometry.io/}
   \item Report bugs at \url{https://github.com/r-spatial/s2/issues}
 }
 
