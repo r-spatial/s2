@@ -1,11 +1,14 @@
-PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
+OPENSSL_LIBS = $(shell pkg-config --libs openssl)
 
-ifeq (,$(shell pkg-config --version 2>/dev/null))
-  PKG_LIBS = -Ls2 -ls2static -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
-else
-  PKG_LIBS = -Ls2 -ls2static $(shell pkg-config --libs openssl)
+# Config for legacy rtools without pkgconfig
+ifeq (,$(OPENSSL_LIBS))
+OPENSSL_LIBS=-L../windows/openssl-$(VERSION)/lib${R_ARCH}${CRT} -lssl -lcrypto -lws2_32 -lgdi32 -lcrypt32
+OPENSSL_CFLAGS=-I../windows/openssl-$(VERSION)/include
 endif
 
+VERSION = 1.1.1k
+PKG_CPPFLAGS = -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME $(OPENSSL_CFLAGS) -I../src
+PKG_LIBS = -Ls2 -ls2static $(OPENSSL_LIBS)
 
 CXX_STD = CXX11
 
@@ -215,9 +218,15 @@ $(SHLIB): $(STATLIB)
 
 $(STATLIB): $(S2LIBS)
 
+$(S2LIBS): winlibs
+
 #all: clean
+
+winlibs:
+	mkdir -p ../inst
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" $(VERSION)
 
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
 
-.PHONY: all clean
+.PHONY: all winlibs clean
