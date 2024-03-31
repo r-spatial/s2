@@ -4,3 +4,5 @@
 .vscode
 docs
 configure.log
+compile_commands.json
+.cache
