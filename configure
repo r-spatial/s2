@@ -23,6 +23,7 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
+CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
 CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake"
 
 build_cmake () {
@@ -36,12 +37,13 @@ build_cmake () {
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-    -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
-    -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
-    -DCMAKE_CXX_STANDARD=14 $2 \
+    -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
+    -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
+    -DCMAKE_CXX_STANDARD=14 "${@:2}" \
     "../../vendor/$1" &&
     ${MAKE} ${MAKEVARS} &&
-    ${CMAKE} --install . --prefix=../../dist
+    ${CMAKE} --install .
 
   cd ../../..
 }
