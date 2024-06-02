@@ -1,0 +1,56 @@
+
+# https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
+
+if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
+if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
+if ${CMAKE} --version ; then
+  echo "Using CMAKE=$CMAKE"
+  echo "Using MAKE=$MAKE $MAKEVARS"
+else
+  echo "cmake not found"
+fi
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CXX=`${R_HOME}/bin/R CMD config CXX14`
+CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
+LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+
+CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake"
+
+build_cmake () {
+  if [ ! -d "tools/build/$1" ]; then
+    mkdir -p "tools/build/$1"
+  fi
+
+  cd "tools/build/$1"
+
+  ${CMAKE} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
+    -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
+    -DCMAKE_CXX_STANDARD=14 "${@:2}" \
+    "../../vendor/$1" &&
+    ${MAKE} ${MAKEVARS} &&
+    ${CMAKE} --install .
+
+  cd ../../..
+}
+
+build_cmake abseil-cpp -DABSL_PROPAGATE_CXX_STD=ON
+
+CMAKE_LIBS="-labsl_base -labsl_city -labsl_cord -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_cordz_info -labsl_hash -labsl_hashtablez_sampler -labsl_int128 -labsl_kernel_timeout_internal -labsl_low_level_hash -labsl_malloc_internal -labsl_raw_hash_set -labsl_raw_logging_internal -labsl_spinlock_wait -labsl_stacktrace -labsl_str_format_internal -labsl_strerror -labsl_string_view -labsl_strings -labsl_strings_internal -labsl_synchronization -labsl_throw_delegate -labsl_time -labsl_time_zone"
+
+
+
