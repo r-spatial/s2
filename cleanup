@@ -1,3 +1,5 @@
 #!/bin/sh
 rm -f src/Makevars configure.log autobrew
 rm `find src -name *.o`
+rm -rf tools/build
+rm -rf tools/dist
