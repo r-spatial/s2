@@ -1,6 +1,6 @@
 
 library(tidyverse)
-tag <- "20230802.1"
+tag <- "20230802.2"
 
 # download Abseil
 source_url <- glue::glue("https://github.com/abseil/abseil-cpp/archive/refs/tags/{tag}.zip")
