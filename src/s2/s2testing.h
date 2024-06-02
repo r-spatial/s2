@@ -17,22 +17,27 @@
 
 #ifndef S2_S2TESTING_H_
 #define S2_S2TESTING_H_
-#include "cpp-compat.h"
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "absl/base/macros.h"
+#include "absl/strings/string_view.h"
+
 #include "s2/base/commandlineflags.h"
+#include "s2/base/commandlineflags_declare.h"
 #include "s2/base/integral_types.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/r2.h"
 #include "s2/s1angle.h"
 #include "s2/s1chord_angle.h"
 #include "s2/s2cell_id.h"
-#include "absl/base/macros.h"
+#include "s2/s2point.h"
+#include "s2/s2region.h"
 #include "s2/util/math/matrix3x3.h"
 
 class S1Angle;
@@ -52,7 +57,7 @@ class S2Region;
 //
 // This flag currently does *not* affect the initial seed value for
 // S2Testing::rnd.  TODO(user): Fix this.
-DECLARE_int32(s2_random_seed);
+S2_DECLARE_int32(s2_random_seed);
 
 // This class defines various static functions that are useful for writing
 // unit tests.
@@ -214,6 +219,11 @@ class S2Testing {
   // sphere) from the given latitude-longitude rectangle.
   static S2Point SamplePoint(const S2LatLngRect& rect);
 
+  // Return an edge that bisects a cap.  We pick a random uniform point on the
+  // cap with SamplePoint() and connect that point to its image reflected across
+  // the cap center.
+  static void SampleCapEdge(const S2Cap& cap, S2Point* a, S2Point* b);
+
   // Return a random cell id at the given level or at a randomly chosen
   // level.  The distribution is uniform over the space of cell ids,
   // but only approximately uniform over the surface of the sphere.
@@ -272,9 +282,7 @@ class S2Testing::Random {
 
   // A functor-style version of Uniform, so that this class can be used with
   // STL functions that require a RandomNumberGenerator concept.
-  int32 operator() (int32 n) {
-    return Uniform(n);
-  }
+  int32 operator()(int32 n) { return Uniform(n); }
 
   // Return true with probability 1 in n.
   bool OneIn(int32 n);
@@ -318,7 +326,7 @@ bool CheckResultSet(const std::vector<std::pair<Distance, Id>>& x,
                     int max_size, Distance max_distance,
                     typename Distance::Delta max_error,
                     typename Distance::Delta max_pruning_error,
-                    const std::string& label) {
+                    absl::string_view label) {
   using Result = std::pair<Distance, Id>;
   // Results should be sorted by distance, but not necessarily then by Id.
   EXPECT_TRUE(std::is_sorted(x.begin(), x.end(),
@@ -353,7 +361,7 @@ bool CheckResultSet(const std::vector<std::pair<Distance, Id>>& x,
       });
     if (yp.first < limit && count != 1) {
       result = false;
-      cpp_compat_cout << (count > 1 ? "Duplicate" : label) << " distance = "
+      std::cout << (count > 1 ? "Duplicate" : label) << " distance = "
                 << S1ChordAngle(yp.first) << ", id = " << yp.second
                 << std::endl;
     }
@@ -375,12 +383,14 @@ bool CheckDistanceResults(
   // pruned from the result set even though they may be slightly closer.
   static const typename Distance::Delta kMaxPruningError(
       S1ChordAngle::Radians(1e-15));
-  return (S2::internal::CheckResultSet(
+  // Use `&` instead of `&&` to evaluate both sides and cast to int to avoid
+  // `bitwise-instead-of-logical` warning.
+  return (static_cast<int>(S2::internal::CheckResultSet(
               actual, expected, max_size, max_distance, max_error,
-              kMaxPruningError, "Missing") & /*not &&*/
-          S2::internal::CheckResultSet(
+              kMaxPruningError, "Missing")) & /*not &&*/
+          static_cast<int>(S2::internal::CheckResultSet(
               expected, actual, max_size, max_distance, max_error,
-              Distance::Delta::Zero(), "Extra"));
+              Distance::Delta::Zero(), "Extra")));
 }
 
 #endif  // S2_S2TESTING_H_

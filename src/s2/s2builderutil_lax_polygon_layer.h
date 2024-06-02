@@ -33,9 +33,11 @@
 #define S2_S2BUILDERUTIL_LAX_POLYGON_LAYER_H_
 
 #include <memory>
+#include <utility>
 #include <vector>
+
+#include "s2/base/integral_types.h"
 #include "s2/base/logging.h"
-#include "absl/memory/memory.h"
 #include "s2/id_set_lexicon.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2builder.h"
@@ -43,6 +45,8 @@
 #include "s2/s2builder_layer.h"
 #include "s2/s2error.h"
 #include "s2/s2lax_polygon_shape.h"
+#include "s2/s2point.h"
+#include "s2/s2shape.h"
 
 namespace s2builderutil {
 
@@ -106,8 +110,11 @@ class LaxPolygonLayer : public S2Builder::Layer {
     // since it maintains the closest fidelity to the original geometry.)
     //
     // DEFAULT: DegenerateBoundaries::KEEP
-    enum class DegenerateBoundaries {
-      DISCARD, DISCARD_HOLES, DISCARD_SHELLS, KEEP
+    enum class DegenerateBoundaries : uint8 {
+      DISCARD,
+      DISCARD_HOLES,
+      DISCARD_SHELLS,
+      KEEP
     };
     DegenerateBoundaries degenerate_boundaries() const;
     void set_degenerate_boundaries(DegenerateBoundaries degenerate_boundaries);

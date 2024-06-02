@@ -13,23 +13,23 @@
 // limitations under the License.
 //
 
-#include <cassert>
+#ifndef S2_BASE_COMMANDLINEFLAGS_DECLARE_H_
+#define S2_BASE_COMMANDLINEFLAGS_DECLARE_H_
 
-#include "s2/strings/ostringstream.h"
+#include <string>
 
-namespace strings {
+#include "absl/flags/declare.h"
 
-OStringStream::Buf::int_type OStringStream::overflow(int c) {
-  assert(s_);
-  if (!Buf::traits_type::eq_int_type(c, Buf::traits_type::eof()))
-    s_->push_back(static_cast<char>(c));
-  return 1;
-}
+#include "s2/base/integral_types.h"
 
-std::streamsize OStringStream::xsputn(const char* s, std::streamsize n) {
-  assert(s_);
-  s_->append(s, n);
-  return n;
-}
+#define S2_DECLARE_bool(name) ABSL_DECLARE_FLAG(bool, name)
 
-}  // namespace strings
+#define S2_DECLARE_double(name) ABSL_DECLARE_FLAG(double, name)
+
+#define S2_DECLARE_int32(name) ABSL_DECLARE_FLAG(int32, name)
+
+#define S2_DECLARE_int64(name) ABSL_DECLARE_FLAG(int64, name)
+
+#define S2_DECLARE_string(name) ABSL_DECLARE_FLAG(std::string, name)
+
+#endif  // S2_BASE_COMMANDLINEFLAGS_DECLARE_H_

@@ -13,12 +13,12 @@
 // limitations under the License.
 //
 
-#ifndef S2_BASE_MUTEX_H_
-#define S2_BASE_MUTEX_H_
+#ifndef S2_TESTING_GTEST_PROD_H_
+#define S2_TESTING_GTEST_PROD_H_
 
-#include <condition_variable>
-#include <mutex>
+// Allow use of prod headers without googletest.
+// This must be kept in sync with the googletest definition.
+#define FRIEND_TEST(test_case_name, test_name) \
+  friend class test_case_name##_##test_name##_Test
 
-#include <absl/synchronization/mutex.h>
-
-#endif  // S2_BASE_MUTEX_H_
+#endif  // S2_TESTING_GTEST_PROD_H_

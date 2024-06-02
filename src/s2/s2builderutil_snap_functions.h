@@ -19,9 +19,11 @@
 #define S2_S2BUILDERUTIL_SNAP_FUNCTIONS_H_
 
 #include <memory>
+
 #include "s2/s1angle.h"
 #include "s2/s2builder.h"
 #include "s2/s2cell_id.h"
+#include "s2/s2point.h"
 
 namespace s2builderutil {
 
@@ -148,7 +150,7 @@ class S2CellIdSnapFunction : public S2Builder::SnapFunction {
 // point (23.12345651, -45.65432149) would become (23123457, -45654321).
 //
 // The main argument of the SnapFunction is the exponent for the power of 10
-// that coordinates should be multipled by before rounding.  For example,
+// that coordinates should be multiplied by before rounding.  For example,
 // IntLatLngSnapFunction(7) is a function that snaps to E7 coordinates.  The
 // exponent can range from 0 to 10.
 //
@@ -183,11 +185,11 @@ class IntLatLngSnapFunction : public S2Builder::SnapFunction {
   void set_exponent(int exponent);
   int exponent() const;
 
-  // The minum exponent supported for snapping.
-  static const int kMinExponent = 0;
+  // The minimum exponent supported for snapping.
+  static constexpr int kMinExponent = 0;
 
   // The maximum exponent supported for snapping.
-  static const int kMaxExponent = 10;
+  static constexpr int kMaxExponent = 10;
 
   // Defines the snap radius to be used (see s2builder.h).  The snap radius
   // must be at least the minimum value for the current exponent(), but larger

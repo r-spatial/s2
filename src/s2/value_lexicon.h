@@ -18,8 +18,11 @@
 #ifndef S2_VALUE_LEXICON_H_
 #define S2_VALUE_LEXICON_H_
 
+#include <cstddef>
+
 #include <functional>
 #include <limits>
+#include <utility>
 #include <vector>
 
 #include "s2/base/integral_types.h"

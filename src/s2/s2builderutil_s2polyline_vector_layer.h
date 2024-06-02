@@ -19,9 +19,10 @@
 #define S2_S2BUILDERUTIL_S2POLYLINE_VECTOR_LAYER_H_
 
 #include <memory>
+#include <utility>
 #include <vector>
+
 #include "s2/base/logging.h"
-#include "absl/memory/memory.h"
 #include "s2/id_set_lexicon.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2builder.h"
@@ -30,6 +31,7 @@
 #include "s2/s2debug.h"
 #include "s2/s2error.h"
 #include "s2/s2polyline.h"
+#include "s2/s2shape.h"
 
 namespace s2builderutil {
 
@@ -69,15 +71,15 @@ class S2PolylineVectorLayer : public S2Builder::Layer {
     S2Builder::EdgeType edge_type() const;
     void set_edge_type(S2Builder::EdgeType edge_type);
 
-    // Indicates whether polylines should be "paths" (which don't allow
-    // duplicate vertices, except possibly the first and last vertex) or
-    // "walks" (which allow duplicate vertices and edges).
+    // Controls how polylines are constructed.  If the polyline type is PATH,
+    // then only vertices of indegree and outdegree 1 (or degree 2 in the case
+    // of undirected edges) will appear in the interior of polylines.  Use this
+    // option if you want to split polylines into separate pieces whenever they
+    // self-intersect or cross each other.
     //
-    // If your input consists of polylines, and you want to split them into
-    // separate pieces whenever they self-intersect or cross each other, then
-    // use PolylineType::PATH (and probably use split_crossing_edges()).  If
-    // you don't mind if your polylines backtrack or contain loops, then use
-    // PolylineType::WALK.
+    // If "polyline_type" is WALK, then each polyline will be as long as
+    // possible.  Polylines may pass through the same vertex or even the same
+    // edge multiple times (if duplicate edges are present).
     //
     // DEFAULT: PolylineType::PATH
     using PolylineType = S2Builder::Graph::PolylineType;
@@ -111,8 +113,9 @@ class S2PolylineVectorLayer : public S2Builder::Layer {
     // If true, calls FindValidationError() on each output polyline.  If any
     // error is found, it will be returned by S2Builder::Build().
     //
-    // Note that this option calls set_s2debug_override(S2Debug::DISABLE) in
-    // order to turn off the default error checking in debug builds.
+    // Note that this option calls set_s2debug_override(S2Debug::DISABLE) if
+    // "validate" is true in order to turn off the default error checking in
+    // debug builds.
     //
     // DEFAULT: false
     bool validate() const;
@@ -195,7 +198,7 @@ class IndexedS2PolylineVectorLayer : public S2Builder::Layer {
     if (error->ok()) {
       for (auto& polyline : polylines_) {
         index_->Add(
-            absl::make_unique<S2Polyline::OwningShape>(std::move(polyline)));
+            std::make_unique<S2Polyline::OwningShape>(std::move(polyline)));
       }
     }
   }
@@ -275,7 +278,7 @@ inline bool S2PolylineVectorLayer::Options::validate() const {
 
 inline void S2PolylineVectorLayer::Options::set_validate(bool validate) {
   validate_ = validate;
-  set_s2debug_override(S2Debug::DISABLE);
+  if (validate) set_s2debug_override(S2Debug::DISABLE);
 }
 
 inline S2Debug S2PolylineVectorLayer::Options::s2debug_override() const {

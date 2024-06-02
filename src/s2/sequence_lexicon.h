@@ -18,8 +18,13 @@
 #ifndef S2_SEQUENCE_LEXICON_H_
 #define S2_SEQUENCE_LEXICON_H_
 
+#include <cstddef>
+
+#include <algorithm>
 #include <functional>
+#include <iterator>
 #include <limits>
+#include <utility>
 #include <vector>
 
 #include "s2/base/integral_types.h"
@@ -159,6 +164,7 @@ const Hasher& SequenceLexicon<T, Hasher, KeyEqual>::IdHasher::hasher() const {
 template <class T, class Hasher, class KeyEqual>
 size_t SequenceLexicon<T, Hasher, KeyEqual>::IdHasher::operator()(
     uint32 id) const {
+  // TODO(user,b/205929456): Is there a way to use absl::Hash instead?
   HashMix mix;
   for (const auto& value : lexicon_->sequence(id)) {
     mix.Mix(hasher_(value));

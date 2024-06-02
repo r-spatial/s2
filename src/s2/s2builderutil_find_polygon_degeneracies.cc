@@ -17,22 +17,27 @@
 
 #include "s2/s2builderutil_find_polygon_degeneracies.h"
 
-#include <cstdlib>
+#include <algorithm>
+#include <memory>
 #include <utility>
 #include <vector>
 
-#include "absl/memory/memory.h"
 #include "s2/mutable_s2shape_index.h"
+#include "s2/s2builder.h"
 #include "s2/s2builder_graph.h"
 #include "s2/s2builderutil_graph_shape.h"
 #include "s2/s2contains_vertex_query.h"
 #include "s2/s2crossing_edge_query.h"
 #include "s2/s2edge_crosser.h"
+#include "s2/s2error.h"
+#include "s2/s2point.h"
 #include "s2/s2pointutil.h"
 #include "s2/s2predicates.h"
+#include "s2/s2shape.h"
+#include "s2/s2shapeutil_shape_edge_id.h"
 
-using absl::make_unique;
 using std::make_pair;
+using std::make_unique;
 using std::pair;
 using std::vector;
 
@@ -158,8 +163,8 @@ vector<PolygonDegeneracy> DegeneracyFinder::Run(S2Error* error) {
       known_vertex = FindUnbalancedVertex();
       known_vertex_sign = ContainsVertexSign(known_vertex);
     }
-    const int kMaxUnindexedContainsCalls = 20;  // Tuned using benchmarks.
-    if (num_unknown_signs <= kMaxUnindexedContainsCalls) {
+    const int kMaxUnindexedSignComputations = 25;  // Tuned using benchmarks.
+    if (num_unknown_signs <= kMaxUnindexedSignComputations) {
       ComputeUnknownSignsBruteForce(known_vertex, known_vertex_sign,
                                     &components);
     } else {
@@ -254,7 +259,7 @@ bool DegeneracyFinder::CrossingParity(VertexId v0, VertexId v1,
   int crossings = 0;
   S2Point p0 = g_.vertex(v0);
   S2Point p1 = g_.vertex(v1);
-  S2Point p0_ref = S2::Ortho(p0);
+  S2Point p0_ref = S2::RefDir(p0);
   for (const Edge& edge : out_.edges(v0)) {
     if (edge.second == v1) {
       if (include_same) ++crossings;
@@ -277,7 +282,7 @@ VertexId DegeneracyFinder::FindUnbalancedVertex() const {
   for (VertexId v = 0; v < g_.num_vertices(); ++v) {
     if (is_vertex_unbalanced_[v]) return v;
   }
-  S2_LOG(DFATAL) << "Could not find previously marked unbalanced vertex";
+  S2_LOG(ERROR) << "Could not find previously marked unbalanced vertex";
   return -1;
 }
 

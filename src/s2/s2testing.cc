@@ -1,4 +1,3 @@
-#include "cpp-compat.h"
 // Copyright 2005 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,38 +21,48 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
+#include <ios>
 #include <memory>
+#include <ostream>
+#include <string>
 #include <utility>
 #include <vector>
 
+#include "absl/strings/string_view.h"
+
 #include "s2/base/commandlineflags.h"
 #include "s2/base/integral_types.h"
-#include "s2/base/logging.h"
 #include "s2/r1interval.h"
+#include "s2/r2.h"
 #include "s2/s1angle.h"
 #include "s2/s1interval.h"
 #include "s2/s2cap.h"
 #include "s2/s2cell.h"
+#include "s2/s2cell_id.h"
 #include "s2/s2cell_union.h"
+#include "s2/s2edge_distances.h"
 #include "s2/s2latlng.h"
 #include "s2/s2latlng_rect.h"
+#include "s2/s2lax_polygon_shape.h"
+#include "s2/s2lax_polyline_shape.h"
 #include "s2/s2loop.h"
+#include "s2/s2point.h"
 #include "s2/s2pointutil.h"
 #include "s2/s2polygon.h"
 #include "s2/s2polyline.h"
 #include "s2/s2region.h"
+#include "s2/s2shape_index.h"
 #include "s2/s2text_format.h"
-#include "s2/strings/serialize.h"
-#include "absl/memory/memory.h"
-#include "absl/strings/str_split.h"
 #include "s2/util/math/matrix3x3.h"
 
-using absl::make_unique;
+using absl::string_view;
+using std::make_unique;
 using std::max;
+using std::string;
 using std::unique_ptr;
 using std::vector;
 
-DEFINE_int32(s2_random_seed, 1,
+S2_DEFINE_int32(s2_random_seed, 1,
              "Seed value that can be passed to S2Testing::rnd.Reset()");
 
 const double S2Testing::kEarthRadiusKm = 6371.01;
@@ -62,11 +71,11 @@ S2Testing::Random::Random() {
   // Unfortunately we can't use FLAGS_s2_random_seed here, because the default
   // S2Testing::Random instance is initialized before command-line flags have
   // been parsed.
-  cpp_compat_srandom(1);
+  srandom(1);
 }
 
 void S2Testing::Random::Reset(int seed) {
-  cpp_compat_srandom(seed);
+  srandom(seed);
 }
 
 // Return a 64-bit unsigned integer whose lowest "num_bits" are random, and
@@ -91,7 +100,7 @@ inline uint64 GetBits(int num_bits) {
 
   uint64 result = 0;
   for (int bits = 0; bits < num_bits; bits += RAND_BITS) {
-    result = (result << RAND_BITS) + cpp_compat_random();
+    result = (result << RAND_BITS) + random();
   }
   if (num_bits < 64) {  // Not legal to shift by full bitwidth of type
     result &= ((1ULL << num_bits) - 1);
@@ -99,17 +108,13 @@ inline uint64 GetBits(int num_bits) {
   return result;
 }
 
-uint64 S2Testing::Random::Rand64() {
-  return GetBits(64);
-}
+uint64 S2Testing::Random::Rand64() { return GetBits(64); }
 
-uint32 S2Testing::Random::Rand32() {
-  return GetBits(32);
-}
+uint32 S2Testing::Random::Rand32() { return GetBits(32); }
 
 double S2Testing::Random::RandDouble() {
   const int NUM_BITS = 53;
-  return ldexp((double) GetBits(NUM_BITS), -NUM_BITS);
+  return ldexp(GetBits(NUM_BITS), -NUM_BITS);
 }
 
 int32 S2Testing::Random::Uniform(int32 n) {
@@ -122,9 +127,7 @@ double S2Testing::Random::UniformDouble(double min, double limit) {
   return min + RandDouble() * (limit - min);
 }
 
-bool S2Testing::Random::OneIn(int32 n) {
-  return Uniform(n) == 0;
-}
+bool S2Testing::Random::OneIn(int32 n) { return Uniform(n) == 0; }
 
 int32 S2Testing::Random::Skewed(int max_log) {
   S2_DCHECK_GE(max_log, 0);
@@ -172,38 +175,54 @@ double S2Testing::AreaToKm2(double steradians) {
   return steradians * kEarthRadiusKm * kEarthRadiusKm;
 }
 
-// The overloaded Dump() function is for use within a debugger.
+// The Dump*() functions are for use within a debugger.  They are similar to
+// the corresponding s2textformat::ToString() functions except that they
+// prefix their output with a label and they don't require default arguments
+// or constructing absl::Span objects (which gdb doesn't know how to do).
 void Dump(const S2Point& p) {
-  cpp_compat_cout << "S2Point: " << s2textformat::ToString(p) << std::endl;
+  std::cout << "S2Point: " << s2textformat::ToString(p) << std::endl;
+}
+
+void Dump(const vector<S2Point>& points) {
+  std::cout << "S2Polygon: " << s2textformat::ToString(points) << std::endl;
 }
 
 void Dump(const S2Loop& loop) {
-  cpp_compat_cout << "S2Polygon: " << s2textformat::ToString(loop) << std::endl;
+  std::cout << "S2Polygon: " << s2textformat::ToString(loop) << std::endl;
 }
 
 void Dump(const S2Polyline& polyline) {
-  cpp_compat_cout << "S2Polyline: " << s2textformat::ToString(polyline) << std::endl;
+  std::cout << "S2Polyline: " << s2textformat::ToString(polyline) << std::endl;
 }
 
 void Dump(const S2Polygon& polygon) {
-  cpp_compat_cout << "S2Polygon: " << s2textformat::ToString(polygon) << std::endl;
+  std::cout << "S2Polygon: " << s2textformat::ToString(polygon) << std::endl;
+}
+
+void Dump(const S2LaxPolylineShape& polyline) {
+  std::cout << "S2Polyline: " << s2textformat::ToString(polyline) << std::endl;
+}
+
+void Dump(const S2LaxPolygonShape& polygon) {
+  std::cout << "S2Polygon: " << s2textformat::ToString(polygon) << std::endl;
 }
 
 // Outputs the contents of an S2ShapeIndex in human-readable form.
 void Dump(const S2ShapeIndex& index) {
-  cpp_compat_cout << "S2ShapeIndex: " << &index << std::endl;
+  std::cout << "S2ShapeIndex: " << &index << std::endl;
+  std::cout << "  " << s2textformat::ToString(index) << std::endl;
   for (S2ShapeIndex::Iterator it(&index, S2ShapeIndex::BEGIN);
        !it.done(); it.Next()) {
-    cpp_compat_cout << "  id: " << it.id().ToString() << std::endl;
+    std::cout << "  id: " << it.id().ToString() << std::endl;
     const S2ShapeIndexCell& cell = it.cell();
     for (int s = 0; s < cell.num_clipped(); ++s) {
       const S2ClippedShape& clipped = cell.clipped(s);
-      cpp_compat_cout << "    shape_id " << clipped.shape_id() << ": ";
+      std::cout << "    shape_id " << clipped.shape_id() << ": ";
       for (int e = 0; e < clipped.num_edges(); ++e) {
-        if (e > 0) cpp_compat_cout << ", ";
-        cpp_compat_cout << clipped.edge(e);
+        if (e > 0) std::cout << ", ";
+        std::cout << clipped.edge(e);
       }
-      cpp_compat_cout << std::endl;
+      std::cout << std::endl;
     }
   }
 }
@@ -218,7 +237,7 @@ S2Point S2Testing::RandomPoint() {
   return S2Point(x, y, z).Normalize();
 }
 
-void S2Testing::GetRandomFrame(Vector3_d* x, Vector3_d* y, Vector3_d* z) {
+void S2Testing::GetRandomFrame(S2Point* x, S2Point* y, S2Point* z) {
   *z = RandomPoint();
   GetRandomFrameAt(*z, x, y);
 }
@@ -310,6 +329,11 @@ S2Point S2Testing::SamplePoint(const S2LatLngRect& rect) {
   return S2LatLng::FromRadians(lat, lng).Normalized().ToPoint();
 }
 
+void S2Testing::SampleCapEdge(const S2Cap& cap, S2Point* a, S2Point* b) {
+  *a = SamplePoint(cap);
+  *b = S2::GetPointOnLine(*a, cap.center(), 2 * cap.GetRadius());
+}
+
 void S2Testing::CheckCovering(const S2Region& region,
                               const S2CellUnion& covering,
                               bool check_tight, S2CellId id) {
@@ -340,7 +364,7 @@ void S2Testing::CheckCovering(const S2Region& region,
 
 S2Testing::Fractal::Fractal()
     : max_level_(-1), min_level_arg_(-1), min_level_(-1),
-      dimension_(log(4.0)/log(3.0)), /* standard Koch curve */
+      dimension_(log(4)/log(3)), /* standard Koch curve */
       edge_fraction_(0), offset_fraction_(0) {
   ComputeOffsets();
 }
@@ -412,15 +436,15 @@ double S2Testing::Fractal::min_radius_factor() const {
 double S2Testing::Fractal::max_radius_factor() const {
   // The maximum radius is always attained at either an original triangle
   // vertex or at a middle vertex from the first subdivision step.
-  return max(1.0, offset_fraction_ * sqrt(3.0) + 0.5);
+  return max(1.0, offset_fraction_ * sqrt(3) + 0.5);
 }
 
 void S2Testing::Fractal::GetR2Vertices(vector<R2Point>* vertices) const {
   // The Koch "snowflake" consists of three Koch curves whose initial edges
   // form an equilateral triangle.
   R2Point v0(1.0, 0.0);
-  R2Point v1(-0.5, sqrt(3.0)/2);
-  R2Point v2(-0.5, -sqrt(3.0)/2);
+  R2Point v1(-0.5, sqrt(3)/2);
+  R2Point v2(-0.5, -sqrt(3)/2);
   GetR2VerticesHelper(v0, v1, 0, vertices);
   GetR2VerticesHelper(v1, v2, 0, vertices);
   GetR2VerticesHelper(v2, v0, 0, vertices);
@@ -450,9 +474,8 @@ void S2Testing::Fractal::GetR2VerticesHelper(const R2Point& v0,
   GetR2VerticesHelper(v3, v4, level+1, vertices);
 }
 
-std::unique_ptr<S2Loop> S2Testing::Fractal::MakeLoop(
-    const Matrix3x3_d& frame,
-    S1Angle nominal_radius) const {
+unique_ptr<S2Loop> S2Testing::Fractal::MakeLoop(const Matrix3x3_d& frame,
+                                                S1Angle nominal_radius) const {
   vector<R2Point> r2vertices;
   GetR2Vertices(&r2vertices);
   vector<S2Point> vertices;

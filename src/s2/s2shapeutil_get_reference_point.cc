@@ -18,9 +18,11 @@
 #include "s2/s2shapeutil_get_reference_point.h"
 
 #include <algorithm>
+#include <vector>
 
-#include "s2/base/logging.h"
 #include "s2/s2contains_vertex_query.h"
+#include "s2/s2point.h"
+#include "s2/s2shape.h"
 
 using std::vector;
 using ReferencePoint = S2Shape::ReferencePoint;
@@ -36,7 +38,7 @@ static bool GetReferencePointAtVertex(
     const S2Shape& shape, const S2Point& vtest, ReferencePoint* result) {
   // Let P be an unbalanced vertex.  Vertex P is defined to be inside the
   // region if the region contains a particular direction vector starting from
-  // P, namely the direction S2::Ortho(P).  This can be calculated using
+  // P, namely the direction S2::RefDir(P).  This can be calculated using
   // S2ContainsVertexQuery.
   S2ContainsVertexQuery contains_query(vtest);
   int n = shape.num_edges();

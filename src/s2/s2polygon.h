@@ -18,25 +18,35 @@
 #ifndef S2_S2POLYGON_H_
 #define S2_S2POLYGON_H_
 
+#include <algorithm>
 #include <atomic>
 #include <cstddef>
-#include <map>
+#include <memory>
+#include <utility>
 #include <vector>
 
+#include "absl/base/attributes.h"
+#include "absl/container/flat_hash_map.h"
+
 #include "s2/base/integral_types.h"
-#include "absl/base/macros.h"
+#include "s2/base/logging.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s1angle.h"
 #include "s2/s2boolean_operation.h"
 #include "s2/s2builder.h"
 #include "s2/s2cell_id.h"
+#include "s2/s2coder.h"
 #include "s2/s2debug.h"
+#include "s2/s2error.h"
 #include "s2/s2latlng_rect.h"
 #include "s2/s2loop.h"
+#include "s2/s2point.h"
 #include "s2/s2polyline.h"
 #include "s2/s2region.h"
+#include "s2/s2shape.h"
 #include "s2/s2shape_index.h"
+#include "s2/util/coding/coder.h"
 
 class Decoder;
 class Encoder;
@@ -46,7 +56,6 @@ class S2Cell;
 class S2CellUnion;
 class S2Error;
 class S2Loop;
-class S2PolygonBuilder;
 class S2Polyline;
 struct S2XYZFaceSiTi;
 
@@ -107,6 +116,8 @@ struct S2XYZFaceSiTi;
 
 class S2Polygon final : public S2Region {
  public:
+  typedef s2coding::internal::S2LegacyCoder<S2Polygon> Coder;
+
   // The default constructor creates an empty polygon.  It can be made
   // non-empty by calling Init(), Decode(), etc.
   S2Polygon();
@@ -151,6 +162,9 @@ class S2Polygon final : public S2Region {
   explicit S2Polygon(std::unique_ptr<S2Loop> loop,
                      S2Debug override = S2Debug::ALLOW);
 
+  S2Polygon(S2Polygon&&);
+  S2Polygon& operator=(S2Polygon&&);
+
   // Create a polygon from a set of hierarchically nested loops.  The polygon
   // interior consists of the points contained by an odd number of loops.
   // (Recall that a loop contains the set of points on its left-hand side.)
@@ -184,7 +198,7 @@ class S2Polygon final : public S2Region {
 
   // Makes a deep copy of the given source polygon.  The destination polygon
   // will be cleared if necessary.
-  void Copy(const S2Polygon* src);
+  void Copy(const S2Polygon& src);
 
   // Destroys the polygon and frees its loops.
   ~S2Polygon() override;
@@ -230,6 +244,7 @@ class S2Polygon final : public S2Region {
   int num_loops() const { return static_cast<int>(loops_.size()); }
 
   // Total number of vertices in all loops.
+  // TODO(ericv): Change to num_edges() for consistency with the S2Shape API.
   int num_vertices() const { return num_vertices_; }
 
   // Return the loop at the given index.  Note that during initialization, the
@@ -283,8 +298,8 @@ class S2Polygon final : public S2Region {
 
   // Return the overlap fractions between two polygons, i.e. the ratios of the
   // area of intersection to the area of each polygon.
-  static std::pair<double, double> GetOverlapFractions(const S2Polygon* a,
-                                                       const S2Polygon* b);
+  static std::pair<double, double> GetOverlapFractions(const S2Polygon& a,
+                                                       const S2Polygon& b);
 
   // If the given point is contained by the polygon, return it.  Otherwise
   // return the closest point on the polygon boundary.  If the polygon is
@@ -299,7 +314,7 @@ class S2Polygon final : public S2Region {
 
   // Return true if this polygon contains the given other polygon, i.e.
   // if polygon A contains all points contained by polygon B.
-  bool Contains(const S2Polygon* b) const;
+  bool Contains(const S2Polygon& b) const;
 
   // Returns true if this polgyon (A) approximately contains the given other
   // polygon (B). This is true if it is possible to move the vertices of B
@@ -307,11 +322,11 @@ class S2Polygon final : public S2Region {
   //
   // For example, the empty polygon will contain any polygon whose maximum
   // width is no more than "tolerance".
-  bool ApproxContains(const S2Polygon* b, S1Angle tolerance) const;
+  bool ApproxContains(const S2Polygon& b, S1Angle tolerance) const;
 
   // Return true if this polygon intersects the given other polygon, i.e.
   // if there is a point that is contained by both polygons.
-  bool Intersects(const S2Polygon* b) const;
+  bool Intersects(const S2Polygon& b) const;
 
   // Returns true if this polgyon (A) and the given polygon (B) are
   // approximately disjoint.  This is true if it is possible to ensure that A
@@ -321,7 +336,7 @@ class S2Polygon final : public S2Region {
   //
   // For example, any polygon is approximately disjoint from a polygon whose
   // maximum width is no more than "tolerance".
-  bool ApproxDisjoint(const S2Polygon* b, S1Angle tolerance) const;
+  bool ApproxDisjoint(const S2Polygon& b, S1Angle tolerance) const;
 
   // Initialize this polygon to the intersection, union, difference (A - B),
   // or symmetric difference (XOR) of the given two polygons.
@@ -367,45 +382,33 @@ class S2Polygon final : public S2Region {
   // success and set "error" appropriately otherwise.  However note that these
   // functions should never return an error provided that both input polygons
   // are valid (i.e., IsValid() returns true).
-  void InitToIntersection(const S2Polygon* a, const S2Polygon* b);
+  void InitToIntersection(const S2Polygon& a, const S2Polygon& b);
   void InitToIntersection(const S2Polygon& a, const S2Polygon& b,
                           const S2Builder::SnapFunction& snap_function);
   bool InitToIntersection(const S2Polygon& a, const S2Polygon& b,
                           const S2Builder::SnapFunction& snap_function,
                           S2Error *error);
 
-  void InitToUnion(const S2Polygon* a, const S2Polygon* b);
+  void InitToUnion(const S2Polygon& a, const S2Polygon& b);
   void InitToUnion(const S2Polygon& a, const S2Polygon& b,
                    const S2Builder::SnapFunction& snap_function);
   bool InitToUnion(const S2Polygon& a, const S2Polygon& b,
                    const S2Builder::SnapFunction& snap_function,
                    S2Error *error);
 
-  void InitToDifference(const S2Polygon* a, const S2Polygon* b);
+  void InitToDifference(const S2Polygon& a, const S2Polygon& b);
   void InitToDifference(const S2Polygon& a, const S2Polygon& b,
                         const S2Builder::SnapFunction& snap_function);
   bool InitToDifference(const S2Polygon& a, const S2Polygon& b,
                         const S2Builder::SnapFunction& snap_function,
                         S2Error *error);
 
-  void InitToSymmetricDifference(const S2Polygon* a, const S2Polygon* b);
+  void InitToSymmetricDifference(const S2Polygon& a, const S2Polygon& b);
   void InitToSymmetricDifference(const S2Polygon& a, const S2Polygon& b,
                                  const S2Builder::SnapFunction& snap_function);
   bool InitToSymmetricDifference(const S2Polygon& a, const S2Polygon& b,
                                  const S2Builder::SnapFunction& snap_function,
                                  S2Error *error);
-
-  // Convenience functions that use the IdentitySnapFunction with the given
-  // snap radius.  TODO(ericv): Consider deprecating these and require the
-  // snap function to be specified explcitly?
-  void InitToApproxIntersection(const S2Polygon* a, const S2Polygon* b,
-                                S1Angle snap_radius);
-  void InitToApproxUnion(const S2Polygon* a, const S2Polygon* b,
-                         S1Angle snap_radius);
-  void InitToApproxDifference(const S2Polygon* a, const S2Polygon* b,
-                              S1Angle snap_radius);
-  void InitToApproxSymmetricDifference(const S2Polygon* a, const S2Polygon* b,
-                                       S1Angle snap_radius);
 
   // Snaps the vertices of the given polygon using the given SnapFunction
   // (e.g., s2builderutil::IntLatLngSnapFunction(6) snaps to E6 coordinates).
@@ -424,21 +427,29 @@ class S2Polygon final : public S2Region {
   // given level (default level 30, which has S2CellId centers spaced about 1
   // centimeter apart).  Polygons can be efficiently encoded by Encode() after
   // they have been snapped.
-  void InitToSnapped(const S2Polygon* polygon,
+  void InitToSnapped(const S2Polygon& polygon,
                      int snap_level = S2CellId::kMaxLevel);
 
   // Snaps the input polygon according to the given "snap_function" and
   // reduces the number of vertices if possible, while ensuring that no vertex
   // moves further than snap_function.snap_radius().
   //
+  // A zero snap radius will leave the input geometry unmodified.
+  //
   // Simplification works by replacing nearly straight chains of short edges
   // with longer edges, in a way that preserves the topology of the input
   // polygon up to the creation of degeneracies.  This means that loops or
   // portions of loops may become degenerate, in which case they are removed.
+  //
   // For example, if there is a very small island in the original polygon, it
-  // may disappear completely.  (Even if there are dense islands, they could
-  // all be removed rather than being replaced by a larger simplified island
-  // if more area is covered by water than land.)
+  // may disappear completely.  (Even if there are dense islands, they could all
+  // be removed rather than being replaced by a larger simplified island if more
+  // area is covered by water than land.)
+  //
+  // What's more, since we snap at the same time that we simplify, edges that
+  // come within the snap radius of a vertex may have a vertex inserted
+  // resulting in a "pinch" that forces S2Builder to produce multiple output
+  // loops.
   void InitToSimplified(const S2Polygon& a,
                         const S2Builder::SnapFunction& snap_function);
 
@@ -475,11 +486,11 @@ class S2Polygon final : public S2Region {
   //
   // REQUIRES: all vertices of "a" are within "boundary_tolerance" of "cell".
   void InitToSimplifiedInCell(
-      const S2Polygon* a, const S2Cell& cell, S1Angle snap_radius,
+      const S2Polygon& a, const S2Cell& cell, S1Angle snap_radius,
       S1Angle boundary_tolerance = S1Angle::Radians(1e-15));
 
   // Initialize this polygon to the complement of the given polygon.
-  void InitToComplement(const S2Polygon* a);
+  void InitToComplement(const S2Polygon& a);
 
   // Invert the polygon (replace it by its complement).
   void Invert();
@@ -568,6 +579,9 @@ class S2Polygon final : public S2Region {
   static std::unique_ptr<S2Polygon> DestructiveApproxUnion(
       std::vector<std::unique_ptr<S2Polygon> > polygons,
       S1Angle snap_radius);
+  static std::unique_ptr<S2Polygon> DestructiveUnion(
+      std::vector<std::unique_ptr<S2Polygon> > polygons,
+      const S2Builder::SnapFunction& snap_function);
 #endif  // !defined(SWIG)
 
   // Initialize this polygon to the outline of the given cell union.
@@ -599,7 +613,7 @@ class S2Polygon final : public S2Region {
   // Return true if two polygons have exactly the same loops.  The loops must
   // appear in the same order, and corresponding loops must have the same
   // linear vertex ordering (i.e., cyclic rotations are not allowed).
-  bool Equals(const S2Polygon* b) const;
+  bool Equals(const S2Polygon& b) const;
 
   // Return true if two polygons are approximately equal to within the given
   // tolerance.  This is true if it is possible to move the vertices of the
@@ -614,7 +628,7 @@ class S2Polygon final : public S2Region {
   // a good choice for comparing polygons that have been snapped, simplified,
   // unioned, etc, since these operations use a model similar to this one
   // (i.e., degenerate loops or portions of loops are automatically removed).
-  bool ApproxEquals(const S2Polygon* b, S1Angle tolerance) const;
+  bool ApproxEquals(const S2Polygon& b, S1Angle tolerance) const;
 
   // Returns true if two polygons have the same boundary.  More precisely,
   // this method requires that both polygons have loops with the same cyclic
@@ -622,7 +636,7 @@ class S2Polygon final : public S2Region {
   // may be cyclically rotated between corresponding loops, and the loop
   // ordering may be different between the two polygons as long as the nesting
   // hierarchy is the same.)
-  bool BoundaryEquals(const S2Polygon* b) const;
+  bool BoundaryEquals(const S2Polygon& b) const;
 
   // Return true if two polygons have the same boundary except for vertex
   // perturbations.  Both polygons must have loops with the same cyclic vertex
@@ -674,7 +688,8 @@ class S2Polygon final : public S2Region {
   //
   // REQUIRES: "encoder" uses the default constructor, so that its buffer
   //           can be enlarged as necessary by calling Ensure(int).
-  void Encode(Encoder* const encoder) const;
+  void Encode(Encoder* const encoder,
+              s2coding::CodingHint hint = s2coding::CodingHint::COMPACT) const;
 
   // Encodes the polygon's S2Points directly as three doubles using
   // (40 + 43 * num_loops + 24 * num_vertices) bytes.
@@ -685,16 +700,6 @@ class S2Polygon final : public S2Region {
 
   // Decodes a polygon encoded with Encode().  Returns true on success.
   bool Decode(Decoder* const decoder);
-
-  // Decodes a polygon by pointing the S2Loop vertices directly into the
-  // decoder's memory buffer (which needs to persist for the lifetime of the
-  // decoded S2Polygon).  It is much faster than Decode(), but requires that
-  // all the polygon vertices were encoded exactly using 24 bytes per vertex.
-  // This essentially requires that the polygon was not snapped beforehand to
-  // a given S2Cell level; otherwise this method falls back to Decode().
-  //
-  // Returns true on success.
-  bool DecodeWithinScope(Decoder* const decoder);
 
 #ifndef SWIG
   // Wrapper class for indexing a polygon (see S2ShapeIndex).  Once this
@@ -707,10 +712,16 @@ class S2Polygon final : public S2Region {
   // Note that unlike S2Polygon, the edges of S2Polygon::Shape are directed
   // such that the polygon interior is always on the left.
   class Shape : public S2Shape {
-   public:
-    static constexpr TypeTag kTypeTag = 1;
+    // To update `polygon_` in `S2Polygon` move constructor/assignment.
+    friend class S2Polygon;
 
-    Shape() : polygon_(nullptr), cumulative_edges_(nullptr) {}
+   public:
+    // Define as enum so we don't have to declare storage.
+    // TODO(user, b/210097200): Use static constexpr when C++17 is
+    // allowed in opensource.
+    enum : TypeTag { kTypeTag = 1 };
+
+    Shape() : polygon_(nullptr), loop_starts_(nullptr) {}
     ~Shape() override;
 
     // Initialization.  Does not take ownership of "polygon".  May be called
@@ -721,20 +732,11 @@ class S2Polygon final : public S2Region {
 
     const S2Polygon* polygon() const { return polygon_; }
 
-    // Encodes the polygon using S2Polygon::Encode().
-    void Encode(Encoder* encoder) const {
-      polygon_->Encode(encoder);
-    }
-
-    // Encodes the polygon using S2Polygon::EncodeUncompressed().
-    void EncodeUncompressed(Encoder* encoder) const {
-      polygon_->EncodeUncompressed(encoder);
-    }
-
-    // Decoding is defined only for S2Polyline::OwningShape below.
-
     // S2Shape interface:
-    int num_edges() const final { return num_edges_; }
+    int num_edges() const final {
+      return (polygon_->num_vertices() != 1) ? polygon_->num_vertices()
+                                             : polygon_->is_full() ? 0 : 1;
+    }
     Edge edge(int e) const final;
     int dimension() const final { return 2; }
     ReferencePoint GetReferencePoint() const final;
@@ -744,22 +746,27 @@ class S2Polygon final : public S2Region {
     ChainPosition chain_position(int e) const final;
     TypeTag type_tag() const override { return kTypeTag; }
 
+  void Encode(Encoder* encoder, s2coding::CodingHint hint) const override {
+      if (hint == s2coding::CodingHint::FAST) {
+        polygon_->EncodeUncompressed(encoder);
+      } else {
+        polygon_->Encode(encoder);
+      }
+    }
+    // Decoding is defined only for S2Polygon::OwningShape below.
+
    private:
-    // The total number of edges in the polygon.  This is the same as
-    // polygon_->num_vertices() except in one case (polygon_->is_full()).  On
-    // the other hand this field doesn't take up any extra space due to field
-    // packing with S2Shape::id_.
-    //
-    // TODO(ericv): Consider using this field instead as an atomic<int> hint to
-    // speed up edge location when there are a large number of loops.  Also
-    // consider changing S2Polygon::num_vertices to num_edges instead.
-    int num_edges_;
+    // The loop that contained the edge returned by the previous call to the
+    // edge() method.  This is used as a hint to speed up edge location when
+    // there are many loops.  Note that this field does not take up any space
+    // due to field packing with S2Shape::id_.
+    mutable std::atomic<int> prev_loop_{0};
 
     const S2Polygon* polygon_;
 
     // An array where element "i" is the total number of edges in loops 0..i-1.
     // This field is only used for polygons that have a large number of loops.
-    int* cumulative_edges_;
+    std::unique_ptr<uint32[]> loop_starts_;
   };
 
   // Like Shape, except that the S2Polygon is automatically deleted when this
@@ -767,7 +774,7 @@ class S2Polygon final : public S2Region {
   // is constructed solely for the purpose of indexing it.
   class OwningShape : public Shape {
    public:
-    OwningShape() {}  // Must call Init().
+    OwningShape() = default;  // Must call Init().
 
     explicit OwningShape(std::unique_ptr<const S2Polygon> polygon)
         : Shape(polygon.get()), owned_polygon_(std::move(polygon)) {}
@@ -778,7 +785,7 @@ class S2Polygon final : public S2Region {
     }
 
     bool Init(Decoder* decoder) {
-      auto polygon = absl::make_unique<S2Polygon>();
+      auto polygon = std::make_unique<S2Polygon>();
       if (!polygon->Decode(decoder)) return false;
       Shape::Init(polygon.get());
       owned_polygon_ = std::move(polygon);
@@ -822,7 +829,7 @@ class S2Polygon final : public S2Region {
   // A map from each loop to its immediate children with respect to nesting.
   // This map is built during initialization of multi-loop polygons to
   // determine which are shells and which are holes, and then discarded.
-  typedef std::map<S2Loop*, std::vector<S2Loop*> > LoopMap;
+  typedef absl::flat_hash_map<S2Loop*, std::vector<S2Loop*> > LoopMap;
 
   void InsertLoop(S2Loop* new_loop, S2Loop* parent, LoopMap* loop_map);
   void InitLoops(LoopMap* loop_map);
@@ -859,9 +866,8 @@ class S2Polygon final : public S2Region {
       const S2Polyline& a) const;
 
   // Decode a polygon encoded with EncodeUncompressed().  Used by the Decode
-  // and DecodeWithinScope methods above.  The within_scope parameter
-  // specifies whether to call DecodeWithinScope on the loops.
-  bool DecodeUncompressed(Decoder* const decoder, bool within_scope);
+  // method above.
+  bool DecodeUncompressed(Decoder* const decoder);
 
   // Encode the polygon's vertices using about 4 bytes / vertex plus 24 bytes /
   // unsnapped vertex. All the loop vertices must be converted first to the
@@ -886,7 +892,7 @@ class S2Polygon final : public S2Region {
   // Defines a total ordering on S2Loops that does not depend on the cyclic
   // order of loop vertices.  This function is used to choose which loop to
   // invert in the case where several loops have exactly the same area.
-  static int CompareLoops(const S2Loop* a, const S2Loop* b);
+  static int CompareLoops(const S2Loop& a, const S2Loop& b);
 
   std::vector<std::unique_ptr<S2Loop> > loops_;
 
@@ -930,5 +936,50 @@ class S2Polygon final : public S2Region {
   void operator=(const S2Polygon&) = delete;
 #endif
 };
+
+
+//////////////////   Implementation details follow   ////////////////////
+
+
+ABSL_ATTRIBUTE_ALWAYS_INLINE
+inline S2Shape::Edge S2Polygon::Shape::chain_edge(int i, int j) const {
+  S2_DCHECK_LT(i, Shape::num_chains());
+  const S2Loop* loop = polygon_->loop(i);
+  S2_DCHECK_LT(j, loop->num_vertices());
+  return Edge(loop->oriented_vertex(j), loop->oriented_vertex(j + 1));
+}
+
+ABSL_ATTRIBUTE_ALWAYS_INLINE
+inline S2Shape::ChainPosition S2Polygon::Shape::chain_position(int e) const {
+  S2_DCHECK_LT(e, num_edges());
+  int i;
+  const uint32* start = loop_starts_.get();
+  if (start == nullptr) {
+    // When the number of loops is small, linear search is faster.  Most often
+    // there is exactly one loop and the code below executes zero times.
+    for (i = 0; e >= polygon_->loop(i)->num_vertices(); ++i) {
+      e -= polygon_->loop(i)->num_vertices();
+    }
+  } else {
+    i = prev_loop_.load(std::memory_order_relaxed);
+    if (static_cast<uint32_t>(e) >= start[i] &&
+        static_cast<uint32_t>(e) < start[i + 1]) {
+      // This edge belongs to the same loop as the previous call.
+    } else {
+      if (static_cast<uint32_t>(e) == start[i + 1]) {
+        // This edge immediately follows the loop from the previous call.
+        // Note that S2Polygon does not allow empty loops.
+        ++i;
+      } else {
+        // "upper_bound" finds the loop just beyond the one we want.
+        i = std::upper_bound(&start[1], &start[polygon_->num_loops()], e)
+            - &start[1];
+      }
+      prev_loop_.store(i, std::memory_order_relaxed);
+    }
+    e -= start[i];
+  }
+  return ChainPosition(i, e);
+}
 
 #endif  // S2_S2POLYGON_H_

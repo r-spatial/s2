@@ -19,8 +19,14 @@
 
 #include <cmath>
 #include <vector>
+
+#include "s2/base/log_severity.h"
+#include "s2/s1angle.h"
 #include "s2/s2loop_measures.h"
+#include "s2/s2point.h"
+#include "s2/s2point_span.h"
 #include "s2/s2polyline_measures.h"
+#include "s2/s2shape.h"
 
 using std::fabs;
 using std::vector;
@@ -66,16 +72,28 @@ double GetArea(const S2Shape& shape) {
   //
   // So instead we use S2::GetSignedArea() to ensure that all loops have areas
   // in the range [-2*Pi, 2*Pi].
+  //
+  // TODO(ericv): Rarely, this function returns the area of the complementary
+  // region (4*Pi - area).  This can only happen when the true area is very
+  // close to zero or 4*Pi and the polygon has multiple loops.  To make this
+  // function completely robust requires checking whether the signed area sum is
+  // ambiguous, and if so, determining the loop nesting structure.  This allows
+  // the sum to be evaluated in a way that is guaranteed to have the correct
+  // sign.
   double area = 0;
+  double max_error = 0;
   vector<S2Point> vertices;
   int num_chains = shape.num_chains();
   for (int chain_id = 0; chain_id < num_chains; ++chain_id) {
     GetChainVertices(shape, chain_id, &vertices);
     area += S2::GetSignedArea(S2PointLoopSpan(vertices));
+    if (google::DEBUG_MODE) {
+      max_error += S2::GetCurvatureMaxError(S2PointLoopSpan(vertices));
+    }
   }
   // Note that S2::GetSignedArea() guarantees that the full loop (containing
   // all points on the sphere) has a very small negative area.
-  S2_DCHECK_LE(fabs(area), 4 * M_PI);
+  S2_DCHECK_LE(fabs(area), 4 * M_PI + max_error);
   if (area < 0.0) area += 4 * M_PI;
   return area;
 }
@@ -119,7 +137,7 @@ S2Point GetCentroid(const S2Shape& shape) {
 }
 
 void GetChainVertices(const S2Shape& shape, int chain_id,
-                      std::vector<S2Point>* vertices) {
+                      vector<S2Point>* vertices) {
   S2Shape::Chain chain = shape.chain(chain_id);
   int num_vertices = chain.length + (shape.dimension() == 1);
   vertices->clear();

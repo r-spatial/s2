@@ -18,6 +18,9 @@
 #ifndef S2_ID_SET_LEXICON_H_
 #define S2_ID_SET_LEXICON_H_
 
+#include <cstddef>
+
+#include <iterator>
 #include <limits>
 #include <vector>
 
@@ -65,8 +68,8 @@
 // This class is similar to SequenceLexicon, except:
 //
 // 1. Empty and singleton sets are represented implicitly; they use no space.
-// 2. Sets are represented rather than sequences; the ordering of values is
-//    not important and duplicates are removed.
+// 2. Sets are represented rather than sequences; values are reordered to be in
+//    sorted order, and duplicates are removed.
 // 3. The values must be 32-bit non-negative integers (only).
 class IdSetLexicon {
  public:
@@ -114,6 +117,8 @@ class IdSetLexicon {
   // This class represents a set of integers stored in the IdSetLexicon.
   class IdSet {
    public:
+    using value_type = const int32;
+
     Iterator begin() const;
     Iterator end() const;
     size_t size() const;
@@ -132,7 +137,7 @@ class IdSetLexicon {
  private:
   // Choose kEmptySetId to be the last id that will ever be generated.
   // (Non-negative ids are reserved for singleton sets.)
-  static const int32 kEmptySetId = std::numeric_limits<int32>::min();
+  static constexpr int32 kEmptySetId = std::numeric_limits<int32>::min();
   int32 AddInternal(std::vector<int32>* ids);
 
   SequenceLexicon<int32> id_sets_;
