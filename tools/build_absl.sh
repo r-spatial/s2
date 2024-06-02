@@ -8,6 +8,7 @@ if ${CMAKE} --version ; then
   echo "Using MAKE=$MAKE $MAKEVARS"
 else
   echo "cmake not found"
+  exit 1
 fi
 
 : ${R_HOME=`R RHOME`}
@@ -50,7 +51,6 @@ build_cmake () {
 
 build_cmake abseil-cpp -DABSL_PROPAGATE_CXX_STD=ON
 
-CMAKE_LIBS="-labsl_base -labsl_city -labsl_cord -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_cordz_info -labsl_hash -labsl_hashtablez_sampler -labsl_int128 -labsl_kernel_timeout_internal -labsl_low_level_hash -labsl_malloc_internal -labsl_raw_hash_set -labsl_raw_logging_internal -labsl_spinlock_wait -labsl_stacktrace -labsl_str_format_internal -labsl_strerror -labsl_string_view -labsl_strings -labsl_strings_internal -labsl_synchronization -labsl_throw_delegate -labsl_time -labsl_time_zone"
 
 
 
