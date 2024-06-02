@@ -34,7 +34,7 @@ build_cmake () {
 
   cd "tools/build/$1"
 
-  ${CMAKE} \
+  $CMAKE \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
