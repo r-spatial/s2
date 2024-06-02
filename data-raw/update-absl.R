@@ -10,6 +10,7 @@ file.rename(glue::glue("tools/vendor/abseil-cpp-{tag}"), "tools/vendor/abseil-cp
 
 # prune unused components
 unlink("tools/vendor/abseil-cpp/.github", recursive = TRUE)
+unlink("tools/vendor/abseil-cpp/.clang-format")
 unlink("tools/vendor/abseil-cpp/ci", recursive = TRUE)
 unlink(list.files("tools/vendor/abseil-cpp", "\\.py$", full.names = TRUE))
 unlink(
@@ -26,3 +27,4 @@ unlink(
     recursive = TRUE
   )
 )
+unlink("tools/vendor/abseil-cpp/absl/time/internal/cctz/testdata", recursive = TRUE)

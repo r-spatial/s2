@@ -50,7 +50,4 @@ build_cmake () {
 }
 
 build_cmake abseil-cpp -DABSL_PROPAGATE_CXX_STD=ON
-
-
-
-
+rm -rf tools/build/abseil-cpp
