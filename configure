@@ -117,7 +117,7 @@ fi
 
 # Unfortunately tracing the dependencies here is difficult but the following
 # list is required (depsite s2 directly requiring little of this)
-ABSL_LIBS=`Rscript -e 'cat(paste0("-l", sub(".a$", "", sub("lib", "", list.files("tools/dist/lib", "^libabsl_"))), collapse = " "))'`
+ABSL_LIBS=`${R_HOME}/bin/Rscript -e 'cat(paste0("-l", sub(".a$", "", sub("lib", "", list.files("tools/dist/lib", "^libabsl_"))), collapse = " "))'`
 PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
 PKG_LIBS="-L${R_S2_ABSL_HOME}/lib ${ABSL_LIBS} ${PKG_LIBS}"
 
