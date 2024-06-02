@@ -14,3 +14,5 @@
 ^\.clang-format$
 ^tools/build$
 ^tools/dist$
+^compile_commands\.json$
+^\.cache$

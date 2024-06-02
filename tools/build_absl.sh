@@ -50,6 +50,7 @@ build_cmake () {
     -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
     -DCMAKE_CXX_STANDARD=14 \
+    -DABSL_PROPAGATE_CXX_STD=ON \
     "../../vendor/$1" &&
     ${MAKE} ${MAKEVARS} &&
     ${CMAKE} --install .
