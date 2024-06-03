@@ -5,7 +5,7 @@ if test -z "$MAKE"; then MAKE="`which make`"; fi
 if ${MAKE} --version ; then
   echo "Using MAKE=$MAKE $MAKEVARS"
 else
-  echo "cmake not found"
+  echo "make not found"
   exit 1
 fi
 
@@ -26,10 +26,10 @@ if test -z "${R_HOME}"; then
 fi
 
 CC=`"${R_HOME}/bin/R" CMD config CC`
-CXX=`${R_HOME}/bin/R CMD config CXX14`
+CXX="`${R_HOME}/bin/R CMD config CXX14` `${R_HOME}/bin/R CMD config CXX14STD`"
 CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
-CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
+R_CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+R_CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
 CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
@@ -43,7 +43,10 @@ build_cmake () {
   cd "tools/build/$1"
 
   ${CMAKE} \
+    -G "Unix Makefiles" \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DCMAKE_CXX_FLAGS_RELEASE="${R_CPPFLAGS} ${R_CXXFLAGS}" \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
     -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
