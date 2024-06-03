@@ -59,4 +59,3 @@ build_cmake () {
 }
 
 build_cmake abseil-cpp
-rm -rf tools/build/abseil-cpp

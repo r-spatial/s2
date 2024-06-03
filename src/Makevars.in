@@ -1,24 +1,10 @@
 PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
-PKG_LIBS = @libs@
+PKG_LIBS = @libs@ -Ls2 -ls2static
 PKG_CXXFLAGS = @cflags@ -pthread
 
 CXX_STD = CXX14
 
-OBJECTS = cpp-compat.o \
-     s2-accessors.o \
-     s2-bounds.o \
-     s2-cell.o \
-     s2-cell-union.o \
-     s2-constructors-formatters.o \
-     s2-predicates.o \
-     s2-transformers.o \
-     init.o \
-     RcppExports.o \
-     s2-geography.o \
-     s2-lnglat.o \
-     s2-matrix.o \
-     wk-impl.o \
-     s2geography/accessors.o \
+S2_OBJECTS = s2geography/accessors.o \
      s2geography/accessors-geog.o \
      s2geography/linear-referencing.o \
      s2geography/distance.o \
@@ -124,3 +110,30 @@ OBJECTS = cpp-compat.o \
      s2/util/math/exactfloat/exactfloat.o \
      s2/util/math/mathutil.o \
      s2/util/units/length-units.o
+
+STATLIB = s2/libs2static.a
+
+OBJECTS = cpp-compat.o \
+     s2-accessors.o \
+     s2-bounds.o \
+     s2-cell.o \
+     s2-cell-union.o \
+     s2-constructors-formatters.o \
+     s2-predicates.o \
+     s2-transformers.o \
+     init.o \
+     RcppExports.o \
+     s2-geography.o \
+     s2-lnglat.o \
+     s2-matrix.o \
+     wk-impl.o
+
+$(SHLIB): $(STATLIB)
+
+$(STATLIB): $(S2_OBJECTS)
+	ar rcs $(STATLIB) $(S2_OBJECTS)
+
+clean:
+	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
+
+.PHONY: clean
