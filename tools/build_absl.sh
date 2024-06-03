@@ -33,7 +33,7 @@ R_CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX14FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
 CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
-CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake:$CMAKE_PREFIX_PATH"
+CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake:${CMAKE_PREFIX_PATH}"
 
 build_cmake () {
   if [ ! -d "tools/build/$1" ]; then
