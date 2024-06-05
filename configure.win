@@ -1,0 +1,12 @@
+
+# Check for pre-specified R_S2_ABSL_HOME, which could be used in development
+# to avoid recompiling Abseil when recompiling a clean version of the package.
+# We might be able to use a previously installed Abseil, but as of this
+# writing it is difficult to guarantee that it will work with an arbitrary
+# Abseil installation.
+if test -z "$R_S2_ABSL_HOME"; then R_S2_ABSL_HOME="`pwd`/tools/dist"; fi
+if [ -d "${R_S2_ABSL_HOME}" ]; then
+  echo "Using pre-built abseil-cpp at ${R_S2_ABSL_HOME}"
+else
+  tools/build_absl.sh
+fi

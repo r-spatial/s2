@@ -1,3 +1,144 @@
-CRT=-ucrt
-include Makevars.win
-CXX_STD = CXX11
+
+ifeq (,$(shell pkg-config absl_base --cflags))
+	ABSL_CFLAGS = -I../tools/dist/include
+else
+	ABSL_CFLAGS =
+endif
+
+ABSL_LIBS = -L..tools/dist/lib -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity
+
+PKG_CPPFLAGS = $(ABSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
+
+
+ifeq (,$(shell pkg-config --version 2>/dev/null))
+  PKG_LIBS = -Ls2 -ls2static $(ABSL_LIBS) -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
+else
+  PKG_LIBS = -Ls2 -ls2static $(ABSL_LIBS) $(shell pkg-config --libs openssl)
+endif
+
+CXX_STD = CXX14
+
+STATLIB = s2/libs2static.a
+
+S2LIBS = s2geography/linear-referencing.o \
+     s2geography/distance.o \
+     s2geography/accessors.o \
+     s2geography/accessors-geog.o \
+     s2geography/build.o \
+     s2geography/coverings.o \
+     s2geography/geography.o \
+     s2geography/predicates.o \
+     s2/base/stringprintf.o \
+     s2/base/strtoint.o \
+     s2/encoded_s2cell_id_vector.o \
+     s2/encoded_s2point_vector.o \
+     s2/encoded_s2shape_index.o \
+     s2/encoded_string_vector.o \
+     s2/id_set_lexicon.o \
+     s2/mutable_s2shape_index.o \
+     s2/r2rect.o \
+     s2/s1angle.o \
+     s2/s1chord_angle.o \
+     s2/s1interval.o \
+     s2/s2boolean_operation.o \
+     s2/s2builder_graph.o \
+     s2/s2builder.o \
+     s2/s2builderutil_closed_set_normalizer.o \
+     s2/s2builderutil_find_polygon_degeneracies.o \
+     s2/s2builderutil_lax_polygon_layer.o \
+     s2/s2builderutil_s2point_vector_layer.o \
+     s2/s2builderutil_s2polygon_layer.o \
+     s2/s2builderutil_s2polyline_layer.o \
+     s2/s2builderutil_s2polyline_vector_layer.o \
+     s2/s2builderutil_snap_functions.o \
+     s2/s2builderutil_testing.o \
+     s2/s2cap.o \
+     s2/s2cell_id.o \
+     s2/s2cell_index.o \
+     s2/s2cell_union.o \
+     s2/s2cell.o \
+     s2/s2centroids.o \
+     s2/s2closest_cell_query.o \
+     s2/s2closest_edge_query.o \
+     s2/s2closest_point_query.o \
+     s2/s2contains_vertex_query.o \
+     s2/s2convex_hull_query.o \
+     s2/s2coords.o \
+     s2/s2crossing_edge_query.o \
+     s2/s2debug.o \
+     s2/s2earth.o \
+     s2/s2edge_clipping.o \
+     s2/s2edge_crosser.o \
+     s2/s2edge_crossings.o \
+     s2/s2edge_distances.o \
+     s2/s2edge_tessellator.o \
+     s2/s2error.o \
+     s2/s2furthest_edge_query.o \
+     s2/s2latlng_rect_bounder.o \
+     s2/s2latlng_rect.o \
+     s2/s2latlng.o \
+     s2/s2lax_loop_shape.o \
+     s2/s2lax_polygon_shape.o \
+     s2/s2lax_polyline_shape.o \
+     s2/s2loop_measures.o \
+     s2/s2loop.o \
+     s2/s2max_distance_targets.o \
+     s2/s2measures.o \
+     s2/s2metrics.o \
+     s2/s2min_distance_targets.o \
+     s2/s2padded_cell.o \
+     s2/s2point_compression.o \
+     s2/s2point_region.o \
+     s2/s2pointutil.o \
+     s2/s2polygon.o \
+     s2/s2polyline_alignment.o \
+     s2/s2polyline_measures.o \
+     s2/s2polyline_simplifier.o \
+     s2/s2polyline.o \
+     s2/s2predicates.o \
+     s2/s2projections.o \
+     s2/s2r2rect.o \
+     s2/s2region_coverer.o \
+     s2/s2region_intersection.o \
+     s2/s2region_term_indexer.o \
+     s2/s2region_union.o \
+     s2/s2region.o \
+     s2/s2shape_index_buffered_region.o \
+     s2/s2shape_index_measures.o \
+     s2/s2shape_index.o \
+     s2/s2shape_measures.o \
+     s2/s2shapeutil_build_polygon_boundaries.o \
+     s2/s2shapeutil_coding.o \
+     s2/s2shapeutil_contains_brute_force.o \
+     s2/s2shapeutil_edge_iterator.o \
+     s2/s2shapeutil_get_reference_point.o \
+     s2/s2shapeutil_range_iterator.o \
+     s2/s2shapeutil_visit_crossing_edge_pairs.o \
+     s2/s2testing.o \
+     s2/s2text_format.o \
+     s2/s2wedge_relations.o \
+     s2/strings/ostringstream.o \
+     s2/strings/serialize.o \
+     s2/util/bits/bit-interleave.o \
+     s2/util/bits/bits.o \
+     s2/util/coding/coder.o \
+     s2/util/coding/varint.o \
+     s2/util/math/exactfloat/exactfloat.o \
+     s2/util/math/mathutil.o \
+     s2/util/units/length-units.o
+
+$(SHLIB): $(STATLIB)
+
+$(STATLIB): $(S2LIBS)
+
+$(S2LIBS): winlibs
+
+#all: clean
+
+winlibs:
+	cd .. && pwd
+
+clean:
+	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
+
+.PHONY: all winlibs clean
