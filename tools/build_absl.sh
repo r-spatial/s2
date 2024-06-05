@@ -35,30 +35,26 @@ LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
 CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake:${CMAKE_PREFIX_PATH}"
 
-build_cmake () {
-  if [ ! -d "tools/build/$1" ]; then
-    mkdir -p "tools/build/$1"
-  fi
+if [ ! -d "tools/build/abseil-cpp" ]; then
+    mkdir -p "tools/build/abseil-cpp"
+fi
 
-  cd "tools/build/$1"
+cd "tools/build/abseil-cpp"
 
-  ${CMAKE} \
-    -G "Unix Makefiles" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DCMAKE_CXX_FLAGS_RELEASE="${R_CPPFLAGS} ${R_CXXFLAGS}" \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-    -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
-    -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
-    -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
-    -DCMAKE_CXX_STANDARD=14 \
-    -DABSL_PROPAGATE_CXX_STD=ON \
-    "../../vendor/$1" &&
-    ${MAKE} ${MAKEVARS} &&
-    ${CMAKE} --install .
+${CMAKE} \
+  -G "Unix Makefiles" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -DCMAKE_CXX_FLAGS_RELEASE="${R_CPPFLAGS} ${R_CXXFLAGS}" \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+  -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
+  -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
+  -DCMAKE_CXX_STANDARD=14 \
+  -DABSL_PROPAGATE_CXX_STD=ON \
+  "../../vendor/abseil-cpp" &&
+  ${MAKE} ${MAKEVARS} &&
+  ${CMAKE} --install .
 
-  cd ../../..
-}
-
-build_cmake abseil-cpp
+cd ../../..
