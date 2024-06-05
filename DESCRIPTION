@@ -19,26 +19,26 @@ Authors@R: c(
 Description: Provides R bindings for Google's s2 library for geometric calculations on
     the sphere. High-performance constructors and exporters provide high compatibility
     with existing spatial packages, transformers construct new geometries from existing
-    geometries, predicates provide a means to select geometries based on spatial 
+    geometries, predicates provide a means to select geometries based on spatial
     relationships, and accessors extract information about geometries.
 License: Apache License (== 2.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-SystemRequirements: OpenSSL >= 1.0.1
-LinkingTo: 
+SystemRequirements: OpenSSL >= 1.0.1, GNU make
+LinkingTo:
     Rcpp,
     wk
-Imports: 
+Imports:
     Rcpp,
     wk (>= 0.6.0)
-Suggests: 
+Suggests:
     bit64,
     testthat (>= 3.0.0),
     vctrs
 URL: https://r-spatial.github.io/s2/, https://github.com/r-spatial/s2, http://s2geometry.io/
 BugReports: https://github.com/r-spatial/s2/issues
-Depends: 
+Depends:
     R (>= 3.0.0)
 Config/testthat/edition: 3

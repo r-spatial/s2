@@ -107,7 +107,11 @@ else
     PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
 fi
 
-# Check for pre-specified R_S2_ABSL_HOME
+# Check for pre-specified R_S2_ABSL_HOME, which could be used in development
+# to avoid recompiling Abseil when recompiling a clean version of the package.
+# We might be able to use a previously installed Abseil, but as of this
+# writing it is difficult to guarantee that it will work with an arbitrary
+# Abseil installation.
 if test -z "$R_S2_ABSL_HOME"; then R_S2_ABSL_HOME="`pwd`/tools/dist"; fi
 if [ -d "${R_S2_ABSL_HOME}" ]; then
   echo "Using pre-built abseil-cpp at ${R_S2_ABSL_HOME}"
@@ -115,8 +119,8 @@ else
   tools/build_absl.sh
 fi
 
-# Unfortunately tracing the dependencies here is difficult but the following
-# list is required (depsite s2 directly requiring little of this)
+# Generated with:
+# PKG_CONFIG_PATH=tools/pkgconfig:tools/dist/lib/pkgconfig pkg-config absl_s2 --libs
 ABSL_LIBS="-labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -lrt -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity"
 PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
 PKG_LIBS="-L${R_S2_ABSL_HOME}/lib ${ABSL_LIBS} ${PKG_LIBS}"

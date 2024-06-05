@@ -6,6 +6,7 @@ includedir=/home/dewey/rscratch/s2/tools/dist/include
 Name: absl_s2
 Description: Abseil requirements
 URL: https://github.com/r-spatial/s2
+Version: 0.0
 Requires: absl_base, absl_btree, absl_config, absl_core_headers, absl_dynamic_annotations, absl_endian, absl_fixed_array, absl_flat_hash_map, absl_flat_hash_set, absl_hash, absl_inlined_vector, absl_int128, absl_log_severity, absl_memory, absl_span, absl_str_format, absl_strings, absl_type_traits, absl_utility, absl_demangle_internal, absl_debugging_internal
 Libs:
 Cflags:
