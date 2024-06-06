@@ -1,6 +1,16 @@
 
 if pkg-config absl_base --libs 2>/dev/null; then
-  exit 0;
+  echo "Using Abseil from RTools via pkg-config"
+else
+  WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh
 fi
 
-WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh
+if pkg-config openssl --libs 2>/dev/null; then
+  echo "Using openssl from RTools via pkg-config"
+else
+  "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+fi
+
+
+
+

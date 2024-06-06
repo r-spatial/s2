@@ -1,4 +1,7 @@
 
+# Configure Abseil. If it wasn't available via pkg-config, it was built
+# by cmake in configure.win.
+
 ABSL_LIBS = -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity
 
 ifeq (,$(shell pkg-config absl_base --libs 2>/dev/null))
@@ -8,13 +11,19 @@ else
   ABSL_LIB_FLAGS = $(ABSL_LIBS)
 endif
 
+
+# Configure openssl and finalize PKG_LIBS. If openssl is not available via
+# pkg-config, it was downloaded from rwinlibs in configure.win.
 ifeq (,$(shell pkg-config openssl --libs 2>/dev/null))
-  PKG_LIBS = -Ls2 -ls2static $(ABSL_LIB_FLAGS) -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
+  OPENSSL_CFLAGS = -I../windows/openssl-$(VERSION)/include
+  OPENSSL_LIB_FLAGS = -L../windows/openssl/lib -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
 else
-  PKG_LIBS = -Ls2 -ls2static $(ABSL_LIB_FLAGS) $(shell pkg-config --libs openssl)
+  OPENSSL_CFLAGS =
+  OPENSSL_LIB_FLAGS = $(shell pkg-config --libs openssl)
 endif
 
-PKG_CPPFLAGS = $(ABSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
+PKG_CPPFLAGS = $(ABSL_CFLAGS) $(OPENSSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
+PKG_LIBS = -Ls2 -ls2static $(ABSL_LIB_FLAGS) $(OPENSSL_LIB_FLAGS)
 
 CXX_STD = CXX17
 
