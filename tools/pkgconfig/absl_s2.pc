@@ -1,8 +1,3 @@
-prefix=/home/dewey/rscratch/s2/tools/dist
-exec_prefix=${prefix}
-libdir=/home/dewey/rscratch/s2/tools/dist/lib
-includedir=/home/dewey/rscratch/s2/tools/dist/include
-
 Name: absl_s2
 Description: Abseil requirements
 URL: https://github.com/r-spatial/s2

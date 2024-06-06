@@ -16,7 +16,7 @@ else
   PKG_LIBS = -Ls2 -ls2static $(ABSL_LIBS) $(shell pkg-config --libs openssl)
 endif
 
-CXX_STD = CXX14
+CXX_STD = CXX17
 
 STATLIB = s2/libs2static.a
 
