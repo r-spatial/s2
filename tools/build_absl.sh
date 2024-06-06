@@ -11,7 +11,7 @@ fi
 
 if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
 if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
-if ${CMAKE} --version ; then
+if "${CMAKE}" --version ; then
   echo "Using CMAKE=$CMAKE"
   echo "Using MAKE=$MAKE $MAKEVARS"
 else
@@ -41,7 +41,7 @@ fi
 
 cd "tools/build/abseil-cpp"
 
-${CMAKE} \
+"${CMAKE}" \
   -G "Unix Makefiles" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -55,6 +55,6 @@ ${CMAKE} \
   -DABSL_PROPAGATE_CXX_STD=ON \
   "../../vendor/abseil-cpp" &&
   ${MAKE} ${MAKEVARS} &&
-  ${CMAKE} --install .
+  "${CMAKE}" --install .
 
 cd ../../..
