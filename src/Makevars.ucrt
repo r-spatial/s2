@@ -1,20 +1,14 @@
 
-ifeq (,$(shell pkg-config absl_base --cflags))
-	ABSL_CFLAGS = -I../tools/dist/include
-else
-	ABSL_CFLAGS =
-endif
-
-ABSL_LIBS = -L..tools/dist/lib -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity
-
-PKG_CPPFLAGS = $(ABSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
-
+ABSL_LIBS = -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity
 
 ifeq (,$(shell pkg-config --version 2>/dev/null))
-  PKG_LIBS = -Ls2 -ls2static $(ABSL_LIBS) -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
+  ABSL_CFLAGS = -I../tools/dist/include
+  PKG_LIBS = -Ls2 -ls2static -L../tools/dist/lib $(ABSL_LIBS) -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32 -limagehlp
 else
   PKG_LIBS = -Ls2 -ls2static $(ABSL_LIBS) $(shell pkg-config --libs openssl)
 endif
+
+PKG_CPPFLAGS = $(ABSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DIS_LITTLE_ENDIAN -DOMIT_STRPTIME -I../src
 
 CXX_STD = CXX17
 
@@ -131,14 +125,9 @@ $(SHLIB): $(STATLIB)
 
 $(STATLIB): $(S2LIBS)
 
-$(S2LIBS): winlibs
-
 #all: clean
-
-winlibs:
-	cd .. && pwd
 
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
 
-.PHONY: all winlibs clean
+.PHONY: all clean

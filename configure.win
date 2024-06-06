@@ -1,0 +1,6 @@
+
+if pkg-config --version 2>/dev/null; then
+  exit 0;
+fi
+
+WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh
