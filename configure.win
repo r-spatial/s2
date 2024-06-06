@@ -1,5 +1,5 @@
 
-if pkg-config --version 2>/dev/null; then
+if pkg-config absl_base --libs 2>/dev/null; then
   exit 0;
 fi
 
