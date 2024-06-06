@@ -2,7 +2,7 @@ PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
 PKG_LIBS = -Ls2 -ls2static @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 
-CXX_STD = CXX14
+CXX_STD = CXX17
 
 S2_OBJECTS = s2geography/accessors.o \
      s2geography/accessors-geog.o \
