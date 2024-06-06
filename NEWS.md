@@ -1,3 +1,14 @@
+# s2 (development version)
+
+* The Abseil dependency is resolved using pkg-config where possible.
+  Where this is not possible, a vendored version of Abseil will be built using
+  CMake (#258).
+* The s2 
+
+# s2 1.1.6
+
+* Fix CRAN warning (#254).
+
 # s2 1.1.5
 
 * fix compiler problem on Alpine 3.19.0 (#251)
