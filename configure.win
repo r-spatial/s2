@@ -8,9 +8,5 @@ fi
 if pkg-config openssl --libs 2>/dev/null; then
   echo "Using openssl from RTools via pkg-config"
 else
-  "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+  "${R_HOME}/bin/Rscript.exe" "tools/winlibs.R"
 fi
-
-
-
-
