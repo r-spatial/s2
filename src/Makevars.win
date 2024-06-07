@@ -15,7 +15,7 @@ endif
 # Configure openssl and finalize PKG_LIBS. If openssl is not available via
 # pkg-config, it was downloaded from rwinlibs in configure.win.
 ifeq (,$(shell pkg-config openssl --libs 2>/dev/null))
-  OPENSSL_CFLAGS = -I../windows/openssl-$(VERSION)/include
+  OPENSSL_CFLAGS = -I../windows/openssl/include
   OPENSSL_LIB_FLAGS = -L../windows/openssl/lib -lssl -lcrypto -lz -lws2_32 -lgdi32 -lcrypt32
 else
   OPENSSL_CFLAGS =
