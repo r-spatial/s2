@@ -178,8 +178,13 @@ class S2Builder::Graph {
 
   // A helper class for VertexOutMap that represents the outgoing edge *ids*
   // from a given vertex.
+
+// Temporary until we update S2 sources (dd)
+/**/#pragma clang diagnostic push
+/**/#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   class VertexOutEdgeIds
       : public std::iterator<std::forward_iterator_tag, EdgeId> {
+/**/#pragma clang diagnostic pop
    public:
     // An iterator over a range of edge ids (like boost::counting_iterator).
     class Iterator {
