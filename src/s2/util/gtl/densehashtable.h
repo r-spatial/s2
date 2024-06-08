@@ -251,7 +251,6 @@ struct dense_hashtable_iterator {
 // Temporary until we update S2 sources (dd)
 /**/#pragma GCC diagnostic push
 /**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
 template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_const_iterator {
  private:
@@ -594,7 +593,7 @@ class dense_hashtable {
 /**/#pragma GCC diagnostic push
 /**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   size_type max_size() const { return get_allocator().max_size(); }
-/**/#pragma clang diagnostic pop
+/**/#pragma GCC diagnostic pop
 
 
   bool empty() const          { return size() == 0; }

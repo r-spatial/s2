@@ -180,11 +180,11 @@ class S2Builder::Graph {
   // from a given vertex.
 
 // Temporary until we update S2 sources (dd)
-/**/#pragma clang diagnostic push
-/**/#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   class VertexOutEdgeIds
       : public std::iterator<std::forward_iterator_tag, EdgeId> {
-/**/#pragma clang diagnostic pop
+/**/#pragma GCC diagnostic pop
    public:
     // An iterator over a range of edge ids (like boost::counting_iterator).
     class Iterator {
