@@ -40,12 +40,16 @@ namespace cctz {
 
 namespace {
 
-#if (defined(_WIN32) || defined(_WIN64)) && defined(_UCRT)
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_UCRT)
 // Uses the globals: '_timezone', '_dstbias' and '_tzname'.
 auto tm_gmtoff(const std::tm& tm) -> decltype(_timezone + _dstbias) {
   const bool is_dst = tm.tm_isdst > 0;
   return _timezone + (is_dst ? _dstbias : 0);
 }
+#else
+#error "Does this ever happen?"
+#endif
 auto tm_zone(const std::tm& tm) -> decltype(_tzname[0]) {
   const bool is_dst = tm.tm_isdst > 0;
   return _tzname[is_dst];
