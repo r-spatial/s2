@@ -195,7 +195,8 @@ size_t Base64EscapeInternal(const unsigned char* src, size_t szsrc, char* dest,
     default:
       // Should not be reached: blocks of 4 bytes are handled
       // in the while loop before this switch statement.
-      ABSL_RAW_LOG(FATAL, "Logic problem? szsrc = %zu", szsrc);
+      // dd: commenting this line because it causes a CRAN check problem
+      // ABSL_RAW_LOG(FATAL, "Logic problem? szsrc = %zu", szsrc);
       break;
   }
   return static_cast<size_t>(cur_dest - dest);
