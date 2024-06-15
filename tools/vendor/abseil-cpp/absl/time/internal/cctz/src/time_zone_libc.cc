@@ -41,14 +41,13 @@ namespace cctz {
 namespace {
 
 #if defined(_WIN32) || defined(_WIN64)
-auto tm_gmtoff(const std::tm& tm) -> decltype(_timezone + _dstbias) {
-  // This is just a hack because s2 doesn't need this and it causes
-  // problems on Windows before UCRT.
+// These are just hacks because s2 doesn't need this and it causes
+// problems on Windows before UCRT.
+long int tm_gmtoff(const std::tm& tm) {
   return 0;
 }
-auto tm_zone(const std::tm& tm) -> decltype(_tzname[0]) {
-  const bool is_dst = tm.tm_isdst > 0;
-  return _tzname[is_dst];
+const char* tm_zone(const std::tm& tm) {
+  return "UTC";
 }
 #elif defined(__sun) || defined(_AIX)
 // Uses the globals: 'timezone', 'altzone' and 'tzname'.
