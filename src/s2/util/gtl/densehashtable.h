@@ -179,10 +179,16 @@ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_const_iterator;
 
 // We're just an array, but we need to skip over empty and deleted elements
+
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_iterator {
  private:
   typedef typename A::template rebind<V>::other value_alloc_type;
+/**/#pragma GCC diagnostic pop
+
 
  public:
   typedef dense_hashtable_iterator<V, K, HF, ExK, SetK, EqK, A>
@@ -242,10 +248,15 @@ struct dense_hashtable_iterator {
 
 
 // Now do it all again, but with const-ness!
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_const_iterator {
  private:
   typedef typename A::template rebind<V>::other value_alloc_type;
+/**/#pragma GCC diagnostic pop
+
 
  public:
   typedef dense_hashtable_iterator<V, K, HF, ExK, SetK, EqK, A>
@@ -311,8 +322,11 @@ template <class Value, class Key, class HashFcn,
           class ExtractKey, class SetKey, class EqualKey, class Alloc>
 class dense_hashtable {
  private:
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   typedef typename Alloc::template rebind<Value>::other value_alloc_type;
-
+/**/#pragma GCC diagnostic pop
 
  public:
   typedef Key key_type;
@@ -575,7 +589,13 @@ class dense_hashtable {
   // FUNCTIONS CONCERNING SIZE
  public:
   size_type size() const      { return num_elements - num_deleted; }
+
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   size_type max_size() const { return get_allocator().max_size(); }
+/**/#pragma GCC diagnostic pop
+
+
   bool empty() const          { return size() == 0; }
   size_type bucket_count() const      { return num_buckets; }
   size_type max_bucket_count() const  { return max_size(); }

@@ -487,8 +487,8 @@ class MutableS2ShapeIndex final : public S2ShapeIndex {
 
   // Documented in the .cc file.
   void UnlockAndSignal()
-      UNLOCK_FUNCTION(lock_)
-      UNLOCK_FUNCTION(update_state_->wait_mutex);
+      ABSL_UNLOCK_FUNCTION(lock_)
+      ABSL_UNLOCK_FUNCTION(update_state_->wait_mutex);
 
   MutableS2ShapeIndex(const MutableS2ShapeIndex&) = delete;
   void operator=(const MutableS2ShapeIndex&) = delete;

@@ -2,3 +2,4 @@
 *.so
 *.dll
 Makevars
+s2/libs2static.a
