@@ -156,7 +156,7 @@ LogicalVector cpp_s2_prepared_dwithin(List geog1, List geog2, NumericVector dist
       iterator.Init(&feature1->Index().ShapeIndex());
       bool may_intersect_buffer = false;
       for (const S2CellId& query_cell: covering) {
-          if (iterator.Locate(query_cell) != S2ShapeIndex::CellRelation::DISJOINT) {
+          if (iterator.Locate(query_cell) != S2CellRelation::DISJOINT) {
             may_intersect_buffer = true;
             break;
           }
