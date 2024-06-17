@@ -111,10 +111,12 @@ fi
 # This should possibly be updated to check that the pkg-config detected
 # version will actually work; however, the version of abseil that included
 # pkg-config files is about the same as the minimum version required here.
-if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_base --libs 2>/dev/null; then
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
+echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
+
+if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_s2 --libs 2>/dev/null; then
   echo "** Using abseil-cpp from pkg-config"
-  export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
-  echo "${PKG_CONFIG_PATH}"
+
   PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
   PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
   PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
