@@ -107,7 +107,10 @@ else
     PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
 fi
 
-# Check pkg-config for abseil-cpp, but fall back to a cmake build
+# Check pkg-config for abseil-cpp, but fall back to a cmake build.
+# This should possibly be updated to check that the pkg-config detected
+# version will actually work; however, the version of abseil that included
+# pkg-config files is about the same as the minimum version required here.
 if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_base --libs 2>/dev/null; then
   echo "** Using abseil-cpp from pkg-config"
   export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
@@ -117,24 +120,26 @@ if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_base --libs 2>/dev/null; then
   PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 else
-  echo "** Building abseil-cpp using cmake"
-  if tools/build_absl.sh; then
-    echo "** Done!"
-  else
-    echo "** CMake build of Abseil failed"
-    echo "** Abseil can be installed with:"
-    echo "** - apt-get install libabsl-dev"
-    echo "** - dnf install abseil-cpp-devel"
-    echo "** - brew install abseil"
-    echo "** If a system install of Abseil is not possible, cmake is required to build"
-    echo "** the internal vendored copy."
-    exit 1
-  fi
-
-  # Clean up build directory
-  rm -rf tools/build
-
+  # Allow developers to set R_S2_ABSL_HOME in .Renviron to avoid building
+  # Abseil on every package rebuild.
   if [ -z "$R_S2_ABSL_HOME" ]; then
+    echo "** Building abseil-cpp using cmake"
+    if tools/build_absl.sh; then
+      echo "** Done!"
+    else
+      echo "** CMake build of Abseil failed"
+      echo "** Abseil can be installed with:"
+      echo "** - apt-get install libabsl-dev"
+      echo "** - dnf install abseil-cpp-devel"
+      echo "** - brew install abseil"
+      echo "** If a system install of Abseil is not possible, cmake is required to build"
+      echo "** the internal vendored copy."
+      exit 1
+    fi
+
+    # Clean up build directory
+    rm -rf tools/build
+
     R_S2_ABSL_HOME="`pwd`/tools/dist"
   fi
 
