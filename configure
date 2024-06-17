@@ -107,6 +107,51 @@ else
     PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
 fi
 
+# Check pkg-config for abseil-cpp, but fall back to a cmake build.
+# This should possibly be updated to check that the pkg-config detected
+# version will actually work; however, the version of abseil that included
+# pkg-config files is about the same as the minimum version required here.
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
+echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
+
+if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_s2 --libs 2>/dev/null; then
+  echo "** Using abseil-cpp from pkg-config"
+
+  PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
+  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+  PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
+  PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
+else
+  # Allow developers to set R_S2_ABSL_HOME in .Renviron to avoid building
+  # Abseil on every package rebuild. This can be built from this directory using
+  # tools/build_absl.sh path/to/dir (then R_S2_ABSL_HOME=path/to/dir in .Renviron)
+  if [ -z "$R_S2_ABSL_HOME" ]; then
+    echo "** Building abseil-cpp using cmake"
+    CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+    if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
+      echo "** Done!"
+    else
+      echo "** CMake build of Abseil failed"
+      echo "** Abseil can be installed with:"
+      echo "** - apt-get install libabsl-dev"
+      echo "** - dnf install abseil-cpp-devel"
+      echo "** - brew install abseil"
+      echo "** If a system install of Abseil is not possible, cmake is required to build"
+      echo "** the internal vendored copy."
+      exit 1
+    fi
+
+    # Clean up build directory
+    rm -rf tools/build
+
+    R_S2_ABSL_HOME="`pwd`/tools/dist"
+  fi
+
+  ABSL_LIBS="-labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_hash -labsl_city -labsl_bad_optional_access -labsl_bad_variant_access -labsl_low_level_hash -labsl_str_format_internal -labsl_strings -labsl_string_view -labsl_strings_internal -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity"
+  PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
+  PKG_LIBS="-L${R_S2_ABSL_HOME}/lib ${ABSL_LIBS} ${PKG_LIBS}"
+fi
+
 # From apache/arrow/r/configure:
 # If on Raspberry Pi, need to manually link against latomic
 # See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81358 for similar example
@@ -116,7 +161,6 @@ fi
 
 echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
-
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars

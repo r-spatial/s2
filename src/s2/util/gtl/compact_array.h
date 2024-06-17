@@ -148,7 +148,11 @@ class compact_array_base {
     return const_cast<compact_array_base<T, A>*>(this)->Array();
   }
 
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   typedef typename A::template rebind<T>::other value_allocator_type;
+/**/#pragma GCC diagnostic pop
 
  public:
   typedef T                                     value_type;

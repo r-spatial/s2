@@ -1,0 +1,21 @@
+
+# On R 4.3 and 4.4, Abseil can be resolved using pkg-config. Otherwise,
+# build a copy of Abseil-cpp using CMake.
+if pkg-config absl_base --libs 2>/dev/null; then
+  echo "Using Abseil from RTools via pkg-config"
+else
+  # Build the libraries
+  CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+  WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"
+
+  # Remove the build directory (its existence causes a check warning on R 4.2)
+  rm -rf tools/build
+fi
+
+# On R 4.3 and 4.4, OpenSSL can be resolved using pkg-config. Otherwise,
+# Use rwinlibs to download a static library for that toolchain.
+if pkg-config openssl --libs 2>/dev/null; then
+  echo "Using openssl from RTools via pkg-config"
+else
+  "${R_HOME}/bin/Rscript.exe" "tools/winlibs.R"
+fi
