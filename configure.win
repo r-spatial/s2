@@ -5,7 +5,8 @@ if pkg-config absl_base --libs 2>/dev/null; then
   echo "Using Abseil from RTools via pkg-config"
 else
   # Build the libraries
-  WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh
+  CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+  WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"
 
   # Remove the build directory (its existence causes a check warning on R 4.2)
   rm -rf tools/build

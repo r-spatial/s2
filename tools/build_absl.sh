@@ -32,8 +32,7 @@ R_CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 R_CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
 LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
-CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
-CMAKE_PREFIX_PATH="`pwd`/tools/dist/lib/cmake:${CMAKE_PREFIX_PATH}"
+CMAKE_INSTALL_PREFIX="$1"
 
 if [ ! -d "tools/build/abseil-cpp" ]; then
     mkdir -p "tools/build/abseil-cpp"
@@ -50,7 +49,6 @@ cd "tools/build/abseil-cpp"
   -DBUILD_SHARED_LIBS=OFF \
   -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
   -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" \
-  -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
   -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
   -DCMAKE_CXX_STANDARD=17 \
   -DABSL_PROPAGATE_CXX_STD=ON \

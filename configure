@@ -121,10 +121,12 @@ if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_base --libs 2>/dev/null; then
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 else
   # Allow developers to set R_S2_ABSL_HOME in .Renviron to avoid building
-  # Abseil on every package rebuild.
+  # Abseil on every package rebuild. This can be built from this directory using
+  # tools/build_absl.sh path/to/dir (then R_S2_ABSL_HOME=path/to/dir in .Renviron)
   if [ -z "$R_S2_ABSL_HOME" ]; then
     echo "** Building abseil-cpp using cmake"
-    if tools/build_absl.sh; then
+    CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+    if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
       echo "** Done!"
     else
       echo "** CMake build of Abseil failed"
