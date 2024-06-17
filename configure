@@ -118,7 +118,21 @@ if [ -z "${R_S2_ABSL_HOME}" ] && pkg-config absl_base --libs 2>/dev/null; then
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 else
   echo "** Building abseil-cpp using cmake"
-  tools/build_absl.sh
+  if tools/build_absl.sh; then
+    echo "** Done!"
+  else
+    echo "** CMake build of Abseil failed"
+    echo "** Abseil can be installed with:"
+    echo "** - apt-get install libabsl-dev"
+    echo "** - dnf install abseil-cpp-devel"
+    echo "** - brew install abseil"
+    echo "** If a system install of Abseil is not possible, cmake is required to build"
+    echo "** the internal vendored copy."
+    exit 1
+  fi
+
+  # Clean up build directory
+  rm -rf tools/build
 
   if [ -z "$R_S2_ABSL_HOME" ]; then
     R_S2_ABSL_HOME="`pwd`/tools/dist"
