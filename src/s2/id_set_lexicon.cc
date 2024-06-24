@@ -18,15 +18,17 @@
 #include "s2/id_set_lexicon.h"
 
 #include <algorithm>
+#include <utility>
 #include <vector>
 
-#include "s2/base/logging.h"
+#include "s2/base/integral_types.h"
+#include "s2/sequence_lexicon.h"
 
-IdSetLexicon::IdSetLexicon() {
-}
+using std::vector;
 
-IdSetLexicon::~IdSetLexicon() {
-}
+IdSetLexicon::IdSetLexicon() = default;
+
+IdSetLexicon::~IdSetLexicon() = default;
 
 // We define the copy/move constructors and assignment operators explicitly
 // in order to avoid copying/moving the temporary storage vector "tmp_".
@@ -51,7 +53,7 @@ void IdSetLexicon::Clear() {
   id_sets_.Clear();
 }
 
-int32 IdSetLexicon::AddInternal(std::vector<int32>* ids) {
+int32 IdSetLexicon::AddInternal(vector<int32>* ids) {
   if (ids->empty()) {
     // Empty sets have a special id chosen not to conflict with other ids.
     return kEmptySetId;
@@ -62,6 +64,10 @@ int32 IdSetLexicon::AddInternal(std::vector<int32>* ids) {
     // Canonicalize the set by sorting and removing duplicates.
     std::sort(ids->begin(), ids->end());
     ids->erase(std::unique(ids->begin(), ids->end()), ids->end());
+
+    // After eliminating duplicates, we may now have a singleton.
+    if (ids->size() == 1) return (*ids)[0];
+
     // Non-singleton sets are represented by the bitwise complement of the id
     // returned by SequenceLexicon.
     return ~id_sets_.Add(*ids);

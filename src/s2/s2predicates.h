@@ -21,8 +21,24 @@
 // precision or even exact arithmetic when the result is uncertain.  Such
 // predicates are useful in implementing robust algorithms.
 //
-// See also S2EdgeCrosser, which implements various exact
-// edge-crossing predicates more efficiently than can be done here.
+// s2edge_crossings.h contains the following exact predicates that test for
+// edge crossings.  (Note that usually you should use S2EdgeCrosser, which
+// implements them in a much more efficient way.)
+//
+//   int CrossingSign(const S2Point& a0, const S2Point& a1,
+//                    const S2Point& b0, const S2Point& b1);
+//
+//   bool EdgeOrVertexCrossing(const S2Point& a0, const S2Point& a1,
+//                             const S2Point& b0, const S2Point& b1);
+//
+// It also contains the following functions, which compute their result to
+// within a guaranteed tolerance and are consistent with the predicates
+// defined here (including using symbolic perturbations when necessary):
+//
+//   S2Point RobustCrossProd(const S2Point& a, const S2Point& b);
+//
+//   S2Point GetIntersection(const S2Point& a, const S2Point& b,
+//                           const S2Point& c, const S2Point& d);
 //
 // TODO(ericv): Add InCircleSign() (the Voronoi/Delaunay predicate).
 // (This is trickier than the usual textbook implementations because we want
@@ -32,24 +48,18 @@
 #define S2_S2PREDICATES_H_
 
 #include <cfloat>
+#include <cmath>
 #include <iosfwd>
+#include <ostream>
 
+#include "absl/flags/flag.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/s1chord_angle.h"
 #include "s2/s2debug.h"
+#include "s2/s2point.h"
 #include "s2/s2pointutil.h"
 
 namespace s2pred {
-
-// S2EdgeUtil contains the following exact predicates that test for edge
-// crossings.  (Usually you will want to use S2EdgeCrosser, which
-// implements them much more efficiently.)
-//
-// int CrossingSign(const S2Point& a0, const S2Point& a1,
-//                  const S2Point& b0, const S2Point& b1);
-//
-// bool EdgeOrVertexCrossing(const S2Point& a0, const S2Point& a1,
-//                           const S2Point& b0, const S2Point& b1);
 
 // Returns +1 if the points A, B, C are counterclockwise, -1 if the points
 // are clockwise, and 0 if any two points are the same.  This function is
@@ -87,6 +97,8 @@ int Sign(const S2Point& a, const S2Point& b, const S2Point& c);
 //  (3) If OrderedCCW(a,b,c,o) && OrderedCCW(c,b,a,o), then a == b == c
 //  (4) If a == b or b == c, then OrderedCCW(a,b,c,o) is true
 //  (5) Otherwise if a == c, then OrderedCCW(a,b,c,o) is false
+//
+// REQUIRES: a != o && b != o && c != o
 bool OrderedCCW(const S2Point& a, const S2Point& b, const S2Point& c,
                 const S2Point& o);
 
@@ -121,6 +133,17 @@ int CompareDistance(const S2Point& x, const S2Point& y, S1ChordAngle r);
 int CompareEdgeDistance(const S2Point& x, const S2Point& a0, const S2Point& a1,
                         S1ChordAngle r);
 
+// Returns -1, 0, or +1 according to whether the distance from edge A edge B
+// is less than, equal to, or greater than "r" respectively.  Distances are
+// measured with respect the positions of all points as though they were
+// projected to lie exactly on the surface of the unit sphere.
+//
+// REQUIRES: A0 and A1 do not project to antipodal points (e.g., A0 == -A1).
+// REQUIRES: B0 and B1 do not project to antipodal points (e.g., B0 == -B1).
+int CompareEdgePairDistance(const S2Point& a0, const S2Point& a1,
+                            const S2Point& b0, const S2Point& b1,
+                            S1ChordAngle r);
+
 // Returns -1, 0, or +1 according to whether the normal of edge A has
 // negative, zero, or positive dot product with the normal of edge B.  This
 // essentially measures whether the edges A and B are closer to proceeding in
@@ -139,6 +162,105 @@ int CompareEdgeDistance(const S2Point& x, const S2Point& a0, const S2Point& a1,
 //           (see comments in CompareEdgeDistance).
 int CompareEdgeDirections(const S2Point& a0, const S2Point& a1,
                           const S2Point& b0, const S2Point& b1);
+
+// Computes the exact sign of the dot product between A and B.
+//
+// REQUIRES: |a|^2 <= 2 and |b|^2 <= 2
+int SignDotProd(const S2Point& a, const S2Point& b);
+
+// Forms the intersection of edge AB with the great circle specified by normal N
+// as (A×B)×N and computes the sign of that point dotted with Y.
+//
+// When you have an edge you know crosses a cell boundary corresponding to N,
+// then this function can tell you whether the intersection point is to the
+// positive, negative, or exactly on an adjacent side X.  Two such tests can
+// determine if the intersection is in range of the S2Cell along the crossed
+// boundary.
+//
+//                            |     A  |
+//                            | N   •  |
+//                      ------┌────╱───┐------
+//                            │ ↓ •   ←│X
+//                                B
+//
+// The intersection of AxB and N results in two (antipodal) points.  This method
+// allows either of those points to test as contained in the lune, so the
+// ambiguity must be resolved externally.
+//
+// Fortunately, if we have an edge on a face, and it crosses some great circle
+// we take from that face, then we know it can't cross on the antipodal side
+// too, because the edge would be > 180 degrees in length.  So checking manually
+// for an edge crossing before calling is sufficient to avoid any issues.
+//
+// REQUIRES: A and B are not equal or antipodal.
+// REQUIRES: A and B are not coplanar with the plane specified by N
+// REQUIRES: AB crosses N (vertices have opposite dot product signs with N)
+//
+// Returns:
+//   -1 - Intersection was on the negative side of X
+//    0 - Intersection was exactly on X
+//   +1 - Intersection was on the positive side of X
+//
+int CircleEdgeIntersectionSign(const S2Point& a, const S2Point& b,
+                               const S2Point& n, const S2Point& x);
+
+// Given two edges AB and CD that cross a great circle defined by a normal
+// vector M, orders the crossings of AB and CD relative to another great circle
+// N representing a zero point.
+//
+// This predicate can be used in any circumstance where we have an exact normal
+// vector to order edge crossings relative to some zero point.
+//
+// As an example, if we have edges AB and CD that cross boundary 2 of a cell:
+//
+//                             B     D
+//                             •  2  •
+//                            ┌─\───/─┐
+//                          3 │  • •  │ 1
+//                               A C
+//
+// We could order them by using the normal of boundary 2 as M, and the normal of
+// either boundary 1 or 3 as N.  If we use boundary 1 as N, then:
+//
+//   CircleEdgeIntersectionOrdering(A, B, C, D, M, N) == +1
+//
+// Indicating that CD is closer to boundary 1 than AB is.
+//
+// But, if we use boundary 3 as N, then:
+//
+//   CircleEdgeIntersectionOrdering(A, B, C, D, M, N) == -1
+//
+// Indicating that AB is closer to boundary 3 than CD is.
+//
+// These results are consistent but one needs to bear in mind what boundary is
+// being used as the reference.
+//
+// The edges AB and CD should be specified such that A and C are on the positive
+// side of M and B and D are on the negative side, as illustrated above.  This
+// will make the sign of their cross products with M consistent.
+//
+// Because we use a dot product to check the distance from N, this predicate can
+// only unambiguously order along edges within [0,90] degrees if N (both
+// vertices must be in quadrant one of the unit circle).
+//
+// REQUIRES: A and B are not equal or antipodal.
+// REQUIRES: C and D are not equal or antipodal.
+// REQUIRES: M and N are not equal or antipodal.
+// REQUIRES: AB crosses M (vertices have opposite dot product signs with M)
+// REQUIRES: CD crosses M (vertices have opposite dot product signs with M)
+// REQUIRES: A and C are on the positive side of M
+// REQUIRES: B and D are on the negative side of M
+// REQUIRES: Intersection of AB and N is on the positive side of N
+// REQUIRES: Intersection of CD and N is on the positive side of N
+//
+// Returns:
+//   -1 if crossing AB is closer to N than crossing CD
+//    0 if the two edges cross at exactly the same position
+//   +1 if crossing AB is further from N than crossing CD
+//
+int CircleEdgeIntersectionOrdering(const S2Point& a, const S2Point& b,
+                                   const S2Point& c, const S2Point& d,
+                                   const S2Point& m, const S2Point& n);
 
 // Returns Sign(X0, X1, Z) where Z is the circumcenter of triangle ABC.
 // The return value is +1 if Z is to the left of edge X, and -1 if Z is to the
@@ -200,7 +322,10 @@ Excluded GetVoronoiSiteExclusion(const S2Point& a, const S2Point& b,
 
 // A more efficient version of Sign that allows the precomputed
 // cross-product of A and B to be specified.  (Unlike the 3 argument
-// version this method is also inlined.)
+// version this method is also inlined.)  Note that "a_cross_b" must be
+// computed using CrossProd rather than S2::RobustCrossProd.
+//
+// REQUIRES: a_cross_b == a.CrossProd(b)
 inline int Sign(const S2Point& a, const S2Point& b, const S2Point& c,
                 const Vector3_d& a_cross_b);
 
@@ -211,6 +336,8 @@ inline int Sign(const S2Point& a, const S2Point& b, const S2Point& c,
 //
 // The purpose of this method is to allow additional cheap tests to be done,
 // where possible, in order to avoid calling ExpensiveSign unnecessarily.
+//
+// REQUIRES: a_cross_b == a.CrossProd(b)
 inline int TriageSign(const S2Point& a, const S2Point& b,
                       const S2Point& c, const Vector3_d& a_cross_b);
 
@@ -260,15 +387,17 @@ inline int TriageSign(const S2Point& a, const S2Point& b,
   //  fl((AxB).C) = (AxB).C + d where |d| <= (2.5 + 2/sqrt(3)) * e
   //
   // which is about 3.6548 * e, or 1.8274 * DBL_EPSILON.
-  const double kMaxDetError = 1.8274 * DBL_EPSILON;
-  S2_DCHECK(S2::IsUnitLength(a));
-  S2_DCHECK(S2::IsUnitLength(b));
-  S2_DCHECK(S2::IsUnitLength(c));
+  //
+  // In order to support vectors of magnitude <= sqrt(2), we double this value.
+  const double kMaxDetError = 3.6548 * DBL_EPSILON;
+  S2_DCHECK_LE(a.Norm2(), 2);
+  S2_DCHECK_LE(b.Norm2(), 2);
+  S2_DCHECK_LE(c.Norm2(), 2);
+  S2_DCHECK_EQ(a_cross_b, a.CrossProd(b));
   double det = a_cross_b.DotProd(c);
 
   // Double-check borderline cases in debug mode.
-  S2_DCHECK(!FLAGS_s2debug ||
-         std::fabs(det) <= kMaxDetError ||
+  S2_DCHECK(!absl::GetFlag(FLAGS_s2debug) || std::fabs(det) <= kMaxDetError ||
          std::fabs(det) >= 100 * kMaxDetError ||
          det * ExpensiveSign(a, b, c) > 0);
 

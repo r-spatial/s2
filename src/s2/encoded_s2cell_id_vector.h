@@ -18,7 +18,13 @@
 #ifndef S2_ENCODED_S2CELL_ID_VECTOR_H_
 #define S2_ENCODED_S2CELL_ID_VECTOR_H_
 
+#include <cstddef>
+
+#include <vector>
+
+#include "s2/base/integral_types.h"
 #include "absl/types/span.h"
+#include "s2/util/coding/coder.h"
 #include "s2/encoded_uint_vector.h"
 #include "s2/s2cell_id.h"
 
@@ -51,7 +57,7 @@ void EncodeS2CellIdVector(absl::Span<const S2CellId> v, Encoder* encoder);
 class EncodedS2CellIdVector {
  public:
   // Constructs an uninitialized object; requires Init() to be called.
-  EncodedS2CellIdVector() {}
+  EncodedS2CellIdVector() = default;
 
   // Initializes the EncodedS2CellIdVector.
   //
@@ -102,7 +108,7 @@ inline size_t EncodedS2CellIdVector::lower_bound(S2CellId target) const {
   if (target.id() <= base_) return 0;
   if (target >= S2CellId::End(S2CellId::kMaxLevel)) return size();
   return deltas_.lower_bound(
-      (target.id() - base_ + (1ULL << shift_) - 1) >> shift_);
+      (target.id() - base_ + (uint64{1} << shift_) - 1) >> shift_);
 }
 
 }  // namespace s2coding

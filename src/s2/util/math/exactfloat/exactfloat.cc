@@ -20,20 +20,26 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <limits>
+#include <string>
 
 #include <openssl/bn.h>
 #include <openssl/crypto.h>  // for OPENSSL_free
 
-#include "s2/base/integral_types.h"
-#include "s2/base/logging.h"
 #include "absl/base/macros.h"
 #include "absl/container/fixed_array.h"
+#include "absl/numeric/int128.h"
+
+#include "s2/base/integral_types.h"
+#include "s2/base/logging.h"
 
 using std::max;
 using std::min;
+using std::string;
 
 // Define storage for constants.
 const int ExactFloat::kMinExp;
@@ -136,10 +142,10 @@ inline static uint64 BN_ext_get_uint64(const BIGNUM* bn) {
   uint64 r;
 #ifdef IS_LITTLE_ENDIAN
   S2_CHECK_EQ(BN_bn2lebinpad(bn, reinterpret_cast<unsigned char*>(&r),
-                             sizeof(r)), sizeof(r));
-#elif IS_BIG_ENDIAN
+              sizeof(r)), sizeof(r));
+#elif defined(IS_BIG_ENDIAN)
   S2_CHECK_EQ(BN_bn2binpad(bn, reinterpret_cast<unsigned char*>(&r),
-                           sizeof(r)), sizeof(r));
+              sizeof(r)), sizeof(r));
 #else
 #error one of IS_LITTLE_ENDIAN or IS_BIG_ENDIAN should be defined!
 #endif
@@ -415,7 +421,7 @@ std::string ExactFloat::ToStringWithMaxDigits(int max_digits) const {
     // Use fixed format.  We split this into two cases depending on whether
     // the integer portion is non-zero or not.
     if (exp10 > 0) {
-      if (exp10 >= digits.size()) {
+      if (static_cast<size_t>(exp10) >= digits.size()) {
         str += digits;
         for (int i = exp10 - digits.size(); i > 0; --i) {
           str.push_back('0');

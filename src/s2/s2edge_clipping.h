@@ -28,6 +28,7 @@
 #ifndef S2_S2EDGE_CLIPPING_H_
 #define S2_S2EDGE_CLIPPING_H_
 
+#include <cfloat>
 #include <cmath>
 
 #include "s2/base/logging.h"
@@ -56,8 +57,7 @@ using FaceSegmentVector = absl::InlinedVector<FaceSegment, 6>;
 // from A to B, and that all vertices are within kFaceClipErrorUVDist of the
 // line AB.  All vertices lie within the [-1,1]x[-1,1] cube face rectangles.
 // The results are consistent with s2pred::Sign(), i.e. the edge is
-// well-defined even its endpoints are antipodal.  [TODO(ericv): Extend the
-// implementation of S2::RobustCrossProd so that this statement is true.]
+// well-defined even its endpoints are antipodal.
 void GetFaceSegments(const S2Point& a, const S2Point& b,
                      FaceSegmentVector* segments);
 
@@ -65,8 +65,12 @@ void GetFaceSegments(const S2Point& a, const S2Point& b,
 // of AB that intersects that face.  This method guarantees that the clipped
 // vertices lie within the [-1,1]x[-1,1] cube face rectangle and are within
 // kFaceClipErrorUVDist of the line AB, but the results may differ from
-// those produced by GetFaceSegments.  Returns false if AB does not
-// intersect the given face.
+// those produced by GetFaceSegments.
+//
+// Returns false if AB does not intersect the given face.
+//
+// The test for face intersection is exact, so if this function returns false
+// then the edge definitively does not intersect the face.
 bool ClipToFace(const S2Point& a, const S2Point& b, int face,
                 R2Point* a_uv, R2Point* b_uv);
 
@@ -92,9 +96,9 @@ bool ClipToPaddedFace(const S2Point& a, const S2Point& b, int face,
 //    returned vertex there is a point on the exact edge AB whose u- and
 //    v-coordinates differ from the vertex by at most this amount.
 
-extern const double kFaceClipErrorRadians;
-extern const double kFaceClipErrorUVDist;
-extern const double kFaceClipErrorUVCoord;
+constexpr double kFaceClipErrorRadians = 3 * DBL_EPSILON;
+constexpr double kFaceClipErrorUVDist = 9 * DBL_EPSILON;
+constexpr double kFaceClipErrorUVCoord = 9 * M_SQRT1_2 * DBL_EPSILON;
 
 // Returns true if the edge AB intersects the given (closed) rectangle to
 // within the error bound below.
@@ -106,7 +110,7 @@ bool IntersectsRect(const R2Point& a, const R2Point& b, const R2Rect& rect);
 // the result is guaranteed to be false.  This bound assumes that "rect" is
 // a subset of the rectangle [-1,1]x[-1,1] or extends slightly outside it
 // (e.g., by 1e-10 or less).
-extern const double kIntersectsRectErrorUVDist;
+constexpr double kIntersectsRectErrorUVDist = 3 * M_SQRT2 * DBL_EPSILON;
 
 // Given an edge AB, returns the portion of AB that is contained by the given
 // rectangle "clip".  Returns false if there is no intersection.
@@ -145,16 +149,21 @@ bool ClipEdgeBound(const R2Point& a, const R2Point& b,
 //    the corresponding exact result.  It is equal to the error in a single
 //    coordinate because at most one coordinate is subject to error.
 
-extern const double kEdgeClipErrorUVCoord;
-extern const double kEdgeClipErrorUVDist;
+constexpr double kEdgeClipErrorUVCoord = 2.25 * DBL_EPSILON;
+constexpr double kEdgeClipErrorUVDist = 2.25 * DBL_EPSILON;
 
 // Given a value x that is some linear combination of a and b, returns the
 // value x1 that is the same linear combination of a1 and b1.  This function
 // makes the following guarantees:
 //  - If x == a, then x1 = a1 (exactly).
 //  - If x == b, then x1 = b1 (exactly).
-//  - If a <= x <= b, then a1 <= x1 <= b1 (even if a1 == b1).
+//  - If a <= x <= b and a1 <= b1, then a1 <= x1 <= b1 (even if a1 == b1).
+//  - More generally, if x is between a and b, then x1 is between a1 and b1.
 // REQUIRES: a != b
+//
+// When a <= x <= b or b <= x <= a we can prove the error bound on the resulting
+// value is 2.25*DBL_EPSILON.  The error for extrapolating an x value outside of
+// a and b can be much worse.  See the gappa proof at the end of the file.
 double InterpolateDouble(double x, double a, double b, double a1, double b1);
 
 
@@ -168,15 +177,70 @@ inline bool ClipToFace(const S2Point& a, const S2Point& b, int face,
 
 inline double InterpolateDouble(double x, double a, double b,
                                 double a1, double b1) {
+  // If A == B == X all we can return is the single point.
+  if (a == b) {
+    S2_DCHECK(x == a && a1 == b1);
+    return a1;
+  }
+
   S2_DCHECK_NE(a, b);
   // To get results that are accurate near both A and B, we interpolate
   // starting from the closer of the two points.
   if (std::fabs(a - x) <= std::fabs(b - x)) {
-    return a1 + (b1 - a1) * (x - a) / (b - a);
+    return a1 + (b1 - a1) * ((x - a) / (b - a));
   } else {
-    return b1 + (a1 - b1) * (x - b) / (a - b);
+    return b1 + (a1 - b1) * ((x - b) / (a - b));
   }
 }
+
+// Gappa proof of bounds for InterpolateDouble
+//
+// NOTE: this proof is only valid for a <= x <= b or b <= x <= a, not for
+// extrapolating values outside of the input range.
+// -----------------------------------------------------------------------------
+//
+// # Use IEEE754 double precision, round-to-nearest by default.
+// @rnd = float<ieee_64, ne>;
+//
+// # Define values to be floating point numbers (rounded reals).
+// x  = rnd(x_ex);
+// a  = rnd(a_ex);
+// b  = rnd(b_ex);
+// a1 = rnd(a1_ex);
+// b1 = rnd(b1_ex);
+//
+// # Compute answer in floating point and exact arithmetic.
+// InterpolateDouble_fp rnd = a1 + (b1-a1)*((x-a)/(b-a));
+// InterpolateDouble_ex     = a1 + (b1-a1)*((x-a)/(b-a));
+//
+// {
+//   # We operate in UV space so inputs are always in [-1,1].
+//   |x|  in [0,1] /\
+//   |a|  in [0,1] /\
+//   |b|  in [0,1] /\
+//   |a1| in [0,1] /\
+//   |b1| in [0,1] /\
+//
+//   # b != a is asserted by the algorithm.
+//   b-a <> 0 /\
+//
+//   # Either a <= x <= b or b <= x <= a, and we either do (x-a) or (x-b)
+//   # depending on which endpoint is closer to x.  So the ratio (x-a)/(b-a) can
+//   # only be up to one half of the total interval before we switch.
+//   rnd(x-a)/rnd(b-a) in [0,0.5]
+//
+//   # Estimate absolute error.
+//   -> InterpolateDouble_fp - InterpolateDouble_ex in ?
+// }
+//
+// -----------------------------------------------------------------------------
+// > gappa interpolate.gappa
+// Results:
+//   InterpolateDouble_fp - InterpolateDouble_ex in
+//       [-324259173170675769b-109 {-4.996e-16, -2^(-50.8301)},
+//         324259173170675769b-109 {+4.996e-16, +2^(-50.8301)}]
+//
+// 324259173170675769*2**-109/DBL_EPSILON == 2.25
 
 }  // namespace S2
 

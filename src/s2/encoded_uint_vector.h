@@ -18,11 +18,19 @@
 #ifndef S2_ENCODED_UINT_VECTOR_H_
 #define S2_ENCODED_UINT_VECTOR_H_
 
+#include <cstddef>
+
+#include <limits>
 #include <type_traits>
 #include <vector>
+
+#include "s2/base/integral_types.h"
 #include "absl/base/internal/unaligned_access.h"
 #include "absl/types/span.h"
+
+#include "s2/util/bits/bits.h"
 #include "s2/util/coding/coder.h"
+#include "s2/util/coding/varint.h"
 
 namespace s2coding {
 
@@ -59,7 +67,7 @@ class EncodedUintVector {
   static_assert(sizeof(T) & 0xe, "Unsupported integer length");
 
   // Constructs an uninitialized object; requires Init() to be called.
-  EncodedUintVector() {}
+  EncodedUintVector() = default;
 
   // Initializes the EncodedUintVector.  Returns false on errors, leaving the
   // vector in an unspecified state.
@@ -84,6 +92,8 @@ class EncodedUintVector {
 
   // Decodes and returns the entire original vector.
   std::vector<T> Decode() const;
+
+  void Encode(Encoder* encoder) const;
 
  private:
   template <int length> size_t lower_bound(T target) const;
@@ -111,7 +121,7 @@ void EncodeUintWithLength(T value, int length, Encoder* encoder);
 // REQUIRES: 2 <= sizeof(T) <= 8
 // REQUIRES: 0 <= length <= sizeof(T)
 template <class T>
-T GetUintWithLength(const void* ptr, int length);
+T GetUintWithLength(const char* ptr, int length);
 
 // Decodes and consumes a variable-length integer consisting of "length" bytes
 // in little-endian format.  Returns false if not enough bytes are available.
@@ -185,8 +195,8 @@ inline T GetUintWithLength(const char* ptr, int length) {
 
 template <class T>
 bool DecodeUintWithLength(int length, Decoder* decoder, T* result) {
-  if (decoder->avail() < length) return false;
-  const char* ptr = reinterpret_cast<const char*>(decoder->ptr());
+  if (decoder->avail() < static_cast<size_t>(length)) return false;
+  const char* ptr = decoder->skip(0);
   *result = GetUintWithLength<T>(ptr, length);
   decoder->skip(length);
   return true;
@@ -223,9 +233,9 @@ bool EncodedUintVector<T>::Init(Decoder* decoder) {
   size_ = size_len / sizeof(T);  // Optimized into bit shift.
   len_ = (size_len & (sizeof(T) - 1)) + 1;
   if (size_ > std::numeric_limits<size_t>::max() / sizeof(T)) return false;
-  size_t bytes = size_ * len_;
+  size_t bytes = static_cast<size_t>(size_) * static_cast<size_t>(len_);
   if (decoder->avail() < bytes) return false;
-  data_ = reinterpret_cast<const char*>(decoder->ptr());
+  data_ = decoder->skip(0);
   decoder->skip(bytes);
   return true;
 }
@@ -292,6 +302,16 @@ std::vector<T> EncodedUintVector<T>::Decode() const {
     result[i] = (*this)[i];
   }
   return result;
+}
+
+template <class T>
+// The encoding must be identical to StringVectorEncoder::Encode().
+void EncodedUintVector<T>::Encode(Encoder* encoder) const {
+  uint64 size_len = (uint64{size_} * sizeof(T)) | (len_ - 1);
+
+  encoder->Ensure(Varint::kMax64 + size_len);
+  encoder->put_varint64(size_len);
+  encoder->putn(data_, size_ * len_);
 }
 
 }  // namespace s2coding

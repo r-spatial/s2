@@ -2,7 +2,7 @@
 library(tidyverse)
 
 # download S2
-source_url <- "https://github.com/google/s2geometry/archive/v0.9.0.zip"
+source_url <- "https://github.com/google/s2geometry/archive/v0.11.1.zip"
 curl::curl_download(source_url, "data-raw/s2-source.tar.gz")
 unzip("data-raw/s2-source.tar.gz", exdir = "data-raw")
 
@@ -11,15 +11,13 @@ s2_dir <- list.files("data-raw", "^s2geometry-[0-9.]+", include.dirs = TRUE, ful
 stopifnot(dir.exists(s2_dir), length(s2_dir) == 1)
 src_dir <- file.path(s2_dir, "src/s2")
 
-# headers live in inst/include
-# keeping the directory structure means that
-# we don't have to update any source files (beause of header locations)
+# Process headers
 headers <- tibble(
   path = list.files(file.path(s2_dir, "src", "s2"), "\\.(h|inc)$", full.names = TRUE, recursive = TRUE),
-  final_path = str_replace(path, ".*?s2/", "inst/include/s2/")
+  final_path = str_replace(path, ".*?s2/", "src/s2/")
 )
 
-# Put S2 compilation units in src/s2/...
+# Process compilation units
 source_files <- tibble(
   path = list.files(file.path(s2_dir, "src", "s2"), "\\.cc$", full.names = TRUE, recursive = TRUE),
   final_path = str_replace(path, ".*?src/", "src/") %>%
@@ -29,7 +27,6 @@ source_files <- tibble(
 
 # clean current headers and source files
 unlink("src/s2", recursive = TRUE)
-unlink("inst/include/s2", recursive = TRUE)
 
 # create destination dirs
 dest_dirs <- c(

@@ -18,10 +18,16 @@
 #ifndef S2_ENCODED_STRING_VECTOR_H_
 #define S2_ENCODED_STRING_VECTOR_H_
 
+#include <cstddef>
+
 #include <memory>
 #include <string>
+#include <vector>
+
+#include "s2/base/integral_types.h"
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
+#include "s2/util/coding/coder.h"
 #include "s2/encoded_uint_vector.h"
 
 namespace s2coding {
@@ -84,7 +90,7 @@ class StringVectorEncoder {
 class EncodedStringVector {
  public:
   // Constructs an uninitialized object; requires Init() to be called.
-  EncodedStringVector() {}
+  EncodedStringVector() = default;
 
   // Initializes the EncodedStringVector.  Returns false on errors, leaving
   // the vector in an unspecified state.
@@ -112,6 +118,8 @@ class EncodedStringVector {
   // data buffer passed to the constructor persists until the result vector is
   // no longer needed.
   std::vector<absl::string_view> Decode() const;
+
+  void Encode(Encoder* encoder) const;
 
  private:
   EncodedUintVector<uint64> offsets_;

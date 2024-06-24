@@ -18,9 +18,14 @@
 #ifndef S2_S2SHAPE_H_
 #define S2_S2SHAPE_H_
 
+#include <iterator>
+
 #include "s2/base/integral_types.h"
+#include "s2/base/logging.h"
+#include "s2/s2coder.h"
 #include "s2/s2point.h"
 #include "s2/s2pointutil.h"
+#include "s2/util/coding/coder.h"
 
 // The purpose of S2Shape is to represent polygonal geometry in a flexible
 // way.  It is organized as a collection of edges that optionally defines an
@@ -61,12 +66,27 @@ class S2Shape {
     Edge() = default;
     Edge(const S2Point& _v0, const S2Point& _v1) : v0(_v0), v1(_v1) {}
 
+    // Returns the edge with the vertices reversed.
+    Edge Reversed() const { return {v1, v0}; }
+
+    // Returns true if the edge is degenerate.
+    bool IsDegenerate() const { return v0 == v1; }
+
     // TODO(ericv): Define all 6 comparisons.
     friend bool operator==(const Edge& x, const Edge& y) {
       return x.v0 == y.v0 && x.v1 == y.v1;
     }
+
+    friend bool operator!=(const Edge& x, const Edge& y) { return !(x == y); }
+
     friend bool operator<(const Edge& x, const Edge& y) {
-      return x.v0 < y.v0 || (x.v0 == y.v0 && x.v1 < y.v1); }
+      return x.v0 < y.v0 || (x.v0 == y.v0 && x.v1 < y.v1);
+    }
+
+    template <typename H>
+    friend H AbslHashValue(H h, const Edge& e) {
+      return H::combine(std::move(h), e.v0, e.v1);
+    }
   };
 
   // A range of edge ids corresponding to a chain of zero or more connected
@@ -127,17 +147,23 @@ class S2Shape {
   // Indicates that a given S2Shape type cannot be encoded.
   static constexpr TypeTag kNoTypeTag = 0;
 
+  // The following constant should be updated whenever new types are added.
+  static constexpr TypeTag kNextAvailableTypeTag = 6;
+
   // The minimum allowable tag for user-defined S2Shape types.
   static constexpr TypeTag kMinUserTypeTag = 8192;
 
   S2Shape() : id_(-1) {}
-  virtual ~S2Shape() {}
+  virtual ~S2Shape() = default;
 
-  // Returns the number of edges in this shape.  Edges have ids ranging from 0
-  // to num_edges() - 1.
+  // Returns the number of edges in this shape, or points, if the shape's
+  // dimension is 0.  Edges or points have ids ranging from 0 to
+  // num_edges() - 1.
   virtual int num_edges() const = 0;
 
-  // Returns the endpoints of the given edge id.
+  // Returns the edge or point for the given edge id.  Points are represented as
+  // degenerate edges, with equal endpoints, but not all degenerate edges are
+  // points.
   //
   // REQUIRES: 0 <= id < num_edges()
   virtual Edge edge(int edge_id) const = 0;
@@ -169,7 +195,8 @@ class S2Shape {
   bool is_empty() const {
     return num_edges() == 0 && (dimension() < 2 || num_chains() == 0);
   }
-  // Returns true if the shape contains all points on the sphere.
+  // Returns true if the shape contains all points on the sphere and has no
+  // edges.
   bool is_full() const {
     return num_edges() == 0 && dimension() == 2 && num_chains() > 0;
   }
@@ -229,6 +256,26 @@ class S2Shape {
   // S2Shape (see TypeTag above).
   virtual TypeTag type_tag() const { return kNoTypeTag; }
 
+  // Appends an encoded representation of the S2Shape to "encoder".  Note that
+  // the encoding does *not* include the type_tag(), so the tag will need to
+  // be encoded separately if the shape type will be unknown at decoding time
+  // (see s2shapeutil::EncodeTaggedShapes() and related functions).
+  //
+  // The encoded representation should satisfy the following:
+  //
+  //  - It should include a version number, so that the encoding may be changed
+  //    or improved in the future.
+  //
+  //  - If "hint" is CodingHint::FAST, the encoding should be optimized for
+  //    decoding performance.  If "hint" is CodingHint::COMPACT, the encoding
+  //    should be optimized for space.
+  //
+  // REQUIRES: "encoder" uses the default constructor, so that its buffer
+  //           can be enlarged as necessary by calling Ensure(int).
+  virtual void Encode(Encoder* encoder, s2coding::CodingHint hint) const {
+    S2_DLOG(FATAL) << "Encoding not implemented for this S2Shape type";
+  }
+
   // Virtual methods that return pointers of your choice.  These methods are
   // intended to help with the problem of attaching additional data to S2Shape
   // objects.  For example, you could return a pointer to a source object, or
@@ -268,16 +315,381 @@ class S2Shape {
   virtual const void* user_data() const { return nullptr; }
   virtual void* mutable_user_data() { return nullptr; }
 
- private:
-  // Next available type tag available for use within the S2 library: 6.
+  // Convenience method that returns the edge id of next edge in a chain.  Wraps
+  // around at the start/end of any closed chains.
+  //
+  // This is intended for one-off lookups, as it has to look up the chain for
+  // the edge every time.  If you want many lookups or to iterate the edges of a
+  // chain, then it's better to do that directly.
+  //
+  // Return -1 when the end of an open chain is reached. Polygon and closed
+  // polyline chains wrap around to the beginning and thus never return -1,
+  // while points always do.
+  int NextEdgeWrap(int edge_id) const;
 
+  // Convenience method that returns the edge id of previous edge in a chain.
+  // Wraps around at the start/end of any closed chains/
+  //
+  // This is intended for one-off lookups, as it has to look up the chain for
+  // the edge every time.  If you want many lookups or to iterate the edges of a
+  // chain, then it's better to do that directly.
+  //
+  // Return -1 when the start of an open chain is reached. Polygon and closed
+  // polyline chains wrap around to the end and thus never return -1, while
+  // points always do.
+  int PrevEdgeWrap(int edge_id) const;
+
+  // ChainVertexIterator allows the use of iterator syntax for accessing
+  // vertices of a shape's chain, e.g.:
+  //
+  //   S2Shape::Chain chain = shape->chain(chain_id);
+  //   for (const S2Point& p : shape.vertices(chain)) { ... }
+  // or
+  //   int chain_id = ...
+  //   for (const S2Point& p : shape.vertices(chain_id)) { ... }
+  //
+  // ChainVertexIterator supports dereference, increment and equality/inequality
+  // operators.
+  //
+  // A ChainVertexIterator is valid as long as the shape it has been created
+  // from exists. It doesn't own the shape it points to, so destroying it has no
+  // effect on the shape.
+  class ChainVertexIterator {
+   public:
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::forward_iterator_tag;
+    using pointer = const S2Point*;
+    using reference = const S2Point&;
+    using value_type = S2Point;
+
+    ChainVertexIterator() = default;
+
+    // Creates iterator pointing to the chain vertex with given index. The index
+    // is zero-based vertex offset from the beginning of the chain.
+    ChainVertexIterator(const S2Shape* shape, const Chain& chain,
+                        int vertex_index);
+
+    // Dereference operators.
+    reference operator*() const;
+    pointer operator->() const;
+
+    // Prefix and postfix increment operators.
+    ChainVertexIterator& operator++();
+    ChainVertexIterator operator++(int);
+
+    // Equality operator overload.
+    bool operator==(ChainVertexIterator it) const;
+
+    // Inquality operator overload.
+    bool operator!=(ChainVertexIterator it) const;
+
+   private:
+    const S2Shape* shape_ = nullptr;
+    Chain chain_;
+
+    // Offset of the current vertex in the chain.
+    int vertex_index_ = 0;
+
+    // Cached copy of the edge used to access the current vertex.
+    Edge edge_;
+
+    // Offset of the current edge in the chain.
+    int edge_offset_ = -1;
+
+    // Offset of the current vertex in the current edge (0 for v0, 1 for v1).
+    int edge_vertex_ = 0;
+
+    // Updates the cached edge data if necessary, to make sure that the current
+    // edge contains the current vertex.
+    void UpdateCurrentEdge();
+  };
+
+  // ChainVertexRange provides access to the iterable vertex range of the given
+  // chain:
+  //
+  //   S2Shape::ChainVertexRange vertices(shape, chain);
+  //   for (const S2Point& p : vertices) { ... }
+  //
+  // A ChainVertexRange is valid as long as the shape it has been created from
+  // exists. It doesn't own the shape it points to, so destroying it has no
+  // effect on the shape.
+  class ChainVertexRange {
+   public:
+    ChainVertexRange() = default;
+
+    // Creates the vertex range for the given chain of the shape.
+    ChainVertexRange(const S2Shape* shape, const Chain& chain);
+
+    // Returns the vertex iterator pointing to the first vertex of the chain.
+    ChainVertexIterator begin() const;
+
+    // Returns the vertex iterator pointing to the end of the chain.
+    ChainVertexIterator end() const;
+
+    // Returns the number of vertices in the chain.
+    // Note: in case of polyline shapes (shape->dimension() == 1) the number of
+    // vertices differs from the number of edges by 1.
+    int num_vertices() const;
+
+   private:
+    const S2Shape* shape_ = nullptr;
+    Chain chain_;
+  };
+
+  // Returns the iterable vertex range for given chain.
+  ChainVertexRange vertices(const Chain& chain) const;
+
+  // Returns the iterable vertex range for given chain id.
+  ChainVertexRange vertices(int chain_id) const;
+
+  // ChainIterator allows iterating over the chains of the shape using
+  // range-based for loops:
+  //
+  //   for (const S2Shape::Chain& chain : shape) { ... }
+  //
+  // A ChainIterator is valid as long as the shape it has been created from
+  // exists. It doesn't own the shape it points to, so destroying it has no
+  // effect on the shape.
+  class ChainIterator {
+   public:
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::forward_iterator_tag;
+    using pointer = Chain*;
+    using reference = Chain;
+    using value_type = Chain;
+
+    ChainIterator() = default;
+
+    // Creates the iterator pointing to the shapes' chain with given chain id.
+    ChainIterator(const S2Shape* shape, int chain_id)
+        : shape_(shape), chain_id_(chain_id) {}
+
+    // Dereference operator.
+    reference operator*() const;
+
+    // Prefix and postfix increment operators.
+    ChainIterator& operator++();
+    ChainIterator operator++(int);
+
+    // REQUIRES: "it" and *this must reference the same S2Shape.
+    bool operator==(ChainIterator it) const;
+
+    // REQUIRES: "it" and *this must reference the same S2Shape.
+    bool operator!=(ChainIterator it) const;
+
+   private:
+    const S2Shape* shape_ = nullptr;
+    int chain_id_ = 0;
+  };
+
+  // ChainRange provides access to the iterable range of chains of the given
+  // shape:
+  //
+  //   S2Shape::ChainRange chains(shape);
+  //   for (const S2Shape::Chain& chain : chains) { ... }
+  //
+  // or:
+  //
+  //   for (const S2Shape::Chain& chain : shape->chains()) { ... }
+  //
+  // A ChainRange is valid as long as the shape it has been created from exists.
+  // It doesn't own the shape it points to, so destroying it has no effect on
+  // the shape.
+  class ChainRange {
+   public:
+    ChainRange() = default;
+
+    // Creates an instance of ChainRange for given shape.
+    explicit ChainRange(const S2Shape* shape) : shape_(shape) {}
+
+    // Returns the chain iterator pointing to the first chain of the shape.
+    ChainIterator begin() const;
+
+    // Returns the chain iterator pointing to the end of the chain range.
+    ChainIterator end() const;
+
+   private:
+    const S2Shape* shape_ = nullptr;
+  };
+
+  // Returns the chain range of the shape.
+  ChainRange chains() const;
+
+ protected:
+  // S2Shape has some state used by the S2ShapeIndex classes.  If we want to be
+  // able to move or copy derived classes, we need to have those operations
+  // available on S2Shape as well.  Having them defined however presents the
+  // risk of accidental slicing as in:
+  //
+  //     S2Shape& a = S2LaxPolygon(...);
+  //     S2Shape& b = S2LaxPolygon(...);
+  //     a = b; // <-- Does not call S2LaxPolygon's copy assignment.
+  //
+  // So we make these protected to allow Derived classes to decide on their
+  // own move/copy semantics without exposing them to broader use.
+  S2Shape(S2Shape&&) = default;
+  S2Shape(const S2Shape&) = default;
+  S2Shape& operator=(const S2Shape&) = default;
+  S2Shape& operator=(S2Shape&&) = default;
+
+ private:
   friend class EncodedS2ShapeIndex;
   friend class MutableS2ShapeIndex;
 
   int id_;  // Assigned by S2ShapeIndex when the shape is added.
-
-  S2Shape(const S2Shape&) = delete;
-  void operator=(const S2Shape&) = delete;
 };
+
+//////////////////   Implementation details follow   ////////////////////
+
+inline S2Shape::ChainIterator::reference S2Shape::ChainIterator::operator*()
+    const {
+  return shape_->chain(chain_id_);
+}
+
+inline S2Shape::ChainIterator& S2Shape::ChainIterator::operator++() {
+  ++chain_id_;
+  return *this;
+}
+
+inline S2Shape::ChainIterator S2Shape::ChainIterator::operator++(int) {
+  return ChainIterator(shape_, chain_id_++);
+}
+
+inline bool S2Shape::ChainIterator::operator==(ChainIterator it) const {
+  return chain_id_ == it.chain_id_ && shape_ == it.shape_;
+}
+
+inline bool S2Shape::ChainIterator::operator!=(ChainIterator it) const {
+  return !(*this == it);
+}
+
+inline S2Shape::ChainRange S2Shape::chains() const { return ChainRange(this); }
+
+inline S2Shape::ChainIterator S2Shape::ChainRange::begin() const {
+  return ChainIterator(shape_, 0);
+}
+
+inline S2Shape::ChainIterator S2Shape::ChainRange::end() const {
+  return ChainIterator(shape_, shape_->num_chains());
+}
+
+inline S2Shape::ChainVertexIterator::ChainVertexIterator(const S2Shape* shape,
+                                                         const Chain& chain,
+                                                         int vertex_index)
+    : shape_(shape), chain_(chain), vertex_index_(vertex_index) {
+  UpdateCurrentEdge();
+}
+
+inline S2Shape::ChainVertexIterator::reference
+S2Shape::ChainVertexIterator::operator*() const {
+  return edge_vertex_ ? edge_.v1 : edge_.v0;
+}
+
+inline S2Shape::ChainVertexIterator::pointer
+S2Shape::ChainVertexIterator::operator->() const {
+  return edge_vertex_ ? &edge_.v1 : &edge_.v0;
+}
+
+inline S2Shape::ChainVertexIterator&
+S2Shape::ChainVertexIterator::operator++() {
+  ++vertex_index_;
+  UpdateCurrentEdge();
+  return *this;
+}
+
+inline S2Shape::ChainVertexIterator S2Shape::ChainVertexIterator::operator++(
+    int) {
+  auto result = *this;
+  ++vertex_index_;
+  UpdateCurrentEdge();
+  return result;
+}
+
+inline bool S2Shape::ChainVertexIterator::operator==(
+    S2Shape::ChainVertexIterator it) const {
+  return vertex_index_ == it.vertex_index_ && chain_.start == it.chain_.start &&
+         shape_ == it.shape_;
+}
+
+inline bool S2Shape::ChainVertexIterator::operator!=(
+    S2Shape::ChainVertexIterator it) const {
+  return !(*this == it);
+}
+
+// This function makes sure that cached copy of the edge contains the vertex
+// at the current vertex index. The cached copy is updated only if needed.
+// Except for the last edge of even-sized chains, only the edges with even
+// offsets are cached.
+//
+// We want to cache the current edge for two reasons:
+//  (1) use only even edges to cut the edge generation in half;
+//  (2) be able to return pointer/reference to S2Point in ChainVertexIterator.
+inline void S2Shape::ChainVertexIterator::UpdateCurrentEdge() {
+  // No need to update in case of the iterator pointing beyond the end of the
+  // range.
+  if (vertex_index_ > chain_.length) {
+    return;
+  }
+
+  // Compute the new edge offset.
+  int edge_offset = 0;
+
+  // For point shapes (dim == 0) the edge offset is always 0.
+  if (shape_->dimension() > 0) {
+    // An edge with even offset (0, 2, ...) can provide access to two vertices
+    // at once.
+    edge_offset = vertex_index_ % 2 ? vertex_index_ - 1 : vertex_index_;
+    if (edge_offset < chain_.length) {
+      // Vertices with odd indices are accessed via v1, and those with even
+      // indices via v0 of the even edge.
+      edge_vertex_ = vertex_index_ % 2;
+    } else {
+      // A corner case: the last vertex of a chain with even number of edges
+      // can be accessed only via the last edge (which has an odd offset).
+      edge_offset = chain_.length - 1;
+      edge_vertex_ = 1;
+    }
+  }
+  // Update the cached copy of the edge only if needed.
+  if (edge_offset_ != edge_offset) {
+    edge_offset_ = edge_offset;
+    edge_ = shape_->edge(chain_.start + edge_offset_);
+  }
+}
+
+inline S2Shape::ChainVertexRange::ChainVertexRange(const S2Shape* shape,
+                                                   const Chain& chain)
+    : shape_(shape), chain_(chain) {}
+
+inline S2Shape::ChainVertexIterator S2Shape::ChainVertexRange::begin() const {
+  return ChainVertexIterator(shape_, chain_, 0);
+}
+
+inline S2Shape::ChainVertexIterator S2Shape::ChainVertexRange::end() const {
+  return ChainVertexIterator(shape_, chain_, num_vertices());
+}
+
+inline int S2Shape::ChainVertexRange::num_vertices() const {
+  // The number of vertices for point shapes (dimension = 0) is always 1, and it
+  // is equal to the chain length, which is also = 1 for the point shapes.
+  //
+  // For the polygon shapes (dimension = 2) the number of vertices is equal to
+  // the number of edges which is given by the chain length. For example, a
+  // rectangle has 4 edges and 4 vertices.
+  //
+  // For polyline shape (dimension = 1) the number of vertices equals the number
+  // of edges + 1 (one vertex at the start of each edge, plus one exta vertex
+  // at the end of the last edge), hence chain_.length + 1.
+  return shape_->dimension() == 1 ? chain_.length + 1 : chain_.length;
+}
+
+inline S2Shape::ChainVertexRange S2Shape::vertices(
+    const S2Shape::Chain& chain) const {
+  return ChainVertexRange(this, chain);
+}
+
+inline S2Shape::ChainVertexRange S2Shape::vertices(int chain_id) const {
+  return vertices(chain(chain_id));
+}
 
 #endif  // S2_S2SHAPE_H_

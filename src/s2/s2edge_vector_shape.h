@@ -20,6 +20,8 @@
 
 #include <utility>
 #include <vector>
+
+#include "s2/s2point.h"
 #include "s2/s2shape.h"
 
 // S2EdgeVectorShape is an S2Shape representing an arbitrary set of edges.  It
@@ -36,7 +38,11 @@
 class S2EdgeVectorShape : public S2Shape {
  public:
   // Constructs an empty edge vector.
-  S2EdgeVectorShape() {}
+  S2EdgeVectorShape() = default;
+
+  S2EdgeVectorShape(S2EdgeVectorShape&& other) = default;
+
+  S2EdgeVectorShape& operator=(S2EdgeVectorShape&& other) = default;
 
   // Constructs an S2EdgeVectorShape from a vector of edges.
   explicit S2EdgeVectorShape(std::vector<std::pair<S2Point, S2Point>> edges) {

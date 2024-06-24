@@ -609,14 +609,9 @@ test_that("s2_rebuild() works", {
 })
 
 test_that("real data survives the S2BooleanOperation", {
-  # the 32-bit Solaris build results in some of the roundtripped
-  # edges becoming degenerate. Rather than pass check = FALSE to
-  # as_s2_geography(), just skip this on Solaris
-  skip_on_os("solaris")
-
   for (continent in unique(s2::s2_data_tbl_countries$continent)) {
     # this is primarily a test of the S2BooleanOperation -> Geography constructor
-    unioned <- expect_s3_class(s2_coverage_union_agg(s2_data_countries(continent)), "s2_geography")
+    unioned <- expect_s3_class(s2_union_agg(s2_data_countries(continent)), "s2_geography")
 
     # this is a test of RGeography::Export() on potentially complex polygons
     exported <- expect_length(s2_as_binary(unioned), 1)

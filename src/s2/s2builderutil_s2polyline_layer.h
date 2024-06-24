@@ -19,9 +19,10 @@
 #define S2_S2BUILDERUTIL_S2POLYLINE_LAYER_H_
 
 #include <memory>
+#include <utility>
 #include <vector>
+
 #include "s2/base/logging.h"
-#include "absl/memory/memory.h"
 #include "s2/id_set_lexicon.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2builder.h"
@@ -29,6 +30,7 @@
 #include "s2/s2builder_layer.h"
 #include "s2/s2error.h"
 #include "s2/s2polyline.h"
+#include "s2/s2shape.h"
 
 namespace s2builderutil {
 
@@ -38,12 +40,10 @@ namespace s2builderutil {
 //
 // Duplicate edges are handled correctly (e.g., if a polyline backtracks on
 // itself, or loops around and retraces some of its previous edges.)  The
-// implementation attempts to preserve the order of directed input edges
-// whenever possible, so that if the input is a polyline and it is not
-// modified by S2Builder, then the output will be the same polyline (even if
-// the polyline backtracks on itself or forms a loop).  With undirected edges,
-// there are no such guarantees; for example, even if the input consists of a
-// single undirected edge, then either directed edge may be returned.
+// implementation attempts to preserve the order of input edges whenever
+// possible, so that if the input is a polyline and it is not modified by
+// S2Builder, then the output will be the same polyline (even if the polyline
+// backtracks on itself or forms a loop).
 //
 // S2PolylineLayer does not support options such as discarding sibling pairs
 // or merging duplicate edges because these options can split the polyline
@@ -130,7 +130,7 @@ class IndexedS2PolylineLayer : public S2Builder::Layer {
     layer_.Build(g, error);
     if (error->ok() && polyline_->num_vertices() > 0) {
       index_->Add(
-          absl::make_unique<S2Polyline::OwningShape>(std::move(polyline_)));
+          std::make_unique<S2Polyline::OwningShape>(std::move(polyline_)));
     }
   }
 

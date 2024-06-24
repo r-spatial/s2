@@ -103,7 +103,7 @@ test_that("s2_area works", {
   expect_identical(s2_area("POINT EMPTY"), 0)
   expect_identical(s2_area("LINESTRING (0 0, 1 1)"), 0)
   expect_identical(s2_area("POLYGON EMPTY"), 0)
-  expect_identical(s2_area("POLYGON ((0 0, 90 0, 0 90, 0 0))", radius = 1), 4 * pi / 8)
+  expect_equal(s2_area("POLYGON ((0 0, 90 0, 0 90, 0 0))", radius = 1), 4 * pi / 8)
   # make sure the radius is squared!
   expect_true(
     abs(s2_area("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))", radius = 180 / pi) - 100) < 0.27

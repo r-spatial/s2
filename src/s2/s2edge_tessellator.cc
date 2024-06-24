@@ -17,10 +17,16 @@
 
 #include "s2/s2edge_tessellator.h"
 
-#include <cmath>
+#include <algorithm>
+#include <vector>
+
+#include "s2/r2.h"
+#include "s2/s1angle.h"
+#include "s2/s1chord_angle.h"
 #include "s2/s2edge_distances.h"
-#include "s2/s2latlng.h"
+#include "s2/s2point.h"
 #include "s2/s2pointutil.h"
+#include "s2/s2projections.h"
 
 using std::vector;
 // Tessellation is implemented by subdividing the edge until the estimated
@@ -182,7 +188,7 @@ S1Angle S2EdgeTessellator::kMinTolerance() {
 S2EdgeTessellator::S2EdgeTessellator(const S2::Projection* projection,
                                      S1Angle tolerance)
     : proj_(*projection) {
-  if (tolerance < kMinTolerance()) S2_LOG(DFATAL) << "Tolerance too small";
+  if (tolerance < kMinTolerance()) S2_LOG(ERROR) << "Tolerance too small";
 
   // Rather than scaling the error estimate as described above, instead we scale
   // the tolerance.  See algorithm description at the top of this file.
@@ -201,8 +207,8 @@ S1ChordAngle S2EdgeTessellator::EstimateMaxError(
 
   constexpr double t1 = kInterpolationFraction;
   constexpr double t2 = 1 - kInterpolationFraction;
-  S2Point mid1 = S2::Interpolate(t1, a, b);
-  S2Point mid2 = S2::Interpolate(t2, a, b);
+  S2Point mid1 = S2::Interpolate(a, b, t1);
+  S2Point mid2 = S2::Interpolate(a, b, t2);
   S2Point pmid1 = proj_.Unproject(proj_.Interpolate(t1, pa, pb));
   S2Point pmid2 = proj_.Unproject(proj_.Interpolate(t2, pa, pb));
   return std::max(S1ChordAngle(mid1, pmid1), S1ChordAngle(mid2, pmid2));

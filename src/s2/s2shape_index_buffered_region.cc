@@ -19,14 +19,23 @@
 
 #include <algorithm>
 #include <vector>
+
+#include "s2/s1angle.h"
+#include "s2/s1chord_angle.h"
+#include "s2/s2cap.h"
+#include "s2/s2cell.h"
+#include "s2/s2cell_id.h"
+#include "s2/s2closest_edge_query.h"
+#include "s2/s2latlng_rect.h"
 #include "s2/s2metrics.h"
+#include "s2/s2point.h"
+#include "s2/s2shape_index.h"
 #include "s2/s2shape_index_region.h"
 
 using std::min;
 using std::vector;
 
-S2ShapeIndexBufferedRegion::S2ShapeIndexBufferedRegion() {
-}
+S2ShapeIndexBufferedRegion::S2ShapeIndexBufferedRegion() = default;
 
 void S2ShapeIndexBufferedRegion::Init(const S2ShapeIndex* index,
                                       S1ChordAngle radius) {
@@ -77,6 +86,9 @@ void S2ShapeIndexBufferedRegion::GetCellUnionBound(vector<S2CellId> *cellids)
 }
 
 bool S2ShapeIndexBufferedRegion::Contains(const S2Cell& cell) const {
+  // Return true if the buffered region is guaranteed to cover whole globe.
+  if (radius_successor_ > S1ChordAngle::Straight()) return true;
+
   // To implement this method perfectly would require computing the directed
   // Hausdorff distance, which is expensive (and not currently implemented).
   // However the following heuristic is almost as good in practice and much

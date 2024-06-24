@@ -18,10 +18,27 @@
 #ifndef S2_S2POINT_INDEX_H_
 #define S2_S2POINT_INDEX_H_
 
+#include <cstddef>
+
 #include <tuple>
 #include <type_traits>
+#include <utility>
+
 #include "absl/container/btree_map.h"
+
 #include "s2/s2cell_id.h"
+#include "s2/s2cell_iterator.h"
+#include "s2/s2point.h"
+
+namespace s2internal {
+// Hack to expose bytes_used.
+template <typename Key, typename Value>
+class BTreeMultimap : public absl::btree_multimap<Key, Value> {
+ public:
+  size_t bytes_used() const { return this->tree_.bytes_used(); }
+};
+}  // namespace s2internal
+
 
 // S2PointIndex maintains an index of points sorted by leaf S2CellId.  Each
 // point can optionally store auxiliary data such as an integer or pointer.
@@ -30,7 +47,7 @@
 // The class supports adding or removing points dynamically, and provides a
 // seekable iterator interface for navigating the index.
 //
-// You can use this class in conjuction with S2ClosestPointQuery to find the
+// You can use this class in conjunction with S2ClosestPointQuery to find the
 // closest index points to a given query point.  For example:
 //
 // void Test(const vector<S2Point>& index_points,
@@ -93,7 +110,7 @@ class S2PointIndex {
   // optimization" to ensure that no extra space is used when Data is empty.
   class PointData {
    public:
-    PointData() {}  // Needed by STL
+    PointData() = default;  // Needed by STL
     PointData(const S2Point& point, const Data& data) : tuple_(point, data) {}
 
     const S2Point& point() const { return std::get<0>(tuple_); }
@@ -114,7 +131,8 @@ class S2PointIndex {
   };
 
   // Default constructor.
-  S2PointIndex();
+  // TODO(b/252809194): Move definition back to .cc file.
+  S2PointIndex() = default;
 
   // Returns the number of points in the index.
   int num_points() const;
@@ -138,12 +156,15 @@ class S2PointIndex {
   // Resets the index to its original empty state.  Invalidates all iterators.
   void Clear();
 
+  // Returns the number of bytes currently occupied by the index.
+  size_t SpaceUsed() const;
+
  private:
   // Defined here because the Iterator class below uses it.
-  using Map = absl::btree_multimap<S2CellId, PointData>;
+  using Map = s2internal::BTreeMultimap<S2CellId, PointData>;
 
  public:
-  class Iterator {
+  class Iterator final : public S2CellIterator {
    public:
     // Default constructor; must be followed by a call to Init().
     Iterator();
@@ -160,7 +181,7 @@ class S2PointIndex {
 
     // The S2CellId for the current index entry.
     // REQUIRES: !done()
-    S2CellId id() const;
+    S2CellId id() const override;
 
     // The point associated with the current index entry.
     // REQUIRES: !done()
@@ -174,25 +195,42 @@ class S2PointIndex {
     const PointData& point_data() const;
 
     // Returns true if the iterator is positioned past the last index entry.
-    bool done() const;
+    bool done() const override;
 
     // Positions the iterator at the first index entry (if any).
-    void Begin();
+    void Begin() override;
 
     // Positions the iterator so that done() is true.
-    void Finish();
+    void Finish() override;
 
     // Advances the iterator to the next index entry.
     // REQUIRES: !done()
-    void Next();
+    void Next() override;
 
     // If the iterator is already positioned at the beginning, returns false.
     // Otherwise positions the iterator at the previous entry and returns true.
-    bool Prev();
+    bool Prev() override;
 
     // Positions the iterator at the first entry with id() >= target, or at the
     // end of the index if no such entry exists.
-    void Seek(S2CellId target);
+    void Seek(S2CellId target) override;
+
+    // Positions the iterator at the cell containing target and returns true. If
+    // no such cell exists, return false and leave the iterator in an undefined
+    // (but valid) state.
+    bool Locate(const S2Point& target) override {
+      return LocateImpl(*this, target);
+    }
+
+    // Let T be the target S2CellId.  If T is contained by some index cell I
+    // (including equality), this method positions the iterator at I and returns
+    // INDEXED.  Otherwise if T contains one or more (smaller) index cells, it
+    // positions the iterator at the first such cell I and returns SUBDIVIDED.
+    // Otherwise it returns DISJOINT and leaves the iterator in an undefined
+    // (but valid) state.
+    S2CellRelation Locate(S2CellId target) override {
+      return LocateImpl(*this, target);
+    }
 
    private:
     const Map* map_;
@@ -209,11 +247,6 @@ class S2PointIndex {
 
 
 //////////////////   Implementation details follow   ////////////////////
-
-
-template <class Data>
-S2PointIndex<Data>::S2PointIndex() {
-}
 
 template <class Data>
 inline int S2PointIndex<Data>::num_points() const {
@@ -264,6 +297,11 @@ void S2PointIndex<Data>::Remove(const S2Point& point) {
 template <class Data>
 void S2PointIndex<Data>::Clear() {
   map_.clear();
+}
+
+template <class Data>
+size_t S2PointIndex<Data>::SpaceUsed() const {
+  return sizeof(*this) - sizeof(map_) + map_.bytes_used();
 }
 
 template <class Data>

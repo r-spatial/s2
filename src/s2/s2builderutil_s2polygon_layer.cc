@@ -18,12 +18,24 @@
 #include "s2/s2builderutil_s2polygon_layer.h"
 
 #include <algorithm>
+#include <array>
 #include <memory>
-#include "absl/memory/memory.h"
-#include "s2/s2debug.h"
+#include <utility>
+#include <vector>
 
-using absl::make_unique;
+#include "absl/container/btree_map.h"
+#include "s2/id_set_lexicon.h"
+#include "s2/s2builder.h"
+#include "s2/s2builder_graph.h"
+#include "s2/s2builder_layer.h"
+#include "s2/s2debug.h"
+#include "s2/s2error.h"
+#include "s2/s2loop.h"
+#include "s2/s2point.h"
+#include "s2/s2polygon.h"
+
 using std::make_pair;
+using std::make_unique;
 using std::pair;
 using std::unique_ptr;
 using std::vector;

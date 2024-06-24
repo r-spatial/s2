@@ -17,28 +17,23 @@
 
 #include "s2/s2edge_clipping.h"
 
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 
-#include "s2/base/logging.h"
 #include "s2/r1interval.h"
+#include "s2/r2.h"
+#include "s2/r2rect.h"
 #include "s2/s2coords.h"
+#include "s2/s2edge_crossings.h"
+#include "s2/s2point.h"
 #include "s2/s2pointutil.h"
-#include "s2/util/math/vector.h"
 
 namespace S2 {
 
 using std::fabs;
 using std::max;
 using std::min;
-
-// Error constant definitions.  See the header file for details.
-const double kFaceClipErrorRadians = 3 * DBL_EPSILON;
-const double kFaceClipErrorUVDist = 9 * DBL_EPSILON;
-const double kFaceClipErrorUVCoord = 9 * M_SQRT1_2 * DBL_EPSILON;
-const double kIntersectsRectErrorUVDist = 3 * M_SQRT2 * DBL_EPSILON;
-const double kEdgeClipErrorUVCoord = 2.25 * DBL_EPSILON;
-const double kEdgeClipErrorUVDist = 2.25 * DBL_EPSILON;
 
 // S2PointUVW is used to document that a given S2Point is expressed in the
 // (u,v,w) coordinates of some cube face.
@@ -353,12 +348,6 @@ bool ClipToPaddedFace(const S2Point& a_xyz, const S2Point& b_xyz, int face,
   S2PointUVW scaled_n(scale_uv * n[0], scale_uv * n[1], n[2]);
   if (!IntersectsFace(scaled_n)) return false;
 
-  // TODO(ericv): This is a temporary hack until I rewrite S2::RobustCrossProd;
-  // it avoids loss of precision in Normalize() when the vector is so small
-  // that it underflows.
-  if (max(fabs(n[0]), max(fabs(n[1]), fabs(n[2]))) < ldexp(1.0, -511)) {
-    n *= ldexp(1.0, 563);
-  }  // END OF HACK
   n = n.Normalize();
   S2PointUVW a_tangent = n.CrossProd(a);
   S2PointUVW b_tangent = b.CrossProd(n);
