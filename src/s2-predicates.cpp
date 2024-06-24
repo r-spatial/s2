@@ -3,7 +3,6 @@
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2latlng_rect.h"
 #include "s2/s2polygon.h"
-#include "s2/s2testing.h"
 #include "s2/s2builderutil_snap_functions.h"
 #include "s2/s2shape_index_buffered_region.h"
 

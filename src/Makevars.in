@@ -93,7 +93,6 @@ S2_OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2/s2shapeutil_edge_iterator.o \
      s2/s2shapeutil_get_reference_point.o \
      s2/s2shapeutil_visit_crossing_edge_pairs.o \
-     s2/s2testing.o \
      s2/s2text_format.o \
      s2/s2wedge_relations.o \
      s2/s2winding_operation.o \
