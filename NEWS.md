@@ -5,6 +5,10 @@
   CMake (#258).
 * The s2 
 
+# s2 1.1.7
+
+* Update src/Makefile.ucrt to no longer download libraries from rwinlib, requested by TK.
+
 # s2 1.1.6
 
 * Fix CRAN warning (#254).
