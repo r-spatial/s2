@@ -2,7 +2,7 @@
 # Configure Abseil. If it wasn't available via pkg-config, it was built
 # by cmake in configure.win.
 
-ABSL_LIBS = -labsl_flags_internal -labsl_flags_marshalling -labsl_flags_reflection -labsl_flags_private_handle_accessor -labsl_flags_commandlineflag -labsl_flags_commandlineflag_internal -labsl_flags_config -labsl_flags_program_name -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_exponential_biased -labsl_log_internal_check_op -labsl_log_internal_conditions -labsl_log_internal_message -labsl_examine_stack -labsl_log_internal_format -labsl_log_internal_proto -labsl_log_internal_nullguard -labsl_log_internal_log_sink_set -labsl_log_internal_globals -labsl_log_globals -labsl_hash -labsl_city -labsl_bad_variant_access -labsl_low_level_hash -labsl_vlog_config_internal -labsl_log_internal_fnmatch -labsl_bad_optional_access -labsl_log_sink -labsl_log_entry -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_malloc_internal -labsl_strerror -labsl_time -labsl_civil_time -labsl_time_zone -labsl_str_format_internal -labsl_strings -labsl_strings_internal -labsl_string_view -labsl_int128 -labsl_throw_delegate -labsl_demangle_internal -labsl_base -labsl_spinlock_wait -labsl_debugging_internal -labsl_raw_logging_internal -labsl_log_severity -labsl_status
+ABSL_LIBS = -labsl_flags_internal -labsl_flags_marshalling -labsl_flags_reflection -labsl_flags_private_handle_accessor -labsl_flags_commandlineflag -labsl_flags_commandlineflag_internal -labsl_flags_config -labsl_flags_program_name -labsl_raw_hash_set -labsl_hashtablez_sampler -labsl_log_internal_check_op -labsl_log_internal_conditions -labsl_log_internal_message -labsl_examine_stack -labsl_log_internal_format -labsl_log_internal_proto -labsl_log_internal_nullguard -labsl_log_internal_log_sink_set -labsl_log_internal_globals -labsl_log_globals -labsl_hash -labsl_city -labsl_bad_variant_access -labsl_low_level_hash -labsl_vlog_config_internal -labsl_log_internal_fnmatch -labsl_log_sink -labsl_log_entry -labsl_status -labsl_cord -labsl_cordz_info -labsl_cord_internal -labsl_cordz_functions -labsl_exponential_biased -labsl_cordz_handle -labsl_synchronization -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_time -labsl_civil_time -labsl_time_zone -labsl_crc_cord_state -labsl_crc32c -labsl_crc_internal -labsl_crc_cpu_detect -labsl_bad_optional_access -labsl_stacktrace -labsl_strerror -labsl_str_format_internal -labsl_symbolize -ldbghelp -labsl_debugging_internal -labsl_demangle_internal -labsl_malloc_internal -labsl_strings -labsl_strings_internal -labsl_string_view -labsl_base -ladvapi32 -labsl_spinlock_wait -labsl_int128 -labsl_throw_delegate -labsl_raw_logging_internal -labsl_log_severity
 
 ifeq (,$(shell pkg-config absl_base --libs 2>/dev/null))
   ABSL_CFLAGS = -I../tools/dist/include
@@ -22,14 +22,12 @@ else
   OPENSSL_LIB_FLAGS = $(shell pkg-config --libs openssl)
 endif
 
-PKG_CPPFLAGS = $(ABSL_CFLAGS) $(OPENSSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DOMIT_STRPTIME -D_GLIBCXX_USE_CXX11_ABI=0 -I../src
-PKG_LIBS = -Ls2 -ls2static $(ABSL_LIB_FLAGS) $(OPENSSL_LIB_FLAGS)
+PKG_CPPFLAGS = $(ABSL_CFLAGS) $(OPENSSL_CFLAGS) -DSTRICT_R_HEADERS -DS2_USE_EXACTFLOAT -D_USE_MATH_DEFINES -DNDEBUG -DOMIT_STRPTIME -I../src
+PKG_LIBS = -LC:/rtools44/x86_64-w64-mingw32.static.posix/bin/../lib $(ABSL_LIB_FLAGS) $(OPENSSL_LIB_FLAGS)
 
 CXX_STD = CXX17
 
-STATLIB = s2/libs2static.a
-
-S2LIBS = s2/encoded_s2cell_id_vector.o \
+OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2/encoded_s2point_vector.o \
      s2/encoded_s2shape_index.o \
      s2/encoded_string_vector.o \
@@ -127,22 +125,25 @@ S2LIBS = s2/encoded_s2cell_id_vector.o \
      s2/util/math/exactfloat/exactfloat.o \
      s2/util/math/mathutil.o \
      s2/util/units/length-units.o \
-     s2geography/linear-referencing.o \
-     s2geography/distance.o \
-     s2geography/accessors.o \
+     cpp-compat.o \
+     s2-accessors.o \
+     s2-bounds.o \
+     s2-cell.o \
+     s2-cell-union.o \
+     s2-constructors-formatters.o \
+     s2-predicates.o \
+     s2-transformers.o \
+     init.o \
+     RcppExports.o \
+     s2-geography.o \
+     s2-lnglat.o \
+     s2-matrix.o \
+     wk-impl.o \
      s2geography/accessors-geog.o \
+     s2geography/accessors.o \
      s2geography/build.o \
      s2geography/coverings.o \
+     s2geography/distance.o \
      s2geography/geography.o \
+     s2geography/linear-referencing.o \
      s2geography/predicates.o
-
-$(SHLIB): $(STATLIB)
-
-$(STATLIB): $(S2LIBS)
-
-#all: clean
-
-clean:
-	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
-
-.PHONY: all clean
