@@ -124,6 +124,7 @@ s2_snap_level <- function(level) {
 #' @rdname s2_options
 #' @export
 s2_snap_precision <- function(precision)  {
+  stopifnot(precision <= 1e17) # https://github.com/r-spatial/s2/issues/248
   structure(list(exponent = round(log10(precision))), class = "snap_precision")
 }
 
