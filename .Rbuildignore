@@ -12,3 +12,7 @@
 ^README\.Rmd$
 ^vignettes/articles$
 ^\.clang-format$
+^tools/build$
+^tools/dist$
+^compile_commands\.json$
+^\.cache$

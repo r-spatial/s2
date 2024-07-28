@@ -17,6 +17,11 @@
 
 #include "s2/s2shape_index.h"
 
+#include "s2/base/integral_types.h"
+#include "s2/util/coding/coder.h"
+#include "s2/util/coding/varint.h"
+#include "s2/util/gtl/compact_array.h"
+
 bool S2ClippedShape::ContainsEdge(int id) const {
   // Linear search is fast because the number of edges per shape is typically
   // very small (less than 10).
@@ -311,6 +316,12 @@ inline bool S2ShapeIndexCell::DecodeEdges(int num_edges,
         count = delta + 8;
         if (!decoder->get_varint32(&delta)) return false;
       }
+
+      // Guard against overflowing edge memory for bad inputs.
+      if (static_cast<int32>(i + count) > num_edges) {
+        return false;
+      }
+
       edge_id += delta;
       for (; count > 0; --count, ++i, ++edge_id) {
         clipped->set_edge(i, edge_id);

@@ -17,9 +17,8 @@
 
 #include "s2/r2rect.h"
 
-#include <iosfwd>
+#include <ostream>
 
-#include "s2/base/logging.h"
 #include "s2/r1interval.h"
 #include "s2/r2.h"
 
@@ -28,11 +27,6 @@ R2Rect R2Rect::FromCenterSize(const R2Point& center, const R2Point& size) {
                            center.x() + 0.5 * size.x()),
                 R1Interval(center.y() - 0.5 * size.y(),
                            center.y() + 0.5 * size.y()));
-}
-
-R2Rect R2Rect::FromPointPair(const R2Point& p1, const R2Point& p2) {
-  return R2Rect(R1Interval::FromPointPair(p1.x(), p2.x()),
-                R1Interval::FromPointPair(p1.y(), p2.y()));
 }
 
 bool R2Rect::Contains(const R2Rect& other) const {

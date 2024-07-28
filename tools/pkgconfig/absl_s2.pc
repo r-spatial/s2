@@ -1,0 +1,7 @@
+Name: absl_s2
+Description: Abseil requirements
+URL: https://github.com/r-spatial/s2
+Version: 0.0
+Requires: absl_base >= 20230802, absl_btree >= 20230802, absl_config >= 20230802, absl_core_headers >= 20230802, absl_dynamic_annotations >= 20230802, absl_endian >= 20230802, absl_fixed_array >= 20230802, absl_flags >= 20230802, absl_flat_hash_map >= 20230802, absl_flat_hash_set >= 20230802, absl_hash >= 20230802, absl_inlined_vector >= 20230802, absl_int128 >= 20230802, absl_log >= 20230802, absl_log_internal_check_impl >= 20230802, absl_log_severity >= 20230802, absl_memory >= 20230802, absl_span >= 20230802, absl_str_format >= 20230802, absl_strings >= 20230802, absl_type_traits >= 20230802, absl_utility >= 20230802, absl_demangle_internal >= 20230802, absl_debugging_internal >= 20230802, absl_status >= 20230802
+Libs:
+Cflags:

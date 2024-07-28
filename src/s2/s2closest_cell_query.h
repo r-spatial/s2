@@ -18,6 +18,7 @@
 #ifndef S2_S2CLOSEST_CELL_QUERY_H_
 #define S2_S2CLOSEST_CELL_QUERY_H_
 
+#include <utility>
 #include <vector>
 
 #include "s2/base/logging.h"
@@ -26,8 +27,12 @@
 #include "s2/s1chord_angle.h"
 #include "s2/s2cell.h"
 #include "s2/s2cell_id.h"
+#include "s2/s2cell_index.h"
+#include "s2/s2cell_union.h"
 #include "s2/s2closest_cell_query_base.h"
 #include "s2/s2min_distance_targets.h"
+#include "s2/s2point.h"
+#include "s2/s2shape_index.h"
 
 // S2ClosestCellQuery is a helper class for finding the closest cell(s) to a
 // given point, edge, S2Cell, S2CellUnion, or geometry collection.  A typical

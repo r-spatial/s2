@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "s2/s1angle.h"
+#include "s2/s2edge_crossings.h"
 #include "s2/s2point.h"
 #include "s2/s2point_span.h"
 #include "s2/s2pointutil.h"
@@ -137,37 +138,107 @@ std::ostream& operator<<(std::ostream& os, LoopOrder order);
 // vertices to be traversed in a canonical order.
 LoopOrder GetCanonicalLoopOrder(S2PointLoopSpan loop);
 
+namespace internal {
+
 // Returns the oriented surface integral of some quantity f(x) over the loop
 // interior, given a function f_tri(A,B,C) that returns the corresponding
 // integral over the spherical triangle ABC.  Here "oriented surface integral"
 // means:
 //
-// (1) f_tri(A,B,C) must be the integral of f if ABC is counterclockwise,
+// (1) f_tri(A,B,C) should return the integral of f if ABC is counterclockwise
 //     and the integral of -f if ABC is clockwise.
 //
-// (2) The result of this function is *either* the integral of f over the
-//     loop interior, or the integral of (-f) over the loop exterior.
+// (2) The result is the integral of f over the loop interior plus or minus
+//     some multiple of the integral of f over the entire sphere.
 //
 // Note that there are at least two common situations where property (2) above
 // is not a limitation:
 //
-//  - If the integral of f over the entire sphere is zero, then it doesn't
-//    matter which case is returned because they are always equal.
+//  - When the integral of f over the entire sphere is zero.  For example this
+//    is true when computing centroids.
 //
-//  - If f is non-negative, then it is easy to detect when the integral over
-//    the loop exterior has been returned, and the integral over the loop
-//    interior can be obtained by adding the integral of f over the entire
-//    unit sphere (a constant) to the result.
+//  - When f is non-negative and the integral over the entire sphere is a
+//    constant known in advance.  In this case the correct result can be
+//    obtained by using std::remainder appropriately.
+//
+// Accumulation of the result can be customized via the sum parameter.
+// Intermediate results are summed via operator+=.
 //
 // REQUIRES: The default constructor for T must initialize the value to zero.
 //           (This is true for built-in types such as "double".)
+template <class T, class TAccumulator = T>
+void GetSurfaceIntegral(S2PointLoopSpan loop,
+                        T f_tri(const S2Point&, const S2Point&, const S2Point&),
+                        TAccumulator& sum);
+
+// Compensated sum using Kahan's algorithm.  This doesn't use the higher-order
+// variations so it's not as robust against wildly ill-conditioned inputs as it
+// could be in the interest of speed.  It's very accurate in general for long
+// sequences of accumulation though.
+template <typename T>
+class KahanSum {
+ public:
+  KahanSum() = default;
+  explicit KahanSum(T value) : sum_(value) {}
+
+  // Adds value to running total with compensate summation.
+  void operator+=(T value) {
+    T tmp1 = value - err_;
+    T tmp2 = sum_ + tmp1;
+    err_ = (tmp2 - sum_) - tmp1;
+    sum_ = tmp2;
+  }
+
+  // Explicitly return the final sum as an instance of T.
+  explicit operator T() const { return sum_; }
+
+  // Returns the current compensation value.
+  T Compensation() const { return err_; }
+
+ private:
+  T sum_ = T();
+  T err_ = T();
+};
+
+}  // namespace internal
+
+// Accumulates the result naively into a variable of type T.
 template <class T>
 T GetSurfaceIntegral(S2PointLoopSpan loop,
-                     T f_tri(const S2Point&, const S2Point&, const S2Point&));
+                     T f_tri(const S2Point&, const S2Point&, const S2Point&)) {
+  T sum = T();
+  internal::GetSurfaceIntegral(loop, f_tri, sum);
+  return sum;
+}
 
-// Returns a new loop obtained by removing all degeneracies from "loop".  In
-// particular, the result will not contain any adjacent duplicate vertices or
-// sibling edge pairs, i.e. vertex sequences of the form (A, A) or (A, B, A).
+// Accumulates the result using a Kahan sum which accumulates much less error
+// for long sequences of numbers.
+template <class T>
+T GetSurfaceIntegralKahan(S2PointLoopSpan loop,
+                          T f_tri(const S2Point&, const S2Point&,
+                                  const S2Point&)) {
+  internal::KahanSum<T> sum;
+  internal::GetSurfaceIntegral(loop, f_tri, sum);
+  return (T)sum;
+}
+
+// Returns a new loop obtained by removing all degeneracies from "loop"
+// that can be detected by only comparing adjacent vertices and edges
+// for equality (not doing any geometric examination of them).
+// More specifically, the function repeatedly finds any vertex subsequences
+// of the form AA or ABA, and collapes them to A, until there are no more,
+// and a loop of length 1 or 2 will be turned into an empty loop.
+//
+// NOTE: it doesn't matter what order such degeneracies are processed in;
+// the resulting pruned loop is uniquely determined, up to cyclic permutation.
+// (This isn't obvious.)
+//
+// CAVEAT: notice that GetCurvature() (and other functions in this file)
+// may return a different answer when called on the resulting pruned loop from
+// when it's called on the original loop.  Specifically, according to
+// GetCurvature()'s contract, when the original loop is nonempty but degenerate,
+// calling GetCurvature() on it will yield 2*PI ("empty") before pruning,
+// but -2*PI ("full") after pruning.
 //
 // "new_vertices" represents storage where new loop vertices may be written.
 // Note that the S2PointLoopSpan result may be a subsequence of either "loop"
@@ -176,36 +247,37 @@ T GetSurfaceIntegral(S2PointLoopSpan loop,
 S2PointLoopSpan PruneDegeneracies(S2PointLoopSpan loop,
                                   std::vector<S2Point>* new_vertices);
 
-
 //////////////////// Implementation details follow ////////////////////////
-
 
 inline bool operator==(LoopOrder x, LoopOrder y) {
   return x.first == y.first && x.dir == y.dir;
 }
 
-template <class T>
-T GetSurfaceIntegral(S2PointLoopSpan loop,
-                     T f_tri(const S2Point&, const S2Point&, const S2Point&)) {
+template <class T, class TAccumulator>
+void internal::GetSurfaceIntegral(S2PointLoopSpan loop,
+                                  T f_tri(const S2Point&, const S2Point&,
+                                          const S2Point&),
+                                  TAccumulator& sum) {
   // We sum "f_tri" over a collection T of oriented triangles, possibly
   // overlapping.  Let the sign of a triangle be +1 if it is CCW and -1
   // otherwise, and let the sign of a point "x" be the sum of the signs of the
   // triangles containing "x".  Then the collection of triangles T is chosen
-  // such that either:
+  // such that every point in the loop interior has the same sign x, and every
+  // point in the loop exterior has the same sign (x - 1).  Furthermore almost
+  // always it is true that x == 0 or x == 1, meaning that either
   //
   //  (1) Each point in the loop interior has sign +1, and sign 0 otherwise; or
   //  (2) Each point in the loop exterior has sign -1, and sign 0 otherwise.
   //
   // The triangles basically consist of a "fan" from vertex 0 to every loop
-  // edge that does not include vertex 0.  These triangles will always satisfy
-  // either (1) or (2).  However, what makes this a bit tricky is that
-  // spherical edges become numerically unstable as their length approaches
-  // 180 degrees.  Of course there is not much we can do if the loop itself
-  // contains such edges, but we would like to make sure that all the triangle
-  // edges under our control (i.e., the non-loop edges) are stable.  For
-  // example, consider a loop around the equator consisting of four equally
-  // spaced points.  This is a well-defined loop, but we cannot just split it
-  // into two triangles by connecting vertex 0 to vertex 2.
+  // edge that does not include vertex 0.  However, what makes this a bit
+  // tricky is that spherical edges become numerically unstable as their
+  // length approaches 180 degrees.  Of course there is not much we can do if
+  // the loop itself contains such edges, but we would like to make sure that
+  // all the triangle edges under our control (i.e., the non-loop edges) are
+  // stable.  For example, consider a loop around the equator consisting of
+  // four equally spaced points.  This is a well-defined loop, but we cannot
+  // just split it into two triangles by connecting vertex 0 to vertex 2.
   //
   // We handle this type of situation by moving the origin of the triangle fan
   // whenever we are about to create an unstable edge.  We choose a new
@@ -219,20 +291,19 @@ T GetSurfaceIntegral(S2PointLoopSpan loop,
   // reduced further if desired.
   static const double kMaxLength = M_PI - 1e-5;
 
-  // The default constructor for T must initialize the value to zero.
+  // The default constructor for TAccumulator must initialize the value to zero.
   // (This is true for built-in types such as "double".)
-  T sum = T();
-  if (loop.size() < 3) return sum;
+  if (loop.size() < 3) return;
 
   S2Point origin = loop[0];
-  for (int i = 1; i + 1 < loop.size(); ++i) {
-    // Let V_i be loop[i], let O be the current origin, and let length(A,B)
-    // be the length of edge (A,B).  At the start of each loop iteration, the
-    // "leading edge" of the triangle fan is (O,V_i), and we want to extend
-    // the triangle fan so that the leading edge is (O,V_i+1).
+  for (size_t i = 1; i + 1 < loop.size(); ++i) {
+    // Let V_i be loop[i], let O be the current origin, and let length(A, B)
+    // be the length of edge (A, B).  At the start of each loop iteration, the
+    // "leading edge" of the triangle fan is (O, V_i), and we want to extend
+    // the triangle fan so that the leading edge is (O, V_i+1).
     //
     // Invariants:
-    //  1. length(O,V_i) < kMaxLength for all (i > 1).
+    //  1. length(O, V_i) < kMaxLength for all (i > 1).
     //  2. Either O == V_0, or O is approximately perpendicular to V_0.
     //  3. "sum" is the oriented integral of f over the area defined by
     //     (O, V_0, V_1, ..., V_i).
@@ -244,35 +315,47 @@ T GetSurfaceIntegral(S2PointLoopSpan loop,
       // for the triangle fan.
       S2Point old_origin = origin;
       if (origin == loop[0]) {
-        // The following point is well-separated from V_i and V_0 (and
-        // therefore V_i+1 as well).
+        // The following point O' is well-separated from V_i and V_0 (and
+        // therefore V_i+1 as well).  Moving the origin transforms the leading
+        // edge of the triangle fan into a two-edge chain (V_0, O', V_i).
         origin = S2::RobustCrossProd(loop[0], loop[i]).Normalize();
       } else if (loop[i].Angle(loop[0]) < kMaxLength) {
         // All edges of the triangle (O, V_0, V_i) are stable, so we can
-        // revert to using V_0 as the origin.
+        // revert to using V_0 as the origin.  This changes the leading edge
+        // chain (V_0, O, V_i) back into a single edge (V_0, V_i).
         origin = loop[0];
       } else {
         // (O, V_i+1) and (V_0, V_i) are antipodal pairs, and O and V_0 are
         // perpendicular.  Therefore V_0.CrossProd(O) is approximately
         // perpendicular to all of {O, V_0, V_i, V_i+1}, and we can choose
         // this point O' as the new origin.
+        //
+        // NOTE(ericv): The following line is the reason why in rare cases the
+        // triangle sum can have a sign other than -1, 0, or 1.  To fix this
+        // we would need to choose either "-origin" or "origin" below
+        // depending on whether the signed area of the triangles chosen so far
+        // is positive or negative respectively.  This is easy in the case of
+        // GetSignedArea() but would be extra work for GetCentroid().  In any
+        // case this does not cause any problems in practice.
         origin = loop[0].CrossProd(old_origin);
 
-        // Advance the edge (V_0,O) to (V_0,O').
+        // The following two triangles transform the leading edge chain from
+        // (V_0, O, V_i) to (V_0, O', V_i+1).
+        //
+        // First we advance the edge (V_0, O) to (V_0, O').
         sum += f_tri(loop[0], old_origin, origin);
       }
-      // Advance the edge (O,V_i) to (O',V_i).
+      // Advance the edge (O, V_i) to (O', V_i).
       sum += f_tri(old_origin, loop[i], origin);
     }
-    // Advance the edge (O,V_i) to (O,V_i+1).
+    // Advance the edge (O, V_i) to (O, V_i+1).
     sum += f_tri(origin, loop[i], loop[i+1]);
   }
   // If the origin is not V_0, we need to sum one more triangle.
   if (origin != loop[0]) {
-    // Advance the edge (O,V_n-1) to (O,V_0).
+    // Advance the edge (O, V_n-1) to (O, V_0).
     sum += f_tri(origin, loop[loop.size() - 1], loop[0]);
   }
-  return sum;
 }
 
 }  // namespace S2

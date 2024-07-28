@@ -17,15 +17,27 @@
 
 #include "s2/encoded_string_vector.h"
 
+#include <cstddef>
+#include <cstdint>
+
+#include <string>
+#include <vector>
+
+#include "s2/base/integral_types.h"
+#include "absl/strings/string_view.h"
+#include "absl/types/span.h"
+#include "s2/util/coding/coder.h"
+#include "s2/encoded_uint_vector.h"
+
 using absl::MakeSpan;
 using absl::Span;
 using absl::string_view;
+using std::string;
 using std::vector;
 
 namespace s2coding {
 
-StringVectorEncoder::StringVectorEncoder() {
-}
+StringVectorEncoder::StringVectorEncoder() = default;
 
 void StringVectorEncoder::Encode(Encoder* encoder) {
   offsets_.push_back(data_.length());
@@ -37,7 +49,7 @@ void StringVectorEncoder::Encode(Encoder* encoder) {
   encoder->putn(data_.base(), data_.length());
 }
 
-void StringVectorEncoder::Encode(Span<const std::string> v, Encoder* encoder) {
+void StringVectorEncoder::Encode(Span<const string> v, Encoder* encoder) {
   StringVectorEncoder string_vector;
   for (const auto& str : v) string_vector.Add(str);
   string_vector.Encode(encoder);
@@ -45,7 +57,7 @@ void StringVectorEncoder::Encode(Span<const std::string> v, Encoder* encoder) {
 
 bool EncodedStringVector::Init(Decoder* decoder) {
   if (!offsets_.Init(decoder)) return false;
-  data_ = reinterpret_cast<const char*>(decoder->ptr());
+  data_ = decoder->skip(0);
   if (offsets_.size() > 0) {
     uint64 length = offsets_[offsets_.size() - 1];
     if (decoder->avail() < length) return false;
@@ -57,10 +69,21 @@ bool EncodedStringVector::Init(Decoder* decoder) {
 vector<string_view> EncodedStringVector::Decode() const {
   size_t n = size();
   vector<string_view> result(n);
-  for (int i = 0; i < n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     result[i] = (*this)[i];
   }
   return result;
+}
+
+// The encoding must be identical to StringVectorEncoder::Encode().
+void EncodedStringVector::Encode(Encoder* encoder) const {
+  offsets_.Encode(encoder);
+
+  if (offsets_.size() > 0) {
+    const uint64 length = offsets_[offsets_.size() - 1];
+    encoder->Ensure(length);
+    encoder->putn(data_, length);
+  }
 }
 
 }  // namespace s2coding

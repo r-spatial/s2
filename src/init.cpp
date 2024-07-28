@@ -10,5 +10,5 @@ void cpp_s2_init() {
   // R instead of throw an exception if this value is set to true.
   // When possible, we also disable debug checks on a per-operation basis
   // if there is another way to do so (e.g., constructing S2Loop and S2Polygon objects).
-  FLAGS_s2debug = false; // # nocov
+  absl::SetFlag(&FLAGS_s2debug, false);
 }
