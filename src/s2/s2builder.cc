@@ -66,6 +66,8 @@
 // Otherwise all layers are processed independently.  For example, sibling
 // edge pairs can only cancel each other within a single layer (if desired).
 
+#include "cpp-compat.h"
+
 #include "s2/s2builder.h"
 
 #include <cstddef>
@@ -826,7 +828,7 @@ void S2Builder::CollectSiteEdges(const S2PointIndex<SiteId>& site_index) {
     const S2Point& v0 = input_vertices_[edge.first];
     const S2Point& v1 = input_vertices_[edge.second];
     if (s2builder_verbose) {
-      std::cout << "S2Polyline: " << s2textformat::ToString(v0)
+      cpp_compat_cout << "S2Polyline: " << s2textformat::ToString(v0)
                 << ", " << s2textformat::ToString(v1) << "\n";
     }
     S2ClosestPointQueryEdgeTarget target(v0, v1);
@@ -1252,9 +1254,9 @@ void S2Builder::SnapEdge(InputEdgeId e, vector<SiteId>* chain) const {
     }
   }
   if (s2builder_verbose) {
-    std::cout << "(" << edge.first << "," << edge.second << "): ";
-    for (SiteId id : *chain) std::cout << id << " ";
-    std::cout << std::endl;
+    cpp_compat_cout << "(" << edge.first << "," << edge.second << "): ";
+    for (SiteId id : *chain) cpp_compat_cout << id << " ";
+    cpp_compat_cout << std::endl;
   }
 }
 
@@ -1330,7 +1332,7 @@ static void DumpEdges(const vector<S2Builder::Graph::Edge>& edges,
     vector<S2Point> v;
     v.push_back(vertices[e.first]);
     v.push_back(vertices[e.second]);
-    std::cout << "S2Polyline: " << s2textformat::ToString(v)
+    cpp_compat_cout << "S2Polyline: " << s2textformat::ToString(v)
               << "(" << e.first << "," << e.second << ")" << std::endl;
   }
 }
