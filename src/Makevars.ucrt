@@ -1,3 +1,0 @@
-CRT=-ucrt
-include Makevars.win
-CXX_STD = CXX11

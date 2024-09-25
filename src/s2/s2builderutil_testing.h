@@ -18,12 +18,18 @@
 #ifndef S2_S2BUILDERUTIL_TESTING_H_
 #define S2_S2BUILDERUTIL_TESTING_H_
 
+#include <memory>
+#include <string>
 #include <vector>
 
-#include "absl/memory/memory.h"
+#include "s2/id_set_lexicon.h"
 #include "s2/s2builder.h"
 #include "s2/s2builder_graph.h"
 #include "s2/s2builder_layer.h"
+#include "s2/s2error.h"
+#include "s2/s2point.h"
+#include "s2/s2shape.h"
+#include "s2/s2shape_index.h"
 
 namespace s2builderutil {
 
@@ -31,7 +37,7 @@ namespace s2builderutil {
 // (unlike S2Builder::Graph, which is just a view).
 class GraphClone {
  public:
-  GraphClone() {}  // Must call Init().
+  GraphClone() = default;  // Must call Init().
   explicit GraphClone(const S2Builder::Graph& g) { Init(g); }
   void Init(const S2Builder::Graph& g);
   const S2Builder::Graph& graph() { return g_; }
@@ -85,7 +91,7 @@ class GraphAppendingLayer : public S2Builder::Layer {
   }
 
   void Build(const S2Builder::Graph& g, S2Error* error) override {
-    clones_->push_back(absl::make_unique<GraphClone>(g));
+    clones_->push_back(std::make_unique<GraphClone>(g));
     graphs_->push_back(clones_->back()->graph());
   }
 
@@ -93,6 +99,41 @@ class GraphAppendingLayer : public S2Builder::Layer {
   GraphOptions graph_options_;
   std::vector<S2Builder::Graph>* graphs_;
   std::vector<std::unique_ptr<GraphClone>>* clones_;
+};
+
+// A layer type that expects that the edges in the S2Builder::Graph passed to
+// its Build() method should match the edges in the given S2ShapeIndex
+// (including multiplicities).  This allows testing whether an algorithm
+// produces a given multiset of edges without needing to specify a particular
+// ordering of those edges.
+class IndexMatchingLayer : public S2Builder::Layer {
+ public:
+  // Tests whether the edges passed to its Build() method match the edges in
+  // the given S2ShapeIndex (including multiplicities).  If any differences
+  // are found, sets "error" to a descriptive error message.
+  //
+  // If "dimension" is non-negative then only shapes of the given dimension
+  // are used.  (This makes allows use with classes such as S2BooleanOperation
+  // that output one S2Builder::Graph for each dimension.)
+  explicit IndexMatchingLayer(const S2Builder::GraphOptions& graph_options,
+                              const S2ShapeIndex* index, int dimension = -1)
+      : graph_options_(graph_options), index_(*index), dimension_(dimension) {
+  }
+
+  // S2Builder interface:
+  GraphOptions graph_options() const override {
+    return graph_options_;
+  }
+
+  void Build(const Graph& g, S2Error* error) override;
+
+ private:
+  using EdgeVector = std::vector<S2Shape::Edge>;
+  static std::string ToString(const EdgeVector& edges);
+
+  GraphOptions graph_options_;
+  const S2ShapeIndex& index_;
+  int dimension_;
 };
 
 }  // namespace s2builderutil

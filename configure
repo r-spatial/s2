@@ -94,17 +94,54 @@ fi
 fi #SONAME
 fi #AUTOBREW
 
-# Define system endianness (compile-time endianness using system/compiler
-# defines isn't detected on Solaris)
-# based on endian detection from the feather package by @hadley
-R_ENDIAN=`${R_HOME}/bin/Rscript -e 'cat(.Platform$endian)'`
-# Trim off any warning messages that Rscript appends in front of the platform endianness
-R_ENDIAN=`expr "$R_ENDIAN" : '.*\(little\)$'`
-SYS_ENDIAN=""
-if [ "$R_ENDIAN" = "little" ]; then
-    PKG_CFLAGS="$PKG_CFLAGS -DIS_LITTLE_ENDIAN"
+# Check pkg-config for abseil-cpp, but fall back to a cmake build.
+# This should possibly be updated to check that the pkg-config detected
+# version will actually work; however, the version of abseil that included
+# pkg-config files is about the same as the minimum version required here.
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
+
+# Allow developers to set R_S2_ABSL_HOME in .Renviron to avoid building
+# Abseil on every package rebuild. This can be built from this directory using
+# tools/build_absl.sh path/to/dir (then R_S2_ABSL_HOME=path/to/dir in .Renviron)
+if [ ! -z "${R_S2_ABSL_HOME}" ]; then
+  export PKG_CONFIG_PATH="{$R_S2_ABSL_HOME}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+fi
+
+echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
+
+if pkg-config absl_s2 --libs 2>/dev/null; then
+  echo "** Using abseil-cpp from pkg-config"
+
+  PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
+  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+  PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
+  PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 else
-    PKG_CFLAGS="$PKG_CFLAGS -DIS_BIG_ENDIAN"
+  echo "** Building abseil-cpp using cmake"
+  CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+  if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
+    echo "** Done!"
+  else
+    echo "** CMake build of Abseil failed"
+    echo "** Abseil can be installed with:"
+    echo "** - apt-get install libabsl-dev"
+    echo "** - dnf install abseil-cpp-devel"
+    echo "** - brew install abseil"
+    echo "** If a system install of Abseil is not possible, cmake is required to build"
+    echo "** the internal vendored copy."
+    exit 1
+  fi
+
+  # Clean up build directory
+  rm -rf tools/build
+
+  R_S2_ABSL_HOME="`pwd`/tools/dist"
+  export PKG_CONFIG_PATH="${R_S2_ABSL_HOME}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+  echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
+  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+
+  PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
+  PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 fi
 
 # From apache/arrow/r/configure:
@@ -116,7 +153,6 @@ fi
 
 echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
-
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars

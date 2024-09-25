@@ -18,17 +18,21 @@
 #ifndef S2_S2REGION_COVERER_H_
 #define S2_S2REGION_COVERER_H_
 
+#include <algorithm>
 #include <cstddef>
 #include <new>
 #include <queue>
 #include <utility>
 #include <vector>
 
+#include "absl/base/casts.h"
 #include "absl/base/macros.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/s2cell.h"
 #include "s2/s2cell_id.h"
 #include "s2/s2cell_union.h"
+#include "s2/s2point.h"
+#include "s2/s2region.h"
 
 class S2Region;
 
@@ -179,7 +183,7 @@ class S2RegionCoverer {
   // Returns an S2CellUnion that covers (GetCovering) or is contained within
   // (GetInteriorCovering) the given region and satisfies the current options.
   //
-  // Note that if options().min_level() > 0 or options().level_mod() > 1, the
+  // Note that if options().min_level() > 0 or options().level_mod() > 1, then
   // by definition the S2CellUnion may not be normalized, i.e. there may be
   // groups of four child cells that can be replaced by their parent cell.
   S2CellUnion GetCovering(const S2Region& region);
@@ -248,10 +252,7 @@ class S2RegionCoverer {
  private:
   struct Candidate {
     void* operator new(std::size_t size, std::size_t max_children) {
-      // dd: CRAN reports a sanitizer error when using this magic, so
-      // we just hard code for the maximum size the comments suggest it will be
-      // return ::operator new (size + max_children * sizeof(Candidate *));
-      return ::operator new (size);
+      return ::operator new (size + max_children * sizeof(Candidate *));
     }
 
     void operator delete(void* p) {
@@ -271,9 +272,7 @@ class S2RegionCoverer {
     S2Cell cell;
     bool is_terminal;        // Cell should not be expanded further.
     int num_children = 0;    // Number of children that intersect the region.
-    // dd: To avoid a sanitizer, we hard-code 64 here rather than rely on
-    // flexible array member magic.
-    Candidate* children[64];  // Actual size may be 0, 4, 16, or 64 elements.
+    Candidate* children[0];  // Actual size may be 0, 4, 16, or 64 elements.
   };
 
   // If the cell intersects the given region, return a new candidate with no

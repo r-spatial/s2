@@ -20,20 +20,29 @@
 #ifndef S2_S2CLOSEST_CELL_QUERY_BASE_H_
 #define S2_S2CLOSEST_CELL_QUERY_BASE_H_
 
+#include <cstddef>
+
+#include <algorithm>
+#include <iterator>
+#include <limits>
+#include <queue>
+#include <type_traits>
 #include <vector>
 
 #include "s2/base/logging.h"
 #include "absl/container/btree_set.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/container/inlined_vector.h"
+#include "absl/hash/hash.h"
 #include "s2/s1chord_angle.h"
 #include "s2/s2cap.h"
+#include "s2/s2cell.h"
 #include "s2/s2cell_id.h"
 #include "s2/s2cell_index.h"
 #include "s2/s2cell_union.h"
 #include "s2/s2distance_target.h"
+#include "s2/s2region.h"
 #include "s2/s2region_coverer.h"
-#include "s2/util/gtl/dense_hash_set.h"
-#include "s2/util/hash/mix.h"
 
 // S2ClosestCellQueryBase is a templatized class for finding the closest
 // (cell_id, label) pairs in an S2CellIndex to a given target.  It is not
@@ -55,7 +64,7 @@
 // The Distance template argument is used to represent distances.  Usually it
 // is a thin wrapper around S1ChordAngle, but another distance type may be
 // used as long as it implements the Distance concept described in
-// s2distance_targets.h.  For example this can be used to measure maximum
+// s2distance_target.h.  For example this can be used to measure maximum
 // distances, to get more accuracy, or to measure non-spheroidal distances.
 template <class Distance>
 class S2ClosestCellQueryBase {
@@ -328,14 +337,7 @@ class S2ClosestCellQueryBase {
   // TODO(ericv): Check whether it is faster to avoid duplicates by default
   // (even when Options::max_results() == 1), rather than just when we need to.
   bool avoid_duplicates_;
-  struct LabelledCellHash {
-    size_t operator()(LabelledCell x) const {
-      HashMix mix(x.cell_id.id());
-      mix.Mix(x.label);
-      return mix.get();
-    }
-  };
-  gtl::dense_hash_set<LabelledCell, LabelledCellHash> tested_cells_;
+  absl::flat_hash_set<LabelledCell> tested_cells_;
 
   // The algorithm maintains a priority queue of unprocessed S2CellIds, sorted
   // in increasing order of distance from the target.
@@ -369,16 +371,13 @@ class S2ClosestCellQueryBase {
 
   std::vector<S2CellId> max_distance_covering_;
   std::vector<S2CellId> intersection_with_max_distance_;
-  const LabelledCell* tmp_range_data_[kMinRangesToEnqueue - 1];
 };
 
 
 //////////////////   Implementation details follow   ////////////////////
 
-
 template <class Distance>
-inline S2ClosestCellQueryBase<Distance>::Options::Options() {
-}
+inline S2ClosestCellQueryBase<Distance>::Options::Options() = default;
 
 template <class Distance>
 inline int S2ClosestCellQueryBase<Distance>::Options::max_results() const {
@@ -441,9 +440,7 @@ inline void S2ClosestCellQueryBase<Distance>::Options::set_use_brute_force(
 
 template <class Distance>
 S2ClosestCellQueryBase<Distance>::S2ClosestCellQueryBase()
-    : tested_cells_(1) /* expected_max_elements*/ {
-  tested_cells_.set_empty_key(LabelledCell(S2CellId::None(), -1));
-}
+    : tested_cells_(/*bucket_count=*/1) {}
 
 template <class Distance>
 S2ClosestCellQueryBase<Distance>::~S2ClosestCellQueryBase() {
@@ -675,7 +672,7 @@ void S2ClosestCellQueryBase<Distance>::InitQueue() {
     initial_cells = &intersection_with_max_distance_;
   }
   NonEmptyRangeIterator range(index_);
-  for (int i = 0; i < initial_cells->size(); ++i) {
+  for (size_t i = 0; i < initial_cells->size(); ++i) {
     S2CellId id = (*initial_cells)[i];
     bool seek = (i == 0) || id.range_min() >= range.limit_id();
     ProcessOrEnqueue(id, &range, seek);

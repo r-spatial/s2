@@ -16,36 +16,26 @@
 #ifndef S2_BASE_COMMANDLINEFLAGS_H_
 #define S2_BASE_COMMANDLINEFLAGS_H_
 
-#ifdef S2_USE_GFLAGS
-
-#include <gflags/gflags.h>
-
-#else  // !defined(S2_USE_GFLAGS)
-
 #include <string>
 
+#include "absl/flags/flag.h"
+
+#include "s2/base/commandlineflags_declare.h"
 #include "s2/base/integral_types.h"
 
-#define DEFINE_bool(name, default_value, description) \
-  bool FLAGS_##name = default_value
-#define DECLARE_bool(name) \
-  extern bool FLAGS_##name
+#define S2_DEFINE_bool(name, default_value, description) \
+  ABSL_FLAG(bool, name, default_value, description)
 
-#define DEFINE_double(name, default_value, description) \
-  double FLAGS_##name = default_value
-#define DECLARE_double(name) \
-  extern double FLAGS_##name
+#define S2_DEFINE_double(name, default_value, description) \
+  ABSL_FLAG(double, name, default_value, description)
 
-#define DEFINE_int32(name, default_value, description) \
-  int32 FLAGS_##name = default_value
-#define DECLARE_int32(name) \
-  extern int32 FLAGS_##name
+#define S2_DEFINE_int32(name, default_value, description) \
+  ABSL_FLAG(int32, name, default_value, description)
 
-#define DEFINE_string(name, default_value, description) \
-  std::string FLAGS_##name = default_value
-#define DECLARE_string(name) \
-  extern std::string FLAGS_##name
+#define S2_DEFINE_int64(name, default_value, description) \
+  ABSL_FLAG(int64, name, default_value, description)
 
-#endif  // !defined(S2_USE_GFLAGS)
+#define S2_DEFINE_string(name, default_value, description) \
+  ABSL_FLAG(std::string, name, default_value, description)
 
 #endif  // S2_BASE_COMMANDLINEFLAGS_H_

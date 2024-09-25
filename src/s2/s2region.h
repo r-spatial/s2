@@ -22,10 +22,10 @@
 
 #include "s2/_fp_contract_off.h"
 #include "s2/s1angle.h"
+#include "s2/s2point.h"
 
 class Decoder;
 class Encoder;
-
 class S2Cap;
 class S2Cell;
 class S2CellId;
@@ -43,7 +43,7 @@ class S2Region {
   S2Region() = default;
   S2Region(const S2Region& other) = default;
   S2Region& operator=(const S2Region&) = default;
-  virtual ~S2Region() {}
+  virtual ~S2Region() = default;
 
   // Returns a deep copy of the region.
   //
@@ -79,12 +79,13 @@ class S2Region {
   virtual void GetCellUnionBound(std::vector<S2CellId> *cell_ids) const;
 
   // Returns true if the region completely contains the given cell, otherwise
-  // returns false.
+  // either the region does not contain the cell or the containment relationship
+  // could not be determined.
   virtual bool Contains(const S2Cell& cell) const = 0;
 
   // If this method returns false, the region does not intersect the given
-  // cell.  Otherwise, either region intersects the cell, or the intersection
-  // relationship could not be determined.
+  // cell.  Otherwise, either the region intersects the cell, or the
+  // intersection relationship could not be determined.
   //
   // Note that there is currently exactly one implementation of this method
   // (S2LatLngRect::MayIntersect) that takes advantage of the semantics above
@@ -129,14 +130,6 @@ class S2Region {
   // Returns true on success.
   //
   // bool Decode(Decoder* const decoder);
-
-  // Provides the same functionality as Decode, except that decoded regions
-  // are allowed to point directly into the Decoder's memory buffer rather
-  // than copying the data.  This method can be much faster for regions that
-  // have a lot of data (such as polygons), but the decoded region is only
-  // valid within the scope (lifetime) of the Decoder's memory buffer.
-  //
-  // bool DecodeWithinScope(Decoder* const decoder);
 };
 
 #endif  // S2_S2REGION_H_

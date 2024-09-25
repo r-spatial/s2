@@ -107,20 +107,22 @@
 
 #include <cassert>
 #include <cstddef>
-#include <cstdio>              // for FILE, fwrite, fread
-#include <algorithm>            // For swap(), eg
+#include <cstdio>  // for FILE, fwrite, fread
+
+#include <algorithm>  // For swap(), eg
+#include <cstdint>
 #include <functional>
-#include <iterator>             // For iterator tags
-#include <limits>               // for numeric_limits
-#include <memory>               // For uninitialized_fill
+#include <iterator>  // For iterator tags
+#include <limits>    // for numeric_limits
+#include <memory>    // For uninitialized_fill
 #include <new>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
-#include <type_traits>
 
-#include "s2/util/gtl/hashtable_common.h"
 #include "s2/base/port.h"
+#include "s2/util/gtl/hashtable_common.h"
 #include <stdexcept>                 // For length_error
 
 namespace gtl {
@@ -179,10 +181,17 @@ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_const_iterator;
 
 // We're just an array, but we need to skip over empty and deleted elements
+
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_iterator {
  private:
-  typedef typename A::template rebind<V>::other value_alloc_type;
+  using value_alloc_type =
+      typename std::allocator_traits<A>::template rebind_alloc<V>;
+  using value_alloc_traits =
+      typename std::allocator_traits<A>::template rebind_traits<V>;
 
  public:
   typedef dense_hashtable_iterator<V, K, HF, ExK, SetK, EqK, A>
@@ -192,10 +201,10 @@ struct dense_hashtable_iterator {
 
   typedef std::forward_iterator_tag iterator_category;  // very little defined!
   typedef V value_type;
-  typedef typename value_alloc_type::difference_type difference_type;
-  typedef typename value_alloc_type::size_type size_type;
-  typedef typename value_alloc_type::reference reference;
-  typedef typename value_alloc_type::pointer pointer;
+  typedef typename value_alloc_traits::difference_type difference_type;
+  typedef typename value_alloc_traits::size_type size_type;
+  typedef typename value_alloc_traits::value_type& reference;
+  typedef typename value_alloc_traits::pointer pointer;
 
   // "Real" constructor and default constructor
   dense_hashtable_iterator(
@@ -242,10 +251,16 @@ struct dense_hashtable_iterator {
 
 
 // Now do it all again, but with const-ness!
+// Temporary until we update S2 sources (dd)
+/**/#pragma GCC diagnostic push
+/**/#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
 struct dense_hashtable_const_iterator {
  private:
-  typedef typename A::template rebind<V>::other value_alloc_type;
+  using value_alloc_type =
+      typename std::allocator_traits<A>::template rebind_alloc<V>;
+  using value_alloc_traits =
+      typename std::allocator_traits<A>::template rebind_traits<V>;
 
  public:
   typedef dense_hashtable_iterator<V, K, HF, ExK, SetK, EqK, A>
@@ -255,10 +270,10 @@ struct dense_hashtable_const_iterator {
 
   typedef std::forward_iterator_tag iterator_category;  // very little defined!
   typedef V value_type;
-  typedef typename value_alloc_type::difference_type difference_type;
-  typedef typename value_alloc_type::size_type size_type;
-  typedef typename value_alloc_type::const_reference reference;
-  typedef typename value_alloc_type::const_pointer pointer;
+  typedef typename value_alloc_traits::difference_type difference_type;
+  typedef typename value_alloc_traits::size_type size_type;
+  typedef const typename value_alloc_traits::value_type& reference;
+  typedef typename value_alloc_traits::const_pointer pointer;
 
   // "Real" constructor and default constructor
   dense_hashtable_const_iterator(
@@ -311,7 +326,10 @@ template <class Value, class Key, class HashFcn,
           class ExtractKey, class SetKey, class EqualKey, class Alloc>
 class dense_hashtable {
  private:
-  typedef typename Alloc::template rebind<Value>::other value_alloc_type;
+  using value_alloc_type =
+      typename std::allocator_traits<Alloc>::template rebind_alloc<Value>;
+  using value_alloc_traits =
+      typename std::allocator_traits<Alloc>::template rebind_traits<Value>;
 
 
  public:
@@ -321,12 +339,12 @@ class dense_hashtable {
   typedef EqualKey key_equal;
   typedef Alloc allocator_type;
 
-  typedef typename value_alloc_type::size_type size_type;
-  typedef typename value_alloc_type::difference_type difference_type;
-  typedef typename value_alloc_type::reference reference;
-  typedef typename value_alloc_type::const_reference const_reference;
-  typedef typename value_alloc_type::pointer pointer;
-  typedef typename value_alloc_type::const_pointer const_pointer;
+  typedef typename value_alloc_traits::size_type size_type;
+  typedef typename value_alloc_traits::difference_type difference_type;
+  typedef typename value_alloc_traits::value_type& reference;
+  typedef const typename value_alloc_traits::value_type& const_reference;
+  typedef typename value_alloc_traits::pointer pointer;
+  typedef typename value_alloc_traits::const_pointer const_pointer;
   typedef dense_hashtable_iterator<Value, Key, HashFcn,
                                    ExtractKey, SetKey, EqualKey, Alloc>
   iterator;
@@ -532,9 +550,9 @@ class dense_hashtable {
   }
 
  private:
-  bool test_empty(size_type bucknum, const_pointer table) const {
+  bool test_empty(size_type bucknum, const_pointer ptable) const {
     assert(settings.use_empty());
-    return equals(key_info.empty, get_key(table[bucknum]));
+    return equals(key_info.empty, get_key(ptable[bucknum]));
   }
 
   void fill_range_with_empty(pointer table_start, pointer table_end) {
@@ -575,7 +593,9 @@ class dense_hashtable {
   // FUNCTIONS CONCERNING SIZE
  public:
   size_type size() const      { return num_elements - num_deleted; }
-  size_type max_size() const { return get_allocator().max_size(); }
+  size_type max_size() const {
+    return std::allocator_traits<value_alloc_type>::max_size(get_allocator());
+  }
   bool empty() const          { return size() == 0; }
   size_type bucket_count() const      { return num_buckets; }
   size_type max_bucket_count() const  { return max_size(); }
@@ -1034,7 +1054,7 @@ class dense_hashtable {
     const size_type bucket_count_minus_one = bucket_count() - 1;
     size_type bucknum = key_hash & bucket_count_minus_one;
     size_type insert_pos = ILLEGAL_BUCKET;  // where we would insert
-    while (1) {                             // probe until something happens
+    while (true) {                          // probe until something happens
       if (test_empty(bucknum)) {            // bucket is empty
         if (insert_pos == ILLEGAL_BUCKET)   // found no prior place to insert
           return std::pair<size_type, size_type>(ILLEGAL_BUCKET, bucknum);
@@ -1072,7 +1092,7 @@ class dense_hashtable {
     size_type num_probes = 0;              // how many times we've probed
     const size_type bucket_count_minus_one = bucket_count() - 1;
     size_type bucknum = key_hash & bucket_count_minus_one;
-    while (1) {                             // probe until something happens
+    while (true) {  // probe until something happens
       if (equals(key, get_key(table[bucknum]))) {
         return std::pair<size_type, bool>(bucknum, true);
       } else if (test_empty(bucknum)) {
@@ -1290,7 +1310,7 @@ class dense_hashtable {
 
 
   void erase(iterator pos) {
-    if (pos == end()) return;    // sanity check
+    if (pos == end()) return;
     set_deleted(pos);
     ++num_deleted;
     // will think about shrink after next insert
@@ -1312,7 +1332,7 @@ class dense_hashtable {
   // you can't use the object after it's erased anyway, so it doesn't matter
   // if it's const or not.
   void erase(const_iterator pos) {
-    if (pos == end()) return;    // sanity check
+    if (pos == end()) return;
     set_deleted(pos);
     ++num_deleted;
     // will think about shrink after next insert

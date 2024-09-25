@@ -18,11 +18,19 @@
 #ifndef S2_S2CLOSEST_EDGE_QUERY_BASE_H_
 #define S2_S2CLOSEST_EDGE_QUERY_BASE_H_
 
+#include <algorithm>
+#include <iterator>
+#include <limits>
 #include <memory>
+#include <queue>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
+#include "s2/base/integral_types.h"
 #include "s2/base/logging.h"
 #include "absl/container/btree_set.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/container/inlined_vector.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/s1angle.h"
@@ -32,11 +40,12 @@
 #include "s2/s2cell_id.h"
 #include "s2/s2cell_union.h"
 #include "s2/s2distance_target.h"
+#include "s2/s2point.h"
 #include "s2/s2region_coverer.h"
+#include "s2/s2shape.h"
 #include "s2/s2shape_index.h"
 #include "s2/s2shapeutil_count_edges.h"
 #include "s2/s2shapeutil_shape_edge_id.h"
-#include "s2/util/gtl/dense_hash_set.h"
 
 // S2ClosestEdgeQueryBase is a templatized class for finding the closest
 // edge(s) between two geometries.  It is not intended to be used directly,
@@ -63,7 +72,7 @@
 // The Distance template argument is used to represent distances.  Usually it
 // is a thin wrapper around S1ChordAngle, but another distance type may be
 // used as long as it implements the Distance concept described in
-// s2distance_targets.h.  For example this can be used to measure maximum
+// s2distance_target.h.  For example this can be used to measure maximum
 // distances, to get more accuracy, or to measure non-spheroidal distances.
 template <class Distance>
 class S2ClosestEdgeQueryBase {
@@ -167,7 +176,7 @@ class S2ClosestEdgeQueryBase {
   //    Such results may be returned when options.include_interiors() is true.
   //    Such results can be identified using the is_interior() method.
   //
-  //  - (shape_id() < 0) && (edge_id() < 0) is returned by `FindClosestEdge`
+  //  - (shape_id() < 0) && (edge_id() < 0) is returned by FindClosestEdge()
   //    to indicate that no edge satisfies the given query options.  Such
   //    results can be identified using is_empty() method.
   class Result {
@@ -363,7 +372,7 @@ class S2ClosestEdgeQueryBase {
   // (even when Options::max_results() == 1), rather than just when we need to.
   bool avoid_duplicates_;
   using ShapeEdgeId = s2shapeutil::ShapeEdgeId;
-  gtl::dense_hash_set<ShapeEdgeId, s2shapeutil::ShapeEdgeIdHash> tested_edges_;
+  absl::flat_hash_set<ShapeEdgeId> tested_edges_;
 
   // The algorithm maintains a priority queue of unprocessed S2CellIds, sorted
   // in increasing order of distance from the target.
@@ -405,10 +414,8 @@ class S2ClosestEdgeQueryBase {
 
 //////////////////   Implementation details follow   ////////////////////
 
-
 template <class Distance>
-inline S2ClosestEdgeQueryBase<Distance>::Options::Options() {
-}
+inline S2ClosestEdgeQueryBase<Distance>::Options::Options() = default;
 
 template <class Distance>
 inline int S2ClosestEdgeQueryBase<Distance>::Options::max_results() const {
@@ -471,9 +478,7 @@ inline void S2ClosestEdgeQueryBase<Distance>::Options::set_use_brute_force(
 
 template <class Distance>
 S2ClosestEdgeQueryBase<Distance>::S2ClosestEdgeQueryBase()
-    : tested_edges_(1) /* expected_max_elements*/ {
-  tested_edges_.set_empty_key(ShapeEdgeId(-1, -1));
-}
+    : tested_edges_(/*bucket_count=*/1) {}
 
 template <class Distance>
 S2ClosestEdgeQueryBase<Distance>::~S2ClosestEdgeQueryBase() {
@@ -569,9 +574,9 @@ void S2ClosestEdgeQueryBase<Distance>::FindClosestEdgesInternal(
     absl::btree_set<int32> shape_ids;
     (void) target->VisitContainingShapes(
         *index_, [&shape_ids, &options](S2Shape* containing_shape,
-                                        const S2Point& target_point) {
+                                        const S2Point& /*target_point*/) {
           shape_ids.insert(containing_shape->id());
-          return shape_ids.size() < options.max_results();
+          return shape_ids.size() < static_cast<size_t>(options.max_results());
         });
     for (int shape_id : shape_ids) {
       AddResult(Result(Distance::Zero(), shape_id, -1));
@@ -718,7 +723,7 @@ void S2ClosestEdgeQueryBase<Distance>::InitQueue() {
   if (index_covering_.empty()) InitCovering();
   if (distance_limit_ == Distance::Infinity()) {
     // Start with the precomputed index covering.
-    for (int i = 0; i < index_covering_.size(); ++i) {
+    for (size_t i = 0; i < index_covering_.size(); ++i) {
       ProcessOrEnqueue(index_covering_[i], index_cells_[i]);
     }
   } else {
@@ -735,7 +740,7 @@ void S2ClosestEdgeQueryBase<Distance>::InitQueue() {
     // Now we need to clean up the initial cells to ensure that they all
     // contain at least one cell of the S2ShapeIndex.  (Some may not intersect
     // the index at all, while other may be descendants of an index cell.)
-    for (int i = 0, j = 0; i < initial_cells_.size(); ) {
+    for (size_t i = 0, j = 0; i < initial_cells_.size();) {
       S2CellId id_i = initial_cells_[i];
       // Find the top-level cell that contains this initial cell.
       while (index_covering_[j].range_max() < id_i) ++j;
@@ -748,8 +753,8 @@ void S2ClosestEdgeQueryBase<Distance>::InitQueue() {
       } else {
         // This initial cell is a proper descendant of a top-level cell.
         // Check how it is related to the cells of the S2ShapeIndex.
-        S2ShapeIndex::CellRelation r = iter_.Locate(id_i);
-        if (r == S2ShapeIndex::INDEXED) {
+        S2CellRelation r = iter_.Locate(id_i);
+        if (r == S2CellRelation::INDEXED) {
           // This cell is a descendant of an index cell.  Enqueue it and skip
           // any other initial cells that are also descendants of this cell.
           ProcessOrEnqueue(iter_.id(), &iter_.cell());
@@ -758,7 +763,7 @@ void S2ClosestEdgeQueryBase<Distance>::InitQueue() {
             continue;
         } else {
           // Enqueue the cell only if it contains at least one index cell.
-          if (r == S2ShapeIndex::SUBDIVIDED) ProcessOrEnqueue(id_i, nullptr);
+          if (r == S2CellRelation::SUBDIVIDED) ProcessOrEnqueue(id_i, nullptr);
           ++i;
         }
       }

@@ -15,15 +15,23 @@
 
 #include "s2/s2max_distance_targets.h"
 
+#include <cmath>
+
 #include <memory>
-#include "absl/memory/memory.h"
-#include "s2/s1angle.h"
+
+#include "s2/s1chord_angle.h"
 #include "s2/s2cap.h"
 #include "s2/s2cell.h"
+#include "s2/s2contains_point_query.h"
+#include "s2/s2distance_target.h"
 #include "s2/s2edge_distances.h"
 #include "s2/s2furthest_edge_query.h"
+#include "s2/s2point.h"
+#include "s2/s2shape.h"
+#include "s2/s2shape_index.h"
 #include "s2/s2shape_index_region.h"
-#include "s2/s2text_format.h"
+
+using std::make_unique;
 
 //////////////////   Point Target   ////////////////////
 
@@ -153,11 +161,9 @@ bool S2MaxDistanceCellTarget::VisitContainingShapes(
 
 S2MaxDistanceShapeIndexTarget::S2MaxDistanceShapeIndexTarget(
     const S2ShapeIndex* index)
-    : index_(index), query_(absl::make_unique<S2FurthestEdgeQuery>(index)) {
-}
+    : index_(index), query_(make_unique<S2FurthestEdgeQuery>(index)) {}
 
-S2MaxDistanceShapeIndexTarget::~S2MaxDistanceShapeIndexTarget() {
-}
+S2MaxDistanceShapeIndexTarget::~S2MaxDistanceShapeIndexTarget() = default;
 
 bool S2MaxDistanceShapeIndexTarget::include_interiors() const {
   return query_->options().include_interiors();
@@ -196,9 +202,7 @@ bool S2MaxDistanceShapeIndexTarget::UpdateMinDistance(
   query_->mutable_options()->set_min_distance(S1ChordAngle(*min_dist));
   S2FurthestEdgeQuery::PointTarget target(p);
   S2FurthestEdgeQuery::Result r = query_->FindFurthestEdge(&target);
-  if (r.shape_id() < 0) {
-    return false;
-  }
+  if (r.is_empty()) return false;
   *min_dist = S2MaxDistance(r.distance());
   return true;
 }
@@ -208,7 +212,7 @@ bool S2MaxDistanceShapeIndexTarget::UpdateMinDistance(
   query_->mutable_options()->set_min_distance(S1ChordAngle(*min_dist));
   S2FurthestEdgeQuery::EdgeTarget target(v0, v1);
   S2FurthestEdgeQuery::Result r = query_->FindFurthestEdge(&target);
-  if (r.shape_id() < 0) return false;
+  if (r.is_empty()) return false;
   *min_dist = S2MaxDistance(r.distance());
   return true;
 }
@@ -218,7 +222,7 @@ bool S2MaxDistanceShapeIndexTarget::UpdateMinDistance(
   query_->mutable_options()->set_min_distance(S1ChordAngle(*min_dist));
   S2FurthestEdgeQuery::CellTarget target(cell);
   S2FurthestEdgeQuery::Result r = query_->FindFurthestEdge(&target);
-  if (r.shape_id() < 0) return false;
+  if (r.is_empty()) return false;
   *min_dist = S2MaxDistance(r.distance());
   return true;
 }

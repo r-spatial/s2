@@ -35,9 +35,9 @@
 #include <memory>
 #include <utility>
 #include <vector>
+
 #include "s2/base/logging.h"
 #include "absl/container/btree_map.h"
-#include "absl/memory/memory.h"
 #include "s2/id_set_lexicon.h"
 #include "s2/mutable_s2shape_index.h"
 #include "s2/s2builder.h"
@@ -46,6 +46,7 @@
 #include "s2/s2error.h"
 #include "s2/s2loop.h"
 #include "s2/s2polygon.h"
+#include "s2/s2shape.h"
 
 namespace s2builderutil {
 
@@ -167,7 +168,7 @@ class IndexedS2PolygonLayer : public S2Builder::Layer {
     layer_.Build(g, error);
     if (error->ok() && !polygon_->is_empty()) {
       index_->Add(
-          absl::make_unique<S2Polygon::OwningShape>(std::move(polygon_)));
+          std::make_unique<S2Polygon::OwningShape>(std::move(polygon_)));
     }
   }
 

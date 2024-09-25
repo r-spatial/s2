@@ -19,11 +19,16 @@
 #define S2_S2SHAPE_INDEX_BUFFERED_REGION_H_
 
 #include <vector>
+
+#include "s2/s1angle.h"
+#include "s2/s1chord_angle.h"
 #include "s2/s2cap.h"
 #include "s2/s2cell.h"
+#include "s2/s2cell_id.h"
 #include "s2/s2cell_union.h"
 #include "s2/s2closest_edge_query.h"
 #include "s2/s2latlng_rect.h"
+#include "s2/s2point.h"
 #include "s2/s2region.h"
 #include "s2/s2shape_index.h"
 

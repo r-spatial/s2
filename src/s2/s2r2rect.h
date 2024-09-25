@@ -19,6 +19,7 @@
 #define S2_S2R2RECT_H_
 
 #include <iosfwd>
+#include <ostream>
 
 #include "s2/base/logging.h"
 #include "s2/_fp_contract_off.h"
@@ -26,6 +27,7 @@
 #include "s2/r2.h"
 #include "s2/r2rect.h"
 #include "s2/s1angle.h"
+#include "s2/s2point.h"
 #include "s2/s2region.h"
 
 class Decoder;
@@ -180,6 +182,9 @@ class S2R2Rect final : public S2Region {
   // Return true if two rectangles contains the same set of points.
   bool operator==(const S2R2Rect& other) const;
 
+  // Return true if two rectangles do not contain the same set of points.
+  bool operator!=(const S2R2Rect& other) const;
+
   // Return true if the x- and y-intervals of the two rectangles are the same
   // up to the given tolerance (see r1interval.h for details).
   bool ApproxEquals(const S2R2Rect& other,
@@ -283,6 +288,9 @@ inline S2R2Rect S2R2Rect::Intersection(const S2R2Rect& other) const {
 }
 inline bool S2R2Rect::operator==(const S2R2Rect& other) const {
   return rect_ == other.rect_;
+}
+inline bool S2R2Rect::operator!=(const S2R2Rect& other) const {
+  return !operator==(other);
 }
 inline bool S2R2Rect::ApproxEquals(const S2R2Rect& other,
                                    S1Angle max_error) const {
