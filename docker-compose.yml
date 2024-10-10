@@ -68,7 +68,7 @@ services:
     build:
       context: .
       args:
-        - IMAGE=fedora:39
+        - IMAGE=fedora:36
       dockerfile: tools/docker/fedora.dockerfile
     volumes:
       - .:/s2

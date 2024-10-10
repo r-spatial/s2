@@ -3,7 +3,6 @@ ARG IMAGE=debian:testing
 
 FROM ${IMAGE}
 
-ENV TZ=UTC
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     r-base cmake libcurl4-openssl-dev libssl-dev
 

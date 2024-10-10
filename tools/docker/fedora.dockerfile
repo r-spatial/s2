@@ -3,10 +3,7 @@ ARG IMAGE=fedora:latest
 
 FROM ${IMAGE}
 
-RUN dnf install -y R cmake openssl-devel
-
-# Only available on Fedora 39+
-RUN dnf install -y abseil-cpp-devel || true
+RUN dnf install -y R cmake abseil-cpp-devel openssl-devel
 
 # Make sure we can use all cores to install things
 RUN mkdir ~/.R && echo "MAKEFLAGS = -j$(nproc)" > ~/.R/Makevars
