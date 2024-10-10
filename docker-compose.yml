@@ -53,11 +53,32 @@ services:
     volumes:
       - .:/s2
 
+  # CRAN platform
   debian-testing:
     build:
       context: .
       args:
         - IMAGE=debian:testing
       dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
+  # This is what CRAN runs
+  fedora-36:
+    build:
+      context: .
+      args:
+        - IMAGE=fedora:39
+      dockerfile: tools/docker/fedora.dockerfile
+    volumes:
+      - .:/s2
+
+  # First version that includes abseil-cpp as a system package
+  fedora-39:
+    build:
+      context: .
+      args:
+        - IMAGE=fedora:39
+      dockerfile: tools/docker/fedora.dockerfile
     volumes:
       - .:/s2
