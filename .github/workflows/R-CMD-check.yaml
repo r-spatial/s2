@@ -11,6 +11,7 @@ name: R-CMD-check
 permissions: read-all
 
 jobs:
+  # Check MacOS first before embarking on the full check matrix
   test:
     runs-on: macos-latest
     steps:
@@ -20,7 +21,7 @@ jobs:
         run: brew install abseil
       - name: Install minimal dependencies
         run: |
-          R -e 'install.packages(c("wk", "Rcpp", "testthat"))'
+          R -e 'install.packages(c("wk", "Rcpp", "bit64", "testthat"))'
       - name: Install
         run: |
           R CMD INSTALL .
