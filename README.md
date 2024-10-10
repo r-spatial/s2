@@ -5,8 +5,8 @@
 
 <!-- badges: start -->
 
-![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
-[![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/s2)
+[![R-CMD-check](https://github.com/r-spatial/s2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/s2/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/r-spatial/s2/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/s2)
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
 [![Downloads](http://cranlogs.r-pkg.org/badges/s2?color=brightgreen)](https://www.r-pkg.org/pkg/s2)
 <!-- badges: end -->
@@ -41,6 +41,15 @@ And the development version from [GitHub](https://github.com/) with:
 remotes::install_github("r-spatial/s2")
 ```
 
+The S2 package requires [Abseil]() and OpenSSL. You can install these
+using a system package manager on most platforms:
+
+- Windows: Both OpenSSL and Abseil are available from RTools since R 4.3
+- MacOS: `brew install openssl abseil`
+- Debian/Ubuntu: `apt-get install libssl-dev libabsl-dev`
+- Fedora: `dnf install openssl-devel abseil-cpp-devel`
+- Alpine: `apk add abseil-cpp`
+
 ## Example
 
 The s2 package provides geometry transformers and predicates similar to
@@ -69,9 +78,9 @@ using `as_s2_geography()`:
 library(dplyr)
 library(sf)
 
-nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
-  mutate(geometry = as_s2_geography(geometry)) %>% 
-  as_tibble() %>% 
+nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>%
+  mutate(geometry = as_s2_geography(geometry)) %>%
+  as_tibble() %>%
   select(NAME, geometry)
 
 nc_s2
@@ -88,13 +97,13 @@ nc_s2
 #>  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.4522858, -76.4983…
 #>  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 36.2135086, -78.05…
 #> 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 36.5471344, -80.43…
-#> # … with 90 more rows
+#> # ℹ 90 more rows
 ```
 
 Use accessors to extract information about geometries:
 
 ``` r
-nc_s2 %>% 
+nc_s2 %>%
   mutate(
     area = s2_area(geometry),
     perimeter = s2_perimeter(geometry)
@@ -112,13 +121,13 @@ nc_s2 %>%
 #>  8 Gates       POLYGON ((-76.46035 36.3738976, -76.5024643 36.… 9.03e8   123170.
 #>  9 Warren      POLYGON ((-78.1347198 36.2365837, -78.1096268 3… 1.18e9   141073.
 #> 10 Stokes      POLYGON ((-80.0240555 36.5450249, -80.0480957 3… 1.23e9   140583.
-#> # … with 90 more rows
+#> # ℹ 90 more rows
 ```
 
 Use predicates to subset vectors:
 
 ``` r
-nc_s2 %>% 
+nc_s2 %>%
   filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
 #> # A tibble: 1 × 2
 #>   NAME    geometry                                                              
@@ -129,7 +138,7 @@ nc_s2 %>%
 Use transformers to create new geometries:
 
 ``` r
-nc_s2 %>% 
+nc_s2 %>%
   mutate(geometry = s2_boundary(geometry))
 #> # A tibble: 100 × 2
 #>    NAME        geometry                                                         
@@ -144,15 +153,15 @@ nc_s2 %>%
 #>  8 Gates       LINESTRING (-76.46035 36.3738976, -76.5024643 36.4522858, -76.49…
 #>  9 Warren      LINESTRING (-78.1347198 36.2365837, -78.1096268 36.2135086, -78.…
 #> 10 Stokes      LINESTRING (-80.0240555 36.5450249, -80.0480957 36.5471344, -80.…
-#> # … with 90 more rows
+#> # ℹ 90 more rows
 ```
 
 Finally, use the WKB or WKT exporters to export to sf or some other
 package:
 
 ``` r
-nc_s2 %>% 
-  mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>% 
+nc_s2 %>%
+  mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>%
   st_as_sf()
 #> Simple feature collection with 100 features and 1 field
 #> Geometry type: GEOMETRY
@@ -172,7 +181,7 @@ nc_s2 %>%
 #>  8 Gates       POLYGON ((-76.46035 36.3739, -76.50246 36.45229, -76.49834 36.50…
 #>  9 Warren      POLYGON ((-78.13472 36.23658, -78.10963 36.21351, -78.05835 36.2…
 #> 10 Stokes      POLYGON ((-80.02406 36.54502, -80.0481 36.54713, -80.43531 36.55…
-#> # … with 90 more rows
+#> # ℹ 90 more rows
 ```
 
 ## Acknowledgment

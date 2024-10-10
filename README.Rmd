@@ -16,15 +16,15 @@ knitr::opts_chunk$set(
 # s2
 
 <!-- badges: start -->
-![R-CMD-check](https://github.com/r-spatial/s2/workflows/R-CMD-check/badge.svg)
-[![codecov](https://codecov.io/gh/r-spatial/s2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/s2)
+[![R-CMD-check](https://github.com/r-spatial/s2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/s2/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/r-spatial/s2/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/s2)
 [![CRAN](http://www.r-pkg.org/badges/version/s2)](https://cran.r-project.org/package=s2)
 [![Downloads](http://cranlogs.r-pkg.org/badges/s2?color=brightgreen)](https://www.r-pkg.org/pkg/s2)
 <!-- badges: end -->
 
 The s2 R package provides bindings to Google's [S2Geometry](http://s2geometry.io) library. The package exposes an API similar to Google's [BigQuery Geography API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions), whose functions also operate on spherical geometries. Package [sf](https://cran.r-project.org/package=sf) uses this package by default for nearly all its geometrical operations on objects with ellipsoidal (unprojected) coordinates; in cases where it doesn't, such as `st_relate()`, it emits a warning.
 
-This package is a complete rewrite of an earlier CRAN package s2 with versions up 
+This package is a complete rewrite of an earlier CRAN package s2 with versions up
 to 0.4-2, for which the sources are found [here](https://github.com/spatstat/s2/).
 
 ## Installation
@@ -41,6 +41,14 @@ And the development version from [GitHub](https://github.com/) with:
 # install.packages("remotes")
 remotes::install_github("r-spatial/s2")
 ```
+
+The S2 package requires [Abseil]() and OpenSSL. You can install these using a system package manager on most platforms:
+
+- Windows: Both OpenSSL and Abseil are available from RTools since R 4.3
+- MacOS: `brew install openssl abseil`
+- Debian/Ubuntu: `apt-get install libssl-dev libabsl-dev`
+- Fedora: `dnf install openssl-devel abseil-cpp-devel`
+- Alpine: `apk add abseil-cpp`
 
 ## Example
 
@@ -63,9 +71,9 @@ The [sf package](https://r-spatial.github.io/sf/) uses s2 for geographic coordin
 library(dplyr)
 library(sf)
 
-nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>% 
-  mutate(geometry = as_s2_geography(geometry)) %>% 
-  as_tibble() %>% 
+nc_s2 <- read_sf(system.file("shape/nc.shp", package = "sf")) %>%
+  mutate(geometry = as_s2_geography(geometry)) %>%
+  as_tibble() %>%
   select(NAME, geometry)
 
 nc_s2
@@ -74,7 +82,7 @@ nc_s2
 Use accessors to extract information about geometries:
 
 ```{r}
-nc_s2 %>% 
+nc_s2 %>%
   mutate(
     area = s2_area(geometry),
     perimeter = s2_perimeter(geometry)
@@ -84,22 +92,22 @@ nc_s2 %>%
 Use predicates to subset vectors:
 
 ```{r}
-nc_s2 %>% 
+nc_s2 %>%
   filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
 ```
 
 Use transformers to create new geometries:
 
 ```{r}
-nc_s2 %>% 
+nc_s2 %>%
   mutate(geometry = s2_boundary(geometry))
 ```
 
 Finally, use the WKB or WKT exporters to export to sf or some other package:
 
 ```{r}
-nc_s2 %>% 
-  mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>% 
+nc_s2 %>%
+  mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>%
   st_as_sf()
 ```
 
