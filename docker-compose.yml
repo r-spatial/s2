@@ -1,0 +1,8 @@
+services:
+  ubuntu-focal:
+    build:
+      context: .
+      dockerfile: tools/docker/ubuntu-focal.dockerfile
+    volumes:
+      - .:/s2
+    command: bash

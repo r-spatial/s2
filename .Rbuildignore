@@ -16,3 +16,4 @@
 ^tools/dist$
 ^compile_commands\.json$
 ^\.cache$
+^docker-compose\.yml$
