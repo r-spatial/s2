@@ -95,10 +95,17 @@ else
   # Clean up build directory
   rm -rf tools/build
 
+  # Depending on the cmake options this can end up in a subdirectory of lib
+  ABSL_BASE_PC=`find tools/dist -name absl_base.pc`
+  R_S2_PKG_CONFIG_PATH=`dirname "${ABSL_BASE_PC}"`
   R_S2_ABSL_HOME="`pwd`/tools/dist"
-  export PKG_CONFIG_PATH="${R_S2_ABSL_HOME}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+  export PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:${PKG_CONFIG_PATH}"
   echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
   PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+  if [ -z "${PKGCONFIG_LIBS}" ]; then
+    echo "** Failed to resolve built vendored copy of Abseil using pkg-config"
+    exit 1
+  fi
 
   PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"

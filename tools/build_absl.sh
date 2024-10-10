@@ -1,9 +1,13 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
+# Do our best to pass on the user MAKEFLAGS. This can result in much faster
+# compilation of the vendored library.
+MAKEFLAGS=`Rscript -e 'readRenviron("~/.R/Makevars"); cat(Sys.getenv("MAKEFLAGS"))'`
+
 if test -z "$MAKE"; then MAKE="`which make`"; fi
 if ${MAKE} --version ; then
-  echo "Using MAKE=$MAKE $MAKEVARS"
+  echo "Using MAKE=$MAKE $MAKEFLAGS"
 else
   echo "make not found"
   exit 1
@@ -13,7 +17,7 @@ if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
 if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
 if "${CMAKE}" --version ; then
   echo "Using CMAKE=$CMAKE"
-  echo "Using MAKE=$MAKE $MAKEVARS"
+  echo "Using MAKE=$MAKE $MAKEFLAGS"
 else
   echo "cmake not found"
   exit 1
@@ -52,7 +56,7 @@ cd "tools/build/abseil-cpp"
   -DCMAKE_CXX_STANDARD=17 \
   -DABSL_PROPAGATE_CXX_STD=ON \
   "../../vendor/abseil-cpp" &&
-  ${MAKE} ${MAKEVARS} &&
+  ${MAKE} ${MAKEFLAGS} &&
   "${CMAKE}" --install .
 
 cd ../../..
