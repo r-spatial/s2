@@ -82,3 +82,10 @@ services:
       dockerfile: tools/docker/fedora.dockerfile
     volumes:
       - .:/s2
+
+  alpine:
+    build:
+      context: .
+      dockerfile: tools/docker/alpine.dockerfile
+    volumes:
+      - .:/s2
