@@ -13,7 +13,6 @@ PKG_CONFIG_NAME="openssl"
 PKG_DEB_NAME="libssl-dev"
 PKG_RPM_NAME="openssl-devel"
 PKG_BREW_NAME="openssl"
-PKG_TEST_FILE="tools/test_openssl.c"
 PKG_LIBS="-lssl -lcrypto"
 PKG_CFLAGS=""
 
@@ -41,10 +40,10 @@ CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
 CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
 # For debugging
-echo "Testing compiler using PKG_CFLAGS=$PKG_CFLAGS"
+echo "Testing compiler OpenSSL configuration using PKG_CFLAGS=$PKG_CFLAGS"
 
 # Test configuration
-${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>configure.log
+${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E tools/test_openssl.c >/dev/null 2>configure.log
 
 # Customize the error
 if [ $? -ne 0 ]; then
@@ -103,6 +102,22 @@ else
 
   PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
+fi
+
+# Check compile of test file
+CXX17="`${R_HOME}/bin/R CMD config CXX17`"
+CXX17FLAGS=`"${R_HOME}"/bin/R CMD config CXX17FLAGS`
+CXX17STD=`"${R_HOME}"/bin/R CMD config CXX17STD`
+
+echo "Testing Abseil configuration using PKG_CFLAGS=${PKG_CFLAGS}"
+
+${CXX17} ${CPPFLAGS} ${PKG_CFLAGS} ${CXX17FLAGS} ${CXX17STD} -E tools/test_absl.cc >/dev/null 2>>configure.log
+if [ $? -ne 0 ]; then
+  echo "Test compile failed!"
+  echo "------- Error ---------"
+  cat configure.log
+  echo "-----------------------"
+  exit 1
 fi
 
 # From apache/arrow/r/configure:
