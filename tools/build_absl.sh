@@ -1,9 +1,15 @@
 
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+
 # Do our best to pass on the user MAKEFLAGS. This can result in much faster
 # compilation of the vendored library.
-MAKEFLAGS=`Rscript -e 'readRenviron("~/.R/Makevars"); cat(Sys.getenv("MAKEFLAGS"))'`
+MAKEFLAGS=`${R_HOME}/bin/Rscript -e 'readRenviron("~/.R/Makevars"); cat(Sys.getenv("MAKEFLAGS"))'`
 
 if test -z "$MAKE"; then MAKE="`which make`"; fi
 if ${MAKE} --version ; then
@@ -20,12 +26,6 @@ if "${CMAKE}" --version ; then
   echo "Using MAKE=$MAKE $MAKEFLAGS"
 else
   echo "cmake not found"
-  exit 1
-fi
-
-: ${R_HOME=`R RHOME`}
-if test -z "${R_HOME}"; then
-  echo "could not determine R_HOME"
   exit 1
 fi
 
