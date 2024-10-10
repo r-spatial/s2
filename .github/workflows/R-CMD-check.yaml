@@ -71,11 +71,6 @@ jobs:
         run: |
           brew install abseil
 
-      - name: Install Abseil (Ubuntu)
-        if: matrix.config.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update && sudo apt-get install -y libabsl-dev
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
