@@ -1,9 +1,8 @@
-url: https://r-spatial.github.io/s2
+url: https://r-spatial.github.io/s2/
 development:
   mode: auto
 template:
   bootstrap: 5
-
 reference:
 - title: Geography Constructors and Exporters
   desc: Convert objects to and from geography vectors
@@ -18,7 +17,6 @@ reference:
   - s2_geog_from_wkb
   - s2_as_text
   - s2_as_binary
-
 - title: Geography Transformations
   desc: Functions that operate on geography vectors and return geography vectors
   contents:
@@ -32,7 +30,6 @@ reference:
   - s2_snap_to_grid
   - s2_union_agg
   - s2_centroid_agg
-
 - title: Binary Geography Predicates
   desc: Functions that operate two geography vectors and return a logical vector
   contents:
@@ -46,9 +43,9 @@ reference:
   - s2_touches
   - s2_within
   - s2_dwithin
-
 - title: Geography Accessors
-  desc: Functions that operate one or more geography vectors and return a vector of values
+  desc: Functions that operate one or more geography vectors and return a vector of
+    values
   contents:
   - s2_is_collection
   - s2_is_empty
@@ -63,35 +60,26 @@ reference:
   - s2_distance
   - s2_max_distance
   - s2_bounds_cap
-
 - title: Matrix Functions
   desc: These functions return various relationships between two geography vectors
-  contents:
-  - s2_closest_feature
-
+  contents: s2_closest_feature
 - title: Linear Referencing
-  contents:
-  - s2_interpolate
-
+  contents: s2_interpolate
 - title: S2 Cell Utilities
   contents:
   - s2_cell_union
   - s2_cell_union_normalize
   - s2_cell
   - s2_cell_is_valid
-
 - title: Utility Functions
   contents:
   - s2_earth_radius_meters
   - s2_options
   - s2_plot
-
 - title: Example Data
   desc: Useful data for testing and demonstrating s2 functions
-  contents:
-  - starts_with("s2_data")
-
+  contents: starts_with("s2_data")
 - title: Low-level Details
   desc: Interact with spherical geometry at a low level
-  contents:
-  - wk_handle.s2_geography
+  contents: wk_handle.s2_geography
+
