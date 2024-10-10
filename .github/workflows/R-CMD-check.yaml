@@ -11,10 +11,29 @@ name: R-CMD-check
 permissions: read-all
 
 jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Abseil (MacOS)
+        run: brew install abseil
+      - name: Install minimal dependencies
+        run: |
+          R -e 'install.packages(c("wk", "Rcpp", "testthat"))'
+      - name: Install
+        run: |
+          R CMD INSTALL .
+      - name: Test
+        run: |
+          R -e 'testthat::test_local()'
+
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    needs:
+      - test
 
     strategy:
       fail-fast: false
