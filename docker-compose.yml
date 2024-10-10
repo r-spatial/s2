@@ -31,22 +31,18 @@ services:
       context: .
       args:
         - IMAGE=ubuntu:20.04
-        - ABSL_DEP=
       dockerfile: tools/docker/debian.dockerfile
     volumes:
       - .:/s2
-    command: R CMD INSTALL /s2 --preclean
 
   ubuntu-22:
     build:
       context: .
       args:
         - IMAGE=ubuntu:22.04
-        - ABSL_DEP=
       dockerfile: tools/docker/debian.dockerfile
     volumes:
       - .:/s2
-    command: R CMD INSTALL /s2 --preclean
 
   ubuntu-24:
     build:
@@ -56,4 +52,12 @@ services:
       dockerfile: tools/docker/debian.dockerfile
     volumes:
       - .:/s2
-    command: R CMD INSTALL /s2 --preclean
+
+  debian-testing:
+    build:
+      context: .
+      args:
+        - IMAGE=debian:testing
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
