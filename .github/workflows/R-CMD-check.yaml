@@ -71,6 +71,11 @@ jobs:
         run: |
           brew install abseil
 
+      - name: Set Makevars (Ubuntu)
+        if: matrix.config.os == 'ubuntu-latest'
+        run: |
+          mkdir ~/.R && echo "MAKEFLAGS = -j$(nproc)" > ~/.R/Makevars
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
