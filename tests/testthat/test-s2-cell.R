@@ -11,6 +11,8 @@ test_that("s2_cell class works", {
 })
 
 test_that("s2_cell bit64::integer64 support works", {
+  skip_if_not_installed("bit64")
+
   cells <- c(as_s2_cell(NA_character_), s2_cell_sentinel())
   int64s <- bit64::as.integer64(cells)
   expect_identical(int64s, bit64::as.integer64(c(NA, -1)))

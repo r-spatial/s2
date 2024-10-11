@@ -1,0 +1,91 @@
+
+# Docker compose setup for testing s2 package install
+#
+# The s2 R package requires OpenSSL and Abseil, of which Abseil
+# is not trivially installable. Because of this, we have several
+# strategies for locating or building a version of it from the
+# configure script. This file (and the images it refers to in
+# tools/docker) are to make sure that the install works on a
+# variety of linux platforms/system Abseil versions.
+#
+# Usage:
+#
+# docker compose run --rm ubuntu-20
+#
+# ...for the default behaviour (clean + install), or use
+#
+# docker compose run --rm -it ubuntu-20 bash
+#
+# ...to open the environment interactively. The build of the image
+# should be cached until you explicitly decide to rebuild it using
+# `docker compose build ubuntu-20`.
+#
+# VSCode users can leverage the Remotes extension that allows connecting
+# to a running container. This involves opening a separate terminal and
+# running `docker compose run --rm -it ubuntu-20 bash` to keep the
+# container running (during which time you can connect to it from VSCode).
+
+services:
+  ubuntu-20:
+    build:
+      context: .
+      args:
+        - IMAGE=ubuntu:20.04
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
+  ubuntu-22:
+    build:
+      context: .
+      args:
+        - IMAGE=ubuntu:22.04
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
+  ubuntu-24:
+    build:
+      context: .
+      args:
+        - IMAGE=ubuntu:24.04
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
+  # CRAN platform
+  debian-testing:
+    build:
+      context: .
+      args:
+        - IMAGE=debian:testing
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
+  # This is what CRAN runs
+  fedora-36:
+    build:
+      context: .
+      args:
+        - IMAGE=fedora:36
+      dockerfile: tools/docker/fedora.dockerfile
+    volumes:
+      - .:/s2
+
+  # First version that includes abseil-cpp as a system package
+  fedora-39:
+    build:
+      context: .
+      args:
+        - IMAGE=fedora:39
+      dockerfile: tools/docker/fedora.dockerfile
+    volumes:
+      - .:/s2
+
+  alpine:
+    build:
+      context: .
+      dockerfile: tools/docker/alpine.dockerfile
+    volumes:
+      - .:/s2

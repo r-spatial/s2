@@ -1,4 +1,8 @@
-# Anticonf (tm) script by Jeroen Ooms (2020)
+
+# This configure script finds OpenSSL and Abseil, optionally building
+# Abseil if not found.
+
+# Anticonf (tm) script by Jeroen Ooms (2020) for finding OpenSSL
 # This script will query 'pkg-config' for the required cflags and ldflags.
 # If pkg-config is unavailable or does not find the library, try setting
 # INCLUDE_DIR and LIB_DIR manually via e.g:
@@ -8,9 +12,7 @@
 PKG_CONFIG_NAME="openssl"
 PKG_DEB_NAME="libssl-dev"
 PKG_RPM_NAME="openssl-devel"
-PKG_CSW_NAME="libssl_dev"
-PKG_BREW_NAME="openssl@1.1"
-PKG_TEST_FILE="tools/version.c"
+PKG_BREW_NAME="openssl"
 PKG_LIBS="-lssl -lcrypto"
 PKG_CFLAGS=""
 
@@ -27,19 +29,9 @@ if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
   PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
   PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
 elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
-  echo "Found pkg-config cflags and libs!"
+  echo "Found OpenSSL pkg-config cflags and libs!"
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
   PKG_LIBS=${PKGCONFIG_LIBS}
-elif [ `uname` = "Darwin" ]; then
-  test ! "$CI" && brew --version 2>/dev/null
-  if [ $? -eq 0 ]; then
-    BREWDIR=`brew --prefix`
-    PKG_CFLAGS="-I$BREWDIR/opt/openssl/include -I$BREWDIR/opt/openssl@1.1/include"
-    PKG_LIBS="-L$BREWDIR/opt/openssl/lib -L$BREWDIR/opt/openssl@1.1/lib $PKG_LIBS"
-  else
-    curl -sfL "https://autobrew.github.io/scripts/$PKG_BREW_NAME" > autobrew
-    . ./autobrew
-  fi
 fi
 
 # Find compiler
@@ -48,10 +40,10 @@ CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
 CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
 # For debugging
-echo "Testing compiler using PKG_CFLAGS=$PKG_CFLAGS"
+echo "Testing compiler OpenSSL configuration using PKG_CFLAGS=$PKG_CFLAGS"
 
 # Test configuration
-${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E ${PKG_TEST_FILE} >/dev/null 2>configure.log
+${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E tools/test_openssl.c >/dev/null 2>configure.log
 
 # Customize the error
 if [ $? -ne 0 ]; then
@@ -59,7 +51,6 @@ if [ $? -ne 0 ]; then
   echo "Configuration failed because $PKG_CONFIG_NAME was not found. Try installing:"
   echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
   echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
-  echo " * csw: $PKG_CSW_NAME (Solaris)"
   echo " * brew: $PKG_BREW_NAME (Mac OSX)"
   echo "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is in your"
   echo "PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file. If pkg-config"
@@ -71,45 +62,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Try to link against the correct OpenSSL version
-if [ -z "$AUTOBREW" ]; then
-SONAME=`${CC} -E ${PKG_CFLAGS} src/tests/soname.h | sh | xargs`
-if [ "$SONAME" ]; then
-if [ `uname` = "Darwin" ]; then
-  PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-lssl.${SONAME}/" | sed "s/-lcrypto/-lcrypto.${SONAME}/"`
-else
-  PKG_LIBS_VERSIONED=`echo "${PKG_LIBS}" | sed "s/-lssl/-l:libssl.so.${SONAME}/" | sed "s/-lcrypto/-l:libcrypto.so.${SONAME}/"`
-fi
-
-# Test if versioned linking works
-${CC} ${PKG_CFLAGS} src/tests/main.c ${PKG_LIBS_VERSIONED} -o src/main.exe 2>/dev/null
-if [ $? -eq 0 ]; then PKG_LIBS="${PKG_LIBS_VERSIONED}"; fi
-rm src/main.exe || true
-
-# Suppress opensslv3 warnings for now
-if [ "$SONAME" = "3" ]; then
-PKG_CFLAGS="$PKG_CFLAGS -DOPENSSL_SUPPRESS_DEPRECATED"
-fi
-
-fi #SONAME
-fi #AUTOBREW
-
-# Check pkg-config for abseil-cpp, but fall back to a cmake build.
-# This should possibly be updated to check that the pkg-config detected
-# version will actually work; however, the version of abseil that included
-# pkg-config files is about the same as the minimum version required here.
+# Check pkg-config for abseil-cpp, but fall back to a cmake build
+# because a sufficient version of abseil-cpp is not available on
+# all platforms (notably, Ubuntu 20.04 and Ubuntu 22.04).
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
-
-# Allow developers to set R_S2_ABSL_HOME in .Renviron to avoid building
-# Abseil on every package rebuild. This can be built from this directory using
-# tools/build_absl.sh path/to/dir (then R_S2_ABSL_HOME=path/to/dir in .Renviron)
-if [ ! -z "${R_S2_ABSL_HOME}" ]; then
-  export PKG_CONFIG_PATH="{$R_S2_ABSL_HOME}/lib/pkgconfig:${PKG_CONFIG_PATH}"
-fi
 
 echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
 
-if pkg-config absl_s2 --libs 2>/dev/null; then
+if pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
   echo "** Using abseil-cpp from pkg-config"
 
   PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
@@ -135,13 +95,36 @@ else
   # Clean up build directory
   rm -rf tools/build
 
+  # Depending on the cmake options this can end up in a subdirectory of lib
+  ABSL_BASE_PC=`find tools/dist -name absl_base.pc`
+  R_S2_PKG_CONFIG_PATH=`dirname "${ABSL_BASE_PC}"`
   R_S2_ABSL_HOME="`pwd`/tools/dist"
-  export PKG_CONFIG_PATH="${R_S2_ABSL_HOME}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+  export PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:${PKG_CONFIG_PATH}"
   echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
   PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+  if [ -z "${PKGCONFIG_LIBS}" ]; then
+    echo "** Failed to resolve built vendored copy of Abseil using pkg-config"
+    exit 1
+  fi
 
   PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
+fi
+
+# Check compile of test file
+CXX17="`${R_HOME}/bin/R CMD config CXX17`"
+CXX17FLAGS=`"${R_HOME}"/bin/R CMD config CXX17FLAGS`
+CXX17STD=`"${R_HOME}"/bin/R CMD config CXX17STD`
+
+echo "Testing Abseil configuration using PKG_CFLAGS=${PKG_CFLAGS}"
+
+${CXX17} ${CPPFLAGS} ${PKG_CFLAGS} ${CXX17FLAGS} ${CXX17STD} -E tools/test_absl.cc >/dev/null 2>>configure.log
+if [ $? -ne 0 ]; then
+  echo "Test compile failed!"
+  echo "------- Error ---------"
+  cat configure.log
+  echo "-----------------------"
+  exit 1
 fi
 
 # From apache/arrow/r/configure:
