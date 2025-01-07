@@ -342,20 +342,23 @@ List cpp_s2_interpolate_normalized(List geog, NumericVector distanceNormalized) 
 }
 
 // [[Rcpp::export]]
-List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel) {
+List cpp_s2_buffer_cells(List geog, NumericVector distance, IntegerVector maxCells, IntegerVector minLevel) {
   class Op: public UnaryGeographyOperator<List, SEXP> {
   public:
     NumericVector distance;
+	IntegerVector maxCells, minLevel;
     S2RegionCoverer coverer;
 
-    Op(NumericVector distance, int maxCells, int minLevel): distance(distance) {
-      this->coverer.mutable_options()->set_max_cells(maxCells);
-      if (minLevel > 0) {
-        this->coverer.mutable_options()->set_min_level(minLevel);
-      }
+    Op(NumericVector distance, IntegerVector maxC, IntegerVector minL): distance(distance) {
+	  maxCells = maxC;
+	  minLevel = minL;
     }
 
     SEXP processFeature(XPtr<RGeography> feature, R_xlen_t i) {
+      this->coverer.mutable_options()->set_max_cells(this->maxCells[i]);
+      if (this->minLevel[i] > 0) {
+        this->coverer.mutable_options()->set_min_level(this->minLevel[i]);
+      }
       S2ShapeIndexBufferedRegion region;
       region.Init(&feature->Index().ShapeIndex(), S1ChordAngle::Radians(this->distance[i]));
 

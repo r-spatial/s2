@@ -1307,15 +1307,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_buffer_cells
-List cpp_s2_buffer_cells(List geog, NumericVector distance, int maxCells, int minLevel);
+List cpp_s2_buffer_cells(List geog, NumericVector distance, IntegerVector maxCells, IntegerVector minLevel);
 RcppExport SEXP _s2_cpp_s2_buffer_cells(SEXP geogSEXP, SEXP distanceSEXP, SEXP maxCellsSEXP, SEXP minLevelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type geog(geogSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type distance(distanceSEXP);
-    Rcpp::traits::input_parameter< int >::type maxCells(maxCellsSEXP);
-    Rcpp::traits::input_parameter< int >::type minLevel(minLevelSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type maxCells(maxCellsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type minLevel(minLevelSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_buffer_cells(geog, distance, maxCells, minLevel));
     return rcpp_result_gen;
 END_RCPP
