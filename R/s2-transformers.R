@@ -207,8 +207,8 @@ s2_rebuild <- function(x, options = s2_options()) {
 #' @export
 s2_buffer_cells <- function(x, distance, max_cells = 1000, min_level = -1,
                             radius = s2_earth_radius_meters()) {
-  recycled <- recycle_common(as_s2_geography(x), distance / radius)
-  new_s2_geography(cpp_s2_buffer_cells(recycled[[1]], recycled[[2]], max_cells, min_level))
+  recycled <- recycle_common(as_s2_geography(x), distance / radius, max_cells, min_level)
+  new_s2_geography(cpp_s2_buffer_cells(recycled[[1]], recycled[[2]], recycled[[3]], recycled[[4]]))
 }
 
 #' @rdname s2_boundary

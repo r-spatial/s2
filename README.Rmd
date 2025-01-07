@@ -113,8 +113,8 @@ nc_s2 %>%
 
 ## Acknowledgment
 
-This project gratefully acknowledges financial [support](https://www.r-consortium.org/) from the
+This project gratefully acknowledges financial [support](https://r-consortium.org/) from the
 
-<a href="https://www.r-consortium.org/">
+<a href="https://r-consortium.org/">
 <img src="man/figures/rc300.png" width="300" />
 </a>
