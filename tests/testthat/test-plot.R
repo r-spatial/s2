@@ -1,5 +1,7 @@
 
 test_that("s2_plot works", {
+  skip_if_not_installed("vctrs")
+
   x <- s2_data_countries()
   expect_identical(s2_plot(x), x)
   s2_plot(s2_data_cities(), add = TRUE)
@@ -10,6 +12,8 @@ test_that("s2_plot works", {
 })
 
 test_that("s2_plot works for all examples", {
+  skip_if_not_installed("vctrs")
+
   for (name in names(s2_data_example_wkt)) {
     geog <- as_s2_geography(s2_data_example_wkt[[name]])
 
@@ -22,6 +26,8 @@ test_that("s2_plot works for all examples", {
 })
 
 test_that("plot() works for vector classes", {
+  skip_if_not_installed("vctrs")
+
   x <- as_s2_geography("POINT (0 1)")
   expect_identical(plot(x), x)
 
