@@ -41,7 +41,7 @@ And the development version from [GitHub](https://github.com/) with:
 remotes::install_github("r-spatial/s2")
 ```
 
-The S2 package requires [Abseil]() and OpenSSL. You can install these
+The S2 package requires [Abseil](https://github.com/abseil/abseil-cpp) and OpenSSL. You can install these
 using a system package manager on most platforms:
 
 - Windows: Both OpenSSL and Abseil are available from RTools since R 4.3
