@@ -63,6 +63,15 @@ services:
     volumes:
       - .:/s2
 
+  debian-sid:
+    build:
+      context: .
+      args:
+        - IMAGE=debian:sid
+      dockerfile: tools/docker/debian.dockerfile
+    volumes:
+      - .:/s2
+
   # This is what CRAN runs
   fedora-36:
     build:
