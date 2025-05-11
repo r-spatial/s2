@@ -41,8 +41,9 @@ And the development version from [GitHub](https://github.com/) with:
 remotes::install_github("r-spatial/s2")
 ```
 
-The S2 package requires [Abseil](https://github.com/abseil/abseil-cpp) and OpenSSL. You can install these
-using a system package manager on most platforms:
+The S2 package requires [Abseil](https://github.com/abseil/abseil-cpp)
+and OpenSSL. You can install these using a system package manager on
+most platforms:
 
 - Windows: Both OpenSSL and Abseil are available from RTools since R 4.3
 - MacOS: `brew install openssl abseil`
@@ -53,15 +54,15 @@ using a system package manager on most platforms:
 ## Example
 
 The s2 package provides geometry transformers and predicates similar to
-those found in [GEOS](https://trac.osgeo.org/geos/), except instead of
-assuming a planar geometry, s2’s functions work in latitude and
-longitude and assume a spherical geometry:
+those found in [GEOS](https://libgeos.org), except instead of assuming a
+planar geometry, s2’s functions work in latitude and longitude and
+assume a spherical geometry:
 
 ``` r
 library(s2)
 
 s2_contains(
-  # polygon containing much  of the northern hemisphere
+  # polygon containing much of the northern hemisphere
   "POLYGON ((-63.5 44.6, -149.75 61.20, 116.4 40.2, 13.5 52.51, -63.5 44.6))",
   # ...should contain the north pole
   "POINT (0 90)"
@@ -70,8 +71,8 @@ s2_contains(
 ```
 
 The [sf package](https://r-spatial.github.io/sf/) uses s2 for geographic
-coordinates with `sf::sf_use_s2(TRUE)`, and will become the default
-after sf version 1.0.0. The sf package also supports creating s2 vectors
+coordinates by default (this can be confirmed by calling
+`sf::sf_use_s2()`). The sf package also supports creating s2 vectors
 using `as_s2_geography()`:
 
 ``` r
