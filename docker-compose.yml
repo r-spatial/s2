@@ -63,12 +63,13 @@ services:
     volumes:
       - .:/s2
 
-  debian-sid:
+# CRAN incoming
+  debian-sid-clang:
     build:
       context: .
       args:
         - IMAGE=debian:sid
-      dockerfile: tools/docker/debian.dockerfile
+      dockerfile: tools/docker/debian-clang.dockerfile
     volumes:
       - .:/s2
 
