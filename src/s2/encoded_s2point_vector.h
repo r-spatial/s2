@@ -18,21 +18,38 @@
 #ifndef S2_ENCODED_S2POINT_VECTOR_H_
 #define S2_ENCODED_S2POINT_VECTOR_H_
 
-#include <cstddef>
-
 #include <atomic>
+#include <cstddef>
 #include <vector>
 
-#include "s2/base/integral_types.h"
 #include "absl/types/span.h"
-#include "s2/util/coding/coder.h"
+#include "s2/base/integral_types.h"
 #include "s2/encoded_string_vector.h"
 #include "s2/encoded_uint_vector.h"
 #include "s2/s2coder.h"
 #include "s2/s2point.h"
 #include "s2/s2shape.h"
+#include "s2/util/coding/coder.h"
 
 namespace s2coding {
+
+// Modified for CRAN: anonymous struct in anonymous union is an extension
+// so we give them names here
+// https://github.com/r-spatial/s2/issues/271
+struct UncompressedS2Points {
+  const S2Point* points;
+};
+
+struct CompressedS2Points {
+  EncodedStringVector blocks;
+  uint64 base;
+  uint8 level;
+  bool have_exceptions;
+
+  // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
+  // a thread-safe way.  This reduces benchmark times for actual polygon
+  // operations (e.g. S2ClosestEdgeQuery) by about 15%.
+};
 
 // Encodes a vector of S2Points in a format that can later be decoded as an
 // EncodedS2PointVector.
@@ -104,29 +121,14 @@ class EncodedS2PointVector {
   Format format_;
   uint32 size_;
   union {
-    struct {
-      const S2Point* points;
-    } uncompressed_;
-    struct {
-      EncodedStringVector blocks;
-      uint64 base;
-      uint8 level;
-      bool have_exceptions;
-
-      // TODO(ericv): Use std::atomic_flag to cache the last point decoded in
-      // a thread-safe way.  This reduces benchmark times for actual polygon
-      // operations (e.g. S2ClosestEdgeQuery) by about 15%.
-    } cell_ids_;
+    UncompressedS2Points uncompressed_;
+    CompressedS2Points cell_ids_;
   };
 };
 
-
 //////////////////   Implementation details follow   ////////////////////
 
-
-inline size_t EncodedS2PointVector::size() const {
-  return size_;
-}
+inline size_t EncodedS2PointVector::size() const { return size_; }
 
 inline S2Point EncodedS2PointVector::operator[](int i) const {
   switch (format_) {
