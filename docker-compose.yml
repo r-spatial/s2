@@ -63,6 +63,16 @@ services:
     volumes:
       - .:/s2
 
+# CRAN incoming
+  debian-sid-clang:
+    build:
+      context: .
+      args:
+        - IMAGE=debian:sid
+      dockerfile: tools/docker/debian-clang.dockerfile
+    volumes:
+      - .:/s2
+
   # This is what CRAN runs
   fedora-36:
     build:
