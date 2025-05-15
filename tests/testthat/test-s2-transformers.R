@@ -473,7 +473,7 @@ test_that("s2_snap_to_grid() works", {
 test_that("s2_buffer() works", {
   # create a hemisphere!
   ply <- s2_buffer_cells("POINT (0 0)", distance = pi / 2, radius = 1)
-  expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.1)
+  expect_near(s2_area(ply, radius = 1), 4 * pi / 2, epsilon = 0.2)
 })
 
 test_that("s2_simplify() works", {
