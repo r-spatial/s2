@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   articles/intro: intro.html
-last_built: 2025-05-15T17:46Z
+last_built: 2025-05-17T14:36Z
 urls:
   reference: https://r-spatial.github.io/s2/reference
   article: https://r-spatial.github.io/s2/articles
