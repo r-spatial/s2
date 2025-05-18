@@ -252,12 +252,15 @@ class S2RegionCoverer {
  private:
   struct Candidate {
     void* operator new(std::size_t size, std::size_t max_children) {
-      return ::operator new (size + max_children * sizeof(Candidate *));
+      // CRAN edit: the sanitizer doesn't understand [0], so we just fix the
+      // size at the
+      // widest possible size.
+      // https://github.com/r-spatial/s2/pull/238
+      // https://github.com/r-spatial/s2/pull/275
+      return ::operator new(size);
     }
 
-    void operator delete(void* p) {
-      ::operator delete (p);
-    }
+    void operator delete(void* p) { ::operator delete(p); }
 
     Candidate(const S2Cell& cell, const std::size_t max_children)
         : cell(cell), is_terminal(max_children == 0) {
@@ -270,9 +273,12 @@ class S2RegionCoverer {
     ~Candidate() = default;
 
     S2Cell cell;
-    bool is_terminal;        // Cell should not be expanded further.
-    int num_children = 0;    // Number of children that intersect the region.
-    __extension__ Candidate* children[0];  // Actual size may be 0, 4, 16, or 64 elements.
+    bool is_terminal;      // Cell should not be expanded further.
+    int num_children = 0;  // Number of children that intersect the region.
+    // CRAN edit: the sanitizer doesn't understand [0], so we just fix the size
+    // at the widest possible size. https://github.com/r-spatial/s2/pull/238
+    // https://github.com/r-spatial/s2/pull/275
+    Candidate* children[64];  // Actual size may be 0, 4, 16, or 64 elements.
   };
 
   // If the cell intersects the given region, return a new candidate with no
@@ -347,7 +353,8 @@ class S2RegionCoverer {
     }
   };
   typedef std::priority_queue<QueueEntry, std::vector<QueueEntry>,
-                              CompareQueueEntries> CandidateQueue;
+                              CompareQueueEntries>
+      CandidateQueue;
   CandidateQueue pq_;
 
   // True if we're computing an interior covering.
