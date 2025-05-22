@@ -1,5 +1,17 @@
 # s2 (development version)
 
+* Fix code to help gcc-ubsan understand the region coverer (#275)
+* Inspect `S2_FORCE_BUNDLED_ABSEIL` in `conifigure`: if non-empty, any system
+  install of Abseil is ignored (e.g., if using a non-standard compiler on a
+  system where system Abseil is available via pkg-config) (#275)
+* Disable optimization in compact_array.h that confused compilers when compiling
+  with `-Wpedantic` (#275).
+* Add `cmake` to SystemReqirements. Even though this is technically optional
+  (system Abseil can be used), adding to requirements helps some installers
+  automatically install the dependency (#277).
+
+# s2 1.1.8
+
 * `s2_buffer_cells()` recycles `max_dist` and `min_level` arguments, allowing
    to specify these by feature (#264 and
    https://github.com/r-spatial/sf/issues/2488).

@@ -69,7 +69,7 @@ export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
 
 echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
 
-if pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
+if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
   echo "** Using abseil-cpp from pkg-config"
 
   PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
