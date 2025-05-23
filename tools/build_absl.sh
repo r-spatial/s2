@@ -1,4 +1,3 @@
-
 # https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-cmake
 
 : ${R_HOME=`R RHOME`}
@@ -20,7 +19,10 @@ else
 fi
 
 if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
-if test -z "$CMAKE"; then CMAKE=/Applications/CMake.app/Contents/bin/cmake; fi
+if test -z "$CMAKE" && [ -f "/Applications/CMake.app/Contents/bin/cmake" ]; then 
+  CMAKE=/Applications/CMake.app/Contents/bin/cmake
+fi
+
 if "${CMAKE}" --version ; then
   echo "Using CMAKE=$CMAKE"
   echo "Using MAKE=$MAKE $MAKEFLAGS"
