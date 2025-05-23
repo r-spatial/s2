@@ -18,10 +18,9 @@ else
   exit 1
 fi
 
-if test -z "$CMAKE"; then
-   OS=`uname` 
-   if [[ "$OS" == "Linux" ]]; then CMAKE="`which cmake`"; fi
-   if [[ "$OS" == "Darwin" ]]; then CMAKE="/Applications/CMake.app/Contents/bin/cmake"; fi
+if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
+if test -z "$CMAKE" && [ -f "/Applications/CMake.app/Contents/bin/cmake" ]; then 
+  CMAKE=/Applications/CMake.app/Contents/bin/cmake
 fi
 
 if "${CMAKE}" --version ; then
