@@ -61,6 +61,10 @@ cpp_s2_max_distance <- function(geog1, geog2) {
     .Call(`_s2_cpp_s2_max_distance`, geog1, geog2)
 }
 
+new_s2_geography <- function(data) {
+    .Call(`_s2_new_s2_geography`, data)
+}
+
 cpp_s2_bounds_cap <- function(geog) {
     .Call(`_s2_cpp_s2_bounds_cap`, geog)
 }

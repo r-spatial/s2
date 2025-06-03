@@ -109,12 +109,8 @@ int builder_vector_start(const wk_vector_meta_t* meta, void* handler_data) {
 SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   builder_result_finalize(data);
-  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
-  SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
-  SET_STRING_ELT(cls, 1, Rf_mkChar("wk_vctr"));
-  Rf_setAttrib(data->result, R_ClassSymbol, cls);
-  UNPROTECT(1);
-  return data->result;
+
+  return new_s2_geography(data->result);
 }
 
 int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
