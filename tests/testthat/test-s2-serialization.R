@@ -41,6 +41,21 @@ test_that("null external pointers do not crash in the handler", {
   )
 })
 
+test_that("ALTREP can be disabled", {
+  skip_if_serialization_unsupported()
+  on.exit(options(s2.disable_altrep = NULL))
+  options(s2.disable_altrep = TRUE)
+
+  geog <- as_s2_geography("POINT (0 1)")
+  geog2 <- unserialize(serialize(geog, NULL))
+  expect_error(
+    wk::wk_void(geog2),
+    "External pointer is not valid"
+  )
+
+  options(s2.disable_altrep = NULL)
+})
+
 # S2 Geography constructors
 test_that("s2_geography() can be correctly serialized", {
   skip_if_serialization_unsupported()

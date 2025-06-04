@@ -64,6 +64,21 @@ static SEXP s2_altrep_Unserialize(SEXP cls, SEXP state) {
 }
 #endif
 
+static SEXP setting_s2_geography_class(SEXP x) {
+  // use callee protection here to simplify the caller code
+  x = PROTECT(x);
+
+  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
+  SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
+  SET_STRING_ELT(cls, 1, Rf_mkChar("wk_vctr"));
+
+  Rf_setAttrib(x, R_ClassSymbol, cls);
+
+  UNPROTECT(2);
+
+  return x;
+}
+
 // [[Rcpp::export]]
 SEXP new_s2_geography(SEXP data) {
   if (TYPEOF(data) != VECSXP) {
@@ -71,22 +86,13 @@ SEXP new_s2_geography(SEXP data) {
   }
 
 #if defined(S2_GEOGRAPHY_ALTREP)
-  SEXP obj = PROTECT(R_new_altrep(s2_geography_altrep_cls, data, R_NilValue));
-#else
-  SEXP obj = data;
+  if (!R_isTRUE(Rf_GetOption1(Rf_install("s2.disable_altrep")))) {
+    // no protection is needed here since setting_s2_geography_class() protects its arguments
+    data = R_new_altrep(s2_geography_altrep_cls, data, R_NilValue);
+  }
 #endif
 
-  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
-  SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
-  SET_STRING_ELT(cls, 1, Rf_mkChar("wk_vctr"));
-
-  Rf_setAttrib(obj, R_ClassSymbol, cls);
-#if defined(S2_GEOGRAPHY_ALTREP)
-  UNPROTECT(2);
-#else
-  UNPROTECT(1);
-#endif
-  return obj;
+  return setting_s2_geography_class(data);
 }
 
 // [[Rcpp::init]]
