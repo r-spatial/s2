@@ -8,6 +8,23 @@ using namespace Rcpp;
 
 R_altrep_class_t s2_geography_altrep_cls;
 
+static SEXP get_s2_namespace_env() {
+  static SEXP env = NULL;
+
+
+
+  if (env == NULL) {
+    env = R_FindNamespace(PROTECT(Rf_mkString("s2")));
+    UNPROTECT(1);
+  }
+
+  return env;
+}
+
+
+
+
+
 // [[Rcpp::export]]
 SEXP new_s2_geography(SEXP data) {
   if (TYPEOF(data) != VECSXP) {
@@ -37,18 +54,28 @@ static SEXP s2_altrep_Elt(SEXP obj, R_xlen_t i) {
   return VECTOR_ELT(data, i);
 }
 
-static SEXP s2_altrep_Serialized_state(SEXP obj)
-{
-  Function to_wkb = Environment::namespace_env("s2")["s2_as_binary"];
+static SEXP s2_altrep_Serialized_state(SEXP obj) {
+  // fetch the pointer to s2::s2_geography_serialize()
+  SEXP env = get_s2_namespace_env();
+  SEXP fn = Rf_findFun(Rf_install("s2_geography_serialize"), env);
 
-  return to_wkb(obj);
+  SEXP call = PROTECT(Rf_lang2(fn, obj));
+  SEXP out = Rf_eval(call, env);
+
+  UNPROTECT(1);
+  return out;
 }
 
-static SEXP s2_altrep_Unserialize(SEXP cls, SEXP state)
-{
-  Function from_wkb = Environment::namespace_env("s2")["s2_geog_from_wkb"];
+static SEXP s2_altrep_Unserialize(SEXP cls, SEXP state) {
+  // fetch the pointer to s2::s2_geography_unserialize()
+  SEXP env = get_s2_namespace_env();
+  SEXP fn = Rf_findFun(Rf_install("s2_geography_unserialize"), env);
 
-  return from_wkb(state);
+  SEXP call = PROTECT(Rf_lang2(fn, state));
+  SEXP out = Rf_eval(call, env);
+
+  UNPROTECT(1);
+  return out;
 }
 
 // [[Rcpp::init]]
