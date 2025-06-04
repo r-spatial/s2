@@ -350,7 +350,7 @@ LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
-List cpp_s2_cell_center(NumericVector cellIdVector) {
+SEXP cpp_s2_cell_center(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
@@ -363,12 +363,11 @@ List cpp_s2_cell_center(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
-  return result;
+  return new_s2_geography(result);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_cell_polygon(NumericVector cellIdVector) {
+SEXP cpp_s2_cell_polygon(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
@@ -382,12 +381,11 @@ List cpp_s2_cell_polygon(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
-  return result;
+  return new_s2_geography(result);
 }
 
 // [[Rcpp::export]]
-List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
+SEXP cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid() && (this->k[i] >= 0)) {
@@ -404,8 +402,7 @@ List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   Op op;
   op.k = k;
   List result = op.processVector(cellIdVector);
-  result.attr("class") = CharacterVector::create("s2_geography", "wk_vctr");
-  return result;
+  return new_s2_geography(result);
 }
 
 // [[Rcpp::export]]

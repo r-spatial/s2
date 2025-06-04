@@ -179,9 +179,6 @@ wk_set_geodesic.s2_geography <- function(x, geodesic) {
   x
 }
 
-new_s2_geography <- function(x) {
-  structure(x, class = c("s2_geography", "wk_vctr"))
-}
 
 #' @export
 is.na.s2_geography <- function(x) {
