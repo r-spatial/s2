@@ -136,6 +136,7 @@ OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2-predicates.o \
      s2-transformers.o \
      init.o \
+     util.o \
      RcppExports.o \
      s2-geography.o \
      s2-lnglat.o \

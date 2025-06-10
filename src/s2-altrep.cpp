@@ -3,20 +3,14 @@
 #include <Rinternals.h>
 #include <Rversion.h>
 
-// ALTREP VECSXP are supported starting from R 4.3.0
-//
-// When compiling for an earlier target serialization support is disabled
-#if defined(R_VERSION) && R_VERSION >= R_Version(4, 3, 0)
-#include "R_ext/Altrep.h"
-#define S2_GEOGRAPHY_ALTREP
-#endif
-
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "s2-altrep.h"
+#include "util.h"
 
 // ALTREP implementation for s2_geography
 #if defined(S2_GEOGRAPHY_ALTREP)
+#include "R_ext/Altrep.h"
 R_altrep_class_t s2_geography_altrep_cls;
+
 
 static R_xlen_t s2_altrep_Length(SEXP obj) {
   SEXP data = R_altrep_data1(obj);
@@ -28,24 +22,13 @@ static SEXP s2_altrep_Elt(SEXP obj, R_xlen_t i) {
   return VECTOR_ELT(data, i);
 }
 
-static SEXP get_s2_namespace_env() {
-  static SEXP env = NULL;
-
-  if (env == NULL) {
-    env = R_FindNamespace(PROTECT(Rf_mkString("s2")));
-    UNPROTECT(1);
-  }
-
-  return env;
-}
 
 static SEXP s2_altrep_Serialized_state(SEXP obj) {
   // fetch the pointer to s2::s2_geography_serialize()
-  SEXP env = get_s2_namespace_env();
-  SEXP fn = Rf_findFun(Rf_install("s2_geography_serialize"), env);
+  SEXP fn = Rf_findFun(Rf_install("s2_geography_serialize"), s2_ns_pkg);
 
   SEXP call = PROTECT(Rf_lang2(fn, obj));
-  SEXP out = Rf_eval(call, env);
+  SEXP out = Rf_eval(call, s2_ns_pkg);
 
   UNPROTECT(1);
   return out;
@@ -53,16 +36,15 @@ static SEXP s2_altrep_Serialized_state(SEXP obj) {
 
 static SEXP s2_altrep_Unserialize(SEXP cls, SEXP state) {
   // fetch the pointer to s2::s2_geography_unserialize()
-  SEXP env = get_s2_namespace_env();
-  SEXP fn = Rf_findFun(Rf_install("s2_geography_unserialize"), env);
+  SEXP fn = Rf_findFun(Rf_install("s2_geography_unserialize"), s2_ns_pkg);
 
   SEXP call = PROTECT(Rf_lang2(fn, state));
-  SEXP out = Rf_eval(call, env);
+  SEXP out = Rf_eval(call, s2_ns_pkg);
 
   UNPROTECT(1);
   return out;
 }
-#endif
+
 
 static SEXP setting_s2_geography_class(SEXP x) {
   // use callee protection here to simplify the caller code
@@ -95,8 +77,7 @@ SEXP new_s2_geography(SEXP data) {
   return setting_s2_geography_class(data);
 }
 
-// [[Rcpp::init]]
-void altrep_init(DllInfo *dll) {
+void s2_init_altrep(DllInfo *dll) {
 #if defined(S2_GEOGRAPHY_ALTREP)
   s2_geography_altrep_cls = R_make_altlist_class("s2_geography", "s2", dll);
 
@@ -106,3 +87,4 @@ void altrep_init(DllInfo *dll) {
   R_set_altrep_Unserialize_method(s2_geography_altrep_cls, s2_altrep_Unserialize);
 #endif
 };
+#endif

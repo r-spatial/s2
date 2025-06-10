@@ -10,15 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// cpp_s2_init
-void cpp_s2_init();
-RcppExport SEXP _s2_cpp_s2_init() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    cpp_s2_init();
-    return R_NilValue;
-END_RCPP
-}
 // cpp_s2_is_collection
 LogicalVector cpp_s2_is_collection(List geog);
 RcppExport SEXP _s2_cpp_s2_is_collection(SEXP geogSEXP) {
@@ -1365,7 +1356,6 @@ RcppExport SEXP c_s2_trans_s2_lnglat_new(void);
 RcppExport SEXP c_s2_trans_s2_point_new(void);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
     {"_s2_cpp_s2_is_valid", (DL_FUNC) &_s2_cpp_s2_is_valid, 1},
     {"_s2_cpp_s2_is_valid_reason", (DL_FUNC) &_s2_cpp_s2_is_valid_reason, 1},
@@ -1488,9 +1478,9 @@ static const R_CallMethodDef CallEntries[] = {
     {NULL, NULL, 0}
 };
 
-void altrep_init(DllInfo *dll);
+void cpp_s2_init(DllInfo *dll);
 RcppExport void R_init_s2(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
-    altrep_init(dll);
+    cpp_s2_init(dll);
 }
