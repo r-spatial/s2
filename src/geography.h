@@ -7,8 +7,6 @@
 #include "s2geography.h"
 #include "s2-altrep.h"
 
-SEXP new_s2_geography(SEXP data);
-
 class RGeography {
 public:
   RGeography(std::unique_ptr<s2geography::Geography> geog):

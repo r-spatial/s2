@@ -167,14 +167,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// new_s2_geography
-SEXP new_s2_geography(SEXP data);
-RcppExport SEXP _s2_new_s2_geography(SEXP dataSEXP) {
+// make_s2_geography_altrep
+SEXP make_s2_geography_altrep(SEXP list);
+RcppExport SEXP _s2_make_s2_geography_altrep(SEXP listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(new_s2_geography(data));
+    Rcpp::traits::input_parameter< SEXP >::type list(listSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_s2_geography_altrep(list));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -472,7 +472,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_cell_center
-SEXP cpp_s2_cell_center(NumericVector cellIdVector);
+List cpp_s2_cell_center(NumericVector cellIdVector);
 RcppExport SEXP _s2_cpp_s2_cell_center(SEXP cellIdVectorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -483,7 +483,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_cell_polygon
-SEXP cpp_s2_cell_polygon(NumericVector cellIdVector);
+List cpp_s2_cell_polygon(NumericVector cellIdVector);
 RcppExport SEXP _s2_cpp_s2_cell_polygon(SEXP cellIdVectorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -494,7 +494,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_s2_cell_vertex
-SEXP cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k);
+List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k);
 RcppExport SEXP _s2_cpp_s2_cell_vertex(SEXP cellIdVectorSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -1370,7 +1370,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_project_normalized", (DL_FUNC) &_s2_cpp_s2_project_normalized, 2},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
-    {"_s2_new_s2_geography", (DL_FUNC) &_s2_new_s2_geography, 1},
+    {"_s2_make_s2_geography_altrep", (DL_FUNC) &_s2_make_s2_geography_altrep, 1},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
     {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},

@@ -11,8 +11,6 @@
 #define S2_GEOGRAPHY_ALTREP
 #endif
 
-// Utility functions are always declared, but might be no-ops on unsupported platforms
-SEXP make_s2_geography_altrep(SEXP list);
 void s2_init_altrep(DllInfo *dll);
 
 #endif

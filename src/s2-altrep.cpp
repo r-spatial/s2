@@ -7,10 +7,10 @@
 #include "util.h"
 
 // ALTREP implementation for s2_geography
+
 #if defined(S2_GEOGRAPHY_ALTREP)
 #include "R_ext/Altrep.h"
 R_altrep_class_t s2_geography_altrep_cls;
-
 
 static R_xlen_t s2_altrep_Length(SEXP obj) {
   SEXP data = R_altrep_data1(obj);
@@ -21,7 +21,6 @@ static SEXP s2_altrep_Elt(SEXP obj, R_xlen_t i) {
   SEXP data = R_altrep_data1(obj);
   return VECTOR_ELT(data, i);
 }
-
 
 static SEXP s2_altrep_Serialized_state(SEXP obj) {
   // fetch the pointer to s2::s2_geography_serialize()
@@ -44,37 +43,16 @@ static SEXP s2_altrep_Unserialize(SEXP cls, SEXP state) {
   UNPROTECT(1);
   return out;
 }
-
-
-static SEXP setting_s2_geography_class(SEXP x) {
-  // use callee protection here to simplify the caller code
-  x = PROTECT(x);
-
-  SEXP cls = PROTECT(Rf_allocVector(STRSXP, 2));
-  SET_STRING_ELT(cls, 0, Rf_mkChar("s2_geography"));
-  SET_STRING_ELT(cls, 1, Rf_mkChar("wk_vctr"));
-
-  Rf_setAttrib(x, R_ClassSymbol, cls);
-
-  UNPROTECT(2);
-
-  return x;
-}
-
-// [[Rcpp::export]]
-SEXP new_s2_geography(SEXP data) {
-  if (TYPEOF(data) != VECSXP) {
-    Rf_error("s2_geography data must be a list");
-  }
-
-#if defined(S2_GEOGRAPHY_ALTREP)
-  if (!R_isTRUE(Rf_GetOption1(Rf_install("s2.disable_altrep")))) {
-    // no protection is needed here since setting_s2_geography_class() protects its arguments
-    data = R_new_altrep(s2_geography_altrep_cls, data, R_NilValue);
-  }
 #endif
 
-  return setting_s2_geography_class(data);
+// [[Rcpp::export]]
+SEXP make_s2_geography_altrep(SEXP list) {
+#if defined(S2_GEOGRAPHY_ALTREP)
+  return R_new_altrep(s2_geography_altrep_cls, list, R_NilValue);
+#else
+  // nothing to do
+  return list;
+#endif
 }
 
 void s2_init_altrep(DllInfo *dll) {
@@ -86,5 +64,4 @@ void s2_init_altrep(DllInfo *dll) {
   R_set_altrep_Serialized_state_method(s2_geography_altrep_cls, s2_altrep_Serialized_state);
   R_set_altrep_Unserialize_method(s2_geography_altrep_cls, s2_altrep_Unserialize);
 #endif
-};
-#endif
+}

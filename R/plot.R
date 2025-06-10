@@ -145,12 +145,12 @@ cap_to_polygon <- function(centre = s2_lnglat(0, 0), radius_rad) {
     c(0, rad_proj, 0, -rad_proj, 0),
     c(rad_proj, 0, -rad_proj, 0, rad_proj)
   )
-  points_s2 <- wk::wk_handle(
+  points_s2 <- new_s2_geography(wk::wk_handle(
     points,
     s2_geography_writer(
       projection = s2_projection_orthographic(centre)
     )
-  )
+  ))
   s2_make_polygon(s2_x(points_s2), s2_y(points_s2))
 }
 

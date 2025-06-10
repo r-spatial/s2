@@ -350,7 +350,7 @@ LogicalVector cpp_s2_cell_is_valid(NumericVector cellIdVector) {
 }
 
 // [[Rcpp::export]]
-SEXP cpp_s2_cell_center(NumericVector cellIdVector) {
+List cpp_s2_cell_center(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
@@ -363,11 +363,11 @@ SEXP cpp_s2_cell_center(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  return new_s2_geography(result);
+  return result;
 }
 
 // [[Rcpp::export]]
-SEXP cpp_s2_cell_polygon(NumericVector cellIdVector) {
+List cpp_s2_cell_polygon(NumericVector cellIdVector) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid()) {
@@ -381,11 +381,11 @@ SEXP cpp_s2_cell_polygon(NumericVector cellIdVector) {
 
   Op op;
   List result = op.processVector(cellIdVector);
-  return new_s2_geography(result);
+  return result;
 }
 
 // [[Rcpp::export]]
-SEXP cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
+List cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   class Op: public UnaryS2CellOperator<List, SEXP> {
     SEXP processCell(S2CellId cellId, R_xlen_t i) {
       if (cellId.is_valid() && (this->k[i] >= 0)) {
@@ -402,7 +402,7 @@ SEXP cpp_s2_cell_vertex(NumericVector cellIdVector, IntegerVector k) {
   Op op;
   op.k = k;
   List result = op.processVector(cellIdVector);
-  return new_s2_geography(result);
+  return result;
 }
 
 // [[Rcpp::export]]

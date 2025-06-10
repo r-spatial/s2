@@ -110,7 +110,7 @@ SEXP builder_vector_end(const wk_vector_meta_t* meta, void* handler_data) {
   builder_handler_t* data = (builder_handler_t*) handler_data;
   builder_result_finalize(data);
 
-  return new_s2_geography(data->result);
+  return data->result;
 }
 
 int builder_feature_start(const wk_vector_meta_t* meta, R_xlen_t feat_id, void* handler_data) {
