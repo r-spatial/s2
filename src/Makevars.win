@@ -127,6 +127,7 @@ OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2/util/math/mathutil.o \
      s2/util/units/length-units.o \
      cpp-compat.o \
+     s2-altrep.o \
      s2-accessors.o \
      s2-bounds.o \
      s2-cell.o \
@@ -135,6 +136,7 @@ OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2-predicates.o \
      s2-transformers.o \
      init.o \
+     util.o \
      RcppExports.o \
      s2-geography.o \
      s2-lnglat.o \

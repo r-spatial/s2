@@ -2,10 +2,19 @@
 #include "absl/log/log.h"
 #include "s2/s2debug.h"
 #include <Rcpp.h>
+#include "s2-altrep.h"
+#include "util.h"
+
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-void cpp_s2_init() {
+// [[Rcpp::init]]
+void cpp_s2_init(DllInfo *dll) {
+  // init the altrep classes
+  s2_init_altrep(dll);
+
+  // init the global sexp cache
+  s2_init_cached_sexps();
+
   // It's important to set this flag, as users might have "debug" flags
   // for their build environment, and there are some checks that will terminate
   // R instead of throw an exception if this value is set to true.
