@@ -1,15 +1,15 @@
 
 test_that("wk_handle() for s2_geography works", {
   for (name in names(s2_data_example_wkt)) {
-    geog <- new_s2_geography(wk::wk_handle(
+    geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
       s2_geography_writer()
-    ))
+    )
 
-    geog2 <- new_s2_geography(wk::wk_handle(
+    geog2 <- wk::wk_handle(
       geog,
       s2_geography_writer(check = TRUE, oriented = TRUE)
-    ))
+    )
 
     expect_equal(wk::wk_coords(geog), wk::wk_coords(geog2))
   }
@@ -17,12 +17,12 @@ test_that("wk_handle() for s2_geography works", {
 
 test_that("wk_handle() for s2_geography works for s2_point projection", {
   for (name in names(s2_data_example_wkt)) {
-    geog <- new_s2_geography(wk::wk_handle(
+    geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
       s2_geography_writer()
-    ))
+    )
 
-    geog2 <- new_s2_geography(wk::wk_handle(
+    geog2 <- wk::wk_handle(
       geog,
       s2_geography_writer(
         check = TRUE,
@@ -30,7 +30,7 @@ test_that("wk_handle() for s2_geography works for s2_point projection", {
         projection = NULL
       ),
       s2_projection = NULL
-    ))
+    )
 
     expect_identical(wk::wk_coords(geog), wk::wk_coords(geog2))
   }
@@ -43,10 +43,10 @@ test_that("wk_writer() works for s2_geography()", {
 test_that("the s2_geography_writer() works for example WKT", {
   # nc has some rings that get reordered by this operation
   for (name in setdiff(names(s2_data_example_wkt), "nc")) {
-    geog <- new_s2_geography(wk::wk_handle(
+    geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
       s2_geography_writer()
-    ))
+    )
 
     expect_equal(
       wk::wk_coords(as_wkt(geog))[c("x", "y")],
@@ -57,13 +57,13 @@ test_that("the s2_geography_writer() works for example WKT", {
 
 test_that("wk_handle() works for example WKT", {
   for (name in names(s2_data_example_wkt)) {
-    geog <- new_s2_geography(wk::wk_handle(
+    geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
       s2_geography_writer()
-    ))
+    )
 
     expect_wkt_equal(
-      new_s2_geography(wk_handle(geog, s2_geography_writer())),
+      wk_handle(geog, s2_geography_writer()),
       geog,
       precision = 14
     )
@@ -72,14 +72,14 @@ test_that("wk_handle() works for example WKT", {
 
 test_that("wk_handle() works for example WKT with tessellation", {
   for (name in names(s2_data_example_wkt)) {
-    geog <- new_s2_geography(wk::wk_handle(
+    geog <- wk::wk_handle(
       s2_data_example_wkt[[name]],
       s2_geography_writer()
-    ))
+    )
 
     expect_wkt_equal(
       # use a big but non-infinite number to trigger the tessellator
-      new_s2_geography(wk_handle(geog, s2_geography_writer(), s2_tessellate_tol = 1e10)),
+      wk_handle(geog, s2_geography_writer(), s2_tessellate_tol = 1e10),
       geog,
       precision = 14
     )
@@ -109,28 +109,28 @@ test_that("s2_geography_writer() with tesselate_tol works", {
 
   expect_equal(
     wk::as_xy(
-      new_s2_geography(wk::wk_handle(
+      wk::wk_handle(
         wk::xy(0, 0),
         s2_geography_writer(tessellate_tol = tol)
-      ))
+      )
     ),
     wk::xy(0, 0, crs = wk::wk_crs_longlat())
   )
 
   expect_identical(
-    new_s2_geography(wk::wk_handle(
+    wk::wk_handle(
       wk::wkt("LINESTRING (0 0, 0 45, -60 45)"),
       s2_geography_writer(tessellate_tol = tol)
-    )) %>%
+    ) %>%
       s2_num_points(),
     6L
   )
 
   expect_identical(
-    new_s2_geography(wk::wk_handle(
+    wk::wk_handle(
       wk::wkt("POLYGON ((0 0, 0 45, -60 45, 0 0))"),
       s2_geography_writer(tessellate_tol = tol)
-    )) %>%
+    ) %>%
       s2_num_points(),
     8L
   )
@@ -139,10 +139,10 @@ test_that("s2_geography_writer() with tesselate_tol works", {
 test_that("s2_geography_writer() with tesselate_tol works with real data", {
   tol <- 1000 / s2_earth_radius_meters()
 
-  countries_tes <- new_s2_geography(wk::wk_handle(
+  countries_tes <- wk::wk_handle(
     s2::s2_data_tbl_countries$geometry,
     s2_geography_writer(tessellate_tol = tol)
-  ))
+  )
 
   expect_true(
     sum(s2_num_points(countries_tes)) >
@@ -163,21 +163,21 @@ test_that("wk_handle + tessellate_tol works", {
   )
 
   expect_identical(
-   new_s2_geography( wk::wk_handle(
+    wk::wk_handle(
       as_s2_geography("LINESTRING (0 0, 0 45, -60 45)"),
       s2_geography_writer(),
       s2_tessellate_tol = tol
-    )) %>%
+    ) %>%
       s2_num_points(),
     6L
   )
 
   expect_identical(
-    new_s2_geography(wk::wk_handle(
+    wk::wk_handle(
       as_s2_geography("POLYGON ((0 0, 0 45, -60 45, 0 0))"),
       s2_geography_writer(),
       s2_tessellate_tol = tol
-    )) %>%
+    ) %>%
       s2_num_points(),
     8L
   )
@@ -187,11 +187,11 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
   tol <- 1000 / s2_earth_radius_meters()
 
   countries <- s2_data_countries()
-  countries_tes <- new_s2_geography(wk::wk_handle(
+  countries_tes <- wk::wk_handle(
     countries,
     s2_geography_writer(check = FALSE),
     s2_tessellate_tol = tol
-  ))
+  )
 
   expect_true(
     sum(s2_num_points(countries_tes)) >
@@ -201,10 +201,10 @@ test_that("s2_geography_writer() with tesselate_tol works with real data", {
 
 test_that("wk_handle() for s2_geography works with s2_projection_mercator()", {
   # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
-  geog <- new_s2_geography(wk::wk_handle(
+  geog <- wk::wk_handle(
     wk::xy(3339584.72379821, 1118889.97485796),
     s2_geography_writer(projection = s2_projection_mercator())
-  ))
+  )
 
   expect_equal(
     wk::wk_handle(
@@ -230,11 +230,11 @@ test_that("s2_geography_writer() works with s2_projection_mercator()", {
   # sf::sf_project("EPSG:4326", "EPSG:3857", wk::xy(30, 10)) %>% dput()
   expect_equal(
     wk::as_xy(
-      new_s2_geography(wk::wk_handle(
+      wk::wk_handle(
         wk::xy(3339584.72379821, 1118889.97485796),
         s2_geography_writer(projection = s2_projection_mercator())
       )
-    )),
+    ),
     wk::xy(30, 10, crs = wk::wk_crs_longlat())
   )
 })
@@ -281,10 +281,10 @@ test_that("s2_geography_writer() works with s2_projection_mercator()", {
     c(0, sqrt(2) / 2, 0)
   )
 
-  geog <- new_s2_geography(wk::wk_handle(
+  geog <- wk::wk_handle(
     xy,
     s2_geography_writer(projection = s2_projection_orthographic())
-  ))
+  )
   expect_identical(
     s2_as_text(geog, precision = 5),
     c("POINT (0 0)", "POINT (0 45)", "POINT (45 0)")

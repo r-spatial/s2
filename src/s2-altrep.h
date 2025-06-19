@@ -12,5 +12,6 @@
 #endif
 
 void s2_init_altrep(DllInfo *dll);
+SEXP make_s2_geography_altrep(SEXP list);
 
 #endif

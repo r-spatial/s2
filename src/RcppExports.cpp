@@ -1346,7 +1346,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography_tessellated(SEXP, SEXP);
 RcppExport SEXP c_s2_projection_mercator(SEXP);
@@ -1467,7 +1467,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_cpp_s2_convex_hull", (DL_FUNC) &_s2_cpp_s2_convex_hull, 1},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
-    {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         4},
+    {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         5},
     {"c_s2_handle_geography",             (DL_FUNC) &c_s2_handle_geography,             2},
     {"c_s2_handle_geography_tessellated", (DL_FUNC) &c_s2_handle_geography_tessellated, 2},
     {"c_s2_projection_mercator",          (DL_FUNC) &c_s2_projection_mercator,          1},

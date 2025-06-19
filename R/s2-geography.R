@@ -71,11 +71,9 @@ as_s2_geography.wk_wkb <- function(x, ..., oriented = FALSE, check = TRUE) {
     }
   }
 
-  new_s2_geography(
-    wk::wk_handle(
-      x,
-      s2_geography_writer(oriented = oriented, check = check)
-    )
+  wk::wk_handle(
+    x,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 
@@ -110,11 +108,9 @@ as_s2_geography.wk_wkt <- function(x, ..., oriented = FALSE, check = TRUE) {
     }
   }
 
-  new_s2_geography(
-    wk::wk_handle(
-      x,
-      s2_geography_writer(oriented = oriented, check = check)
-    )
+  wk::wk_handle(
+    x,
+    s2_geography_writer(oriented = oriented, check = check)
   )
 }
 

@@ -7,14 +7,12 @@ s2_geography_serialize <- function(x) {
 }
 
 s2_geography_unserialize <- function(bytes) {
-  new_s2_geography(
-    wk::wk_handle(
-      bytes,
-      s2::s2_geography_writer(
-        oriented = TRUE,
-        check = FALSE,
-        projection = NULL
-      )
+  wk::wk_handle(
+    bytes,
+    s2::s2_geography_writer(
+      oriented = TRUE,
+      check = FALSE,
+      projection = NULL
     )
   )
 }

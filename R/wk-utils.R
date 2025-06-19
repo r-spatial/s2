@@ -39,7 +39,8 @@ wk_handle.s2_geography <- function(handleable, handler, ...,
 #' @export
 s2_geography_writer <- function(oriented = FALSE, check = TRUE,
                                 projection = s2_projection_plate_carree(),
-                                tessellate_tol = Inf) {
+                                tessellate_tol = Inf,
+                                use_altrep = !isTRUE(getOption("s2.disable_altrep"))) {
   stopifnot(is.null(projection) || inherits(projection, "s2_projection"))
 
   wk::new_wk_handler(
@@ -48,7 +49,8 @@ s2_geography_writer <- function(oriented = FALSE, check = TRUE,
       as.logical(oriented)[1],
       as.logical(check)[1],
       projection,
-      as.double(tessellate_tol[1])
+      as.double(tessellate_tol[1]),
+      as.logical(use_altrep)[1]
     ),
     "s2_geography_writer"
   )

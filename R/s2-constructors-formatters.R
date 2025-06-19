@@ -91,19 +91,17 @@
 #' )
 #'
 s2_geog_point <- function(longitude, latitude) {
-  new_s2_geography(wk::wk_handle(wk::xy(longitude, latitude), s2_geography_writer()))
+  wk::wk_handle(wk::xy(longitude, latitude), s2_geography_writer())
 }
 
 #' @rdname s2_geog_point
 #' @export
 s2_make_line <- function(longitude, latitude, feature_id = 1L) {
-  new_s2_geography(
-    wk::wk_handle(
-      wk::xy(longitude, latitude),
-      wk::wk_linestring_filter(
-        s2_geography_writer(),
-        feature_id = as.integer(feature_id)
-      )
+  wk::wk_handle(
+    wk::xy(longitude, latitude),
+    wk::wk_linestring_filter(
+      s2_geography_writer(),
+      feature_id = as.integer(feature_id)
     )
   )
 }
@@ -112,14 +110,12 @@ s2_make_line <- function(longitude, latitude, feature_id = 1L) {
 #' @export
 s2_make_polygon <- function(longitude, latitude, feature_id = 1L, ring_id = 1L,
                             oriented = FALSE, check = TRUE) {
-  new_s2_geography(
-    wk::wk_handle(
-      wk::xy(longitude, latitude),
-      wk::wk_polygon_filter(
-        s2_geography_writer(oriented = oriented, check = check),
-        feature_id = as.integer(feature_id),
-        ring_id = as.integer(ring_id)
-      )
+  wk::wk_handle(
+    wk::xy(longitude, latitude),
+    wk::wk_polygon_filter(
+      s2_geography_writer(oriented = oriented, check = check),
+      feature_id = as.integer(feature_id),
+      ring_id = as.integer(ring_id)
     )
   )
 }
@@ -133,18 +129,16 @@ s2_geog_from_text <- function(wkt_string, oriented = FALSE, check = TRUE,
   wkt <- wk::new_wk_wkt(wkt_string, geodesic = TRUE)
   wk::validate_wk_wkt(wkt)
 
-  new_s2_geography(
-    wk::wk_handle(
-      wkt,
-      s2_geography_writer(
-        oriented = oriented,
-        check = check,
-        tessellate_tol = if (planar) {
-          tessellate_tol_m / s2_earth_radius_meters()
-        } else {
-          Inf
-        }
-      )
+  wk::wk_handle(
+    wkt,
+    s2_geography_writer(
+      oriented = oriented,
+      check = check,
+      tessellate_tol = if (planar) {
+        tessellate_tol_m / s2_earth_radius_meters()
+      } else {
+        Inf
+      }
     )
   )
 }
@@ -158,18 +152,16 @@ s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE, check = TRUE,
   wkb <- wk::new_wk_wkb(wkb_bytes)
   wk::validate_wk_wkb(wkb)
 
-  new_s2_geography(
-    wk::wk_handle(
-      wkb,
-      s2_geography_writer(
-        oriented = oriented,
-        check = check,
-        tessellate_tol = if (planar) {
-          tessellate_tol_m / s2_earth_radius_meters()
-        } else {
-          Inf
-        }
-      )
+  wk::wk_handle(
+    wkb,
+    s2_geography_writer(
+      oriented = oriented,
+      check = check,
+      tessellate_tol = if (planar) {
+        tessellate_tol_m / s2_earth_radius_meters()
+      } else {
+        Inf
+      }
     )
   )
 }
