@@ -7,6 +7,9 @@
 #' @param tessellate_tol,s2_tessellate_tol An angle in radians.
 #'   Points will not be added if a line segment is within this
 #'   distance of a point.
+#' @param use_altrep A flag indicating whether ALTREP representation of s2 geography
+#'    vectors should be used with support for data serialization (default: `TRUE` on R 4.3.0 and later,
+#'    set the option `s2.disable_altrep` to disable)
 #' @param x_scale The maximum x value of the projection
 #' @param centre The center point of the orthographic projection
 #' @param epsilon_east_west,epsilon_north_south Use a positive number to
