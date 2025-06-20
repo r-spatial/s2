@@ -198,12 +198,3 @@ test_that("planar = TRUE works for s2_geog_from_text()", {
   out <- s2_as_binary(geog, planar = TRUE)
   expect_true(s2_num_points(out) > s2_num_points(geog))
 })
-
-test_that("null external pointers do not crash in the handler", {
-  geog <- as_s2_geography("POINT (0 1)")
-  geog2 <- unserialize(serialize(geog, NULL))
-  expect_error(
-    wk::wk_void(geog2),
-    "External pointer is not valid"
-  )
-})

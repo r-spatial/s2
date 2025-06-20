@@ -10,15 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// cpp_s2_init
-void cpp_s2_init();
-RcppExport SEXP _s2_cpp_s2_init() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    cpp_s2_init();
-    return R_NilValue;
-END_RCPP
-}
 // cpp_s2_is_collection
 LogicalVector cpp_s2_is_collection(List geog);
 RcppExport SEXP _s2_cpp_s2_is_collection(SEXP geogSEXP) {
@@ -173,6 +164,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type geog1(geog1SEXP);
     Rcpp::traits::input_parameter< List >::type geog2(geog2SEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_s2_max_distance(geog1, geog2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// make_s2_geography_altrep
+SEXP make_s2_geography_altrep(SEXP list);
+RcppExport SEXP _s2_make_s2_geography_altrep(SEXP listSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type list(listSEXP);
+    rcpp_result_gen = Rcpp::wrap(make_s2_geography_altrep(list));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1344,7 +1346,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP c_s2_geography_writer_new(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography(SEXP, SEXP);
 RcppExport SEXP c_s2_handle_geography_tessellated(SEXP, SEXP);
 RcppExport SEXP c_s2_projection_mercator(SEXP);
@@ -1354,7 +1356,6 @@ RcppExport SEXP c_s2_trans_s2_lnglat_new(void);
 RcppExport SEXP c_s2_trans_s2_point_new(void);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_s2_cpp_s2_init", (DL_FUNC) &_s2_cpp_s2_init, 0},
     {"_s2_cpp_s2_is_collection", (DL_FUNC) &_s2_cpp_s2_is_collection, 1},
     {"_s2_cpp_s2_is_valid", (DL_FUNC) &_s2_cpp_s2_is_valid, 1},
     {"_s2_cpp_s2_is_valid_reason", (DL_FUNC) &_s2_cpp_s2_is_valid_reason, 1},
@@ -1369,6 +1370,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_project_normalized", (DL_FUNC) &_s2_cpp_s2_project_normalized, 2},
     {"_s2_cpp_s2_distance", (DL_FUNC) &_s2_cpp_s2_distance, 2},
     {"_s2_cpp_s2_max_distance", (DL_FUNC) &_s2_cpp_s2_max_distance, 2},
+    {"_s2_make_s2_geography_altrep", (DL_FUNC) &_s2_make_s2_geography_altrep, 1},
     {"_s2_cpp_s2_bounds_cap", (DL_FUNC) &_s2_cpp_s2_bounds_cap, 1},
     {"_s2_cpp_s2_bounds_rect", (DL_FUNC) &_s2_cpp_s2_bounds_rect, 1},
     {"_s2_cpp_s2_cell_union_normalize", (DL_FUNC) &_s2_cpp_s2_cell_union_normalize, 1},
@@ -1465,7 +1467,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_s2_cpp_s2_buffer_cells", (DL_FUNC) &_s2_cpp_s2_buffer_cells, 4},
     {"_s2_cpp_s2_convex_hull", (DL_FUNC) &_s2_cpp_s2_convex_hull, 1},
     {"_s2_cpp_s2_convex_hull_agg", (DL_FUNC) &_s2_cpp_s2_convex_hull_agg, 2},
-    {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         4},
+    {"c_s2_geography_writer_new",         (DL_FUNC) &c_s2_geography_writer_new,         5},
     {"c_s2_handle_geography",             (DL_FUNC) &c_s2_handle_geography,             2},
     {"c_s2_handle_geography_tessellated", (DL_FUNC) &c_s2_handle_geography_tessellated, 2},
     {"c_s2_projection_mercator",          (DL_FUNC) &c_s2_projection_mercator,          1},
@@ -1476,7 +1478,9 @@ static const R_CallMethodDef CallEntries[] = {
     {NULL, NULL, 0}
 };
 
+void cpp_s2_init(DllInfo *dll);
 RcppExport void R_init_s2(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
+    cpp_s2_init(dll);
 }

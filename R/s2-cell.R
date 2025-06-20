@@ -222,26 +222,26 @@ s2_cell_to_lnglat <- function(x) {
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_center <- function(x) {
-  cpp_s2_cell_center(x)
+  new_s2_geography(cpp_s2_cell_center(x))
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_boundary <- function(x) {
-  s2_boundary(cpp_s2_cell_polygon(x))
+  s2_boundary(new_s2_geography(cpp_s2_cell_polygon(x)))
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_polygon <- function(x) {
-  cpp_s2_cell_polygon(x)
+  new_s2_geography(cpp_s2_cell_polygon(x))
 }
 
 #' @rdname s2_cell_is_valid
 #' @export
 s2_cell_vertex <- function(x, k) {
   recycled <- recycle_common(x, k)
-  cpp_s2_cell_vertex(recycled[[1]], recycled[[2]])
+  new_s2_geography(cpp_s2_cell_vertex(recycled[[1]], recycled[[2]]))
 }
 
 # accessors

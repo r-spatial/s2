@@ -5,6 +5,7 @@
 #include <Rcpp.h>
 
 #include "s2geography.h"
+#include "s2-altrep.h"
 
 class RGeography {
 public:

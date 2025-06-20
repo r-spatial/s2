@@ -151,6 +151,7 @@ s2_geog_from_wkb <- function(wkb_bytes, oriented = FALSE, check = TRUE,
   attributes(wkb_bytes) <- NULL
   wkb <- wk::new_wk_wkb(wkb_bytes)
   wk::validate_wk_wkb(wkb)
+
   wk::wk_handle(
     wkb,
     s2_geography_writer(

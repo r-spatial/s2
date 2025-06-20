@@ -25,7 +25,8 @@ s2_geography_writer(
   oriented = FALSE,
   check = TRUE,
   projection = s2_projection_plate_carree(),
-  tessellate_tol = Inf
+  tessellate_tol = Inf,
+  use_altrep = !isTRUE(getOption("s2.disable_altrep"))
 )
 
 \method{wk_writer}{s2_geography}(handleable, ...)
@@ -64,6 +65,10 @@ rings are defined clockwise).}
 \item{tessellate_tol, s2_tessellate_tol}{An angle in radians.
 Points will not be added if a line segment is within this
 distance of a point.}
+
+\item{use_altrep}{A flag indicating whether ALTREP representation of s2 geography
+vectors should be used with support for data serialization (default: \code{TRUE} on R 4.3.0 and later,
+set the option \code{s2.disable_altrep} to disable)}
 
 \item{x_scale}{The maximum x value of the projection}
 

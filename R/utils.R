@@ -86,3 +86,7 @@ expect_wkt_equal <- function(x, y, precision = 16) {
 expect_near <- function(x, y, epsilon) {
   testthat::expect_true(abs(y - x) < epsilon)
 }
+
+expect_wkt_serializeable <- function(x) {
+  expect_wkt_equal(x, unserialize(serialize(x, NULL)), precision = 8)
+}

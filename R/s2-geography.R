@@ -180,7 +180,14 @@ wk_set_geodesic.s2_geography <- function(x, geodesic) {
 }
 
 new_s2_geography <- function(x) {
-  structure(x, class = c("s2_geography", "wk_vctr"))
+  # set the ALTREP class
+  if (!isTRUE(getOption("s2.disable_altrep"))) {
+    x <- make_s2_geography_altrep(x)
+  }
+  # set the s2_geography class
+  class(x) <- c("s2_geography", "wk_vctr")
+
+  x
 }
 
 #' @export

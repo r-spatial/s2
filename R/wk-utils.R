@@ -7,6 +7,9 @@
 #' @param tessellate_tol,s2_tessellate_tol An angle in radians.
 #'   Points will not be added if a line segment is within this
 #'   distance of a point.
+#' @param use_altrep A flag indicating whether ALTREP representation of s2 geography
+#'    vectors should be used with support for data serialization (default: `TRUE` on R 4.3.0 and later,
+#'    set the option `s2.disable_altrep` to disable)
 #' @param x_scale The maximum x value of the projection
 #' @param centre The center point of the orthographic projection
 #' @param epsilon_east_west,epsilon_north_south Use a positive number to
@@ -39,7 +42,8 @@ wk_handle.s2_geography <- function(handleable, handler, ...,
 #' @export
 s2_geography_writer <- function(oriented = FALSE, check = TRUE,
                                 projection = s2_projection_plate_carree(),
-                                tessellate_tol = Inf) {
+                                tessellate_tol = Inf,
+                                use_altrep = !isTRUE(getOption("s2.disable_altrep"))) {
   stopifnot(is.null(projection) || inherits(projection, "s2_projection"))
 
   wk::new_wk_handler(
@@ -48,7 +52,8 @@ s2_geography_writer <- function(oriented = FALSE, check = TRUE,
       as.logical(oriented)[1],
       as.logical(check)[1],
       projection,
-      as.double(tessellate_tol[1])
+      as.double(tessellate_tol[1]),
+      as.logical(use_altrep)[1]
     ),
     "s2_geography_writer"
   )
