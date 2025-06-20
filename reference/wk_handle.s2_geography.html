@@ -56,7 +56,8 @@
 <span>  oriented <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  projection <span class="op">=</span> <span class="fu">s2_projection_plate_carree</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  tessellate_tol <span class="op">=</span> <span class="cn">Inf</span></span>
+<span>  tessellate_tol <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  use_altrep <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"s2.disable_altrep"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 's2_geography'</span></span>
@@ -113,6 +114,12 @@ rings are defined clockwise).</p></dd>
 <dd><p>An angle in radians.
 Points will not be added if a line segment is within this
 distance of a point.</p></dd>
+
+
+<dt id="arg-use-altrep">use_altrep<a class="anchor" aria-label="anchor" href="#arg-use-altrep"></a></dt>
+<dd><p>A flag indicating whether ALTREP representation of s2 geography
+vectors should be used with support for data serialization (default: <code>TRUE</code> on R 4.3.0 and later,
+set the option <code>s2.disable_altrep</code> to disable)</p></dd>
 
 
 <dt id="arg-x-scale">x_scale<a class="anchor" aria-label="anchor" href="#arg-x-scale"></a></dt>
