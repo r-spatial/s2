@@ -38,7 +38,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="s2-development-version">s2 (development version)<a class="anchor" aria-label="anchor" href="#s2-development-version"></a></h2>
-<ul><li>Fix code to help gcc-ubsan understand the region coverer (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>)</li>
+<ul><li>Implement serialization support for <code>s2_geography</code> vectors. This not only allows data containing s2 geography to be safely saved and restored across R sessions, but also enables using <code>s2</code> in parallel algorithms such as <code>mclapply()</code> (<a href="https://github.com/r-spatial/s2/issues/283" class="external-link">#283</a>)</li>
+<li>Fix code to help gcc-ubsan understand the region coverer (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>)</li>
 <li>Inspect <code>S2_FORCE_BUNDLED_ABSEIL</code> in <code>conifigure</code>: if non-empty, any system install of Abseil is ignored (e.g., if using a non-standard compiler on a system where system Abseil is available via pkg-config) (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>)</li>
 <li>Disable optimization in compact_array.h that confused compilers when compiling with <code>-Wpedantic</code> (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>).</li>
 <li>Add <code>cmake</code> to SystemReqirements. Even though this is technically optional (system Abseil can be used), adding to requirements helps some installers automatically install the dependency (<a href="https://github.com/r-spatial/s2/issues/277" class="external-link">#277</a>).</li>
