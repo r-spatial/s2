@@ -22,6 +22,21 @@ static SEXP s2_altrep_Elt(SEXP obj, R_xlen_t i) {
   return VECTOR_ELT(data, i);
 }
 
+static void s2_altrep_SetElt(SEXP obj, R_xlen_t i, SEXP v) {
+  SEXP data = R_altrep_data1(obj);
+  SET_VECTOR_ELT(data, i, v);
+}
+
+static void* s2_altrep_Dataptr(SEXP obj, Rboolean writable) {
+  if (writable) return NULL;
+  SEXP data = R_altrep_data1(obj);
+  return (void*) DATAPTR_RO(data);
+}
+
+static const void* s2_altrep_Dataptr_or_null(SEXP obj) {
+  return s2_altrep_Dataptr(obj, FALSE);
+}
+
 static SEXP s2_altrep_Serialized_state(SEXP obj) {
   // fetch the pointer to s2::s2_geography_serialize()
   SEXP fn = Rf_findFun(Rf_install("s2_geography_serialize"), s2_ns_pkg);
@@ -61,6 +76,9 @@ void s2_init_altrep(DllInfo *dll) {
 
   R_set_altrep_Length_method(s2_geography_altrep_cls, s2_altrep_Length);
   R_set_altlist_Elt_method(s2_geography_altrep_cls, s2_altrep_Elt);
+  R_set_altlist_Set_elt_method(s2_geography_altrep_cls, s2_altrep_SetElt);
+  R_set_altvec_Dataptr_method(s2_geography_altrep_cls, s2_altrep_Dataptr);
+  R_set_altvec_Dataptr_or_null_method(s2_geography_altrep_cls, s2_altrep_Dataptr_or_null);
   R_set_altrep_Serialized_state_method(s2_geography_altrep_cls, s2_altrep_Serialized_state);
   R_set_altrep_Unserialize_method(s2_geography_altrep_cls, s2_altrep_Unserialize);
 #endif
