@@ -275,3 +275,18 @@ test_that("wk crs and geodesic methods are defined", {
 
   expect_error(wk::wk_set_geodesic(geog, FALSE), "Can't set geodesic")
 })
+
+test_that("s2_geography vectors support elementwise assignment", {
+  x <- as_s2_geography(c("POINT (0 0)", "POINT (90 0)"))
+  x[2] <- as_s2_geography(c("POINT (45 45)"))
+
+  expect_wkt_equal(x, c("POINT (0 0)", "POINT (45 45)"))
+})
+
+test_that("DATAPTR can be obtained for s2_geography", {
+  Rcpp::cppFunction("double get_dataptr(SEXP obj) {
+    return (double) ((uintptr_t) DATAPTR_RO(obj));
+  }")
+
+  expect_no_error(get_dataptr(as_s2_geography("POINT (0 0)")))
+})
