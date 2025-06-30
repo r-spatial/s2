@@ -28,7 +28,8 @@ static void s2_altrep_SetElt(SEXP obj, R_xlen_t i, SEXP v) {
 }
 
 static void* s2_altrep_Dataptr(SEXP obj, Rboolean writable) {
-  if (writable) return NULL;
+  if (writable) Rf_error("unable to produce writable DATAPTR for list data");
+
   SEXP data = R_altrep_data1(obj);
   return (void*) DATAPTR_RO(data);
 }

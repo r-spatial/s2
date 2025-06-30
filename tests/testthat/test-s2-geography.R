@@ -284,9 +284,9 @@ test_that("s2_geography vectors support elementwise assignment", {
 })
 
 test_that("DATAPTR can be obtained for s2_geography", {
-  Rcpp::cppFunction("double get_dataptr(SEXP obj) {
-    return (double) ((uintptr_t) DATAPTR_RO(obj));
+  Rcpp::cppFunction("bool get_dataptr(SEXP obj) {
+    return DATAPTR_RO(obj) != NULL;
   }")
 
-  expect_no_error(get_dataptr(as_s2_geography("POINT (0 0)")))
+  expect_true(get_dataptr(as_s2_geography("POINT (0 0)")))
 })
