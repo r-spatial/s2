@@ -206,6 +206,8 @@ test_that("s2_distance works", {
 
   expect_identical(s2_distance("POINT (0 nan)", "POINT (0 0)"), NA_real_)
   expect_identical(s2_distance("POINT (0 0)", "POINT (0 nan)"), NA_real_)
+  expect_identical(s2_distance("POINT (nan 0)", "POINT (0 0)"), NA_real_)
+  expect_identical(s2_distance("POINT (0 0)", "POINT (nan 0)"), NA_real_)
 })
 
 test_that("s2_max_distance works", {
