@@ -1,4 +1,4 @@
-PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
+PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
 PKG_LIBS = -Ls2 -ls2static @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 
