@@ -99,3 +99,10 @@ services:
       dockerfile: tools/docker/alpine.dockerfile
     volumes:
       - .:/s2
+
+  cran-incoming:
+    build:
+      context: .
+      dockerfile: tools/docker/cran-incoming.dockerfile
+    volumes:
+      - .:/s2
