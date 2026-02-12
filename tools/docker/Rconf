@@ -1,0 +1,230 @@
+#! /bin/sh
+
+: ${R_SRC_DIR=~/src/R}
+
+args="--cache-file=config.cache \
+--enable-R-shlib --enable-memory-profiling \
+DEFS='-DUSE_TYPE_CHECKING_STRICT -D_FORTIFY_SOURCE=3' LIBnn=lib"
+## DEFS='-DUSE_TYPE_CHECKING_STRICT' LIBnn=lib"
+## --with-valgrind-instrumentation=1
+
+## Compilers to use.
+## Use configure defaults (gcc/g++/gfortran).
+compilers=
+flavor="-fg"
+extra=false
+blas=
+## --with-blas=no is the current default ...
+##   blas="--with-blas=no"
+
+## <NOTE>
+## If needed, the flavors could set their own user Makevars file via the
+## environment variable R_MAKEVARS_USER.
+## </NOTE>
+
+dryrun=false
+
+while test -n "${1}"; do
+  case "${1}" in
+    -r)
+      R_SRC_DIR=~/src/apps/R/r-release/R ;;
+    -p)
+      R_SRC_DIR=~/src/apps/R/r-patched/R ;;
+    -d)
+      R_SRC_DIR=~/src/apps/R/r-devel/R ;;
+    -s)
+      R_SRC_DIR="${2}"
+      shift ;;
+    -m)
+      args="${args} --enable-maintainer-mode" ;;
+    -x)
+      extra=true ;;
+    -bo)
+      blas="--with-blas=-lopenblas --with-lapack=no" ;;
+    -ba)
+      blas="--with-blas='-lcblas -lf77blas -latlas' --with-lapack=no" ;;
+    -bm)
+      blas="--with-blas='-lmkl_gf_lp64 -lmkl_core -lmkl_sequential' --with-lapack" ;;
+    -bi)
+      blas="--with-blas=no --with-lapack=no" ;;
+    -b)
+      blas="--with-blas=yes --with-lapack=yes" ;;
+    -v)
+      args="${args} --with-valgrind-instrumentation=2" ;;
+    -f*)
+      flavor="${1}" ;;
+    -n)
+      dryrun=true ;;
+    *)
+      args="${args} ${1}" ;;
+  esac
+  shift
+done
+
+## <FIXME>
+## libdeflate
+## Use new --with-libdeflate-compression=yes for r-devel: currently not
+## done by default.
+## ## Drop when we switch the default to yes.
+## case "${R_SRC_DIR}" in
+##   */src/apps/R/r-devel/R)
+##     args="${args} --with-libdeflate-compression=yes" ;;
+## esac
+## </FIXME>
+
+## <NOTE>
+## One can use the undocumented R configure variable CXXSTD to specify
+## the C++ standard for the *default* C++ compiler (and use CXX23STD etc
+## for the specific ones if necessary).
+## We provide CC_STD for specifying the C standard.
+
+args="${args} ${blas}"
+
+case "${flavor}" in    
+  -fg*)
+    ## flavor: gcc
+    ## <NOTE>
+    ## When primarily using clang for testing, configure with
+    ## --disable-long-double so that we can emulate hardware with no
+    ## excess fp precision results:
+    ##   args="${args} --disable-long-double"
+    ## </NOTE>
+    v=`expr "${flavor}" : ".*/\\(.*\\)"`
+    gcc_series_is_snap=false
+    case "${v}" in 
+      snap)
+	gcc_series_is_snap=true ;;
+    esac
+    PREFIX=
+    SUFFIX=
+    if test "${gcc_series_is_snap}" = "true"; then
+      PREFIX="/usr/lib/gcc-snapshot/bin/"
+    elif test -n "${v}"; then
+      SUFFIX="-${v}"
+    fi
+    ## C and C++ standards:
+    ## See <https://gcc.gnu.org/onlinedocs/gcc/Standards.html>.
+    ## As of 2024-11 defaults are as follows:
+    ## * if no C language dialect options are given: -std=gnu17
+    ## * if no C++ language dialect options are given, -std=gnu++17
+    ## See also <https://gcc.gnu.org/projects/cxx-status.html>:
+    ## * C++17 features are available since GCC 5. This mode is the
+    ##   default in GCC 11. 
+    ## * C++14 is the default in GCC 6.1 up until GCC 10 (including);
+    ##   it can be explicitly selected with the -std=c++14 command-line
+    ##   flag, or -std=gnu++14 to enable GNU extensions as well. 
+    ## * C++98 is the default in GCC versions prior to 6.1; 
+    ##   it can be explicitly selected with the -std=c++98 command-line
+    ##   flag, or -std=gnu++98 to enable GNU extensions as well.
+    if test "${extra}" = "true"; then
+      CC_EXTRA="-fsanitize=address,undefined,bounds-strict -fno-omit-frame-pointer"
+      CXX_EXTRA="-fsanitize=address,undefined,bounds-strict -fno-omit-frame-pointer"
+      FC_EXTRA="-fsanitize=address"
+      ## As of 2015-09-07, compilation with ASAN/UBSAN fails on the
+      ## #pragma omp parallel in /src/library/stats/src/distance.c:
+      ## Hence, disable OpenMP for the time being.
+      args="${args} --disable-openmp"
+    else
+      CC_EXTRA=
+      CXX_EXTRA=
+      FC_EXTRA=
+    fi
+    CC="${PREFIX}gcc${SUFFIX}"
+    test -n "${CC_STD}" && CC="${CC} ${CC_STD}"
+    test -n "${CC_EXTRA}" && CC="${CC} ${CC_EXTRA}"
+    CXX="${PREFIX}g++${SUFFIX}"
+    test -n "${CXX_EXTRA}" && CXX="${CXX} ${CXX_EXTRA}"
+    FC="${PREFIX}gfortran${SUFFIX}"
+    test -n "${FC_EXTRA}" && FC="${FC} ${FC_EXTRA}"
+    OBJC="${PREFIX}gcc${SUFFIX}"
+    OBJCXX="${PREFIX}gcc${SUFFIX}"
+    compilers="CC=\"${CC}\" CXX=\"${CXX}\" OBJC=${OBJC} OBJCXX=${OBJCXX} FC=\"${FC}\" F77=\"${FC}\""
+    if test "${gcc_series_is_snap}" = "true"; then
+      compilers="${compilers} LDFLAGS=-L/usr/lib/gcc-snapshot/lib"
+      ## compilers="${compilers} LDFLAGS=-Wl,-rpath,/usr/lib/gcc-snapshot/lib"
+    fi
+    if test "${extra}" = "true"; then
+      compilers="${compilers} MAIN_LDFLAGS=\"-fsanitize=address,undefined\""
+    fi
+    ;;
+  -fc*)
+    ## flavor: clang
+    ## Using '-stdlib=libc++' does not always work for packages linking
+    ## against system libraries built against -lstdc++ (e.g., JAGS).
+    ## <FIXME>
+    ## As of 2024-01, Debian testing with the LLVM 17 compilers has OMP
+    ## runtime problems, eventually giving errors like
+    ##   OMP: Error #13: Assertion failure at kmp_runtime.cpp(6891).
+    ## So for the time being, disable OpenMP.
+    ## Commented out 2024-12-22.
+    ## </FIXME>
+    ## <NOTE>
+    ## As of 2025-02, apparently using the LLVM 19 compilers with OpenMP
+    ## gives many "CPU time > 2.5 times elapsed time" NOTEs we do not
+    ## get for the GCC compilers with OpenMP.
+    ## So for the time being, disable OpenMP.
+    ## <CODE>
+    args="${args} --disable-openmp"
+    ## </CODE>
+    ## </NOTE>
+    vc=`expr "${flavor}" : "[^/]*/\\([^/]*\\)\\(/.*\\)\\?"`
+    vg=`expr "${flavor}" : "[^/]*/[^/]*/\\(.*\\)"`
+    test -n "${vc}" && vc="-${vc}"
+    test -n "${vg}" && vg="-${vg}"
+    if test "${extra}" = "true"; then
+      CC_EXTRA="-fsanitize=address,undefined -fno-sanitize=float-divide-by-zero -fno-sanitize=alignment  -fno-omit-frame-pointer"
+      CXX_EXTRA="-fsanitize=address,undefined -fno-sanitize=float-divide-by-zero -fno-sanitize=alignment -fno-omit-frame-pointer -frtti"
+    else
+      CC_EXTRA=
+      CXX_EXTRA=
+    fi
+    CC="clang${vc}"
+    test -n "${CC_STD}" && CC="${CC} ${CC_STD}"
+    test -n "${CC_EXTRA}" && CC="${CC} ${CC_EXTRA}"
+    CXX="clang++${vc}"
+    test -n "${CXX_STDLIB}" && CXX="${CXX} -stdlib=${CXX_STDLIB}"
+    test -n "${CXX_EXTRA}" && CXX="${CXX} ${CXX_EXTRA}"    
+    ## <FIXME>
+    ## As of 2014-09-10, we had
+    ##   Clang can compile Objective-C and Objective-C++, but needs a
+    ##   runtime and the corresponding headers (e.g., 'objc/Object.h'):
+    ##   on Debian/Ubuntu, the latter are currently only available in
+    ##   the respective GCC version-specific header directories (e.g.,
+    ##   '/usr/lib/gcc/x86_64-linux-gnu/4.9/include'), and hence not
+    ##   really usable for Clang.
+    ##   One could try using the GNUstep Objective-C runtime and headers
+    ##   (libobjc2 available from http://download.gna.org/gnustep/) but
+    ##   this is not available for Debian/Ubuntu.
+    ##   Hence, use GCC for Objective-C and Objective-C++.
+    ##   What a nuisance ...
+    ## As of 2023-11, apparently clang can be configured ok to use as
+    ## the Objective C compiler.  Objective C++ works for neither gcc
+    ## nor clang as configure fails to find the Foundation/Foundation.h
+    ## header ...
+    ## </FIXME>
+    OBJC="clang${vc}"
+    OBJCXX="clang${vc}"
+    compilers="CC=\"${CC}\" CXX=\"${CXX}\" OBJC=${OBJC} OBJCXX=${OBJCXX}"
+    if test "${extra}" = "true"; then
+      compilers="${compilers} MAIN_LD=\"clang++${vc} -fsanitize=undefined,address\""
+    fi
+    ## Note that the LLVM Fortran front does not work for versions below
+    ## 17.
+    if test -n "${vc}" && test -z "${vg}"; then
+      if test "${vc#-}" -ge 20; then
+	FC="flang${vc}"
+      else
+	FC="flang-new${vc}"
+      fi
+    else
+      FC="gfortran${vg}"
+    fi
+    compilers="${compilers} FC=${FC} F77=${FC}"
+    ;;
+esac
+
+if test "${dryrun}" = "true"; then
+  echo ${R_SRC_DIR}/configure ${args} ${compilers}
+else
+  eval ${R_SRC_DIR}/configure ${args} ${compilers}
+fi
