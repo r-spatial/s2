@@ -74,6 +74,7 @@
 #include <limits>
 #include <memory>
 #include <ostream>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -1373,7 +1374,9 @@ class S2BooleanOperation::Impl::CrossingProcessor {
   // loop or a sibling pair), indicates whether that loop represents a shell
   // or a hole.  This information is used during the second pass of
   // AddBoundaryPair() to determine the output for degenerate edges.
-  flat_hash_map<ShapeEdgeId, bool> is_degenerate_hole_;
+  // Use std::unordered_map instead of absl::flat_hash_map to work around
+  // GCC 14 constexpr bugs with older abseil versions (e.g., Debian's).
+  std::unordered_map<ShapeEdgeId, bool> is_degenerate_hole_;
 
   // Indicates whether the point being processed along the current edge chain
   // is in the polygonal interior of the opposite region, using semi-open

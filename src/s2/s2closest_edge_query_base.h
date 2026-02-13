@@ -24,13 +24,13 @@
 #include <memory>
 #include <queue>
 #include <type_traits>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
 #include "s2/base/integral_types.h"
 #include "s2/base/logging.h"
 #include "absl/container/btree_set.h"
-#include "absl/container/flat_hash_set.h"
 #include "absl/container/inlined_vector.h"
 #include "s2/_fp_contract_off.h"
 #include "s2/s1angle.h"
@@ -372,7 +372,9 @@ class S2ClosestEdgeQueryBase {
   // (even when Options::max_results() == 1), rather than just when we need to.
   bool avoid_duplicates_;
   using ShapeEdgeId = s2shapeutil::ShapeEdgeId;
-  absl::flat_hash_set<ShapeEdgeId> tested_edges_;
+  // Use std::unordered_set instead of absl::flat_hash_set to work around
+  // GCC 14 constexpr bugs with older abseil versions (e.g., Debian's).
+  std::unordered_set<ShapeEdgeId> tested_edges_;
 
   // The algorithm maintains a priority queue of unprocessed S2CellIds, sorted
   // in increasing order of distance from the target.
