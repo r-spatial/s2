@@ -66,7 +66,7 @@ services:
 # CRAN incoming
   debian-sid-clang:
     build:
-      context: .
+      context: tools/docker
       args:
         - IMAGE=debian:sid
       dockerfile: tools/docker/debian-clang.dockerfile
@@ -97,5 +97,12 @@ services:
     build:
       context: .
       dockerfile: tools/docker/alpine.dockerfile
+    volumes:
+      - .:/s2
+
+  cran-incoming:
+    build:
+      context: .
+      dockerfile: tools/docker/cran-incoming.dockerfile
     volumes:
       - .:/s2
