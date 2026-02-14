@@ -2,7 +2,7 @@ PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
 PKG_LIBS = -Ls2 -ls2static @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 
-CXX_STD = CXX17
+CXX_STD = CXX20
 
 S2_OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2/encoded_s2point_vector.o \

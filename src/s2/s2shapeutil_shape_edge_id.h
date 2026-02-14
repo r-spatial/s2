@@ -19,6 +19,8 @@
 #define S2_S2SHAPEUTIL_SHAPE_EDGE_ID_H_
 
 #include <cstddef>
+#include <cstdint>
+#include <functional>
 
 #include <iostream>
 #include <ostream>
@@ -90,5 +92,19 @@ inline std::ostream& operator<<(std::ostream& os, ShapeEdgeId id) {
 }
 
 }  // namespace s2shapeutil
+
+// std::hash specialization for ShapeEdgeId to enable use in std::unordered_set
+// and std::unordered_map. This is needed as a workaround for GCC 14 constexpr
+// bugs with older abseil versions when using absl::flat_hash_set/map.
+namespace std {
+template <>
+struct hash<s2shapeutil::ShapeEdgeId> {
+  size_t operator()(const s2shapeutil::ShapeEdgeId& id) const {
+    // Combine shape_id and edge_id using a simple hash combination
+    return std::hash<int64_t>()(static_cast<int64_t>(id.shape_id) << 32 |
+                                static_cast<uint32_t>(id.edge_id));
+  }
+};
+}  // namespace std
 
 #endif  // S2_S2SHAPEUTIL_SHAPE_EDGE_ID_H_
