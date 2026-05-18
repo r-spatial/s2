@@ -1,6 +1,7 @@
 # Introduction to s2
 
 ``` r
+
 library(s2)
 ```
 

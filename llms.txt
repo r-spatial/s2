@@ -20,12 +20,14 @@ You can install the released version of s2 from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
+
 install.packages("s2")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("r-spatial/s2")
 ```
@@ -48,6 +50,7 @@ planar geometry, s2’s functions work in latitude and longitude and
 assume a spherical geometry:
 
 ``` r
+
 library(s2)
 
 s2_contains(
@@ -66,6 +69,7 @@ using
 [`as_s2_geography()`](https://r-spatial.github.io/s2/reference/as_s2_geography.md):
 
 ``` r
+
 library(dplyr)
 library(sf)
 
@@ -94,6 +98,7 @@ nc_s2
 Use accessors to extract information about geometries:
 
 ``` r
+
 nc_s2 %>%
   mutate(
     area = s2_area(geometry),
@@ -118,6 +123,7 @@ nc_s2 %>%
 Use predicates to subset vectors:
 
 ``` r
+
 nc_s2 %>%
   filter(s2_contains(geometry, "POINT (-80.9313 35.6196)"))
 #> # A tibble: 1 × 2
@@ -129,6 +135,7 @@ nc_s2 %>%
 Use transformers to create new geometries:
 
 ``` r
+
 nc_s2 %>%
   mutate(geometry = s2_boundary(geometry))
 #> # A tibble: 100 × 2
@@ -151,6 +158,7 @@ Finally, use the WKB or WKT exporters to export to sf or some other
 package:
 
 ``` r
+
 nc_s2 %>%
   mutate(geometry = st_as_sfc(s2_as_binary(geometry))) %>%
   st_as_sf()
