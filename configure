@@ -76,9 +76,11 @@ if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && pkg-config absl_s2 --libs >/dev/null 2>/
   PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
   PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
+  R_S2_ABSL_HOME=""
 else
   echo "** Building abseil-cpp using cmake"
-  CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+  CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
+  mkdir -p "${CMAKE_INSTALL_PREFIX}"
   if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
     echo "** Done!"
   else
@@ -96,9 +98,9 @@ else
   rm -rf tools/build
 
   # Depending on the cmake options this can end up in a subdirectory of lib
-  ABSL_BASE_PC=`find tools/dist -name absl_base.pc`
+  ABSL_BASE_PC=`find "${CMAKE_INSTALL_PREFIX}" -name absl_base.pc`
   R_S2_PKG_CONFIG_PATH=`dirname "${ABSL_BASE_PC}"`
-  R_S2_ABSL_HOME="`pwd`/tools/dist"
+  R_S2_ABSL_HOME="${CMAKE_INSTALL_PREFIX}"
   export PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:${PKG_CONFIG_PATH}"
   echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
   PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
@@ -138,7 +140,7 @@ echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 
 # Write to Makevars
-sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars
+sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|@absl_home@|$R_S2_ABSL_HOME|" src/Makevars.in > src/Makevars
 
 # Success
 exit 0

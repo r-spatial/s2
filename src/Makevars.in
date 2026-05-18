@@ -138,7 +138,7 @@ $(STATLIB): $(S2_OBJECTS)
 all: $(SHLIB) purify
 
 purify: $(SHLIB)
-	@rm -f $(STATLIB) $(S2_OBJECTS) || true
+	@rm -rf @absl_home@ || true
 
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
