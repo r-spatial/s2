@@ -84,10 +84,19 @@
 // have an implicit 'this' argument, the arguments of such methods
 // should be counted from two, not one."
 #if ABSL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
+// If using mingw's c99-compliant printf, we need a different format-checking
+// attribute to properly recognize %llu, %llx, etc.
+#if defined(__USE_MINGW_ANSI_STDIO) && defined(__MINGW_PRINTF_FORMAT)
+#define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check) \
+  __attribute__((__format__(__MINGW_PRINTF_FORMAT, string_index, first_to_check)))
+#define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check) \
+  __attribute__((__format__(__MINGW_SCANF_FORMAT, string_index, first_to_check)))
+#else
 #define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check) \
   __attribute__((__format__(__printf__, string_index, first_to_check)))
 #define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check) \
   __attribute__((__format__(__scanf__, string_index, first_to_check)))
+#endif
 #else
 #define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check)
 #define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check)
