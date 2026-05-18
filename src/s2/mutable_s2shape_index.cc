@@ -592,7 +592,7 @@ void MutableS2ShapeIndex::ApplyUpdatesThreadSafe() {
     // is unlocked the index_status_ is guaranteed to be FRESH.
     ++update_state_->num_waiting;
     lock_.Unlock();
-    update_state_->wait_mutex.Lock();
+    update_state_->wait_mutex.lock();
     lock_.Lock();
     --update_state_->num_waiting;
     UnlockAndSignal();  // Notify other waiting threads.
@@ -609,7 +609,7 @@ void MutableS2ShapeIndex::ApplyUpdatesThreadSafe() {
     update_state_ = make_unique<UpdateState>();
     // lock_.Lock wait_mutex *before* calling Unlock() to ensure that all other
     // threads will block on it.
-    update_state_->wait_mutex.Lock();
+    update_state_->wait_mutex.lock();
     // Release the spinlock before doing any real work.
     lock_.Unlock();
     ApplyUpdatesInternal();
@@ -637,7 +637,7 @@ inline void MutableS2ShapeIndex::UnlockAndSignal() {
   //
   // We need to unlock wait_mutex before destroying it even if there are no
   // waiting threads.
-  update_state_->wait_mutex.Unlock();
+  update_state_->wait_mutex.unlock();
   if (num_waiting == 0) {
     update_state_.reset();
   }
