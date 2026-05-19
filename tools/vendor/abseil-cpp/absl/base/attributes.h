@@ -91,6 +91,13 @@
   __attribute__((__format__(__MINGW_PRINTF_FORMAT, string_index, first_to_check)))
 #define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check) \
   __attribute__((__format__(__MINGW_SCANF_FORMAT, string_index, first_to_check)))
+#elif defined(__USE_MINGW_ANSI_STDIO)
+// MinGW ANSI stdio is in use but __MINGW_PRINTF_FORMAT is not defined (older
+// headers). Use gnu_printf which also understands C99 format specifiers.
+#define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check) \
+  __attribute__((__format__(__gnu_printf__, string_index, first_to_check)))
+#define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check) \
+  __attribute__((__format__(__gnu_scanf__, string_index, first_to_check)))
 #else
 #define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check) \
   __attribute__((__format__(__printf__, string_index, first_to_check)))
