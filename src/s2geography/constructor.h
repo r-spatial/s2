@@ -87,6 +87,10 @@ class Constructor : public Handler {
       }
     } else {
       for (const auto& pt: input_points_) {
+        if (std::isnan(pt.x()) || std::isnan(pt.y())) {
+          throw Exception("Can't unproject point with nan to S2Point");
+        }
+
         points_.push_back(options_.projection()->Unproject(R2Point(pt.x(), pt.y())));
       }
     }
@@ -142,12 +146,12 @@ class PointConstructor : public Constructor {
  private:
   bool coord_empty(const double* coord, int32_t coord_size) {
     for (int32_t i = 0; i < coord_size; i++) {
-      if (!std::isnan(coord[i])) {
-        return false;
+      if (std::isnan(coord[i])) {
+        return true;
       }
     }
 
-    return true;
+    return false;
   }
 };
 

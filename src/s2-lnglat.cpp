@@ -19,9 +19,14 @@ List s2_lnglat_from_s2_point(List s2_point) {
 
   S2LatLng item;
   for (R_xlen_t i = 0; i < n; i++) {
-    item = S2LatLng(S2Point(x[i], y[i], z[i]));
-    lng[i] = item.lng().degrees();
-    lat[i] = item.lat().degrees();
+    if (std::isnan(x[i]) || std::isnan(y[i]) || std::isnan(z[i])) {
+      lng[i] = NA_REAL;
+      lat[i] = NA_REAL;
+    } else {
+      item = S2LatLng(S2Point(x[i], y[i], z[i]));
+      lng[i] = item.lng().degrees();
+      lat[i] = item.lat().degrees();
+    }
   }
 
   return List::create(_["x"] = lng, _["y"] = lat);
@@ -40,10 +45,16 @@ List s2_point_from_s2_lnglat(List s2_lnglat) {
 
   S2Point item;
   for (R_xlen_t i = 0; i < n; i++) {
-    item = S2LatLng::FromDegrees(lat[i], lng[i]).Normalized().ToPoint();
-    x[i] = item.x();
-    y[i] = item.y();
-    z[i] = item.z();
+    if (std::isnan(lng[i]) || std::isnan(lat[i])) {
+      x[i] = NA_REAL;
+      y[i] = NA_REAL;
+      z[i] = NA_REAL;
+    } else {
+      item = S2LatLng::FromDegrees(lat[i], lng[i]).Normalized().ToPoint();
+      x[i] = item.x();
+      y[i] = item.y();
+      z[i] = item.z();
+    }
   }
 
   return List::create(_["x"] = x, _["y"] = y, _["z"] = z);
