@@ -30,9 +30,20 @@
 #include "s2/base/commandlineflags.h"
 #include "s2/base/integral_types.h"
 #include "absl/base/attributes.h"
+#include "absl/base/config.h"
 #include "absl/container/btree_map.h"
 #include "absl/flags/flag.h"
 #include "absl/synchronization/mutex.h"
+
+// Abseil deprecated Lock()/Unlock() in favor of lock()/unlock() in version
+// 20260107. Use the new lowercase names when available.
+#if !defined(ABSL_LTS_RELEASE_VERSION) || ABSL_LTS_RELEASE_VERSION >= 20260107
+#define S2_ABSL_MUTEX_LOCK(mu) (mu).lock()
+#define S2_ABSL_MUTEX_UNLOCK(mu) (mu).unlock()
+#else
+#define S2_ABSL_MUTEX_LOCK(mu) (mu).Lock()
+#define S2_ABSL_MUTEX_UNLOCK(mu) (mu).Unlock()
+#endif
 #include "absl/utility/utility.h"
 #include "s2/util/coding/coder.h"
 #include "s2/util/coding/varint.h"
@@ -592,7 +603,7 @@ void MutableS2ShapeIndex::ApplyUpdatesThreadSafe() {
     // is unlocked the index_status_ is guaranteed to be FRESH.
     ++update_state_->num_waiting;
     lock_.Unlock();
-    update_state_->wait_mutex.Lock();
+    S2_ABSL_MUTEX_LOCK(update_state_->wait_mutex);
     lock_.Lock();
     --update_state_->num_waiting;
     UnlockAndSignal();  // Notify other waiting threads.
@@ -609,7 +620,7 @@ void MutableS2ShapeIndex::ApplyUpdatesThreadSafe() {
     update_state_ = make_unique<UpdateState>();
     // lock_.Lock wait_mutex *before* calling Unlock() to ensure that all other
     // threads will block on it.
-    update_state_->wait_mutex.Lock();
+    S2_ABSL_MUTEX_LOCK(update_state_->wait_mutex);
     // Release the spinlock before doing any real work.
     lock_.Unlock();
     ApplyUpdatesInternal();
@@ -637,7 +648,7 @@ inline void MutableS2ShapeIndex::UnlockAndSignal() {
   //
   // We need to unlock wait_mutex before destroying it even if there are no
   // waiting threads.
-  update_state_->wait_mutex.Unlock();
+  S2_ABSL_MUTEX_UNLOCK(update_state_->wait_mutex);
   if (num_waiting == 0) {
     update_state_.reset();
   }

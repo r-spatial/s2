@@ -17,3 +17,4 @@
 ^compile_commands\.json$
 ^\.cache$
 ^docker-compose\.yml$
+^\.dockerignore$

@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <R.h>
+#include <Rcpp.h>
 #include <Rinternals.h>
 
 extern SEXP s2_ns_pkg;

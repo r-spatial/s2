@@ -1,4 +1,4 @@
-PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS
+PKG_CPPFLAGS = -I../src -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
 PKG_LIBS = -Ls2 -ls2static @libs@
 PKG_CXXFLAGS = @cflags@ -pthread
 
@@ -135,7 +135,12 @@ $(SHLIB): $(STATLIB)
 $(STATLIB): $(S2_OBJECTS)
 	ar rcs $(STATLIB) $(S2_OBJECTS)
 
+all: $(SHLIB) purify
+
+purify: $(SHLIB)
+	@rm -rf @absl_home@ || true
+
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
 
-.PHONY: clean
+.PHONY: clean purify

@@ -1,5 +1,6 @@
 #define R_NO_REMAP
-#include <R.h>
+#include <Rcpp.h>
+
 #include <Rinternals.h>
 #include <Rversion.h>
 
