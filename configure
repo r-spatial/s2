@@ -79,7 +79,16 @@ if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && pkg-config absl_s2 --libs >/dev/null 2>/
   R_S2_ABSL_HOME=""
 else
   echo "** Building abseil-cpp using cmake"
-  CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
+
+  # If the build has explicitly forced building bundled Abseil, we install to a temporary
+  # directory so that R CMD check does not inspects its static libraries for disallowed
+  # symbols. Otherwise, we install into the package source (more conventional).
+  if [ ! -z "$S2_FORCE_BUNDLED_ABSEIL" ]; then
+    CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
+  else
+    CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
+  fi
+
   mkdir -p "${CMAKE_INSTALL_PREFIX}"
   if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
     echo "** Done!"
