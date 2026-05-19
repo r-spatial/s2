@@ -12,8 +12,8 @@ test_that("s2_lnglat objects can be created from and converted back to R objects
   )
 
   expect_identical(
-    as_s2_lnglat(s2_point(NaN, NaN, NaN)),
-    s2_lnglat(NaN, NaN)
+    as_s2_lnglat(s2_point(NA, NA, NA)),
+    s2_lnglat(NA, NA)
   )
 })
 
