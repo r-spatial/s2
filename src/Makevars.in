@@ -135,7 +135,12 @@ $(SHLIB): $(STATLIB)
 $(STATLIB): $(S2_OBJECTS)
 	ar rcs $(STATLIB) $(S2_OBJECTS)
 
+all: $(SHLIB) purify
+
+purify: $(SHLIB)
+	@rm -rf @absl_home@ || true
+
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
 
-.PHONY: clean
+.PHONY: clean purify
