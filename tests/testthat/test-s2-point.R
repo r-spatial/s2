@@ -12,6 +12,17 @@ test_that("s2_point objects can be created from and converted back to R objects"
   )
 })
 
+test_that("s2_point objects propagate NAs on convert to/from lnglat", {
+  expect_identical(as_s2_point(s2_lnglat(NA, NA)), s2_point(NA, NA, NA))
+  expect_identical(as_s2_point(s2_lnglat(NA, 1)), s2_point(NA, NA, NA))
+  expect_identical(as_s2_point(s2_lnglat(1, NA)), s2_point(NA, NA, NA))
+
+  expect_identical(as_s2_lnglat(s2_point(NA, NA, NA)), s2_lnglat(NA, NA))
+  expect_identical(as_s2_lnglat(s2_point(1, NA, NA)), s2_lnglat(NA, NA))
+  expect_identical(as_s2_lnglat(s2_point(NA, 1, NA)), s2_lnglat(NA, NA))
+  expect_identical(as_s2_lnglat(s2_point(NA, NA, 1)), s2_lnglat(NA, NA))
+})
+
 test_that("s2_point can be imported from s2_geography", {
   expect_equal(
     as_s2_point(as_s2_geography("POINT (-64 45)")),
