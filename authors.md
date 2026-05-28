@@ -22,13 +22,13 @@ Source:
 [`DESCRIPTION`](https://github.com/r-spatial/s2/blob/main/DESCRIPTION)
 
 Dunnington D, Pebesma E, Rubak E (2026). *s2: Spherical Geometry
-Operators Using the S2 Geometry Library*. R package version 1.1.9,
+Operators Using the S2 Geometry Library*. R package version 1.1.10,
 <https://r-spatial.github.io/s2/>.
 
     @Manual{,
       title = {s2: Spherical Geometry Operators Using the S2 Geometry Library},
       author = {Dewey Dunnington and Edzer Pebesma and Ege Rubak},
       year = {2026},
-      note = {R package version 1.1.9},
+      note = {R package version 1.1.10},
       url = {https://r-spatial.github.io/s2/},
     }
