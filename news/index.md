@@ -1,6 +1,15 @@
 # Changelog
 
-## s2 (development version)
+## s2 1.1.11
+
+- Fix deprecated Abseil usage and Rcpp include order
+  [\#300](https://github.com/r-spatial/s2/issues/300)
+  [\#297](https://github.com/r-spatial/s2/issues/297)
+  [\#299](https://github.com/r-spatial/s2/issues/299)
+
+## s2 1.1.9
+
+CRAN release: 2025-05-23
 
 - Implement serialization support for `s2_geography` vectors. This not
   only allows data containing s2 geography to be safely saved and

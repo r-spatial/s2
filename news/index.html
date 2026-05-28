@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">s2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="s2-development-version">s2 (development version)<a class="anchor" aria-label="anchor" href="#s2-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.11" id="s2-1111">s2 1.1.11<a class="anchor" aria-label="anchor" href="#s2-1111"></a></h2>
+<ul><li>Fix deprecated Abseil usage and Rcpp include order <a href="https://github.com/r-spatial/s2/issues/300" class="external-link">#300</a> <a href="https://github.com/r-spatial/s2/issues/297" class="external-link">#297</a> <a href="https://github.com/r-spatial/s2/issues/299" class="external-link">#299</a></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.9" id="s2-119">s2 1.1.9<a class="anchor" aria-label="anchor" href="#s2-119"></a></h2><p class="text-muted">CRAN release: 2025-05-23</p>
 <ul><li>Implement serialization support for <code>s2_geography</code> vectors. This not only allows data containing s2 geography to be safely saved and restored across R sessions, but also enables using <code>s2</code> in parallel algorithms such as <code>mclapply()</code> (<a href="https://github.com/r-spatial/s2/issues/283" class="external-link">#283</a>)</li>
 <li>Fix code to help gcc-ubsan understand the region coverer (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>)</li>
 <li>Inspect <code>S2_FORCE_BUNDLED_ABSEIL</code> in <code>conifigure</code>: if non-empty, any system install of Abseil is ignored (e.g., if using a non-standard compiler on a system where system Abseil is available via pkg-config) (<a href="https://github.com/r-spatial/s2/issues/275" class="external-link">#275</a>)</li>
