@@ -1,0 +1,5 @@
+# Ignore everything except what's needed for Docker builds
+*
+
+# Include only the docker build files
+!tools/docker/
