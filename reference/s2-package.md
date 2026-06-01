@@ -15,7 +15,7 @@ Useful links:
 
 - <https://github.com/r-spatial/s2>
 
-- <http://s2geometry.io/>
+- <https://s2geometry.io/>
 
 - Report bugs at <https://github.com/r-spatial/s2/issues>
 
@@ -25,6 +25,9 @@ Useful links:
 ([ORCID](https://orcid.org/0000-0001-8049-7069))
 
 Authors:
+
+- Edzer Pebesma <edzer.pebesma@uni-muenster.de>
+  ([ORCID](https://orcid.org/0000-0001-8049-7069))
 
 - Dewey Dunnington <dewey@fishandwhistle.net>
   ([ORCID](https://orcid.org/0000-0002-9415-4582))
