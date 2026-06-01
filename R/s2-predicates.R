@@ -21,16 +21,16 @@
 #'
 #' BigQuery's geography function reference:
 #'
-#' - [ST_CONTAINS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains)
-#' - [ST_COVEREDBY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_coveredby)
-#' - [ST_COVERS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_covers)
-#' - [ST_DISJOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_disjoint)
-#' - [ST_EQUALS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_equals)
-#' - [ST_INTERSECTS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersects)
-#' - [ST_INTERSECTSBOX](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersectsbox)
-#' - [ST_TOUCHES](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_touches)
-#' - [ST_WITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
-#' - [ST_DWITHIN](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
+#' - [ST_CONTAINS](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains)
+#' - [ST_COVEREDBY](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_coveredby)
+#' - [ST_COVERS](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_covers)
+#' - [ST_DISJOINT](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_disjoint)
+#' - [ST_EQUALS](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_equals)
+#' - [ST_INTERSECTS](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersects)
+#' - [ST_INTERSECTSBOX](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersectsbox)
+#' - [ST_TOUCHES](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_touches)
+#' - [ST_WITHIN](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within)
+#' - [ST_DWITHIN](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin)
 #'
 #' @examples
 #' s2_contains(

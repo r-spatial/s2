@@ -13,7 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://r-spatial.github.io/s2/}
   \item \url{https://github.com/r-spatial/s2}
-  \item \url{http://s2geometry.io/}
+  \item \url{https://s2geometry.io/}
   \item Report bugs at \url{https://github.com/r-spatial/s2/issues}
 }
 
@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Edzer Pebesma \email{edzer.pebesma@uni-muenster.de} (\href{https://orcid.org/0000-0001-8049-7069}{ORCID})
   \item Dewey Dunnington \email{dewey@fishandwhistle.net} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID})
   \item Ege Rubak \email{rubak@math.aau.dk}
 }

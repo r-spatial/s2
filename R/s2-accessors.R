@@ -14,17 +14,17 @@
 #' @seealso
 #' BigQuery's geography function reference:
 #'
-#' - [ST_ISCOLLECTION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_iscollection)
-#' - [ST_DIMENSION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dimension)
-#' - [ST_NUMPOINTS](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_numpoints)
-#' - [ST_ISEMPTY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty)
-#' - [ST_AREA](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_area)
-#' - [ST_LENGTH](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_length)
-#' - [ST_PERIMETER](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_perimeter)
-#' - [ST_X](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_x)
-#' - [ST_Y](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_y)
-#' - [ST_DISTANCE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_distance)
-#' - [ST_MAXDISTANCE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_maxdistance)
+#' - [ST_ISCOLLECTION](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_iscollection)
+#' - [ST_DIMENSION](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dimension)
+#' - [ST_NUMPOINTS](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_numpoints)
+#' - [ST_ISEMPTY](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty)
+#' - [ST_AREA](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_area)
+#' - [ST_LENGTH](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_length)
+#' - [ST_PERIMETER](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_perimeter)
+#' - [ST_X](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_x)
+#' - [ST_Y](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_y)
+#' - [ST_DISTANCE](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_distance)
+#' - [ST_MAXDISTANCE](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_maxdistance)
 #'
 #' @examples
 #' # s2_is_collection() tests for multiple geometries in one feature

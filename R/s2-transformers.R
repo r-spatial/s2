@@ -27,16 +27,16 @@
 #' @seealso
 #' BigQuery's geography function reference:
 #'
-#' - [ST_BOUNDARY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_boundary)
-#' - [ST_CENTROID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_centroid)
-#' - [ST_CLOSESTPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_closestpoint)
-#' - [ST_DIFFERENCE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_difference)
-#' - [ST_INTERSECTION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection)
-#' - [ST_UNION](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union)
-#' - [ST_SNAPTOGRID](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
-#' - [ST_SIMPLIFY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify)
-#' - [ST_UNION_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg)
-#' - [ST_CENTROID_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
+#' - [ST_BOUNDARY](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_boundary)
+#' - [ST_CENTROID](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_centroid)
+#' - [ST_CLOSESTPOINT](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_closestpoint)
+#' - [ST_DIFFERENCE](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_difference)
+#' - [ST_INTERSECTION](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection)
+#' - [ST_UNION](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union)
+#' - [ST_SNAPTOGRID](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid)
+#' - [ST_SIMPLIFY](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify)
+#' - [ST_UNION_AGG](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg)
+#' - [ST_CENTROID_AGG](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg)
 #'
 #' @examples
 #' # returns the boundary:

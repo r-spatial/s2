@@ -87,7 +87,7 @@ digits after the decimal place.}
 
 \item{trim}{Should trailing zeroes be included after the decimal place?}
 
-\item{endian}{The endian-ness of the well-known binary. See \code{\link[wk:deprecated]{wk::wkb_translate_wkb()}}.}
+\item{endian}{The endian-ness of the well-known binary. See \code{\link[wk:wkb_translate_wkb]{wk::wkb_translate_wkb()}}.}
 }
 \description{
 These functions create and export \link[=as_s2_geography]{geography vectors}.
@@ -153,12 +153,12 @@ See \code{\link[=as_s2_geography]{as_s2_geography()}} for other ways to construc
 
 BigQuery's geography function reference:
 \itemize{
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint}{ST_GEOGPOINT}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline}{ST_MAKELINE}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon}{ST_MAKEPOLYGON}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext}{ST_GEOGFROMTEXT}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb}{ST_GEOGFROMWKB}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext}{ST_ASTEXT}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_asbinary}{ST_ASBINARY}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint}{ST_GEOGPOINT}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline}{ST_MAKELINE}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon}{ST_MAKEPOLYGON}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext}{ST_GEOGFROMTEXT}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb}{ST_GEOGFROMWKB}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext}{ST_ASTEXT}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_asbinary}{ST_ASBINARY}
 }
 }

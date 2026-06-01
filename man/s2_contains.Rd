@@ -155,15 +155,15 @@ Matrix versions of these predicates (e.g., \code{\link[=s2_intersects_matrix]{s2
 
 BigQuery's geography function reference:
 \itemize{
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains}{ST_CONTAINS}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_coveredby}{ST_COVEREDBY}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_covers}{ST_COVERS}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_disjoint}{ST_DISJOINT}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_equals}{ST_EQUALS}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersects}{ST_INTERSECTS}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersectsbox}{ST_INTERSECTSBOX}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_touches}{ST_TOUCHES}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within}{ST_WITHIN}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin}{ST_DWITHIN}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_contains}{ST_CONTAINS}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_coveredby}{ST_COVEREDBY}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_covers}{ST_COVERS}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_disjoint}{ST_DISJOINT}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_equals}{ST_EQUALS}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersects}{ST_INTERSECTS}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersectsbox}{ST_INTERSECTSBOX}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_touches}{ST_TOUCHES}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_within}{ST_WITHIN}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dwithin}{ST_DWITHIN}
 }
 }

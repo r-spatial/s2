@@ -30,13 +30,13 @@
 #'
 #' BigQuery's geography function reference:
 #'
-#' - [ST_GEOGPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)
-#' - [ST_MAKELINE](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline)
-#' - [ST_MAKEPOLYGON](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon)
-#' - [ST_GEOGFROMTEXT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext)
-#' - [ST_GEOGFROMWKB](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb)
-#' - [ST_ASTEXT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext)
-#' - [ST_ASBINARY](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_asbinary)
+#' - [ST_GEOGPOINT](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)
+#' - [ST_MAKELINE](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makeline)
+#' - [ST_MAKEPOLYGON](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_makepolygon)
+#' - [ST_GEOGFROMTEXT](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext)
+#' - [ST_GEOGFROMWKB](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromwkb)
+#' - [ST_ASTEXT](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_astext)
+#' - [ST_ASBINARY](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_asbinary)
 #'
 #' @examples
 #' # create point geographies using coordinate values:

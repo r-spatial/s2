@@ -12,9 +12,9 @@
 <!-- badges: end -->
 
 The s2 R package provides bindings to Google’s
-[S2Geometry](http://s2geometry.io) library. The package exposes an API
+[S2Geometry](https://s2geometry.io) library. The package exposes an API
 similar to Google’s [BigQuery Geography
-API](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions),
+API](https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions),
 whose functions also operate on spherical geometries. Package
 [sf](https://cran.r-project.org/package=sf) uses this package by default
 for nearly all its geometrical operations on objects with ellipsoidal

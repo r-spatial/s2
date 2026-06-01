@@ -97,16 +97,16 @@ s2_max_distance(
 \seealso{
 BigQuery's geography function reference:
 \itemize{
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_iscollection}{ST_ISCOLLECTION}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dimension}{ST_DIMENSION}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_numpoints}{ST_NUMPOINTS}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty}{ST_ISEMPTY}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_area}{ST_AREA}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_length}{ST_LENGTH}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_perimeter}{ST_PERIMETER}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_x}{ST_X}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_y}{ST_Y}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_distance}{ST_DISTANCE}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_maxdistance}{ST_MAXDISTANCE}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_iscollection}{ST_ISCOLLECTION}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_dimension}{ST_DIMENSION}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_numpoints}{ST_NUMPOINTS}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_isempty}{ST_ISEMPTY}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_area}{ST_AREA}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_length}{ST_LENGTH}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_perimeter}{ST_PERIMETER}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_x}{ST_X}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_y}{ST_Y}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_distance}{ST_DISTANCE}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_maxdistance}{ST_MAXDISTANCE}
 }
 }

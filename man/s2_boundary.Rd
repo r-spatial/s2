@@ -201,15 +201,15 @@ s2_snap_to_grid("POINT (0.333333333333 0.666666666666)", 1e-2)
 \seealso{
 BigQuery's geography function reference:
 \itemize{
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_boundary}{ST_BOUNDARY}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_centroid}{ST_CENTROID}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_closestpoint}{ST_CLOSESTPOINT}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_difference}{ST_DIFFERENCE}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection}{ST_INTERSECTION}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union}{ST_UNION}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid}{ST_SNAPTOGRID}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify}{ST_SIMPLIFY}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg}{ST_UNION_AGG}
-\item \href{https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg}{ST_CENTROID_AGG}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_boundary}{ST_BOUNDARY}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_centroid}{ST_CENTROID}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_closestpoint}{ST_CLOSESTPOINT}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_difference}{ST_DIFFERENCE}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_intersection}{ST_INTERSECTION}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union}{ST_UNION}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_snaptogrid}{ST_SNAPTOGRID}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_simplify}{ST_SIMPLIFY}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_union_agg}{ST_UNION_AGG}
+\item \href{https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#s2_centroid_agg}{ST_CENTROID_AGG}
 }
 }
