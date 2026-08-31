@@ -69,7 +69,11 @@ export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
 
 echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
 
-if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
+if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ]; then
+  S2_FORCE_BUNDLED_ABSEIL=true
+fi
+
+if [ "$S2_FORCE_BUNDLED_ABSEIL" = "false" ] && pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
   echo "** Using abseil-cpp from pkg-config"
 
   PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
@@ -83,7 +87,7 @@ else
   # If the build has explicitly forced building bundled Abseil, we install to a temporary
   # directory so that R CMD check does not inspects its static libraries for disallowed
   # symbols. Otherwise, we install into the package source (more conventional).
-  if [ ! -z "$S2_FORCE_BUNDLED_ABSEIL" ]; then
+  if [ "$S2_FORCE_BUNDLED_ABSEIL" != "false" ]; then
     CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
   else
     CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"

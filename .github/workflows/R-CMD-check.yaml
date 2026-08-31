@@ -73,9 +73,6 @@ jobs:
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           mkdir ~/.R && echo "MAKEFLAGS = -j$(nproc)" > ~/.R/Makevars
-          # Explicitly force bundled Abseil here to avoid CMD check warning
-          # about disallowed symbols in Abseil static libraries
-          echo "S2_FORCE_BUNDLED_ABSEIL=true" >> $GITHUB_ENV
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
