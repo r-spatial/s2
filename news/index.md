@@ -2,6 +2,8 @@
 
 ## s2 1.1.11
 
+CRAN release: 2026-06-01
+
 - Fix deprecated Abseil usage and Rcpp include order
   [\#300](https://github.com/r-spatial/s2/issues/300)
   [\#297](https://github.com/r-spatial/s2/issues/297)
