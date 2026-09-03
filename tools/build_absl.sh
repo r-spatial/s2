@@ -8,7 +8,7 @@ fi
 
 # Do our best to pass on the user MAKEFLAGS. This can result in much faster
 # compilation of the vendored library.
-MAKEFLAGS=`${R_HOME}/bin/Rscript -e 'readRenviron("~/.R/Makevars"); cat(Sys.getenv("MAKEFLAGS"))'`
+MAKEFLAGS=`${R_HOME}/bin/Rscript -e 'readRenviron(Sys.getenv("R_MAKEVARS_USER", "~/.R/Makevars")); cat(Sys.getenv("MAKEFLAGS"))'`
 
 if test -z "$MAKE"; then MAKE="`which make`"; fi
 if ${MAKE} --version ; then
@@ -19,7 +19,7 @@ else
 fi
 
 if test -z "$CMAKE"; then CMAKE="`which cmake`"; fi
-if test -z "$CMAKE" && [ -f "/Applications/CMake.app/Contents/bin/cmake" ]; then 
+if test -z "$CMAKE" && [ -f "/Applications/CMake.app/Contents/bin/cmake" ]; then
   CMAKE=/Applications/CMake.app/Contents/bin/cmake
 fi
 
