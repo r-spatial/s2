@@ -574,7 +574,7 @@ inline bool IsEmptyOrDeleted(ctrl_t c) { return c < ctrl_t::kSentinel; }
 inline __m128i _mm_cmpgt_epi8_fixed(__m128i a, __m128i b) {
 #if defined(__GNUC__) && !defined(__clang__)
   if (std::is_unsigned<char>::value) {
-    const __m128i mask = _mm_set1_epi8(static_cast<char>(-128));
+    const __m128i mask = _mm_set1_epi8(static_cast<char>(0x80));
     const __m128i diff = _mm_subs_epi8(b, a);
     return _mm_cmpeq_epi8(_mm_and_si128(diff, mask), mask);
   }
