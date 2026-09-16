@@ -46,7 +46,7 @@ fi
 R_CXX17=`"${R_EXECUTABLE}" CMD config CXX17`
 
 echo "** Configuring s2geography with Homebrew s2geometry at ${S2_PREFIX}"
-if ! CXX="${R_CXX17}" "${CMAKE}" -S . -B "${BUILD_DIR}" \
+if ! CXX="${R_CXX17}" "${CMAKE}" -S tools -B "${BUILD_DIR}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_PREFIX_PATH="${S2_PREFIX}" >configure.log 2>&1; then
   echo "** CMake configuration failed"

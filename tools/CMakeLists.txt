@@ -10,14 +10,14 @@ find_package(s2 CONFIG REQUIRED)
 
 add_library(
   s2geography STATIC
-  src/s2geography/accessors-geog.cc
-  src/s2geography/accessors.cc
-  src/s2geography/build.cc
-  src/s2geography/coverings.cc
-  src/s2geography/distance.cc
-  src/s2geography/geography.cc
-  src/s2geography/linear-referencing.cc
-  src/s2geography/predicates.cc)
+  ../src/s2geography/accessors-geog.cc
+  ../src/s2geography/accessors.cc
+  ../src/s2geography/build.cc
+  ../src/s2geography/coverings.cc
+  ../src/s2geography/distance.cc
+  ../src/s2geography/geography.cc
+  ../src/s2geography/linear-referencing.cc
+  ../src/s2geography/predicates.cc)
 
 set_target_properties(s2geography PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(s2geography PUBLIC s2::s2)
