@@ -69,8 +69,12 @@ export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
 
 echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
 
-if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && [ "`uname -s`" = "Linux" ]; then
-  S2_FORCE_BUNDLED_ABSEIL=true
+if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ]; then
+  if [ "`uname -s`" = "Linux" ]; then
+    S2_FORCE_BUNDLED_ABSEIL=true
+  else
+    S2_FORCE_BUNDLED_ABSEIL=false
+  fi
 fi
 
 if [ "$S2_FORCE_BUNDLED_ABSEIL" = "false" ] && pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
