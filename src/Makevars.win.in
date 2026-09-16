@@ -1,0 +1,29 @@
+PKG_CPPFLAGS = @cflags@ -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
+PKG_LIBS = @libs@
+
+OBJECTS = cpp-compat.o \
+     s2-altrep.o \
+     s2-accessors.o \
+     s2-bounds.o \
+     s2-cell.o \
+     s2-cell-union.o \
+     s2-constructors-formatters.o \
+     s2-predicates.o \
+     s2-transformers.o \
+     init.o \
+     util.o \
+     RcppExports.o \
+     s2-geography.o \
+     s2-lnglat.o \
+     s2-matrix.o \
+     wk-impl.o
+
+all: $(SHLIB) purify
+
+purify: $(SHLIB)
+	@if test -n "@cmake_build@"; then rm -rf "@cmake_build@"; fi
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
+
+.PHONY: clean purify

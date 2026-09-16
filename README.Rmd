@@ -52,14 +52,27 @@ brew install cmake s2geometry
 CMake resolves the Abseil libraries required by Homebrew s2geometry 0.14;
 OpenSSL is no longer required for that build.
 
-On Linux, or to build without Homebrew on macOS, point `VCPKG_ROOT` to a
-bootstrapped [vcpkg](https://github.com/microsoft/vcpkg) checkout:
+On Linux or Windows, or to build without Homebrew on macOS, point `VCPKG_ROOT`
+to a bootstrapped [vcpkg](https://github.com/microsoft/vcpkg) checkout. On
+Linux and macOS:
 
 ``` sh
 git clone https://github.com/microsoft/vcpkg
 ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 VCPKG_ROOT="$(pwd)/vcpkg" R CMD INSTALL .
 ```
+
+On Windows, use PowerShell to bootstrap vcpkg and set `VCPKG_ROOT`:
+
+``` powershell
+git clone https://github.com/microsoft/vcpkg
+.\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+$env:VCPKG_ROOT = (Resolve-Path .\vcpkg).Path
+R CMD INSTALL .
+```
+
+The Windows overlay uses Rtools MinGW rather than MSVC so that the dependency
+libraries use R's C++ ABI.
 
 The vcpkg build uses an overlay triplet selected for the host architecture and
 builds s2geometry and its dependencies with R's compiler and flags. Set

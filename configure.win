@@ -1,21 +1,158 @@
+#!/bin/sh
 
-# On R 4.3 and 4.4, Abseil can be resolved using pkg-config. Otherwise,
-# build a copy of Abseil-cpp using CMake.
-if pkg-config absl_base --libs 2>/dev/null; then
-  echo "Using Abseil from RTools via pkg-config"
-else
-  # Build the libraries
-  CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
-  WIN_CPPFLAGS="-DABSL_FORCE_WAITER_MODE=4" tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"
+# Configure the R package against s2geometry built by vcpkg with Rtools.
+# vcpkg's standard Windows triplets use MSVC, so this package supplies MinGW
+# overlay triplets that use the same compiler and flags as R.
 
-  # Remove the build directory (its existence causes a check warning on R 4.2)
-  rm -rf tools/build
+set -eu
+
+if test -z "${CMAKE:-}"; then
+  CMAKE=`command -v cmake || true`
 fi
 
-# On R 4.3 and 4.4, OpenSSL can be resolved using pkg-config. Otherwise,
-# Use rwinlibs to download a static library for that toolchain.
-if pkg-config openssl --libs 2>/dev/null; then
-  echo "Using openssl from RTools via pkg-config"
-else
-  "${R_HOME}/bin/Rscript.exe" "tools/winlibs.R"
+if test -z "${CMAKE}"; then
+  echo "--------------------------- [ANTICONF] --------------------------------"
+  echo "Configuration failed because cmake was not found."
+  echo "Install CMake and ensure it is available on PATH."
+  echo "------------------------------------------------------------------------"
+  exit 1
 fi
+
+if test -z "${R_HOME:-}"; then
+  echo "Configuration failed because R_HOME was not set."
+  exit 1
+fi
+
+R_EXECUTABLE="${R_HOME}/bin/R.exe"
+if test ! -x "${R_EXECUTABLE}"; then
+  R_EXECUTABLE="${R_HOME}/bin/R"
+fi
+
+if test -z "${VCPKG_ROOT:-}"; then
+  echo "--------------------------- [ANTICONF] --------------------------------"
+  echo "Building s2 on Windows requires VCPKG_ROOT to point to a"
+  echo "bootstrapped vcpkg checkout."
+  echo "------------------------------------------------------------------------"
+  exit 1
+fi
+
+# Normalize a native Windows or MSYS path before testing or invoking files in
+# the checkout. CMake receives mixed-style paths to avoid backslash escaping.
+VCPKG_ROOT_POSIX=`cygpath -u "${VCPKG_ROOT}"`
+VCPKG_ROOT_CMAKE=`cygpath -m "${VCPKG_ROOT_POSIX}"`
+if test ! -f "${VCPKG_ROOT_POSIX}/scripts/buildsystems/vcpkg.cmake" || \
+    test ! -x "${VCPKG_ROOT_POSIX}/vcpkg.exe"; then
+  echo "--------------------------- [ANTICONF] --------------------------------"
+  echo "VCPKG_ROOT does not point to a bootstrapped vcpkg checkout:"
+  echo "  ${VCPKG_ROOT}"
+  echo "------------------------------------------------------------------------"
+  exit 1
+fi
+
+BUILD_DIR_POSIX="`pwd`/tools/build"
+BUILD_DIR_CMAKE=`cygpath -m "${BUILD_DIR_POSIX}"`
+OVERLAY_TRIPLETS_POSIX="`pwd`/tools/vcpkg-triplets"
+OVERLAY_TRIPLETS_CMAKE=`cygpath -m "${OVERLAY_TRIPLETS_POSIX}"`
+
+CC=`"${R_EXECUTABLE}" CMD config CC`
+CXX=`"${R_EXECUTABLE}" CMD config CXX`
+CPPFLAGS=`"${R_EXECUTABLE}" CMD config CPPFLAGS`
+CFLAGS=`"${R_EXECUTABLE}" CMD config CFLAGS`
+CXXFLAGS=`"${R_EXECUTABLE}" CMD config CXXFLAGS`
+LDFLAGS=`"${R_EXECUTABLE}" CMD config LDFLAGS`
+
+# These names deliberately differ from CC/CXX: vcpkg builds ports in a clean
+# environment, and the overlay triplet explicitly passes these values through.
+S2_R_CC="${CC}"
+S2_R_CXX="${CXX}"
+S2_R_CFLAGS="${CPPFLAGS} ${CFLAGS}"
+S2_R_CXXFLAGS="${CPPFLAGS} ${CXXFLAGS}"
+S2_R_LDFLAGS="${LDFLAGS}"
+export CC CXX CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
+export S2_R_CC S2_R_CXX S2_R_CFLAGS S2_R_CXXFLAGS S2_R_LDFLAGS
+
+VCPKG_TARGET_TRIPLET_VALUE="${VCPKG_TARGET_TRIPLET:-${VCPKG_DEFAULT_TRIPLET:-}}"
+if test -z "${VCPKG_TARGET_TRIPLET_VALUE}"; then
+  COMPILER_TARGET=`${CC} -dumpmachine`
+  case "${COMPILER_TARGET}" in
+    aarch64-*|arm64-*)
+      VCPKG_TARGET_TRIPLET_VALUE="r-s2-arm64-mingw-static-release"
+      ;;
+    x86_64-*|amd64-*)
+      VCPKG_TARGET_TRIPLET_VALUE="r-s2-x64-mingw-static-release"
+      ;;
+    *)
+      echo "No default vcpkg triplet for compiler target ${COMPILER_TARGET}."
+      echo "Set VCPKG_TARGET_TRIPLET to an appropriate overlay triplet."
+      exit 1
+      ;;
+  esac
+fi
+
+VCPKG_OVERLAY_TRIPLETS_VALUE="${VCPKG_OVERLAY_TRIPLETS:-}"
+if test -n "${VCPKG_OVERLAY_TRIPLETS_VALUE}"; then
+  VCPKG_OVERLAY_TRIPLETS_VALUE="${OVERLAY_TRIPLETS_CMAKE};${VCPKG_OVERLAY_TRIPLETS_VALUE}"
+else
+  VCPKG_OVERLAY_TRIPLETS_VALUE="${OVERLAY_TRIPLETS_CMAKE}"
+fi
+
+CMAKE_TOOLCHAIN_FILE_VALUE="${CMAKE_TOOLCHAIN_FILE:-${VCPKG_ROOT_CMAKE}/scripts/buildsystems/vcpkg.cmake}"
+CMAKE_PREFIX_PATH_VALUE="${CMAKE_PREFIX_PATH:-}"
+VCPKG_MANIFEST_MODE_VALUE="${VCPKG_MANIFEST_MODE:-ON}"
+
+echo "** Configuring s2geography with vcpkg triplet ${VCPKG_TARGET_TRIPLET_VALUE}"
+
+# Unix Makefiles ensures that CMake uses Rtools rather than an installed MSVC
+# toolchain. Construct the argument vector incrementally to preserve spaces.
+set -- \
+  -S tools \
+  -B "${BUILD_DIR_CMAKE}" \
+  -G "Unix Makefiles" \
+  -DCMAKE_BUILD_TYPE=Release \
+  "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE_VALUE}" \
+  "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET_VALUE}" \
+  "-DVCPKG_OVERLAY_TRIPLETS=${VCPKG_OVERLAY_TRIPLETS_VALUE}" \
+  "-DVCPKG_MANIFEST_MODE=${VCPKG_MANIFEST_MODE_VALUE}"
+
+if test -n "${CMAKE_PREFIX_PATH_VALUE}"; then
+  set -- "$@" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH_VALUE}"
+fi
+
+if ! "${CMAKE}" "$@" >configure.log 2>&1; then
+  echo "** CMake configuration failed"
+  cat configure.log
+  exit 1
+fi
+
+if ! "${CMAKE}" --build "${BUILD_DIR_CMAKE}" --config Release \
+    --target linker_flags >>configure.log 2>&1; then
+  echo "** CMake build failed"
+  cat configure.log
+  exit 1
+fi
+
+LINK_FLAGS_FILE="${BUILD_DIR_POSIX}/linker_flags.txt"
+INCLUDE_FLAGS_FILE="${BUILD_DIR_POSIX}/s2_include_flags.txt"
+if test ! -s "${LINK_FLAGS_FILE}" || test ! -s "${INCLUDE_FLAGS_FILE}"; then
+  echo "** CMake did not produce the expected compiler and linker flags"
+  cat configure.log
+  exit 1
+fi
+
+PKG_LIBS=`sed \
+  -e "s|libs2geography\\.a|${BUILD_DIR_CMAKE}/libs2geography.a|" \
+  -e "s|^vcpkg_installed/|${BUILD_DIR_CMAKE}/vcpkg_installed/|" \
+  -e "s| vcpkg_installed/| ${BUILD_DIR_CMAKE}/vcpkg_installed/|g" \
+  "${LINK_FLAGS_FILE}"`
+PKG_CFLAGS=`cat "${INCLUDE_FLAGS_FILE}"`
+
+echo "** Using PKG_CPPFLAGS=${PKG_CFLAGS}"
+echo "** Using PKG_LIBS=${PKG_LIBS}"
+
+sed \
+  -e "s|@cflags@|${PKG_CFLAGS}|g" \
+  -e "s|@libs@|${PKG_LIBS}|g" \
+  -e "s|@cmake_build@|${BUILD_DIR_CMAKE}|g" \
+  src/Makevars.win.in >src/Makevars.win
+
+exit 0

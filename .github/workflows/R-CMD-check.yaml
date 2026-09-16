@@ -46,9 +46,9 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release', deps: 'homebrew'}
           - {os: macos-latest,   r: 'release', deps: 'vcpkg'}
-          - {os: windows-latest, r: '4.2', deps: 'rtools'}
-          - {os: windows-latest, r: '4.3', deps: 'rtools'}
-          - {os: windows-latest, r: 'release', deps: 'rtools'}
+          - {os: windows-latest, r: '4.2', deps: 'vcpkg'}
+          - {os: windows-latest, r: '4.3', deps: 'vcpkg'}
+          - {os: windows-latest, r: 'release', deps: 'vcpkg'}
           - {os: ubuntu-latest,   r: 'devel', deps: 'vcpkg', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release', deps: 'vcpkg'}
           - {os: ubuntu-latest,   r: 'oldrel-1', deps: 'vcpkg'}
@@ -70,11 +70,17 @@ jobs:
           ref: ${{ env.VCPKG_REF }}
           path: vcpkg
 
-      - name: Bootstrap vcpkg
-        if: matrix.config.deps == 'vcpkg'
+      - name: Bootstrap vcpkg (Unix)
+        if: matrix.config.deps == 'vcpkg' && runner.os != 'Windows'
         run: |
           ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
           mkdir -p "$VCPKG_DEFAULT_BINARY_CACHE"
+
+      - name: Bootstrap vcpkg (Windows)
+        if: matrix.config.deps == 'vcpkg' && runner.os == 'Windows'
+        run: |
+          .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+          New-Item -ItemType Directory -Force $env:VCPKG_DEFAULT_BINARY_CACHE
 
       - name: Cache vcpkg binaries
         if: matrix.config.deps == 'vcpkg'

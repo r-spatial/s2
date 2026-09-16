@@ -1,5 +1,5 @@
 #!/bin/sh
-rm -f src/Makevars configure.log autobrew
+rm -f src/Makevars src/Makevars.win configure.log autobrew
 find src -name "*.o" -exec rm -f {} +
 find src -name "*.a" -exec rm -f {} +
 find src -name "*.tmp" -exec rm -f {} +
