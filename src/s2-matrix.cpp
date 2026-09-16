@@ -3,11 +3,11 @@
 #include <unordered_set>
 #include <algorithm>
 
-#include "s2/s2boolean_operation.h"
-#include "s2/s2closest_edge_query.h"
-#include "s2/s2furthest_edge_query.h"
-#include "s2/s2shape_index_region.h"
-#include "s2/s2shape_index_buffered_region.h"
+#include <s2/s2boolean_operation.h>
+#include <s2/s2closest_edge_query.h>
+#include <s2/s2furthest_edge_query.h>
+#include <s2/s2shape_index_region.h>
+#include <s2/s2shape_index_buffered_region.h>
 
 #include "geography-operator.h"
 #include "s2-options.h"

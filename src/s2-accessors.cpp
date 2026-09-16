@@ -34,7 +34,7 @@ CharacterVector cpp_s2_is_valid_reason(List geog) {
   class Op: public UnaryGeographyOperator<CharacterVector, String> {
     String processFeature(XPtr<RGeography> feature, R_xlen_t i) {
       if (s2geography::s2_find_validation_error(feature->Geog(), &error)) {
-        return this->error.text();
+        return std::string(this->error.message());
       } else {
         return NA_STRING;
       }

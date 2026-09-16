@@ -119,7 +119,7 @@ std::unique_ptr<Geography> s2_boolean_operation(
   // do the boolean operation, build layers, and check for errors
   S2Error error;
   if (!op.Build(geog1.ShapeIndex(), geog2.ShapeIndex(), &error)) {
-    throw Exception(error.text());
+    throw Exception(std::string(error.message()));
   }
 
   // construct output
@@ -155,7 +155,7 @@ std::unique_ptr<PolygonGeography> s2_unary_union(const PolygonGeography& geog,
     builder.AddShape(S2Loop::Shape(geog.Polygon()->loop(i)));
     S2Error error;
     if (!builder.Build(&error)) {
-      throw Exception(error.text());
+      throw Exception(std::string(error.message()));
     }
 
     // Check if the builder created a polygon whose boundary contained more than
@@ -269,7 +269,7 @@ std::unique_ptr<Geography> s2_rebuild(
   // build the output
   S2Error error;
   if (!builder.Build(&error)) {
-    throw Exception(error.text());
+    throw Exception(std::string(error.message()));
   }
 
   // construct output

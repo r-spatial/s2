@@ -1,11 +1,14 @@
 
-#include "s2/s2cell_id.h"
-#include "s2/s2cell.h"
-#include "s2/s2latlng.h"
-#include "s2/s2cell_union.h"
-#include "s2/s2region_coverer.h"
-#include "s2/s2shape_index_buffered_region.h"
-#include "s2/s2region_union.h"
+#include <cstdint>
+#include <cstring>
+
+#include <s2/s2cell_id.h>
+#include <s2/s2cell.h>
+#include <s2/s2latlng.h>
+#include <s2/s2cell_union.h>
+#include <s2/s2region_coverer.h>
+#include <s2/s2shape_index_buffered_region.h>
+#include <s2/s2region_union.h>
 
 #include "geography-operator.h"
 
@@ -20,7 +23,8 @@ static inline double reinterpret_double(uint64_t id) {
 }
 
 S2CellUnion cell_union_from_cell_id_vector(const NumericVector& cellIdNumeric) {
-  uint64* cellIds = (uint64*) &(cellIdNumeric[0]);
+  const uint64_t* cellIds =
+      reinterpret_cast<const uint64_t*>(&(cellIdNumeric[0]));
   std::vector<S2CellId> cellIdsVector(cellIds, cellIds + cellIdNumeric.size());
   return S2CellUnion(std::move(cellIdsVector));
 }

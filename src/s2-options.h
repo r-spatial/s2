@@ -4,11 +4,11 @@
 
 #include <sstream>
 #include <Rcpp.h>
-#include "s2/s2boolean_operation.h"
-#include "s2/s2builderutil_snap_functions.h"
-#include "s2/s2builderutil_s2polygon_layer.h"
-#include "s2/s2builderutil_s2polyline_vector_layer.h"
-#include "s2/s2builderutil_s2point_vector_layer.h"
+#include <s2/s2boolean_operation.h>
+#include <s2/s2builderutil_snap_functions.h>
+#include <s2/s2builderutil_s2polygon_layer.h>
+#include <s2/s2builderutil_s2polyline_vector_layer.h>
+#include <s2/s2builderutil_s2point_vector_layer.h>
 
 #include "s2geography.h"
 

@@ -187,7 +187,7 @@ class PolylineConstructor : public Constructor {
       // reverse dependency checks.
       // if (options_.check() && !polyline->IsValid()) {
       //   polyline->FindValidationError(&error_);
-      //   throw Exception(error_.text());
+      //   throw Exception(std::string(error_.message()));
       // }
 
       polylines_.push_back(std::move(polyline));
@@ -247,7 +247,7 @@ class PolygonConstructor : public Constructor {
       std::stringstream err;
       err << "Loop " << (loops_.size()) << " is not valid: ";
       loop->FindValidationError(&error_);
-      err << error_.text();
+      err << error_.message();
       throw Exception(err.str());
     }
 
@@ -269,7 +269,7 @@ class PolygonConstructor : public Constructor {
 
     if (options_.check() && !polygon->IsValid()) {
       polygon->FindValidationError(&error_);
-      throw Exception(error_.text());
+      throw Exception(std::string(error_.message()));
     }
 
     auto result = absl::make_unique<PolygonGeography>(std::move(polygon));

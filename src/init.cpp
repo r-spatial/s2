@@ -1,6 +1,7 @@
-#include "absl/base/config.h"
-#include "absl/log/log.h"
-#include "s2/s2debug.h"
+#include <absl/base/config.h>
+#include <absl/flags/flag.h>
+#include <absl/log/log.h>
+#include <s2/s2debug.h>
 #include <Rcpp.h>
 #include "s2-altrep.h"
 #include "util.h"

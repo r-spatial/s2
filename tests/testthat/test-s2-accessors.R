@@ -59,8 +59,8 @@ test_that("s2_is_valid_detail() works", {
       reason = c(
         NA, NA, NA, NA,
         "Vertices 0 and 1 are identical",
-        "Loop 0: Edge 3 is degenerate (duplicate vertex)",
-        "Loop 0: Edge 3 is degenerate (duplicate vertex)",
+        "Shape 0: chain 0, edge 3 is degenerate",
+        "Shape 0: chain 0, edge 3 is degenerate",
         NA
       ),
       stringsAsFactors = FALSE

@@ -1,7 +1,7 @@
 #!/bin/sh
 rm -f src/Makevars configure.log autobrew
-rm `find src -name "*.o"`
-rm `find src -name "*.a"`
-rm `find src -name "*.tmp"`
+find src -name "*.o" -exec rm -f {} +
+find src -name "*.a" -exec rm -f {} +
+find src -name "*.tmp" -exec rm -f {} +
 rm -rf tools/build
 rm -rf tools/dist
