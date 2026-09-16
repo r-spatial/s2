@@ -167,6 +167,12 @@ PKG_LIBS=`sed \
   "${LINK_FLAGS_FILE}"`
 PKG_CFLAGS=`cat "${INCLUDE_FLAGS_FILE}"`
 
+if test -z "${PKG_LIBS}"; then
+  echo "** CMake produced an empty linker interface"
+  cat configure.log
+  exit 1
+fi
+
 echo "** Using PKG_CPPFLAGS=${PKG_CFLAGS}"
 echo "** Using PKG_LIBS=${PKG_LIBS}"
 
