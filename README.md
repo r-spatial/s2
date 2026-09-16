@@ -41,15 +41,30 @@ And the development version from [GitHub](https://github.com/) with:
 remotes::install_github("r-spatial/s2")
 ```
 
-The S2 package currently requires CMake and Homebrew's
+The S2 package requires CMake and s2geometry. On macOS, install Homebrew's
 [s2geometry](https://formulae.brew.sh/formula/s2geometry) 0.14 or newer:
 
 ``` sh
 brew install cmake s2geometry
 ```
 
-CMake resolves the Abseil libraries required by s2geometry; OpenSSL is no
-longer required.
+CMake resolves the Abseil libraries required by Homebrew s2geometry 0.14;
+OpenSSL is no longer required for that build.
+
+On Linux, or to build without Homebrew on macOS, point `VCPKG_ROOT` to a
+bootstrapped [vcpkg](https://github.com/microsoft/vcpkg) checkout:
+
+``` sh
+git clone https://github.com/microsoft/vcpkg
+./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+VCPKG_ROOT="$(pwd)/vcpkg" R CMD INSTALL .
+```
+
+The vcpkg build uses an overlay triplet selected for the host architecture and
+builds s2geometry and its dependencies with R's compiler and flags. Set
+`VCPKG_TARGET_TRIPLET` to override the automatically selected triplet. The
+manifest resolves all transitive dependencies required by vcpkg's s2geometry
+port.
 
 ## Example
 

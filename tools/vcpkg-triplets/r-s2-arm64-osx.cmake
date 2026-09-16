@@ -1,0 +1,4 @@
+set(VCPKG_TARGET_ARCHITECTURE arm64)
+set(VCPKG_CMAKE_SYSTEM_NAME Darwin)
+set(VCPKG_OSX_ARCHITECTURES arm64)
+include("${CMAKE_CURRENT_LIST_DIR}/common/r-s2-unix.cmake")

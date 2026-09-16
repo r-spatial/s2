@@ -2,8 +2,6 @@ PKG_CPPFLAGS = @cflags@ -DSTRICT_R_HEADERS -DRCPP_NO_MASK_RF_ERROR
 PKG_LIBS = @libs@
 PKG_CXXFLAGS = -pthread
 
-CXX_STD = CXX17
-
 OBJECTS = cpp-compat.o \
      s2-altrep.o \
      s2-accessors.o \

@@ -1,0 +1,7 @@
+{
+  "name": "r-s2-dependencies",
+  "version-string": "0",
+  "dependencies": [
+    "s2geometry"
+  ]
+}
