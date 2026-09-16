@@ -23,7 +23,7 @@ using namespace s2geography;
 // s2/s2shapeutil_coding.cc.
 class S2ShapeWrapper : public S2Shape {
  public:
-  S2ShapeWrapper(S2Shape* shape) : shape_(shape) {}
+  S2ShapeWrapper(const S2Shape* shape) : shape_(shape) {}
   int num_edges() const { return shape_->num_edges(); }
   Edge edge(int edge_id) const { return shape_->edge(edge_id); }
   int dimension() const { return shape_->dimension(); }
@@ -40,7 +40,7 @@ class S2ShapeWrapper : public S2Shape {
   }
 
  private:
-  S2Shape* shape_;
+  const S2Shape* shape_;
 };
 
 // Just like the S2ShapeWrapper, the S2RegionWrapper helps reconcile the
@@ -169,7 +169,7 @@ int ShapeIndexGeography::num_shapes() const {
 }
 
 std::unique_ptr<S2Shape> ShapeIndexGeography::Shape(int id) const {
-  S2Shape* shape = shape_index_.shape(id);
+  const S2Shape* shape = shape_index_.shape(id);
   return std::unique_ptr<S2Shape>(new S2ShapeWrapper(shape));
 }
 

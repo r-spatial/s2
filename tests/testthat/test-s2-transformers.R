@@ -559,7 +559,7 @@ test_that("s2_rebuild() works", {
   )
   expect_error(
     s2_rebuild(bad_poly, options = s2_options(validate = TRUE)),
-    "Edge 1 crosses edge 3"
+    "Chain 0 edge 1 crosses chain 0 edge 3"
   )
 
   # polyline type

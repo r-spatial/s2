@@ -1,159 +1,195 @@
+#!/bin/sh
 
-# This configure script finds OpenSSL and Abseil, optionally building
-# Abseil if not found.
+# Configure the R package against s2geometry from Homebrew or vcpkg. CMake
+# resolves S2's transitive dependencies and records the complete link interface
+# for use by R's Makevars.
 
-# Anticonf (tm) script by Jeroen Ooms (2020) for finding OpenSSL
-# This script will query 'pkg-config' for the required cflags and ldflags.
-# If pkg-config is unavailable or does not find the library, try setting
-# INCLUDE_DIR and LIB_DIR manually via e.g:
-# R CMD INSTALL --configure-vars='INCLUDE_DIR=/.../include LIB_DIR=/.../lib'
+set -eu
 
-# Library settings
-PKG_CONFIG_NAME="openssl"
-PKG_DEB_NAME="libssl-dev"
-PKG_RPM_NAME="openssl-devel"
-PKG_BREW_NAME="openssl"
-PKG_LIBS="-lssl -lcrypto"
-PKG_CFLAGS=""
-
-# Use pkg-config if available
-pkg-config ${PKG_CONFIG_NAME} --atleast-version=1.0  2>/dev/null
-if [ $? -eq 0 ]; then
-  PKGCONFIG_CFLAGS=`pkg-config --cflags ${PKG_CONFIG_NAME}`
-  PKGCONFIG_LIBS=`pkg-config --libs ${PKG_CONFIG_NAME}`
+if test -z "${CMAKE:-}"; then
+  CMAKE=`command -v cmake || true`
 fi
 
-# Note that cflags may be empty in case of success
-if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
-  echo "Found INCLUDE_DIR and/or LIB_DIR!"
-  PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
-  PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
-elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
-  echo "Found OpenSSL pkg-config cflags and libs!"
-  PKG_CFLAGS=${PKGCONFIG_CFLAGS}
-  PKG_LIBS=${PKGCONFIG_LIBS}
-fi
-
-# Find compiler
-CC=`${R_HOME}/bin/R CMD config CC`
-CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
-CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
-
-# For debugging
-echo "Testing compiler OpenSSL configuration using PKG_CFLAGS=$PKG_CFLAGS"
-
-# Test configuration
-${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E tools/test_openssl.c >/dev/null 2>configure.log
-
-# Customize the error
-if [ $? -ne 0 ]; then
+if test -z "${CMAKE}"; then
   echo "--------------------------- [ANTICONF] --------------------------------"
-  echo "Configuration failed because $PKG_CONFIG_NAME was not found. Try installing:"
-  echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
-  echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
-  echo " * brew: $PKG_BREW_NAME (Mac OSX)"
-  echo "If $PKG_CONFIG_NAME is already installed, check that 'pkg-config' is in your"
-  echo "PATH and PKG_CONFIG_PATH contains a $PKG_CONFIG_NAME.pc file. If pkg-config"
-  echo "is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:"
-  echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
-  echo "-------------------------- [ERROR MESSAGE] ---------------------------"
-  cat configure.log
-  echo "--------------------------------------------------------------------"
+  echo "Configuration failed because cmake was not found."
+  echo "Install CMake with your system package manager."
+  echo "------------------------------------------------------------------------"
   exit 1
 fi
 
-# Check pkg-config for abseil-cpp, but fall back to a cmake build
-# because a sufficient version of abseil-cpp is not available on
-# all platforms (notably, Ubuntu 20.04 and Ubuntu 22.04).
-export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
-
-echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
-
-if [ -z "$S2_FORCE_BUNDLED_ABSEIL" ] && [ "`uname -s`" = "Linux" ]; then
-  S2_FORCE_BUNDLED_ABSEIL=true
-fi
-
-if [ "$S2_FORCE_BUNDLED_ABSEIL" = "false" ] && pkg-config absl_s2 --libs >/dev/null 2>/dev/null; then
-  echo "** Using abseil-cpp from pkg-config"
-
-  PKGCONFIG_CFLAGS=`pkg-config --cflags-only-I absl_s2`
-  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
-  PKG_CFLAGS="${PKGCONFIG_CFLAGS} ${PKG_CFLAGS}"
-  PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
-  R_S2_ABSL_HOME=""
+if test -n "${R_HOME:-}"; then
+  R_EXECUTABLE="${R_HOME}/bin/R"
 else
-  echo "** Building abseil-cpp using cmake"
-
-  # If the build has explicitly forced building bundled Abseil, we install to a temporary
-  # directory so that R CMD check does not inspects its static libraries for disallowed
-  # symbols. Otherwise, we install into the package source (more conventional).
-  if [ "$S2_FORCE_BUNDLED_ABSEIL" != "false" ]; then
-    CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
-  else
-    CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
-  fi
-
-  mkdir -p "${CMAKE_INSTALL_PREFIX}"
-  if tools/build_absl.sh "${CMAKE_INSTALL_PREFIX}"; then
-    echo "** Done!"
-  else
-    echo "** CMake build of Abseil failed"
-    echo "** Abseil can be installed with:"
-    echo "** - apt-get install libabsl-dev"
-    echo "** - dnf install abseil-cpp-devel"
-    echo "** - brew install abseil"
-    echo "** If a system install of Abseil is not possible, cmake is required to build"
-    echo "** the internal vendored copy."
-    exit 1
-  fi
-
-  # Clean up build directory
-  rm -rf tools/build
-
-  # Depending on the cmake options this can end up in a subdirectory of lib
-  ABSL_BASE_PC=`find "${CMAKE_INSTALL_PREFIX}" -name absl_base.pc`
-  R_S2_PKG_CONFIG_PATH=`dirname "${ABSL_BASE_PC}"`
-  R_S2_ABSL_HOME="${CMAKE_INSTALL_PREFIX}"
-  export PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:${PKG_CONFIG_PATH}"
-  echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
-  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
-  if [ -z "${PKGCONFIG_LIBS}" ]; then
-    echo "** Failed to resolve built vendored copy of Abseil using pkg-config"
-    exit 1
-  fi
-
-  PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
-  PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
+  R_EXECUTABLE=`command -v R || true`
 fi
 
-# Check compile of test file
-CXX17="`${R_HOME}/bin/R CMD config CXX17`"
-CXX17FLAGS=`"${R_HOME}"/bin/R CMD config CXX17FLAGS`
-CXX17STD=`"${R_HOME}"/bin/R CMD config CXX17STD`
-
-echo "Testing Abseil configuration using PKG_CFLAGS=${PKG_CFLAGS}"
-
-${CXX17} ${CPPFLAGS} ${PKG_CFLAGS} ${CXX17FLAGS} ${CXX17STD} -E tools/test_absl.cc >/dev/null 2>>configure.log
-if [ $? -ne 0 ]; then
-  echo "Test compile failed!"
-  echo "------- Error ---------"
-  cat configure.log
-  echo "-----------------------"
+if test -z "${R_EXECUTABLE}"; then
+  echo "Configuration failed because R was not found."
   exit 1
 fi
 
-# From apache/arrow/r/configure:
-# If on Raspberry Pi, need to manually link against latomic
-# See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81358 for similar example
-if grep raspbian /etc/os-release >/dev/null 2>&1; then
-  PKG_LIBS="-latomic $PKG_LIBS"
+BUILD_DIR="`pwd`/tools/build"
+OVERLAY_TRIPLETS="`pwd`/tools/vcpkg-triplets"
+SYSTEM_NAME=`uname -s`
+SYSTEM_ARCH=`uname -m`
+
+# Use R's complete toolchain for both this project and dependencies that vcpkg
+# builds. The overlay triplets forward these variables into vcpkg's clean build
+# environment and include them in its binary-cache ABI calculation.
+CC=`"${R_EXECUTABLE}" CMD config CC`
+CXX=`"${R_EXECUTABLE}" CMD config CXX`
+CPPFLAGS=`"${R_EXECUTABLE}" CMD config CPPFLAGS`
+CFLAGS=`"${R_EXECUTABLE}" CMD config CFLAGS`
+CXXFLAGS=`"${R_EXECUTABLE}" CMD config CXXFLAGS`
+LDFLAGS=`"${R_EXECUTABLE}" CMD config LDFLAGS`
+export CC CXX CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
+
+CMAKE_TOOLCHAIN_FILE_VALUE="${CMAKE_TOOLCHAIN_FILE:-}"
+CMAKE_PREFIX_PATH_VALUE="${CMAKE_PREFIX_PATH:-}"
+VCPKG_TARGET_TRIPLET_VALUE="${VCPKG_TARGET_TRIPLET:-${VCPKG_DEFAULT_TRIPLET:-}}"
+VCPKG_OVERLAY_TRIPLETS_VALUE="${VCPKG_OVERLAY_TRIPLETS:-}"
+VCPKG_MANIFEST_MODE_VALUE="${VCPKG_MANIFEST_MODE:-ON}"
+
+if test -n "${VCPKG_ROOT:-}"; then
+  if test ! -f "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" || \
+      test ! -x "${VCPKG_ROOT}/vcpkg"; then
+    echo "--------------------------- [ANTICONF] --------------------------------"
+    echo "VCPKG_ROOT does not point to a bootstrapped vcpkg checkout:"
+    echo "  ${VCPKG_ROOT}"
+    echo "------------------------------------------------------------------------"
+    exit 1
+  fi
+
+  if test -z "${CMAKE_TOOLCHAIN_FILE_VALUE}"; then
+    CMAKE_TOOLCHAIN_FILE_VALUE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+  fi
+
+  if test -z "${VCPKG_TARGET_TRIPLET_VALUE}"; then
+    case "${SYSTEM_NAME}:${SYSTEM_ARCH}" in
+      Darwin:arm64|Darwin:aarch64)
+        VCPKG_TARGET_TRIPLET_VALUE="r-s2-arm64-osx"
+        ;;
+      Darwin:x86_64|Darwin:amd64)
+        VCPKG_TARGET_TRIPLET_VALUE="r-s2-x64-osx"
+        ;;
+      Linux:arm64|Linux:aarch64)
+        VCPKG_TARGET_TRIPLET_VALUE="r-s2-arm64-linux"
+        ;;
+      Linux:x86_64|Linux:amd64)
+        VCPKG_TARGET_TRIPLET_VALUE="r-s2-x64-linux"
+        ;;
+      *)
+        echo "No default vcpkg triplet for ${SYSTEM_NAME} ${SYSTEM_ARCH}."
+        echo "Set VCPKG_TARGET_TRIPLET to an appropriate overlay triplet."
+        exit 1
+        ;;
+    esac
+  fi
+
+  if test -n "${VCPKG_OVERLAY_TRIPLETS_VALUE}"; then
+    VCPKG_OVERLAY_TRIPLETS_VALUE="${OVERLAY_TRIPLETS};${VCPKG_OVERLAY_TRIPLETS_VALUE}"
+  else
+    VCPKG_OVERLAY_TRIPLETS_VALUE="${OVERLAY_TRIPLETS}"
+  fi
+
+  echo "** Configuring s2geography with vcpkg triplet ${VCPKG_TARGET_TRIPLET_VALUE}"
+else
+  if test "${SYSTEM_NAME}" != "Darwin"; then
+    echo "--------------------------- [ANTICONF] --------------------------------"
+    echo "Building on ${SYSTEM_NAME} requires VCPKG_ROOT to point to a"
+    echo "bootstrapped vcpkg checkout."
+    echo "------------------------------------------------------------------------"
+    exit 1
+  fi
+
+  if test -z "${BREW:-}"; then
+    BREW=`command -v brew || true`
+  fi
+
+  if test -z "${BREW}" || ! S2_PREFIX=`"${BREW}" --prefix s2geometry 2>/dev/null`; then
+    echo "--------------------------- [ANTICONF] --------------------------------"
+    echo "Configuration failed because Homebrew s2geometry was not found."
+    echo "Install it with: brew install s2geometry"
+    echo "Alternatively, set VCPKG_ROOT to a bootstrapped vcpkg checkout."
+    echo "------------------------------------------------------------------------"
+    exit 1
+  fi
+
+  if test -n "${CMAKE_PREFIX_PATH_VALUE}"; then
+    CMAKE_PREFIX_PATH_VALUE="${CMAKE_PREFIX_PATH_VALUE};${S2_PREFIX}"
+  else
+    CMAKE_PREFIX_PATH_VALUE="${S2_PREFIX}"
+  fi
+
+  echo "** Configuring s2geography with Homebrew s2geometry at ${S2_PREFIX}"
 fi
 
-echo "Using PKG_LIBS=$PKG_LIBS"
-echo "Using PKG_CFLAGS=$PKG_CFLAGS"
+# Build the CMake argument vector incrementally so paths and user-provided
+# values containing spaces remain single arguments.
+set -- \
+  -S tools \
+  -B "${BUILD_DIR}" \
+  -DCMAKE_BUILD_TYPE=Release
 
-# Write to Makevars
-sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|@absl_home@|$R_S2_ABSL_HOME|" src/Makevars.in > src/Makevars
+if test -n "${CMAKE_TOOLCHAIN_FILE_VALUE}"; then
+  set -- "$@" "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE_VALUE}"
+fi
+if test -n "${CMAKE_PREFIX_PATH_VALUE}"; then
+  set -- "$@" "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH_VALUE}"
+fi
+if test -n "${VCPKG_TARGET_TRIPLET_VALUE}"; then
+  set -- "$@" "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET_VALUE}"
+fi
+if test -n "${VCPKG_OVERLAY_TRIPLETS_VALUE}"; then
+  set -- "$@" "-DVCPKG_OVERLAY_TRIPLETS=${VCPKG_OVERLAY_TRIPLETS_VALUE}"
+fi
+if test -n "${VCPKG_MANIFEST_MODE_VALUE}"; then
+  set -- "$@" "-DVCPKG_MANIFEST_MODE=${VCPKG_MANIFEST_MODE_VALUE}"
+fi
 
-# Success
+if ! "${CMAKE}" "$@" >configure.log 2>&1; then
+  echo "** CMake configuration failed"
+  cat configure.log
+  exit 1
+fi
+
+if ! "${CMAKE}" --build "${BUILD_DIR}" --config Release \
+    --target linker_flags >>configure.log 2>&1; then
+  echo "** CMake build failed"
+  cat configure.log
+  exit 1
+fi
+
+LINK_FLAGS_FILE="${BUILD_DIR}/linker_flags.txt"
+INCLUDE_FLAGS_FILE="${BUILD_DIR}/s2_include_flags.txt"
+
+if test ! -s "${LINK_FLAGS_FILE}" || test ! -s "${INCLUDE_FLAGS_FILE}"; then
+  echo "** CMake did not produce the expected compiler and linker flags"
+  cat configure.log
+  exit 1
+fi
+
+PKG_LIBS=`sed \
+  -e "s|libs2geography\\.a|${BUILD_DIR}/libs2geography.a|" \
+  -e "s|^vcpkg_installed/|${BUILD_DIR}/vcpkg_installed/|" \
+  -e "s| vcpkg_installed/| ${BUILD_DIR}/vcpkg_installed/|g" \
+  "${LINK_FLAGS_FILE}"`
+PKG_CFLAGS=`cat "${INCLUDE_FLAGS_FILE}"`
+
+if test -z "${PKG_LIBS}"; then
+  echo "** CMake produced an empty linker interface"
+  cat configure.log
+  exit 1
+fi
+
+echo "** Using PKG_CPPFLAGS=${PKG_CFLAGS}"
+echo "** Using PKG_LIBS=${PKG_LIBS}"
+
+sed \
+  -e "s|@cflags@|${PKG_CFLAGS}|g" \
+  -e "s|@libs@|${PKG_LIBS}|g" \
+  -e "s|@cmake_build@|${BUILD_DIR}|g" \
+  src/Makevars.in >src/Makevars
+
 exit 0

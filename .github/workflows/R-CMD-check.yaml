@@ -10,6 +10,9 @@ name: R-CMD-check
 
 permissions: read-all
 
+env:
+  VCPKG_REF: 580d480f750618f8affeb77abbb956e6eeaee0ce
+
 jobs:
   # Check MacOS first before embarking on the full check matrix
   test:
@@ -17,8 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
-      - name: Install Abseil (MacOS)
-        run: brew install abseil
+      - name: Install s2geometry (Homebrew)
+        run: brew install s2geometry
       - name: Install minimal dependencies
         run: |
           R -e 'install.packages(c("wk", "Rcpp", "bit64", "testthat"))'
@@ -32,7 +35,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}, ${{ matrix.config.deps }})
 
     needs:
       - test
@@ -41,20 +44,50 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: '4.2'}
-          - {os: windows-latest, r: '4.3'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+          - {os: macos-latest,   r: 'release', deps: 'homebrew'}
+          - {os: macos-latest,   r: 'release', deps: 'vcpkg'}
+          - {os: windows-latest, r: '4.2', deps: 'vcpkg'}
+          - {os: windows-latest, r: '4.3', deps: 'vcpkg'}
+          - {os: windows-latest, r: 'release', deps: 'vcpkg'}
+          - {os: ubuntu-latest,   r: 'devel', deps: 'vcpkg', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release', deps: 'vcpkg'}
+          - {os: ubuntu-latest,   r: 'oldrel-1', deps: 'vcpkg'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      VCPKG_ROOT: ${{ matrix.config.deps == 'vcpkg' && format('{0}/vcpkg', github.workspace) || '' }}
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ matrix.config.deps == 'vcpkg' && format('{0}/vcpkg-bincache', github.workspace) || '' }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Clone vcpkg
+        if: matrix.config.deps == 'vcpkg'
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/vcpkg
+          ref: ${{ env.VCPKG_REF }}
+          path: vcpkg
+
+      - name: Bootstrap vcpkg (Unix)
+        if: matrix.config.deps == 'vcpkg' && runner.os != 'Windows'
+        run: |
+          ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+          mkdir -p "$VCPKG_DEFAULT_BINARY_CACHE"
+
+      - name: Bootstrap vcpkg (Windows)
+        if: matrix.config.deps == 'vcpkg' && runner.os == 'Windows'
+        run: |
+          .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+          New-Item -ItemType Directory -Force $env:VCPKG_DEFAULT_BINARY_CACHE
+
+      - name: Cache vcpkg binaries
+        if: matrix.config.deps == 'vcpkg'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+          key: r-vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ env.VCPKG_REF }}-${{ hashFiles('tools/vcpkg.json', 'tools/vcpkg-triplets/**') }}
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -64,10 +97,10 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install Abseil (MacOS)
-        if: matrix.config.os == 'macos-latest'
+      - name: Install s2geometry (Homebrew)
+        if: matrix.config.os == 'macos-latest' && matrix.config.deps == 'homebrew'
         run: |
-          brew install abseil
+          brew install s2geometry
 
       - name: Set Makevars and environment (Ubuntu)
         if: matrix.config.os == 'ubuntu-latest'
@@ -87,4 +120,9 @@ jobs:
       - name: Show install output
         if: always()
         run: find check -name '00install.out*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Show vcpkg compiler detection logs
+        if: failure() && runner.os == 'Windows'
+        run: find vcpkg/buildtrees/detect_compiler -name '*.log' -exec cat '{}' \; || true
         shell: bash

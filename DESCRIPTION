@@ -25,7 +25,7 @@ License: Apache License (== 2.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-SystemRequirements: cmake, OpenSSL >= 1.0.1, Abseil >= 20230802.0
+SystemRequirements: cmake, s2geometry (Homebrew >= 0.14.0 or vcpkg)
 LinkingTo:
     Rcpp,
     wk

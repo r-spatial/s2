@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^src/Makevars$
+^src/Makevars\.win$
 ^\.github$
 ^\.vscode$
 ^\.covrignore$
@@ -18,3 +19,4 @@
 ^\.cache$
 ^docker-compose\.yml$
 ^\.dockerignore$
+^vcpkg$

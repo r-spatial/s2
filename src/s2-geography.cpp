@@ -1,7 +1,7 @@
 
-#include "s2/s2latlng.h"
-#include "s2/s2polyline.h"
-#include "s2/s2polygon.h"
+#include <s2/s2latlng.h>
+#include <s2/s2polyline.h>
+#include <s2/s2polygon.h>
 
 #include "geography.h"
 

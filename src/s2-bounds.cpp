@@ -1,6 +1,6 @@
 
-#include "s2/s2latlng_rect.h"
-#include "s2/s2cap.h"
+#include <s2/s2latlng_rect.h>
+#include <s2/s2cap.h>
 
 #include "s2-options.h"
 #include "geography-operator.h"

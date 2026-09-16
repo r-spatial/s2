@@ -1,0 +1,3 @@
+set(VCPKG_TARGET_ARCHITECTURE arm64)
+set(VCPKG_CMAKE_SYSTEM_NAME Linux)
+include("${CMAKE_CURRENT_LIST_DIR}/common/r-s2-unix.cmake")
