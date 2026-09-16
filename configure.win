@@ -81,6 +81,36 @@ if test -z "${CC_PATH}" || test -z "${CXX_PATH}"; then
   exit 1
 fi
 
+# R supplies the make implementation that matches its Windows toolchain. Pass
+# its resolved path to CMake because Rtools' usr/bin is not necessarily on the
+# native Windows PATH inherited by CMake.
+MAKE_COMMAND="${MAKE:-make}"
+set -- ${MAKE_COMMAND}
+MAKE_PROGRAM="$1"
+MAKE_PATH=`command -v "${MAKE_PROGRAM}" || true`
+
+if test -z "${MAKE_PATH}"; then
+  MAKE_CANDIDATE=`cygpath -u "${MAKE_PROGRAM}" 2>/dev/null || true`
+  if test -x "${MAKE_CANDIDATE}"; then
+    MAKE_PATH="${MAKE_CANDIDATE}"
+  fi
+fi
+
+if test -z "${MAKE_PATH}"; then
+  RTOOLS_ROOT=`dirname "$(dirname "$(dirname "${CC_PATH}")")"`
+  MAKE_CANDIDATE="${RTOOLS_ROOT}/usr/bin/make.exe"
+  if test -x "${MAKE_CANDIDATE}"; then
+    MAKE_PATH="${MAKE_CANDIDATE}"
+  fi
+fi
+
+if test -z "${MAKE_PATH}"; then
+  echo "Could not resolve MAKE='${MAKE_COMMAND}' to an Rtools make executable."
+  exit 1
+fi
+
+MAKE_PATH_CMAKE=`cygpath -m "${MAKE_PATH}"`
+
 # These names deliberately differ from CC/CXX: vcpkg builds ports in a clean
 # environment, and the overlay triplet explicitly passes these values through.
 S2_R_CC=`cygpath -m "${CC_PATH}"`
@@ -122,13 +152,15 @@ VCPKG_MANIFEST_MODE_VALUE="${VCPKG_MANIFEST_MODE:-ON}"
 
 echo "** Configuring s2geography with vcpkg triplet ${VCPKG_TARGET_TRIPLET_VALUE}"
 echo "** Using Rtools compilers ${S2_R_CC} and ${S2_R_CXX}"
+echo "** Using Rtools make ${MAKE_PATH_CMAKE} (MAKE='${MAKE_COMMAND}')"
 
-# Ninja is available with vcpkg and avoids relying on Rtools make being on PATH
-# during R CMD check. The overlay still selects Rtools rather than MSVC.
+# Unix Makefiles preserves the shell quoting used by the synthetic linker-flags
+# target. Specify Rtools make explicitly rather than relying on CMake's PATH.
 set -- \
   -S tools \
   -B "${BUILD_DIR_CMAKE}" \
-  -G Ninja \
+  -G "Unix Makefiles" \
+  "-DCMAKE_MAKE_PROGRAM=${MAKE_PATH_CMAKE}" \
   -DCMAKE_BUILD_TYPE=Release \
   "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE_VALUE}" \
   "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET_VALUE}" \

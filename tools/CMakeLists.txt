@@ -27,10 +27,10 @@ file(
 
 # Abseil is split into many interdependent libraries whose names change between
 # releases. Record the link interface resolved by CMake instead of duplicating
-# that dependency list in configure. Pass the resolved arguments to a CMake
-# script so this does not depend on Unix or Windows shell quoting/redirection.
+# that dependency list in configure. This is the non-MSVC form of the approach
+# used by Apache Sedona's sedona-s2geography crate.
 set(CMAKE_ECHO_LINK_EXECUTABLE
-    "${CMAKE_COMMAND} -DOUTPUT=<TARGET> -P \"${CMAKE_CURRENT_SOURCE_DIR}/write-link-flags.cmake\" -- <LINK_LIBRARIES>")
+    "sh -c \"echo <LINK_LIBRARIES> > <TARGET>\"")
 
 if(WIN32)
   # The target below is a synthetic text file rather than an executable, and
