@@ -61,19 +61,39 @@ CFLAGS=`"${R_EXECUTABLE}" CMD config CFLAGS`
 CXXFLAGS=`"${R_EXECUTABLE}" CMD config CXXFLAGS`
 LDFLAGS=`"${R_EXECUTABLE}" CMD config LDFLAGS`
 
+# R's CC and CXX values may contain command-line arguments. CMake's compiler
+# fields must contain only an executable, so retain any trailing arguments as
+# flags and resolve the executables before vcpkg enters its clean environment.
+set -- ${CC}
+CC_PROGRAM="$1"
+shift
+CC_PROGRAM_FLAGS="$*"
+
+set -- ${CXX}
+CXX_PROGRAM="$1"
+shift
+CXX_PROGRAM_FLAGS="$*"
+
+CC_PATH=`command -v "${CC_PROGRAM}" || true`
+CXX_PATH=`command -v "${CXX_PROGRAM}" || true`
+if test -z "${CC_PATH}" || test -z "${CXX_PATH}"; then
+  echo "Could not resolve R's compilers (${CC_PROGRAM}, ${CXX_PROGRAM}) on PATH."
+  exit 1
+fi
+
 # These names deliberately differ from CC/CXX: vcpkg builds ports in a clean
 # environment, and the overlay triplet explicitly passes these values through.
-S2_R_CC="${CC}"
-S2_R_CXX="${CXX}"
-S2_R_CFLAGS="${CPPFLAGS} ${CFLAGS}"
-S2_R_CXXFLAGS="${CPPFLAGS} ${CXXFLAGS}"
+S2_R_CC=`cygpath -m "${CC_PATH}"`
+S2_R_CXX=`cygpath -m "${CXX_PATH}"`
+S2_R_CFLAGS="${CC_PROGRAM_FLAGS} ${CPPFLAGS} ${CFLAGS}"
+S2_R_CXXFLAGS="${CXX_PROGRAM_FLAGS} ${CPPFLAGS} ${CXXFLAGS}"
 S2_R_LDFLAGS="${LDFLAGS}"
 export CC CXX CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 export S2_R_CC S2_R_CXX S2_R_CFLAGS S2_R_CXXFLAGS S2_R_LDFLAGS
 
 VCPKG_TARGET_TRIPLET_VALUE="${VCPKG_TARGET_TRIPLET:-${VCPKG_DEFAULT_TRIPLET:-}}"
 if test -z "${VCPKG_TARGET_TRIPLET_VALUE}"; then
-  COMPILER_TARGET=`${CC} -dumpmachine`
+  COMPILER_TARGET=`"${CC_PATH}" -dumpmachine`
   case "${COMPILER_TARGET}" in
     aarch64-*|arm64-*)
       VCPKG_TARGET_TRIPLET_VALUE="r-s2-arm64-mingw-static-release"
@@ -101,13 +121,14 @@ CMAKE_PREFIX_PATH_VALUE="${CMAKE_PREFIX_PATH:-}"
 VCPKG_MANIFEST_MODE_VALUE="${VCPKG_MANIFEST_MODE:-ON}"
 
 echo "** Configuring s2geography with vcpkg triplet ${VCPKG_TARGET_TRIPLET_VALUE}"
+echo "** Using Rtools compilers ${S2_R_CC} and ${S2_R_CXX}"
 
-# Unix Makefiles ensures that CMake uses Rtools rather than an installed MSVC
-# toolchain. Construct the argument vector incrementally to preserve spaces.
+# Ninja is available with vcpkg and avoids relying on Rtools make being on PATH
+# during R CMD check. The overlay still selects Rtools rather than MSVC.
 set -- \
   -S tools \
   -B "${BUILD_DIR_CMAKE}" \
-  -G "Unix Makefiles" \
+  -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE_VALUE}" \
   "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET_VALUE}" \
