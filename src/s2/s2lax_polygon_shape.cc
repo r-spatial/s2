@@ -75,9 +75,9 @@ S2LaxPolygonShape::S2LaxPolygonShape(const S2Polygon& polygon) {
 
 S2LaxPolygonShape::S2LaxPolygonShape(S2LaxPolygonShape&& b)
     : S2Shape(std::move(b)),
-      num_loops_(absl::exchange(b.num_loops_, 0)),
+      num_loops_(std::exchange(b.num_loops_, 0)),
       prev_loop_(b.prev_loop_.exchange(0, std::memory_order_relaxed)),
-      num_vertices_(absl::exchange(b.num_vertices_, 0)),
+      num_vertices_(std::exchange(b.num_vertices_, 0)),
       vertices_(std::move(b.vertices_)),
       loop_starts_(std::move(b.loop_starts_)) {}
 
@@ -88,10 +88,10 @@ S2LaxPolygonShape& S2LaxPolygonShape::operator=(S2LaxPolygonShape&& b) {
   // move any of its private state.  This is a little odd since b is in a
   // half-moved state after calling but is ultimately safe.
   S2Shape::operator=(static_cast<S2Shape&&>(b));
-  num_loops_ = absl::exchange(b.num_loops_, 0);
+  num_loops_ = std::exchange(b.num_loops_, 0);
   prev_loop_.store(b.prev_loop_.exchange(0, memory_order_relaxed),
                    memory_order_relaxed);
-  num_vertices_ = absl::exchange(b.num_vertices_, 0);
+  num_vertices_ = std::exchange(b.num_vertices_, 0);
   vertices_ = std::move(b.vertices_);
   loop_starts_ = std::move(b.loop_starts_);
   return *this;
@@ -255,7 +255,7 @@ S2Shape::Chain S2LaxPolygonShape::chain(int i) const {
 
 EncodedS2LaxPolygonShape::EncodedS2LaxPolygonShape(EncodedS2LaxPolygonShape&& b)
     : S2Shape(std::move(b)),
-      num_loops_(absl::exchange(b.num_loops_, 0)),
+      num_loops_(std::exchange(b.num_loops_, 0)),
       prev_loop_(b.prev_loop_.exchange(0, std::memory_order_relaxed)),
       vertices_(std::move(b.vertices_)),
       loop_starts_(std::move(b.loop_starts_)) {}
@@ -266,7 +266,7 @@ EncodedS2LaxPolygonShape& EncodedS2LaxPolygonShape::operator=(
   // move any of its private state.  This is a little odd since b is in a
   // half-moved state after calling but is ultimately safe.
   S2Shape::operator=(static_cast<S2Shape&&>(b));
-  num_loops_ = absl::exchange(b.num_loops_, 0);
+  num_loops_ = std::exchange(b.num_loops_, 0);
   prev_loop_.store(b.prev_loop_.exchange(0, std::memory_order_relaxed),
                    std::memory_order_relaxed);
   vertices_ = std::move(b.vertices_);

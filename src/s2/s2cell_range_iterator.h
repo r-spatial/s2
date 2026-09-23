@@ -16,7 +16,7 @@
 #ifndef S2_S2CELL_RANGE_ITERATOR_H_
 #define S2_S2CELL_RANGE_ITERATOR_H_
 
-#include "absl/meta/type_traits.h"
+#include <type_traits>
 #include "s2/s2cell_id.h"
 #include "s2/s2cell_iterator.h"
 #include "s2/s2shape_index.h"
@@ -119,7 +119,7 @@ template <typename Iterator,
           typename std::enable_if<S2CellIterator::ImplementedBy<Iterator>{},
                                   bool>::type = true>
 auto MakeS2CellRangeIterator(Iterator&& iter) {
-  return S2CellRangeIterator<absl::decay_t<Iterator>>(
+  return S2CellRangeIterator<std::decay_t<Iterator>>(
       std::forward<Iterator>(iter));
 }
 

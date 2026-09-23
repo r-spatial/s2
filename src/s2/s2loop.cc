@@ -110,8 +110,8 @@ S2Loop::S2Loop() {
 #ifndef SWIG
 S2Loop::S2Loop(S2Loop&& b)
     : S2Region(std::move(b)),
-      depth_(absl::exchange(b.depth_, 0)),
-      num_vertices_(absl::exchange(b.num_vertices_, 0)),
+      depth_(std::exchange(b.depth_, 0)),
+      num_vertices_(std::exchange(b.num_vertices_, 0)),
       vertices_(std::move(b.vertices_)),
       s2debug_override_(std::move(b.s2debug_override_)),
       origin_inside_(std::move(b.origin_inside_)),
@@ -129,8 +129,8 @@ S2Loop::S2Loop(S2Loop&& b)
 
 S2Loop& S2Loop::operator=(S2Loop&& b) {
   S2Region::operator=(static_cast<S2Region&&>(b));
-  depth_ = absl::exchange(b.depth_, 0);
-  num_vertices_ = absl::exchange(b.num_vertices_, 0);
+  depth_ = std::exchange(b.depth_, 0);
+  num_vertices_ = std::exchange(b.num_vertices_, 0);
   vertices_ = std::move(b.vertices_);
   s2debug_override_ = std::move(b.s2debug_override_);
   origin_inside_ = std::move(b.origin_inside_);
