@@ -32,18 +32,18 @@
 #include "s2/base/port.h"
 
 Encoder::Encoder(Encoder&& other)
-    : buf_(absl::exchange(other.buf_, nullptr)),
-      limit_(absl::exchange(other.limit_, nullptr)),
-      underlying_buffer_(absl::exchange(other.underlying_buffer_, nullptr)),
-      orig_(absl::exchange(other.orig_, nullptr)) {}
+    : buf_(std::exchange(other.buf_, nullptr)),
+      limit_(std::exchange(other.limit_, nullptr)),
+      underlying_buffer_(std::exchange(other.underlying_buffer_, nullptr)),
+      orig_(std::exchange(other.orig_, nullptr)) {}
 
 Encoder& Encoder::operator=(Encoder&& other) {
   if (this == &other) return *this;
   if (ensure_allowed()) DeleteBuffer(underlying_buffer_, capacity());
-  buf_ = absl::exchange(other.buf_, nullptr);
-  limit_ = absl::exchange(other.limit_, nullptr);
-  underlying_buffer_ = absl::exchange(other.underlying_buffer_, nullptr);
-  orig_ = absl::exchange(other.orig_, nullptr);
+  buf_ = std::exchange(other.buf_, nullptr);
+  limit_ = std::exchange(other.limit_, nullptr);
+  underlying_buffer_ = std::exchange(other.underlying_buffer_, nullptr);
+  orig_ = std::exchange(other.orig_, nullptr);
   return *this;
 }
 
