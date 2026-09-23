@@ -15,6 +15,7 @@ PKG_RPM_NAME="openssl-devel"
 PKG_BREW_NAME="openssl"
 PKG_LIBS="-lssl -lcrypto"
 PKG_CFLAGS=""
+PKG_CPPFLAGS=""
 
 # Use pkg-config if available
 pkg-config ${PKG_CONFIG_NAME} --atleast-version=1.0  2>/dev/null
@@ -92,7 +93,7 @@ else
   # directory so that R CMD check does not inspects its static libraries for disallowed
   # symbols. Otherwise, we install into the package source (more conventional).
   if [ "$S2_FORCE_BUNDLED_ABSEIL" != "false" ]; then
-    CMAKE_INSTALL_PREFIX="/tmp/s2_absl_$$"
+    CMAKE_INSTALL_PREFIX="${TMPDIR:-/tmp}/s2_absl_$$"
   else
     CMAKE_INSTALL_PREFIX="`pwd`/tools/dist"
   fi
@@ -120,13 +121,40 @@ else
   R_S2_ABSL_HOME="${CMAKE_INSTALL_PREFIX}"
   export PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:${PKG_CONFIG_PATH}"
   echo "** Using PKG_CONFIG_PATH=${PKG_CONFIG_PATH}"
-  PKGCONFIG_LIBS=`pkg-config --libs absl_s2`
+
+  # Resolve only against the pkg-config files for the copy we just built. The
+  # absl_s2 file is maintained by this package; its dependencies are installed
+  # alongside the vendored Abseil libraries.
+  R_S2_BUNDLED_PKG_CONFIG_PATH="${R_S2_PKG_CONFIG_PATH}:`pwd`/tools/pkgconfig"
+  PKGCONFIG_LIBS=`PKG_CONFIG_PATH="${R_S2_BUNDLED_PKG_CONFIG_PATH}" PKG_CONFIG_LIBDIR="${R_S2_BUNDLED_PKG_CONFIG_PATH}" pkg-config --libs absl_s2`
   if [ -z "${PKGCONFIG_LIBS}" ]; then
     echo "** Failed to resolve built vendored copy of Abseil using pkg-config"
     exit 1
   fi
 
-  PKG_CFLAGS="-I${R_S2_ABSL_HOME}/include ${PKG_CFLAGS}"
+  # The vendored build contains static libraries. Replace its -labsl_* flags
+  # with exact archive paths so that the linker cannot select a system Abseil
+  # ahead of the copy whose headers and pkg-config files are used here.
+  R_S2_ABSL_LIBDIR=`PKG_CONFIG_PATH="${R_S2_BUNDLED_PKG_CONFIG_PATH}" PKG_CONFIG_LIBDIR="${R_S2_BUNDLED_PKG_CONFIG_PATH}" pkg-config --variable=libdir absl_base`
+  R_S2_STATIC_LIBS=""
+  for R_S2_LIB in ${PKGCONFIG_LIBS}; do
+    case "${R_S2_LIB}" in
+      -labsl*)
+        R_S2_ARCHIVE="${R_S2_ABSL_LIBDIR}/lib${R_S2_LIB#-l}.a"
+        if [ ! -f "${R_S2_ARCHIVE}" ]; then
+          echo "** Failed to find vendored Abseil archive ${R_S2_ARCHIVE}"
+          exit 1
+        fi
+        R_S2_STATIC_LIBS="${R_S2_STATIC_LIBS} ${R_S2_ARCHIVE}"
+        ;;
+      *)
+        R_S2_STATIC_LIBS="${R_S2_STATIC_LIBS} ${R_S2_LIB}"
+        ;;
+    esac
+  done
+  PKGCONFIG_LIBS="${R_S2_STATIC_LIBS# }"
+
+  PKG_CPPFLAGS="-I${R_S2_ABSL_HOME}/include"
   PKG_LIBS="${PKGCONFIG_LIBS} ${PKG_LIBS}"
 fi
 
@@ -135,9 +163,9 @@ CXX17="`${R_HOME}/bin/R CMD config CXX17`"
 CXX17FLAGS=`"${R_HOME}"/bin/R CMD config CXX17FLAGS`
 CXX17STD=`"${R_HOME}"/bin/R CMD config CXX17STD`
 
-echo "Testing Abseil configuration using PKG_CFLAGS=${PKG_CFLAGS}"
+echo "Testing Abseil configuration using PKG_CPPFLAGS=${PKG_CPPFLAGS} PKG_CFLAGS=${PKG_CFLAGS}"
 
-${CXX17} ${CPPFLAGS} ${PKG_CFLAGS} ${CXX17FLAGS} ${CXX17STD} -E tools/test_absl.cc >/dev/null 2>>configure.log
+${CXX17} ${PKG_CPPFLAGS} ${CPPFLAGS} ${PKG_CFLAGS} ${CXX17FLAGS} ${CXX17STD} -E tools/test_absl.cc >/dev/null 2>>configure.log
 if [ $? -ne 0 ]; then
   echo "Test compile failed!"
   echo "------- Error ---------"
@@ -155,9 +183,10 @@ fi
 
 echo "Using PKG_LIBS=$PKG_LIBS"
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
+echo "Using PKG_CPPFLAGS=$PKG_CPPFLAGS"
 
 # Write to Makevars
-sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|@absl_home@|$R_S2_ABSL_HOME|" src/Makevars.in > src/Makevars
+sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@cppflags@|$PKG_CPPFLAGS|" -e "s|@libs@|$PKG_LIBS|" -e "s|@absl_home@|$R_S2_ABSL_HOME|" src/Makevars.in > src/Makevars
 
 # Success
 exit 0
