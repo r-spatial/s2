@@ -1,3 +1,11 @@
+# s2 1.1.13
+
+* Fix Abseil usage; #305
+
+# s2 1.1.12
+
+* Fix deprecated Abseil usage; #293; #303
+
 # s2 1.1.11
 
 * Fix deprecated Abseil usage and Rcpp include order #300 #297 #299
