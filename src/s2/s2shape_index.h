@@ -305,7 +305,7 @@ class S2ShapeIndex {
   //       "We require an S2ShapeIndex.");
   //   }
   template <typename T>
-  using ImplementedBy = std::is_convertible<absl::decay_t<T>*, S2ShapeIndex*>;
+  using ImplementedBy = std::is_convertible<std::decay_t<T>*, S2ShapeIndex*>;
 
   virtual ~S2ShapeIndex() = default;
 

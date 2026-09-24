@@ -467,7 +467,7 @@ MutableS2ShapeIndex::MutableS2ShapeIndex(MutableS2ShapeIndex&& b)
       shapes_(std::move(b.shapes_)),
       cell_map_(std::move(b.cell_map_)),
       options_(std::move(b.options_)),
-      pending_additions_begin_(absl::exchange(b.pending_additions_begin_, 0)),
+      pending_additions_begin_(std::exchange(b.pending_additions_begin_, 0)),
       pending_removals_(std::move(b.pending_removals_)),
       index_status_(b.index_status_.exchange(FRESH, std::memory_order_relaxed)),
       mem_tracker_(std::move(b.mem_tracker_)) {}
@@ -480,7 +480,7 @@ MutableS2ShapeIndex& MutableS2ShapeIndex::operator=(MutableS2ShapeIndex&& b) {
   shapes_ = std::move(b.shapes_);
   cell_map_ = std::move(b.cell_map_);
   options_ = std::move(b.options_);
-  pending_additions_begin_ = absl::exchange(b.pending_additions_begin_, 0);
+  pending_additions_begin_ = std::exchange(b.pending_additions_begin_, 0);
   pending_removals_ = std::move(b.pending_removals_);
   index_status_.store(
       b.index_status_.exchange(FRESH, std::memory_order_relaxed),

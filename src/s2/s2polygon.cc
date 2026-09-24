@@ -138,8 +138,8 @@ S2Polygon::S2Polygon(S2Polygon&& b)
       loops_(std::move(b.loops_)),
       s2debug_override_(std::move(b.s2debug_override_)),
       error_inconsistent_loop_orientations_(
-          absl::exchange(b.error_inconsistent_loop_orientations_, 0)),
-      num_vertices_(absl::exchange(b.num_vertices_, 0)),
+          std::exchange(b.error_inconsistent_loop_orientations_, 0)),
+      num_vertices_(std::exchange(b.num_vertices_, 0)),
       unindexed_contains_calls_(
           b.unindexed_contains_calls_.exchange(0, std::memory_order_relaxed)),
       bound_(std::move(b.bound_)),
@@ -161,8 +161,8 @@ S2Polygon& S2Polygon::operator=(S2Polygon&& b) {
   loops_ = std::move(b.loops_);
   s2debug_override_ = std::move(b.s2debug_override_);
   error_inconsistent_loop_orientations_ =
-      absl::exchange(b.error_inconsistent_loop_orientations_, 0);
-  num_vertices_ = absl::exchange(b.num_vertices_, 0);
+      std::exchange(b.error_inconsistent_loop_orientations_, 0);
+  num_vertices_ = std::exchange(b.num_vertices_, 0);
   unindexed_contains_calls_.store(
       b.unindexed_contains_calls_.exchange(0, std::memory_order_relaxed),
       std::memory_order_relaxed);

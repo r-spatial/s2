@@ -51,7 +51,6 @@
 #include <utility>
 
 #include "absl/base/macros.h"
-#include "absl/meta/type_traits.h"
 
 #include "s2/base/integral_types.h"
 #include "s2/base/logging.h"
@@ -359,7 +358,7 @@ class compact_array_base {
     // Destroying elements on shrinking resize isn't a concern, since the
     // value_type must be trivially destructible.
     if (n > size() &&
-        !absl::is_trivially_default_constructible<value_type>::value) {
+        !std::is_trivially_default_constructible<value_type>::value) {
       // Increasing size would expose unconstructed elements.
       value_type *new_end = Array() + n;
       for (value_type *p = Array() + size(); p != new_end; ++p)
@@ -520,9 +519,9 @@ class compact_array_base {
     typedef typename std::iterator_traits<Iterator>::iterator_category Cat;
     range_insert(p, first, last, Cat());
   }
-  static_assert(absl::is_trivially_copy_constructible<value_type>::value &&
-                absl::is_trivially_copy_assignable<value_type>::value &&
-                absl::is_trivially_destructible<value_type>::value,
+  static_assert(std::is_trivially_copy_constructible<value_type>::value &&
+                std::is_trivially_copy_assignable<value_type>::value &&
+                std::is_trivially_destructible<value_type>::value,
                 "Requires trivial copy, assignment, and destructor.");
 };
 

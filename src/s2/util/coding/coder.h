@@ -158,7 +158,7 @@ class Encoder {
       S2_DCHECK_LE(enc->buf_, enc->limit_);
     }
 
-    char* skip(ptrdiff_t N) { return absl::exchange(p, p + N); }
+    char* skip(ptrdiff_t N) { return std::exchange(p, p + N); }
 
     void put8(unsigned char v) { *p++ = v; }
     void put16(uint16 v) { LittleEndian::Store16(skip(2), v); }
@@ -490,11 +490,11 @@ inline void DecoderExtensions::FillArray(Decoder* array, int num_decoders) {
   // This is an optimization based on the fact that Decoder(nullptr, 0) sets all
   // structure bytes to 0. This is valid because Decoder is TriviallyCopyable
   // (https://en.cppreference.com/w/cpp/named_req/TriviallyCopyable).
-  static_assert(absl::is_trivially_copy_constructible<Decoder>::value,
+  static_assert(std::is_trivially_copy_constructible<Decoder>::value,
                 "Decoder must be trivially copy-constructible");
-  static_assert(absl::is_trivially_copy_assignable<Decoder>::value,
+  static_assert(std::is_trivially_copy_assignable<Decoder>::value,
                 "Decoder must be trivially copy-assignable");
-  static_assert(absl::is_trivially_destructible<Decoder>::value,
+  static_assert(std::is_trivially_destructible<Decoder>::value,
                 "Decoder must be trivially destructible");
 
   // For R On Windows, this line gives install warning

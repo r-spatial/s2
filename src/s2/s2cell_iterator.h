@@ -17,8 +17,8 @@
 #define S2_S2CELL_ITERATOR_H_
 
 #include <ostream>
+#include <type_traits>
 
-#include "absl/meta/type_traits.h"
 #include "s2/s2cell_id.h"
 
 // Possible relationships between two S2CellIds in an index.
@@ -86,7 +86,7 @@ class S2CellIterator {
   //       "We require an object implementing the S2CellIterator API.");
   //   }
   template <typename T>
-  using ImplementedBy = std::is_convertible<absl::decay_t<T>*, S2CellIterator*>;
+  using ImplementedBy = std::is_convertible<std::decay_t<T>*, S2CellIterator*>;
 
   S2CellIterator() = default;
   virtual ~S2CellIterator() = default;
