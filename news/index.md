@@ -1,5 +1,19 @@
 # Changelog
 
+## s2 1.1.13
+
+- Fix MacOS build; [\#306](https://github.com/r-spatial/s2/issues/306)
+
+- Fix Abseil usage; [\#305](https://github.com/r-spatial/s2/issues/305)
+
+## s2 1.1.12
+
+CRAN release: 2026-09-03
+
+- Fix deprecated Abseil usage;
+  [\#293](https://github.com/r-spatial/s2/issues/293);
+  [\#303](https://github.com/r-spatial/s2/issues/303)
+
 ## s2 1.1.11
 
 CRAN release: 2026-06-01
