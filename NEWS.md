@@ -1,5 +1,7 @@
 # s2 1.1.13
 
+* Fix MacOS build; #306
+
 * Fix Abseil usage; #305
 
 # s2 1.1.12
