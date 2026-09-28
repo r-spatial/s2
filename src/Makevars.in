@@ -103,6 +103,14 @@ S2_OBJECTS = s2/encoded_s2cell_id_vector.o \
      s2/util/math/mathutil.o \
      s2/util/units/length-units.o
 
+# This must be the first rule in the file: R's build machinery invokes
+# `make` with no explicit target, so make's default goal is whichever
+# target is defined first across the concatenated makefiles. Without
+# this, `$(SHLIB): $(STATLIB)` below would become the default goal and
+# `purify` (which removes the temporary Abseil install prefix) would
+# never run, leaving detritus behind in the temp directory.
+all: $(SHLIB) purify
+
 STATLIB = s2/libs2static.a
 
 OBJECTS = cpp-compat.o \
@@ -135,12 +143,10 @@ $(SHLIB): $(STATLIB)
 $(STATLIB): $(S2_OBJECTS)
 	ar rcs $(STATLIB) $(S2_OBJECTS)
 
-all: $(SHLIB) purify
-
 purify: $(SHLIB)
 	@rm -rf @absl_home@ || true
 
 clean:
 	rm -f $(SHLIB) $(STATLIB) $(OBJECTS) $(S2LIBS)
 
-.PHONY: clean purify
+.PHONY: all clean purify
