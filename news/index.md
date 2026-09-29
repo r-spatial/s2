@@ -2,6 +2,8 @@
 
 ## s2 1.1.13
 
+CRAN release: 2026-09-28
+
 - Fix MacOS build; [\#306](https://github.com/r-spatial/s2/issues/306)
 
 - Fix Abseil usage; [\#305](https://github.com/r-spatial/s2/issues/305)
