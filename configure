@@ -107,8 +107,10 @@ else
     echo "** - apt-get install libabsl-dev"
     echo "** - dnf install abseil-cpp-devel"
     echo "** - brew install abseil"
-    echo "** If a system install of Abseil is not possible, cmake is required to build"
-    echo "** the internal vendored copy."
+    echo "** Alternatively, cmake can be installed to build the internal vendored copy:"
+    echo "** - apt-get install cmake"
+    echo "** - dnf install cmake"
+    echo "** - brew install cmake"
     exit 1
   fi
 
